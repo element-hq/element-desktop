@@ -1,0 +1,86 @@
+{
+  "name": "riot-desktop",
+  "productName": "Riot",
+  "main": "src/electron-main.js",
+  "version": "1.5.5",
+  "description": "A feature-rich client for Matrix.org",
+  "author": "New Vector Ltd.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vector-im/riot-desktop"
+  },
+  "license": "Apache-2.0",
+  "files": [],
+  "scripts": {
+    "mkdirs": "mkdir -p packages && mkdir -p deploys",
+    "fetch": "yarn run mkdirs && scripts/fetch-package.js",
+    "check": "scripts/check-webapp.js",
+    "start": "yarn run check && yarn install:electron && electron .",
+    "install:electron": "electron-builder install-app-deps",
+    "lint": "eslint src/",
+    "build:electron:linux": "yarn check && electron-builder -l --x64",
+    "build:electron:macos": "yarn check && electron-builder -m --x64",
+    "build:electron:windows": "yarn check && electron-builder -w --ia32 --x64",
+    "clean": "rimraf webapp dist packages deploys"
+  },
+  "dependencies": {
+    "auto-launch": "^5.0.1",
+    "electron-store": "^2.0.0",
+    "electron-window-state": "^4.1.0",
+    "minimist": "^1.2.0",
+    "png-to-ico": "^1.0.2"
+  },
+  "devDependencies": {
+    "electron-builder": "^21.2.0",
+    "electron-builder-squirrel-windows": "^21.2.0",
+    "electron-devtools-installer": "^2.2.4",
+    "electron-notarize": "^0.2.0",
+    "eslint": "^5.8.0",
+    "eslint-config-google": "^0.7.1",
+    "eslint-plugin-babel": "^4.1.2",
+    "follow-redirects": "^1.9.0",
+    "matrix-js-sdk": "^2.4.6-rc.1",
+    "tar": "^5.0.5"
+  },
+  "build": {
+    "appId": "im.riot.app",
+    "electronVersion": "7.1.3",
+    "files": [
+      "node_modules/**",
+      "src/**"
+    ],
+    "extraResources": [
+      {
+        "from": "res/img",
+        "to": "img"
+      },
+      "webapp/**/*"
+    ],
+    "linux": {
+      "target": "deb",
+      "category": "Network;InstantMessaging;Chat",
+      "maintainer": "support@riot.im",
+      "desktop": {
+        "StartupWMClass": "riot"
+      }
+    },
+    "deb": {
+      "afterInstall": "build/linux/after-install.tpl"
+    },
+    "mac": {
+      "category": "public.app-category.social-networking",
+      "darkModeSupport": true
+    },
+    "win": {
+      "target": {
+        "target": "squirrel"
+      },
+      "sign": "scripts/electron_winSign"
+    },
+    "directories": {
+      "buildResources": "electron_app/build",
+      "output": "dist"
+    },
+    "afterSign": "scripts/electron_afterSign.js"
+  }
+}
