@@ -18,9 +18,7 @@
     "start": "yarn run check && yarn install:electron && electron .",
     "install:electron": "electron-builder install-app-deps",
     "lint": "eslint src/",
-    "build:electron:linux": "yarn check && electron-builder -l --x64",
-    "build:electron:macos": "yarn check && electron-builder -m --x64",
-    "build:electron:windows": "yarn check && electron-builder -w --ia32 --x64",
+    "build:electron": "yarn check && electron-builder",
     "clean": "rimraf webapp dist packages deploys"
   },
   "dependencies": {
@@ -73,7 +71,11 @@
     },
     "win": {
       "target": {
-        "target": "squirrel"
+        "target": "squirrel",
+        "arch": [
+          "x64",
+          "ia32"
+        ]
       },
       "sign": "scripts/electron_winSign"
     },
