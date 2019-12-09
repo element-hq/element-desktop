@@ -80,7 +80,6 @@
       "sign": "scripts/electron_winSign"
     },
     "directories": {
-      "buildResources": "electron_app/build",
       "output": "dist"
     },
     "afterSign": "scripts/electron_afterSign.js"
