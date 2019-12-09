@@ -18,7 +18,7 @@
     "start": "yarn run check && yarn install:electron && electron .",
     "install:electron": "electron-builder install-app-deps",
     "lint": "eslint src/",
-    "build:electron": "yarn check && electron-builder",
+    "build:electron": "yarn run check && electron-builder",
     "clean": "rimraf webapp dist packages deploys"
   },
   "dependencies": {
