@@ -10,7 +10,7 @@ const tar = require('tar');
 
 const riotDesktopPackageJson = require('../package.json');
 
-const PUBKEYURL = "https://packages.riot.im/riot-release-key.asc";
+const PUB_KEY_URL = "https://packages.riot.im/riot-release-key.asc";
 const PACKAGE_URL_PREFIX = "https://github.com/vector-im/riot-web/releases/download/";
 
 async function downloadToFile(url, filename) {
@@ -105,7 +105,7 @@ async function main() {
                 }
                 resolve(!error);
             });
-            https.get(PUBKEYURL, (resp) => {
+            https.get(PUB_KEY_URL, (resp) => {
                 resp.on('data', (chunk) => {
                     gpgProc.stdin.write(chunk);
                 });
