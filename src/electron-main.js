@@ -35,7 +35,6 @@ const tray = require('./tray');
 const vectorMenu = require('./vectormenu');
 const webContentsHandler = require('./webcontents-handler');
 const updater = require('./updater');
-const { migrateFromOldOrigin } = require('./originMigrator');
 
 const windowStateKeeper = require('electron-window-state');
 const Store = require('electron-store');
@@ -64,11 +63,6 @@ if (argv["help"]) {
     app.exit();
 }
 
-// boolean flag set whilst we are doing one-time origin migration
-// We only serve the origin migration script while we're actually
-// migrating to mitigate any risk of it being used maliciously.
-let migratingOrigin = false;
-
 if (argv['profile-dir']) {
     app.setPath('userData', argv['profile-dir']);
 } else if (argv['profile']) {
@@ -77,7 +71,7 @@ if (argv['profile-dir']) {
 
 let vectorConfig = {};
 try {
-    vectorConfig = require('../../webapp/config.json');
+    vectorConfig = require('../webapp/config.json');
 } catch (e) {
     // it would be nice to check the error code here and bail if the config
     // is unparseable, but we get MODULE_NOT_FOUND in the case of a missing
@@ -230,11 +224,6 @@ ipcMain.on('ipcCall', async function(ev, payload) {
             } else {
                 mainWindow.focus();
             }
-            break;
-        case 'origin_migrate':
-            migratingOrigin = true;
-            await migrateFromOldOrigin();
-            migratingOrigin = false;
             break;
         case 'getConfig':
             ret = vectorConfig;
@@ -476,15 +465,8 @@ app.on('ready', () => {
         }
 
         let baseDir;
-        // first part of the path determines where we serve from
-        if (migratingOrigin && target[1] === 'origin_migrator_dest') {
-            // the origin migrator destination page
-            // (only the destination script needs to come from the
-            // custom protocol: the source part is loaded from a
-            // file:// as that's the origin we're migrating from).
-            baseDir = __dirname + "/../../origin_migrator/dest";
-        } else if (target[1] === 'webapp') {
-            baseDir = __dirname + "/../../webapp";
+        if (target[1] === 'webapp') {
+            baseDir = path.join(__dirname, "../webapp");
         } else {
             callback({error: -6}); // FILE_NOT_FOUND
             return;
