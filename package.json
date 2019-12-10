@@ -13,8 +13,8 @@
   "files": [],
   "scripts": {
     "mkdirs": "mkdir -p packages && mkdir -p deploys",
-    "fetch": "yarn run mkdirs && scripts/fetch-package.js",
-    "check": "scripts/check-webapp.js",
+    "fetch": "yarn run mkdirs && node scripts/fetch-package.js",
+    "check": "node scripts/check-webapp.js",
     "start": "yarn run check && yarn install:electron && electron .",
     "install:electron": "electron-builder install-app-deps",
     "lint": "eslint src/",
