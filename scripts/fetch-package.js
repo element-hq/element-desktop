@@ -7,11 +7,13 @@ const fsPromises = require('fs').promises;
 const { https } = require('follow-redirects');
 const child_process = require('child_process');
 const tar = require('tar');
+const asar = require('asar');
 
 const riotDesktopPackageJson = require('../package.json');
 
 const PUB_KEY_URL = "https://packages.riot.im/riot-release-key.asc";
 const PACKAGE_URL_PREFIX = "https://github.com/vector-im/riot-web/releases/download/";
+const ASAR_PATH = 'webapp.asar';
 
 async function downloadToFile(url, filename) {
     console.log("Downloading " + url + "...");
@@ -177,9 +179,16 @@ async function main() {
         });
     }
 
-    console.log("Symlink " + expectedDeployDir + " -> webapp");
-    // Does this do a sensible thing on Windows?
-    await fsPromises.symlink(expectedDeployDir, 'webapp');
+    try {
+        await fsPromises.stat(ASAR_PATH);
+        console.log(ASAR_PATH + " already present: removing");
+        await fsPromises.unlink(ASAR_PATH);
+    } catch (e) {
+    }
+
+    console.log("Pack " + expectedDeployDir + " -> " + ASAR_PATH);
+    await asar.createPackage(expectedDeployDir, ASAR_PATH);
+    console.log("Done!");
 }
 
 main().then((ret) => process.exit(ret));

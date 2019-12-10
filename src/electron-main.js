@@ -50,6 +50,15 @@ try {
     console.warn("seshat unavailable", e);
 }
 
+// Things we need throughout the file but need to be created
+// async to are initialised in setupGlobals()
+let asarPath;
+let resPath;
+let vectorConfig;
+let iconPath;
+let trayConfig;
+let launcher;
+
 if (argv["help"]) {
     console.log("Options:");
     console.log("  --profile-dir {path}: Path to where to store the profile.");
@@ -69,34 +78,86 @@ if (argv['profile-dir']) {
     app.setPath('userData', `${app.getPath('userData')}-${argv['profile']}`);
 }
 
-let vectorConfig = {};
-try {
-    vectorConfig = require('../webapp/config.json');
-} catch (e) {
-    // it would be nice to check the error code here and bail if the config
-    // is unparseable, but we get MODULE_NOT_FOUND in the case of a missing
-    // file or invalid json, so node is just very unhelpful.
-    // Continue with the defaults (ie. an empty config)
+async function tryAsarPaths(rawPaths) {
+    // Make everything relative to the current file
+    const paths = rawPaths.map(p => path.join(__dirname, p));
+
+    for (const p of paths) {
+        try {
+            await afs.stat(p);
+            return p + '/';
+        } catch (e) {
+        }
+    }
+    console.log("Couldn't find webapp files in any of: ");
+    for (const p of paths) {
+        console.log("\t"+path.resolve(p));
+    }
+    throw new Error("Failed to find webapp files");
 }
 
-try {
-    // Load local config and use it to override values from the one baked with the build
-    const localConfig = require(path.join(app.getPath('userData'), 'config.json'));
+// Find the webapp resources and set up things that require them
+async function setupGlobals() {
+    // find the webapp asar.
+    asarPath = await tryAsarPaths([
+        // If run from the source checkout, this will be in the directory above
+        '../webapp.asar',
+        // but if run from a packaged application, electron-main.js will be in
+        // a different asar file so it will be two levels above
+        '../../webapp.asar',
+    // also try without the 'asar' suffix to allow symlinking in a directory
+        '../webapp',
+    ]);
+    // we assume the resources path is in the same place as the asar
+    resPath = path.join(path.dirname(asarPath), 'res');
 
-    // If the local config has a homeserver defined, don't use the homeserver from the build
-    // config. This is to avoid a problem where Riot thinks there are multiple homeservers
-    // defined, and panics as a result.
-    const homeserverProps = ['default_is_url', 'default_hs_url', 'default_server_name', 'default_server_config'];
-    if (Object.keys(localConfig).find(k => homeserverProps.includes(k))) {
-        // Rip out all the homeserver options from the vector config
-        vectorConfig = Object.keys(vectorConfig)
-            .filter(k => !homeserverProps.includes(k))
-            .reduce((obj, key) => {obj[key] = vectorConfig[key]; return obj;}, {});
+    try {
+        vectorConfig = require(asarPath + 'config.json');
+    } catch (e) {
+        // it would be nice to check the error code here and bail if the config
+        // is unparseable, but we get MODULE_NOT_FOUND in the case of a missing
+        // file or invalid json, so node is just very unhelpful.
+        // Continue with the defaults (ie. an empty config)
+        vectorConfig = {};
     }
 
-    vectorConfig = Object.assign(vectorConfig, localConfig);
-} catch (e) {
-    // Could not load local config, this is expected in most cases.
+    try {
+        // Load local config and use it to override values from the one baked with the build
+        const localConfig = require(path.join(app.getPath('userData'), 'config.json'));
+
+        // If the local config has a homeserver defined, don't use the homeserver from the build
+        // config. This is to avoid a problem where Riot thinks there are multiple homeservers
+        // defined, and panics as a result.
+        const homeserverProps = ['default_is_url', 'default_hs_url', 'default_server_name', 'default_server_config'];
+        if (Object.keys(localConfig).find(k => homeserverProps.includes(k))) {
+            // Rip out all the homeserver options from the vector config
+            vectorConfig = Object.keys(vectorConfig)
+                .filter(k => !homeserverProps.includes(k))
+                .reduce((obj, key) => {obj[key] = vectorConfig[key]; return obj;}, {});
+        }
+
+        vectorConfig = Object.assign(vectorConfig, localConfig);
+    } catch (e) {
+        // Could not load local config, this is expected in most cases.
+    }
+
+    // The tray icon
+    // It's important to call `path.join` so we don't end up with the packaged asar in the final path.
+    const iconFile = `riot.${process.platform === 'win32' ? 'ico' : 'png'}`;
+    iconPath = path.join(resPath, "img", iconFile);
+    trayConfig = {
+        icon_path: iconPath,
+        brand: vectorConfig.brand || 'Riot',
+    };
+
+    // launcher
+    launcher = new AutoLaunch({
+        name: vectorConfig.brand || 'Riot',
+        isHidden: true,
+        mac: {
+            useLaunchAgent: true,
+        },
+    });
 }
 
 const eventStorePath = path.join(app.getPath('userData'), 'EventStore');
@@ -106,14 +167,6 @@ let eventIndex = null;
 
 let mainWindow = null;
 global.appQuitting = false;
-
-// It's important to call `path.join` so we don't end up with the packaged asar in the final path.
-const iconFile = `riot.${process.platform === 'win32' ? 'ico' : 'png'}`;
-const iconPath = path.join(__dirname, "..", "..", "img", iconFile);
-const trayConfig = {
-    icon_path: iconPath,
-    brand: vectorConfig.brand || 'Riot',
-};
 
 // handle uncaught errors otherwise it displays
 // stack traces in popup dialogs, which is terrible (which
@@ -399,14 +452,6 @@ if (!gotLock) {
     app.exit();
 }
 
-const launcher = new AutoLaunch({
-    name: vectorConfig.brand || 'Riot',
-    isHidden: true,
-    mac: {
-        useLaunchAgent: true,
-    },
-});
-
 // Register the scheme the app is served from as 'standard'
 // which allows things like relative URLs and IndexedDB to
 // work.
@@ -421,7 +466,19 @@ protocol.registerSchemesAsPrivileged([{
     },
 }]);
 
-app.on('ready', () => {
+app.on('ready', async () => {
+    try {
+        await setupGlobals();
+    } catch (e) {
+        console.log("App setup failed: exiting", e);
+        process.exit(1);
+        // process.exit doesn't cause node to stop running code immediately,
+        // so return (we could let the exception propagate but then we end up
+        // with node printing all sorts of stuff about unhandled exceptions
+        // when we want the actual error to be as obvious as possible).
+        return;
+    }
+
     if (argv['devtools']) {
         try {
             const { default: installExt, REACT_DEVELOPER_TOOLS, REACT_PERF } = require('electron-devtools-installer');
@@ -466,7 +523,7 @@ app.on('ready', () => {
 
         let baseDir;
         if (target[1] === 'webapp') {
-            baseDir = path.join(__dirname, "../webapp");
+            baseDir = asarPath;
         } else {
             callback({error: -6}); // FILE_NOT_FOUND
             return;
