@@ -66,10 +66,9 @@ const template = [
 
 // macOS has specific menu conventions...
 if (process.platform === 'darwin') {
-    // first macOS menu is the name of the app
-    const name = app.getName();
     template.unshift({
-        label: name,
+        // first macOS menu is the name of the app
+        label: app.name,
         submenu: [
             { role: 'about' },
             { type: 'separator' },
