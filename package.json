@@ -12,7 +12,7 @@
   "license": "Apache-2.0",
   "files": [],
   "scripts": {
-    "mkdirs": "mkdir -p packages && mkdir -p deploys",
+    "mkdirs": "mkdirp packages deploys",
     "fetch": "yarn run mkdirs && scripts/fetch-package.js",
     "check": "scripts/check-webapp.js",
     "start": "yarn run check && yarn install:electron && electron .",
@@ -38,6 +38,7 @@
     "eslint-plugin-babel": "^4.1.2",
     "follow-redirects": "^1.9.0",
     "matrix-js-sdk": "^2.4.6-rc.1",
+    "mkdirp": "^0.5.1",
     "rimraf": "^3.0.0",
     "tar": "^5.0.5"
   },
