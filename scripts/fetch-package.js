@@ -114,6 +114,7 @@ async function main() {
                 });
             });
         });
+        return 0;
     }
         
     if (verify && !haveGpg) {
