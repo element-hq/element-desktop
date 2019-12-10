@@ -16,9 +16,8 @@
     "fetch": "yarn run mkdirs && node scripts/fetch-package.js",
     "check": "node scripts/check-webapp.js",
     "start": "yarn run check && yarn install:electron && electron .",
-    "install:electron": "electron-builder install-app-deps",
     "lint": "eslint src/",
-    "build:electron": "yarn run check && electron-builder",
+    "build": "yarn run check && electron-builder",
     "clean": "rimraf webapp dist packages deploys"
   },
   "dependencies": {
