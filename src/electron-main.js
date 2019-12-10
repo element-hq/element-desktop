@@ -180,7 +180,7 @@ process.on('uncaughtException', function(error) {
 
 let focusHandlerAttached = false;
 ipcMain.on('setBadgeCount', function(ev, count) {
-    app.setBadgeCount(count);
+    app.badgeCount = count;
     if (count === 0 && mainWindow) {
         mainWindow.flashFrame(false);
     }
@@ -543,8 +543,6 @@ app.on('ready', async () => {
         callback({
             path: absTarget,
         });
-    }, (error) => {
-        if (error) console.error('Failed to register protocol');
     });
 
     if (argv['no-update']) {
