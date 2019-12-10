@@ -15,7 +15,7 @@
     "mkdirs": "mkdirp packages deploys",
     "fetch": "yarn run mkdirs && node scripts/fetch-package.js",
     "check": "node scripts/check-webapp.js",
-    "start": "yarn run check && yarn install:electron && electron .",
+    "start": "electron .",
     "lint": "eslint src/",
     "build": "yarn run check && electron-builder",
     "clean": "rimraf webapp.asar dist packages deploys"
