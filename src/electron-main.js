@@ -145,7 +145,6 @@ async function setupGlobals() {
     // It's important to call `path.join` so we don't end up with the packaged asar in the final path.
     const iconFile = `riot.${process.platform === 'win32' ? 'ico' : 'png'}`;
     iconPath = path.join(resPath, "img", iconFile);
-    console.log("loading tray icon from " + iconPath);
     trayConfig = {
         icon_path: iconPath,
         brand: vectorConfig.brand || 'Riot',
