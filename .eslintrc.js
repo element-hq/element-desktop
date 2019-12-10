@@ -17,3 +17,9 @@ module.exports = {
 // don't use babel, so remove it & put the original back
 delete module.exports.rules["babel/no-invalid-this"];
 module.exports.rules["no-invalid-this"] = "error";
+
+// also override the line length to be consistent with
+// vector-web / react-sdk rather than js-sdk
+module.exports.rules["max-len"] = ["warn", {
+    code: 120,
+}];

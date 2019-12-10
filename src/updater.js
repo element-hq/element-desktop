@@ -38,7 +38,6 @@ module.exports.start = function startAutoUpdate(updateBaseUrl) {
             // and also acts as a convenient cache-buster to ensure that when the
             // app updates it always gets a fresh value to avoid update-looping.
             url = `${updateBaseUrl}macos/?localVersion=${encodeURIComponent(app.getVersion())}`;
-
         } else if (process.platform === 'win32') {
             url = `${updateBaseUrl}win32/${process.arch}/`;
         } else {
@@ -64,7 +63,7 @@ module.exports.start = function startAutoUpdate(updateBaseUrl) {
         // will fail if running in debug mode
         console.log('Couldn\'t enable update checking', err);
     }
-}
+};
 
 ipcMain.on('install_update', installUpdate);
 ipcMain.on('check_updates', pollForUpdates);
