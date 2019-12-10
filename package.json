@@ -18,7 +18,7 @@
     "start": "yarn run check && yarn install:electron && electron .",
     "lint": "eslint src/",
     "build": "yarn run check && electron-builder",
-    "clean": "rimraf webapp dist packages deploys"
+    "clean": "rimraf webapp.asar dist packages deploys"
   },
   "dependencies": {
     "auto-launch": "^5.0.1",
@@ -28,6 +28,7 @@
     "png-to-ico": "^1.0.2"
   },
   "devDependencies": {
+    "asar": "^2.0.1",
     "electron-builder": "^21.2.0",
     "electron-builder-squirrel-windows": "^21.2.0",
     "electron-devtools-installer": "^2.2.4",
@@ -53,7 +54,7 @@
         "from": "res/img",
         "to": "img"
       },
-      "webapp/**/*"
+      "webapp.asar"
     ],
     "linux": {
       "target": "deb",
@@ -82,7 +83,6 @@
     },
     "directories": {
       "output": "dist"
-    },
-    "afterSign": "scripts/electron_afterSign.js"
+    }
   }
 }

@@ -71,7 +71,7 @@ if (argv['profile-dir']) {
 
 let vectorConfig = {};
 try {
-    vectorConfig = require('../webapp/config.json');
+    vectorConfig = require('../webapp.asar/config.json');
 } catch (e) {
     // it would be nice to check the error code here and bail if the config
     // is unparseable, but we get MODULE_NOT_FOUND in the case of a missing
@@ -466,7 +466,7 @@ app.on('ready', () => {
 
         let baseDir;
         if (target[1] === 'webapp') {
-            baseDir = path.join(__dirname, "../webapp");
+            baseDir = path.join(__dirname, "../webapp.asar");
         } else {
             callback({error: -6}); // FILE_NOT_FOUND
             return;

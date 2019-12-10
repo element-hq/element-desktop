@@ -4,10 +4,10 @@ const fs = require('fs').promises;
 
 async function main() {
     try {
-        const webappDir = await fs.opendir('webapp');
+        const webappDir = await fs.stat('webapp.asar');
         return 0;
     } catch (e) {
-        console.log("No 'webapp' directory found. Run 'yarn run fetch' or symlink manually");
+        console.log("No 'webapp.asar' found. Run 'yarn run fetch'");
         return 1;
     }
 }
