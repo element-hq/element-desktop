@@ -177,8 +177,11 @@ async function main() {
     }
 
     console.log("Symlink " + expectedDeployDir + " -> webapp");
-    // Does this do a sensible thing on Windows?
-    await fsPromises.symlink(expectedDeployDir, 'webapp');
+    // 'junction' here creates a junction point on Windows (and is
+    // ignored everywhere else). The default type requires special
+    // permissions on Windows, but junction points don't and appear
+    // to do the right thing.
+    await fsPromises.symlink(expectedDeployDir, 'webapp', 'junction');
 }
 
 main().then((ret) => process.exit(ret));
