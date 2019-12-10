@@ -301,14 +301,14 @@ ipcMain.on('seshat', async function(ev, payload) {
 
     const sendError = (id, e) => {
         const error = {
-            message: e.message
-        }
+            message: e.message,
+        };
 
         mainWindow.webContents.send('seshatReply', {
-            id:id,
-            error: error
+            id: id,
+            error: error,
         });
-    }
+    };
 
     const args = payload.args || [];
     let ret;
@@ -336,16 +336,18 @@ ipcMain.on('seshat', async function(ev, payload) {
             break;
 
         case 'deleteEventIndex':
-            const deleteFolderRecursive = async(p) =>  {
-                for (let entry of await afs.readdir(p)) {
-                    const curPath = path.join(p, entry);
-                    await afs.unlink(curPath);
-                }
-            }
+            {
+                const deleteFolderRecursive = async (p) => {
+                    for (const entry of await afs.readdir(p)) {
+                        const curPath = path.join(p, entry);
+                        await afs.unlink(curPath);
+                    }
+                };
 
-            try {
-                await deleteFolderRecursive(eventStorePath);
-            } catch (e) {
+                try {
+                    await deleteFolderRecursive(eventStorePath);
+                } catch (e) {
+                }
             }
 
             break;
