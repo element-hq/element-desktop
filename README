@@ -5,3 +5,72 @@ This is *not* where the source for Riot desktop lives... yet. As of now,
 it still lives in the main riot-web repo: https://github.com/vector-im/riot-web
 
 This is an experimental split-out of the Riot desktop code from the main repo.
+
+Fetching Riot
+=============
+Since this package is just the Electron wrapper for Riot, it doesn't contain any of the Riot code,
+so the first step is to get a working copy of Riot. There are a few ways of doing this:
+
+```
+# Fetch the prebuilt release Riot package from the riot.im GitHub releases page. The version
+# fetched will be the same as the local riot-desktop package.
+yarn run fetch --noverify
+```
+
+...or if you'd like to use GPG to verify the downloaded package:
+```
+# Fetch the Riot public key from the riot.im web server over a secure connection and import
+# it into your local GPG keychain (you'll need GPG installed). You only need to to do this
+# once.
+yarn run fetch --importkey
+# Fetch the package and verify the signature
+yarn run fetch
+```
+
+...or either of the above, but fetching a specific version of Riot:
+```
+# Fetch the prebuilt release Riot package from the riot.im GitHub releases page. The version
+# fetched will be the same as the local riot-desktop package.
+yarn run fetch --noverify v1.5.6
+```
+
+If you only want to run the app locally and don't need to build packages, you can
+provide the `webapp` directory directly:
+```
+# Assuming you've checked out and built a copy of riot-web in ../riot-web
+ln -s ../riot-web/webapp ./
+```
+
+[TODO: add support for fetching develop builds, arbitrary URLs and arbitrary paths]
+
+
+Building
+========
+Now you have a copy of Riot, you're ready to build packages. If you'd just like to
+run Riot locally, skip to the next section.
+
+```
+yarn run build
+```
+This will do a couple of things:
+ * Run the `setversion` script to set the local package version to match whatever
+   version of Riot you installed above.
+ * Run electron-builder to build a package. The package built will match the operating system
+   you're running the build process on.
+
+You can also build using docker, which will always produce the linux package:
+```
+yarn run dockerbuild
+```
+
+After running, the packages should be in `dist/`.
+
+Starting
+========
+If you'd just like to run the electron app locally for development:
+```
+# Install electron - we don't normally need electron itself as it's provided
+# by electron-builder when building packages
+yarn add electron
+yarn start
+```
