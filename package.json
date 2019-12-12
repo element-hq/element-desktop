@@ -79,7 +79,7 @@
           "ia32"
         ]
       },
-      "sign": "scripts/electron_winSign"
+      "certificateSubjectName": "New Vector Ltd"
     },
     "directories": {
       "output": "dist"
