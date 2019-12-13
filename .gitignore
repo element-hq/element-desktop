@@ -4,4 +4,5 @@
 /packages
 /deploys
 /node_modules
+/docker_node_modules
 /pkg/control
