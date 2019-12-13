@@ -86,5 +86,5 @@ mkdir myconfig
 cp /path/to/my/config.json myconfig/
 yarn run fetch --cfgdir myconfig
 ```
-The config dir for the official Riot.im app is in `riot.im`. Ifb you use this,
+The config dir for the official Riot.im app is in `riot.im`. If you use this,
 your app will auto-update itself using builds from Riot.im.
