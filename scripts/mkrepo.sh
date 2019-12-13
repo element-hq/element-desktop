@@ -9,8 +9,7 @@ fi
 
 confdir=$1
 
-set -x
-set -e
+set -ex
 
 ver=`node -e "require('fs'); console.log(JSON.parse(fs.readFileSync('package.json')).version)"`
 distdir=$PWD/dist
