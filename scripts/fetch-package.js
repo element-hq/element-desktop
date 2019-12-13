@@ -58,6 +58,7 @@ async function main() {
     let importkey = false;
     let pkgDir = 'packages';
     let deployDir = 'deploys';
+    let cfgDir;
     let targetVersion;
 
     while (process.argv.length > 2) {
@@ -75,6 +76,11 @@ async function main() {
             case '--deploys':
                 process.argv.shift();
                 deployDir = process.argv[2];
+                break;
+            case '--cfgdir':
+            case '-d':
+                process.argv.shift();
+                cfgDir = process.argv[2];
                 break;
             default:
                 targetVersion = process.argv[2];
@@ -117,6 +123,13 @@ async function main() {
             });
         });
         return 0;
+    }
+
+    if (cfgDir === undefined) {
+        console.log("No config directory set");
+        console.log("Specify a config directory with --cfgdir or -d");
+        console.log("To build with no config (and no auto-update), pass the empty string (-d '')");
+        return 1;
     }
         
     if (verify && !haveGpg) {
@@ -184,6 +197,15 @@ async function main() {
         console.log(ASAR_PATH + " already present: removing");
         await fsPromises.unlink(ASAR_PATH);
     } catch (e) {
+    }
+
+    if (cfgDir.length) {
+        const configJsonSource = path.join(cfgDir, 'config.json');
+        const configJsonDest = path.join(expectedDeployDir, 'config.json');
+        console.log(configJsonSource + ' -> ' + configJsonDest);
+        await fsPromises.copyFile(configJsonSource, configJsonDest);
+    } else {
+        console.log("Skipping config file");
     }
 
     console.log("Pack " + expectedDeployDir + " -> " + ASAR_PATH);
