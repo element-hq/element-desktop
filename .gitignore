@@ -1,0 +1,6 @@
+/dist
+/webapp
+/webapp.asar
+/packages
+/deploys
+/node_modules
