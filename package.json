@@ -21,6 +21,7 @@
     "indocker": "scripts/indocker.sh",
     "docker:build": "yarn run indocker yarn run build",
     "docker:install": "yarn run indocker yarn install",
+    "debrepo": "scripts/mkrepo.sh",
     "clean": "rimraf webapp.asar dist packages deploys"
   },
   "dependencies": {
