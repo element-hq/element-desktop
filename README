@@ -60,7 +60,8 @@ This will do a couple of things:
 
 You can also build using docker, which will always produce the linux package:
 ```
-yarn run dockerbuild
+yarn run docker:install
+yarn run docker:build
 ```
 
 After running, the packages should be in `dist/`.
