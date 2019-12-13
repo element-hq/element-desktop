@@ -1,0 +1,14 @@
+Package: riot-desktop
+License: Apache-2.0
+Vendor: support@riot.im
+Architecture: amd64
+Maintainer: support@riot.im
+Depends: libgtk-3-0, libnotify4, libnss3, libxss1, libxtst6, xdg-utils, libatspi2.0-0, libuuid1, libappindicator3-1, libsecret-1-0
+Provides: riot-web
+Conflicts: riot-web
+Replaces: riot-web
+Section: net
+Priority: extra
+Homepage: https://riot.im/
+Description: 
+  A feature-rich client for Matrix.org

@@ -65,7 +65,10 @@
       }
     },
     "deb": {
-      "afterInstall": "build/linux/after-install.tpl"
+      "afterInstall": "build/linux/after-install.tpl",
+      "fpm": [
+        "--deb-custom-control=pkg/control"
+      ]
     },
     "mac": {
       "category": "public.app-category.social-networking",
