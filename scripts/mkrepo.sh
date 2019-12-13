@@ -11,7 +11,7 @@ confdir=$1
 
 set -ex
 
-ver=`node -e "require('fs'); console.log(JSON.parse(fs.readFileSync('package.json')).version)"`
+ver=`jq -r .version package.json`
 distdir=$PWD/dist
 confdir=$PWD/$confdir
 
