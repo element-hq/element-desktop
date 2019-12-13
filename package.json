@@ -18,9 +18,9 @@
     "start": "electron .",
     "lint": "eslint src/",
     "build": "yarn run setversion && electron-builder",
-    "indocker": "scripts/indocker.sh",
-    "docker:build": "yarn run indocker yarn run build",
-    "docker:install": "yarn run indocker yarn install",
+    "in-docker": "scripts/in-docker.sh",
+    "docker:build": "yarn run in-docker yarn run build",
+    "docker:install": "yarn run in-docker yarn install",
     "clean": "rimraf webapp.asar dist packages deploys"
   },
   "dependencies": {
