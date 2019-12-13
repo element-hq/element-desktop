@@ -7,7 +7,7 @@ Depends: libgtk-3-0, libnotify4, libnss3, libxss1, libxtst6, xdg-utils, libatspi
 Provides: riot-web
 Conflicts: riot-web
 Replaces: riot-web
-Section: default
+Section: net
 Priority: extra
 Homepage: https://riot.im/
 Description: 

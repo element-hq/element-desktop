@@ -14,7 +14,8 @@ so the first step is to get a working copy of Riot. There are a few ways of doin
 ```
 # Fetch the prebuilt release Riot package from the riot.im GitHub releases page. The version
 # fetched will be the same as the local riot-desktop package.
-yarn run fetch --noverify
+# We're explicitly asking for no config, so the package Riot will have no config.json.
+yarn run fetch --noverify --cfgdir ''
 ```
 
 ...or if you'd like to use GPG to verify the downloaded package:
@@ -24,14 +25,14 @@ yarn run fetch --noverify
 # once.
 yarn run fetch --importkey
 # Fetch the package and verify the signature
-yarn run fetch
+yarn run fetch --cfgdir ''
 ```
 
 ...or either of the above, but fetching a specific version of Riot:
 ```
 # Fetch the prebuilt release Riot package from the riot.im GitHub releases page. The version
 # fetched will be the same as the local riot-desktop package.
-yarn run fetch --noverify v1.5.6
+yarn run fetch --noverify --cfgdir '' v1.5.6
 ```
 
 If you only want to run the app locally and don't need to build packages, you can
@@ -75,3 +76,16 @@ If you'd just like to run the electron app locally for development:
 yarn add electron
 yarn start
 ```
+
+Config
+======
+If you'd like the packaged Riot to have a configuration file, you can create a
+config directory and place `config.json` in there, then specify this directory
+with the `--cfgdir` option to `yarn run fetch`, eg:
+```
+mkdir myconfig
+cp /path/to/my/config.json myconfig/
+yarn run fetch --cfgdir myconfig
+```
+The config dir for the official Riot.im app is in `riot.im`. If you use this,
+your app will auto-update itself using builds from Riot.im.
