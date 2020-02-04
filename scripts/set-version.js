@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /*
- * Checks for the pre3sence of a webapp, inspects its version and sets the
+ * Checks for the presence of a webapp, inspects its version and sets the
  * version metadata of the package to match.
  */
 
