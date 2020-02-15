@@ -20,7 +20,7 @@ const rimraf = require('rimraf');
 
 async function clean(hakEnv, moduleInfo) {
     await new Promise((resolve, reject) => {
-        rimraf(moduleInfo.moduleHakDir, (err) => {
+        rimraf(moduleInfo.moduleDotHakDir, (err) => {
             if (err) {
                 reject(err);
             } else {

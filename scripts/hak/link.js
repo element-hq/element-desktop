@@ -32,12 +32,22 @@ async function link(hakEnv, moduleInfo) {
     } catch (e) {
         await fsProm.writeFile(
             yarnrc, 
-            '--link-folder ' + path.join(hakEnv.dotHakDir, 'links') + os.EOL,
+            // XXX: 1. This must be absolute, as yarn will resolve link directories
+            // relative to the closest project root, which means when we run it
+            // in the dependency project, it will put the link directory in its
+            // own project folder rather than the main project.
+            // 2. We put a colon on the end of the key, which is not what yarn's
+            // stringifier does and not really the format of the file, but it happens
+            // to work and also work around the bug where the parser breaks on values
+            // with a colon in them (which absolute windows paths do).
+            '--link-folder: ' + path.join(hakEnv.dotHakDir, 'links') + os.EOL,
         );
     }
 
+    const yarnCmd = 'yarn' + (hakEnv.isWin() ? '.cmd' : '');
+
     await new Promise((resolve, reject) => {
-        const proc = child_process.spawn('yarn', ['link'], {
+        const proc = child_process.spawn(yarnCmd, ['link'], {
             cwd: moduleInfo.moduleOutDir,
             stdio: 'inherit',
         });
@@ -47,7 +57,7 @@ async function link(hakEnv, moduleInfo) {
     });
 
     await new Promise((resolve, reject) => {
-        const proc = child_process.spawn('yarn', ['link', moduleInfo.name], {
+        const proc = child_process.spawn(yarnCmd, ['link', moduleInfo.name], {
             cwd: hakEnv.projectRoot,
             stdio: 'inherit',
         });

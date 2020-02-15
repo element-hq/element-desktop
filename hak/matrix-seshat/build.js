@@ -17,18 +17,158 @@ limitations under the License.
 const path = require('path');
 const child_process = require('child_process');
 
+const mkdirp = require('mkdirp');
+const fsExtra = require('fs-extra');
+
 module.exports = async function(hakEnv, moduleInfo) {
-    if (hakEnv.isWin()) await buildOpenSsl(hakEnv, moduleInfo);
-    await buildSqlCipher(hakEnv, moduleInfo);
+    if (hakEnv.isWin()) {
+        await buildOpenSslWin(hakEnv, moduleInfo);
+        await buildSqlCipherWin(hakEnv, moduleInfo);
+    } else {
+        await buildSqlCipherUnix(hakEnv, moduleInfo);
+    }
     await buildMatrixSeshat(hakEnv, moduleInfo);
 }
 
-async function buildOpenSsl(hakEnv, moduleInfo) {
-    const openSslDir = path.join(moduleInfo.moduleHakDir, 'openssl-1.1.1d');
+async function buildOpenSslWin(hakEnv, moduleInfo) {
+    const openSslDir = path.join(moduleInfo.moduleDotHakDir, 'openssl-1.1.1d');
+
+    const openSslArch = hakEnv.arch === 'x64' ? 'VC-WIN64A' : 'VC-WIN32';
+
+    console.log("Building openssl in " + openSslDir);
+    await new Promise((resolve, reject) => {
+        const proc = child_process.spawn(
+            'perl',
+            [
+                'Configure',
+                '--prefix=' + moduleInfo.depPrefix,
+                 // sqlcipher only uses about a tiny part of openssl. We link statically
+                 // so will only pull in the symbols we use, but we may as well turn off
+                 // as much as possible to save on build time.
+                'no-afalgeng',
+                'no-capieng',
+                'no-cms',
+                'no-ct',
+                'no-deprecated',
+                'no-dgram',
+                'no-dso',
+                'no-ec',
+                'no-ec2m',
+                'no-gost',
+                'no-nextprotoneg',
+                'no-ocsp',
+                'no-sock',
+                'no-srp',
+                'no-srtp',
+                'no-tests',
+                'no-ssl',
+                'no-tls',
+                'no-dtls',
+                'no-shared',
+                'no-aria',
+                'no-camellia',
+                'no-cast',
+                'no-chacha',
+                'no-cmac',
+                'no-des',
+                'no-dh',
+                'no-dsa',
+                'no-ecdh',
+                'no-ecdsa',
+                'no-idea',
+                'no-md4',
+                'no-mdc2',
+                'no-ocb',
+                'no-poly1305',
+                'no-rc2',
+                'no-rc4',
+                'no-rmd160',
+                'no-scrypt',
+                'no-seed',
+                'no-siphash',
+                'no-sm2',
+                'no-sm3',
+                'no-sm4',
+                'no-whirlpool',
+                openSslArch,
+            ],
+            {
+                cwd: openSslDir,
+                stdio: 'inherit',
+            },
+        );
+        proc.on('exit', (code) => {
+            code ? reject(code) : resolve();
+        });
+    });
+
+    await new Promise((resolve, reject) => {
+        const proc = child_process.spawn(
+            'nmake',
+            ['build_libs'],
+            {
+                cwd: openSslDir,
+                stdio: 'inherit',
+            },
+        );
+        proc.on('exit', (code) => {
+            code ? reject(code) : resolve();
+        });
+    });
+
+    await new Promise((resolve, reject) => {
+        const proc = child_process.spawn(
+            'nmake',
+            ['install_dev'],
+            {
+                cwd: openSslDir,
+                stdio: 'inherit',
+            },
+        );
+        proc.on('exit', (code) => {
+            code ? reject(code) : resolve();
+        });
+    });
 }
 
-async function buildSqlCipher(hakEnv, moduleInfo) {
-    const sqlCipherDir = path.join(moduleInfo.moduleHakDir, 'sqlcipher-4.3.0');
+async function buildSqlCipherWin(hakEnv, moduleInfo) {
+    const sqlCipherDir = path.join(moduleInfo.moduleDotHakDir, 'sqlcipher-4.3.0');
+    const buildDir = path.join(sqlCipherDir, 'bld');
+
+    await mkdirp(buildDir);
+
+    await new Promise((resolve, reject) => {
+        const proc = child_process.spawn(
+            'nmake',
+            ['/f', path.join('..', 'Makefile.msc'), 'libsqlite3.lib', 'TOP=..'],
+            {
+                cwd: buildDir,
+                stdio: 'inherit',
+	        env: Object.assign({}, process.env, {
+                    CCOPTS: "-DSQLITE_HAS_CODEC -I" + path.join(moduleInfo.depPrefix, 'include'),
+                    LTLIBPATHS: "/LIBPATH:" + path.join(moduleInfo.depPrefix, 'lib'),
+                    LTLIBS: "libcrypto.lib",
+                }),
+            },
+        );
+        proc.on('exit', (code) => {
+            code ? reject(code) : resolve();
+        });
+    });
+
+    await fsExtra.copy(
+        path.join(buildDir, 'libsqlite3.lib'),
+        path.join(moduleInfo.depPrefix, 'lib', 'sqlcipher.lib'),
+    );
+
+    await fsExtra.copy(
+        path.join(buildDir, 'sqlite3.h'),
+        path.join(moduleInfo.depPrefix, 'include', 'sqlcipher.h'),
+    );
+}
+
+async function buildSqlCipherUnix(hakEnv, moduleInfo) {
+    const sqlCipherDir = path.join(moduleInfo.moduleDotHakDir, 'sqlcipher-4.3.0');
 
     const args = [
         '--prefix=' + moduleInfo.depPrefix + '',
@@ -88,17 +228,24 @@ async function buildSqlCipher(hakEnv, moduleInfo) {
 }
 
 async function buildMatrixSeshat(hakEnv, moduleInfo) {
-    await new Promise((resolve) => {
+    const env = Object.assign({
+        SQLCIPHER_STATIC: 1,
+        SQLCIPHER_LIB_DIR: path.join(moduleInfo.depPrefix, 'lib'),
+        SQLCIPHER_INCLUDE_DIR: path.join(moduleInfo.depPrefix, 'include'),
+    }, hakEnv.makeGypEnv());
+
+    if (hakEnv.isWin()) {
+        env.RUSTFLAGS = '-Ctarget-feature=+crt-static -Clink-args=libcrypto.lib';
+    }
+
+    console.log("Running neon with env", env);
+    await new Promise((resolve, reject) => {
         const proc = child_process.spawn(
-            path.join(moduleInfo.nodeModuleBinDir, 'neon'),
+            path.join(moduleInfo.nodeModuleBinDir, 'neon' + (hakEnv.isWin() ? '.cmd' : '')),
             ['build', '--release'],
             {
                 cwd: moduleInfo.moduleBuildDir,
-                env: Object.assign({
-                    SQLCIPHER_STATIC: 1,
-                    SQLCIPHER_LIB_DIR: path.join(moduleInfo.depPrefix, 'lib'),
-                    SQLCIPHER_INCLUDE_DIR: path.join(moduleInfo.depPrefix, 'include'),
-                }, hakEnv.makeGypEnv()),
+                env,
                 stdio: 'inherit',
             },
         );

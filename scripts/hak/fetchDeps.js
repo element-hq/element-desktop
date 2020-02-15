@@ -14,7 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+const mkdirp = require('mkdirp');
+
 async function fetchDeps(hakEnv, moduleInfo) {
+    await mkdirp(moduleInfo.moduleDotHakDir);
     if (moduleInfo.scripts.fetchDeps) {
         await moduleInfo.scripts.fetchDeps(hakEnv, moduleInfo);
     }

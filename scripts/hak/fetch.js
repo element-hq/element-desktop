@@ -62,10 +62,10 @@ async function fetch(hakEnv, moduleInfo) {
 
     const tarballUrl = versions[orderedVersions[0]]['dist.tarball'];
 
-    await mkdirp(moduleInfo.moduleHakDir);
+    await mkdirp(moduleInfo.moduleDotHakDir);
 
     const parsedUrl = url.parse(tarballUrl);
-    const tarballFile = path.join(moduleInfo.moduleHakDir, path.basename(parsedUrl.path));
+    const tarballFile = path.join(moduleInfo.moduleDotHakDir, path.basename(parsedUrl.path));
 
     let haveTarball;
     try {
@@ -89,9 +89,10 @@ async function fetch(hakEnv, moduleInfo) {
         strip: 1,
     });
 
+    console.log("Running yarn install in " + moduleInfo.moduleBuildDir);
     await new Promise((resolve, reject) => {
         const proc = child_process.spawn(
-            'yarn',
+            hakEnv.isWin() ? 'yarn.cmd' : 'yarn',
             ['install', '--ignore-scripts'],
             {
                 stdio: 'inherit',

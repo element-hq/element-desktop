@@ -15,7 +15,9 @@ limitations under the License.
 */
 
 const path = require('path');
+const child_process = require('child_process');
 
+const fs = require('fs');
 const fsProm = require('fs').promises;
 const needle = require('needle');
 const tar = require('tar');
@@ -29,7 +31,7 @@ module.exports = async function(hakEnv, moduleInfo) {
 }
 
 async function getSqlCipher(hakEnv, moduleInfo) {
-    const sqlCipherDir = path.join(moduleInfo.moduleHakDir, 'sqlcipher-4.3.0');
+    const sqlCipherDir = path.join(moduleInfo.moduleDotHakDir, 'sqlcipher-4.3.0');
 
     let haveSqlcipher;
     try {
@@ -41,7 +43,7 @@ async function getSqlCipher(hakEnv, moduleInfo) {
 
     if (haveSqlcipher) return;
 
-    const sqlCipherTarball = path.join(moduleInfo.moduleHakDir, 'sqlcipher-4.3.0.tar.gz');
+    const sqlCipherTarball = path.join(moduleInfo.moduleDotHakDir, 'sqlcipher-4.3.0.tar.gz');
     let haveSqlcipherTar;
     try {
         await fsProm.stat(sqlCipherTarball);
@@ -59,12 +61,36 @@ async function getSqlCipher(hakEnv, moduleInfo) {
 
     await tar.x({
         file: sqlCipherTarball,
-        cwd: moduleInfo.moduleHakDir,
+        cwd: moduleInfo.moduleDotHakDir,
     });
+
+    if (hakEnv.isWin()) {
+        // On Windows, we need to patch the makefile because it forces TEMP_STORE to
+        // default to files (1) but the README specifically says you '*must*' set it
+        // set it to 2 (default to memory).
+        const patchFile = path.join(moduleInfo.moduleHakDir, 'sqlcipher-4.3.0-win.patch');
+
+        await new Promise((resolve, reject) => {
+	    const readStream = fs.createReadStream(patchFile);
+
+            const proc = child_process.spawn(
+                'patch',
+                ['-p1'],
+                {
+                    cwd: sqlCipherDir,
+                    stdio: ['pipe', 'inherit', 'inherit'],
+                },
+            );
+            proc.on('exit', (code) => {
+                code ? reject(code) : resolve();
+            });
+	    readStream.pipe(proc.stdin);
+        });
+    }
 }
 
 async function getOpenSsl(hakEnv, moduleInfo) {
-    const openSslDir = path.join(moduleInfo.moduleHakDir, 'openssl-1.1.1d');
+    const openSslDir = path.join(moduleInfo.moduleDotHakDir, 'openssl-1.1.1d');
 
     let haveOpenSsl;
     try {
@@ -76,7 +102,7 @@ async function getOpenSsl(hakEnv, moduleInfo) {
 
     if (haveOpenSsl) return;
 
-    const openSslTarball = path.join(moduleInfo.depDir, 'openssl-1.1.1d.tar.gz');
+    const openSslTarball = path.join(moduleInfo.moduleDotHakDir, 'openssl-1.1.1d.tar.gz');
     let haveOpenSslTar;
     try {
         await fsProm.stat(openSslTarball);
@@ -91,8 +117,9 @@ async function getOpenSsl(hakEnv, moduleInfo) {
         });
     }
 
+    console.log("extracting " + openSslTarball + " in " +  moduleInfo.moduleDotHakDir);
     await tar.x({
         file: openSslTarball,
-        cwd: moduleInfo.depDir,
+        cwd: moduleInfo.moduleDotHakDir,
     });
 }

@@ -43,6 +43,7 @@
     "eslint-plugin-babel": "^4.1.2",
     "find-npm-prefix": "^1.0.2",
     "follow-redirects": "^1.9.0",
+    "fs-extra": "^8.1.0",
     "glob": "^7.1.6",
     "matrix-js-sdk": "^2.4.6-rc.1",
     "mkdirp": "^1.0.3",
