@@ -36,11 +36,11 @@ async function link(hakEnv, moduleInfo) {
             // relative to the closest project root, which means when we run it
             // in the dependency project, it will put the link directory in its
             // own project folder rather than the main project.
-            // 2. We put a colon on the end of the key, which is not what yarn's
-            // stringifier does and not really the format of the file, but it happens
-            // to work and also work around the bug where the parser breaks on values
-            // with a colon in them (which absolute windows paths do).
-            '--link-folder: ' + path.join(hakEnv.dotHakDir, 'links') + os.EOL,
+            // 2. The parser gets very confused by strings with colons in them
+            // (ie. Windows absolute paths) but strings in quotes get parsed as
+            // JSON so need to be valid JSON encoded strings (ie. have the
+            // backslashes escaped). JSON.stringify will add quotes and escape.
+            '--link-folder ' + JSON.stringify(path.join(hakEnv.dotHakDir, 'links')) + os.EOL,
         );
     }
 
