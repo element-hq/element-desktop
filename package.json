@@ -34,8 +34,8 @@
   },
   "devDependencies": {
     "asar": "^2.0.1",
-    "electron-builder": "^21.2.0",
-    "electron-builder-squirrel-windows": "^21.2.0",
+    "electron-builder": "^22.3.2",
+    "electron-builder-squirrel-windows": "^22.3.2",
     "electron-devtools-installer": "^2.2.4",
     "electron-notarize": "^0.2.0",
     "eslint": "^5.8.0",
@@ -80,7 +80,6 @@
       }
     },
     "deb": {
-      "afterInstall": "build/linux/after-install.tpl",
       "fpm": [
         "--deb-custom-control=pkg/control"
       ]
