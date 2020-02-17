@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 const path = require('path');
-const fsProm = require('fs').promises;
 
 const findNpmPrefix = require('find-npm-prefix');
 

@@ -21,6 +21,6 @@ async function fetchDeps(hakEnv, moduleInfo) {
     if (moduleInfo.scripts.fetchDeps) {
         await moduleInfo.scripts.fetchDeps(hakEnv, moduleInfo);
     }
-};
+}
 
 module.exports = fetchDeps;

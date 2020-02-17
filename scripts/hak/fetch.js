@@ -17,7 +17,7 @@ limitations under the License.
 const path = require('path');
 const url = require('url');
 const fsProm = require('fs').promises;
-const child_process = require('child_process');
+const childProcess = require('child_process');
 
 const npm = require('npm');
 const semver = require('semver');
@@ -91,7 +91,7 @@ async function fetch(hakEnv, moduleInfo) {
 
     console.log("Running yarn install in " + moduleInfo.moduleBuildDir);
     await new Promise((resolve, reject) => {
-        const proc = child_process.spawn(
+        const proc = childProcess.spawn(
             hakEnv.isWin() ? 'yarn.cmd' : 'yarn',
             ['install', '--ignore-scripts'],
             {

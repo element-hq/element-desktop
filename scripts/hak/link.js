@@ -17,7 +17,7 @@ limitations under the License.
 const path = require('path');
 const os = require('os');
 const fsProm = require('fs').promises;
-const child_process = require('child_process');
+const childProcess = require('child_process');
 
 async function link(hakEnv, moduleInfo) {
     const yarnrc = path.join(hakEnv.projectRoot, '.yarnrc');
@@ -31,7 +31,7 @@ async function link(hakEnv, moduleInfo) {
         await fsProm.stat(yarnrc);
     } catch (e) {
         await fsProm.writeFile(
-            yarnrc, 
+            yarnrc,
             // XXX: 1. This must be absolute, as yarn will resolve link directories
             // relative to the closest project root, which means when we run it
             // in the dependency project, it will put the link directory in its
@@ -47,7 +47,7 @@ async function link(hakEnv, moduleInfo) {
     const yarnCmd = 'yarn' + (hakEnv.isWin() ? '.cmd' : '');
 
     await new Promise((resolve, reject) => {
-        const proc = child_process.spawn(yarnCmd, ['link'], {
+        const proc = childProcess.spawn(yarnCmd, ['link'], {
             cwd: moduleInfo.moduleOutDir,
             stdio: 'inherit',
         });
@@ -57,7 +57,7 @@ async function link(hakEnv, moduleInfo) {
     });
 
     await new Promise((resolve, reject) => {
-        const proc = child_process.spawn(yarnCmd, ['link', moduleInfo.name], {
+        const proc = childProcess.spawn(yarnCmd, ['link', moduleInfo.name], {
             cwd: hakEnv.projectRoot,
             stdio: 'inherit',
         });
@@ -65,6 +65,6 @@ async function link(hakEnv, moduleInfo) {
             code ? reject(code) : resolve();
         });
     });
-};
+}
 
 module.exports = link;

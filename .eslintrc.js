@@ -5,6 +5,7 @@ module.exports = {
         ecmaVersion: 8,
     },
     env: {
+        es6: true,
         node: true,
         // we also have some browser code (ie. the preload script)
         browser: true,

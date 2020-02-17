@@ -62,6 +62,6 @@ async function copy(hakEnv, moduleInfo) {
             await fsProm.copyFile(src, dst);
         }
     }
-};
+}
 
 module.exports = copy;

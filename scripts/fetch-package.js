@@ -5,7 +5,7 @@ const path = require('path');
 const fs = require('fs');
 const fsPromises = require('fs').promises;
 const { https } = require('follow-redirects');
-const child_process = require('child_process');
+const childProcess = require('child_process');
 const tar = require('tar');
 const asar = require('asar');
 
@@ -43,7 +43,7 @@ async function downloadToFile(url, filename) {
 
 async function verifyFile(filename) {
     return new Promise((resolve, reject) => {
-        const gpgProc = child_process.execFile('gpg', ['--verify', filename + '.asc', filename], (error) => {
+        childProcess.execFile('gpg', ['--verify', filename + '.asc', filename], (error) => {
             if (error) {
                 reject(error);
             } else {
@@ -93,7 +93,7 @@ async function main() {
     }
 
     const haveGpg = await new Promise((resolve) => {
-        child_process.execFile('gpg', ['--version'], (error) => {
+        childProcess.execFile('gpg', ['--version'], (error) => {
             resolve(!error);
         });
     });
@@ -105,7 +105,7 @@ async function main() {
         }
 
         await new Promise((resolve) => {
-            const gpgProc = child_process.execFile('gpg', ['--import'], (error) => {
+            const gpgProc = childProcess.execFile('gpg', ['--import'], (error) => {
                 if (error) {
                     console.log("Failed to import key", error);
                 } else {
@@ -131,16 +131,16 @@ async function main() {
         console.log("To build with no config (and no auto-update), pass the empty string (-d '')");
         return 1;
     }
-        
+
     if (verify && !haveGpg) {
         console.log("No working GPG binary: install GPG or pass --noverify to skip verification");
         return 1;
     }
 
-    const haveDeploy = false;
+    let haveDeploy = false;
     const expectedDeployDir = path.join(deployDir, 'riot-' + targetVersion);
     try {
-        const webappDir = await fs.opendir(expectedDeployDir);
+        await fs.opendir(expectedDeployDir);
         console.log(expectedDeployDir + "already exists");
         haveDeploy = true;
     } catch (e) {
