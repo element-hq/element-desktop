@@ -61,6 +61,9 @@ This will do a couple of things:
 
 You can also build using docker, which will always produce the linux package:
 ```
+# Run this once to make the docker image
+yarn run docker:setup
+
 yarn run docker:install
 yarn run docker:build
 ```

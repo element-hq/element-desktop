@@ -19,6 +19,8 @@
     "lint": "eslint src/ scripts/ hak/",
     "build": "yarn run setversion && electron-builder",
     "in-docker": "scripts/in-docker.sh",
+    "docker:setup": "docker build -t riot-desktop-dockerbuild dockerbuild",
+    "docker:buildnative": "yarn run in-docker yarn run hak",
     "docker:build": "yarn run in-docker yarn run build",
     "docker:install": "yarn run in-docker yarn install",
     "debrepo": "scripts/mkrepo.sh",
