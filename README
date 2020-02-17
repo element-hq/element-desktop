@@ -59,12 +59,21 @@ This will do a couple of things:
  * Run electron-builder to build a package. The package built will match the operating system
    you're running the build process on.
 
+If you'd like to build the native modules (for searching in encrypted rooms):
+This will take 10 minutes or so, and will require a number of native tools
+to be installed, depending on your OS (eg. rust, tcl, make/nmake).
+```
+yarn run build:native
+```
+
 You can also build using docker, which will always produce the linux package:
 ```
 # Run this once to make the docker image
 yarn run docker:setup
 
 yarn run docker:install
+# if you want to build the native modules (this will take a while)
+yarn run docker:buildnative
 yarn run docker:build
 ```
 
