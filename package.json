@@ -69,7 +69,6 @@
       }
     },
     "deb": {
-      "afterInstall": "build/linux/after-install.tpl",
       "fpm": [
         "--deb-custom-control=pkg/control"
       ]
