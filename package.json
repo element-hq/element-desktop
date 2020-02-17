@@ -16,7 +16,7 @@
     "fetch": "yarn run mkdirs && node scripts/fetch-package.js",
     "setversion": "node scripts/set-version.js",
     "start": "electron .",
-    "lint": "eslint src/ scripts/",
+    "lint": "eslint src/ scripts/ hak/",
     "build": "yarn run setversion && electron-builder",
     "in-docker": "scripts/in-docker.sh",
     "docker:build": "yarn run in-docker yarn run build",

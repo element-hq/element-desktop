@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 const path = require('path');
-const child_process = require('child_process');
+const childProcess = require('child_process');
 
 const fs = require('fs');
 const fsProm = require('fs').promises;
@@ -28,7 +28,7 @@ module.exports = async function(hakEnv, moduleInfo) {
     if (hakEnv.isWin()) {
         getOpenSsl(hakEnv, moduleInfo);
     }
-}
+};
 
 async function getSqlCipher(hakEnv, moduleInfo) {
     const sqlCipherDir = path.join(moduleInfo.moduleDotHakDir, 'sqlcipher-4.3.0');
@@ -52,7 +52,7 @@ async function getSqlCipher(hakEnv, moduleInfo) {
         haveSqlcipherTar = false;
     }
     if (!haveSqlcipherTar) {
-        const bob =  needle('get', 'https://github.com/sqlcipher/sqlcipher/archive/v4.3.0.tar.gz', {
+        const bob = needle('get', 'https://github.com/sqlcipher/sqlcipher/archive/v4.3.0.tar.gz', {
             follow: 10,
             output: sqlCipherTarball,
         });
@@ -71,9 +71,9 @@ async function getSqlCipher(hakEnv, moduleInfo) {
         const patchFile = path.join(moduleInfo.moduleHakDir, 'sqlcipher-4.3.0-win.patch');
 
         await new Promise((resolve, reject) => {
-	    const readStream = fs.createReadStream(patchFile);
+        const readStream = fs.createReadStream(patchFile);
 
-            const proc = child_process.spawn(
+            const proc = childProcess.spawn(
                 'patch',
                 ['-p1'],
                 {
@@ -84,7 +84,7 @@ async function getSqlCipher(hakEnv, moduleInfo) {
             proc.on('exit', (code) => {
                 code ? reject(code) : resolve();
             });
-	    readStream.pipe(proc.stdin);
+            readStream.pipe(proc.stdin);
         });
     }
 }
@@ -117,7 +117,7 @@ async function getOpenSsl(hakEnv, moduleInfo) {
         });
     }
 
-    console.log("extracting " + openSslTarball + " in " +  moduleInfo.moduleDotHakDir);
+    console.log("extracting " + openSslTarball + " in " + moduleInfo.moduleDotHakDir);
     await tar.x({
         file: openSslTarball,
         cwd: moduleInfo.moduleDotHakDir,
