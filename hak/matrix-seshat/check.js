@@ -34,15 +34,15 @@ module.exports = async function(hakEnv, moduleInfo) {
 
     const tools = [];
     if (hakEnv.isWin()) {
-        tools.push('perl'); // for openssl configure
-        tools.push('nmake');
+        tools.push(['perl', '--version']); // for openssl configure
+        tools.push(['nmake', '/?']);
     } else {
-        tools.push('make');
+        tools.push(['make', '--version']);
     }
 
     for (const tool of tools) {
         await new Promise((resolve, reject) => {
-            const proc = childProcess.spawn(tool, ['--version'], {
+            const proc = childProcess.spawn(tool[0], tool.slice(1), {
                 stdio: ['ignore'],
             });
             proc.on('exit', (code) => {
