@@ -26,6 +26,7 @@ const GENERALCOMMANDS = [
 
 // These can only be run on specific modules
 const MODULECOMMANDS = [
+    'check',
     'fetch',
     'link',
     'fetchDeps',
@@ -34,7 +35,9 @@ const MODULECOMMANDS = [
     'clean',
 ];
 
+// Scripts valid in a hak.json 'scripts' section
 const HAKSCRIPTS = [
+    'check',
     'fetch',
     'fetchDeps',
     'build',
