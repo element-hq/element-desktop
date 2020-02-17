@@ -76,3 +76,6 @@ Shortcomings
 Hak doesn't know about dependencies between lifecycle stages, ie. it doesn't know that you need to
 'fetch' and 'fetchDeps' before you can 'build', etc. You get to run each individually, and remember
 the right order.
+
+There is also a *lot* of duplication in the command execution: we should abstract away
+some of the boilerplate required to run commands & so forth.
