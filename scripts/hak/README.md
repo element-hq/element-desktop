@@ -37,7 +37,7 @@ Workings
 ========
 Hak works around native node modules that try to fetch or build their native component in
 the npm 'install' phase - modules that do this will typically end up with native components
-targeted to the build platform and the node that npm/yarn is using, which is no good for an]
+targeted to the build platform and the node that npm/yarn is using, which is no good for an
 electron app.
 
 It does this by installing it with `--ignore-scripts` and then using `yarn link` to keep the
@@ -46,7 +46,7 @@ at other points (eg. whenever you `yarn add` a random other dependency).
 
 This also means that the dependencies cannot be listed in `dependencies` or
 `devDependencies` in the project, since this would cause npm / yarn to install them and
-trey to fetch their native parts. Instead, they are listed in `hakDependencies` which
+try to fetch their native parts. Instead, they are listed in `hakDependencies` which
 hak reads to install them for you.
 
 Hak will *not* install dependencies for the copy of the module it links into your
@@ -63,7 +63,7 @@ Hak is divided into lifecycle stages, in order:
  * link - Link the copy of the dependency into your node_modules directory
  * fetchDeps - Fetch & extract any native dependencies required to build the module.
  * build - The Good Stuff. Configure and build any native dependencies, then the module itself.
- * copy - Copy the built artifact from the module build dorectory to the module output directory.
+ * copy - Copy the built artifact from the module build directory to the module output directory.
 
 hak.json
 ========
