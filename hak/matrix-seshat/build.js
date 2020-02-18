@@ -240,6 +240,12 @@ async function buildMatrixSeshat(hakEnv, moduleInfo) {
 
     if (hakEnv.isWin()) {
         env.RUSTFLAGS = '-Ctarget-feature=+crt-static -Clink-args=libcrypto.lib';
+        // Note that in general, you can specify targets in Rust without having to have
+        // the matching toolchain, however for this, cargo gets confused when building
+        // the build scripts since they run on the host, but vcvarsall.bat sets the c
+        // compiler in the path to be the one for the target, so we just use the matching
+        // toolchain for the target architecture which makes everything happy.
+        env.RUSTUP_TOOLCHAIN = hakEnv.arch == 'x64' ? 'stable-x86_64-pc-windows-msvc' : 'stable-i686-pc-windows-msvc';
     }
 
     console.log("Running neon with env", env);
