@@ -59,12 +59,26 @@ This will do a couple of things:
  * Run electron-builder to build a package. The package built will match the operating system
    you're running the build process on.
 
+If you're on Windows, you can choose to build specifically for 32 or 64 bit:
+```
+yarn run build32
+```
+or
+```
+yarn run build64
+```
+
+This build step will not build any native modules.
+
 If you'd like to build the native modules (for searching in encrypted rooms):
 This will take 10 minutes or so, and will require a number of native tools
 to be installed, depending on your OS (eg. rust, tcl, make/nmake).
 ```
 yarn run build:native
 ```
+
+On Windows, this will automatically determine the architecture to build for based
+on the environment (ie. set up by vcvarsall.bat).
 
 You can also build using docker, which will always produce the linux package:
 ```
