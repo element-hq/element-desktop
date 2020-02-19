@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 async function build(hakEnv, moduleInfo) {
-    moduleInfo.scripts.build(hakEnv, moduleInfo);
+    await moduleInfo.scripts.build(hakEnv, moduleInfo);
 }
 
 module.exports = build;

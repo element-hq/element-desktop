@@ -23,7 +23,9 @@ const needle = require('needle');
 const tar = require('tar');
 
 module.exports = async function(hakEnv, moduleInfo) {
-    await getSqlCipher(hakEnv, moduleInfo);
+    if (!hakEnv.isLinux()) {
+        await getSqlCipher(hakEnv, moduleInfo);
+    }
 
     if (hakEnv.isWin()) {
         getOpenSsl(hakEnv, moduleInfo);

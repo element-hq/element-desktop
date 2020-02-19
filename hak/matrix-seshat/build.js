@@ -24,7 +24,7 @@ module.exports = async function(hakEnv, moduleInfo) {
     if (hakEnv.isWin()) {
         await buildOpenSslWin(hakEnv, moduleInfo);
         await buildSqlCipherWin(hakEnv, moduleInfo);
-    } else {
+    } else if (hakEnv.isMac()) {
         await buildSqlCipherUnix(hakEnv, moduleInfo);
     }
     await buildMatrixSeshat(hakEnv, moduleInfo);
@@ -228,11 +228,15 @@ async function buildSqlCipherUnix(hakEnv, moduleInfo) {
 }
 
 async function buildMatrixSeshat(hakEnv, moduleInfo) {
-    const env = Object.assign({
-        SQLCIPHER_STATIC: 1,
-        SQLCIPHER_LIB_DIR: path.join(moduleInfo.depPrefix, 'lib'),
-        SQLCIPHER_INCLUDE_DIR: path.join(moduleInfo.depPrefix, 'include'),
-    }, hakEnv.makeGypEnv());
+    const env = hakEnv.makeGypEnv();
+
+    if (!hakEnv.isLinux()) {
+        Object.assign(env, {
+            SQLCIPHER_STATIC: 1,
+            SQLCIPHER_LIB_DIR: path.join(moduleInfo.depPrefix, 'lib'),
+            SQLCIPHER_INCLUDE_DIR: path.join(moduleInfo.depPrefix, 'include'),
+        });
+    }
 
     if (hakEnv.isWin()) {
         env.RUSTFLAGS = '-Ctarget-feature=+crt-static -Clink-args=libcrypto.lib';

@@ -89,45 +89,47 @@ async function main() {
         }
     }
 
+    let cmds;
     if (process.argv.length < 3) {
-        console.log("Usage: hak <command> [modules...]");
-        process.exit(1);
+        cmds = ['check', 'fetch', 'fetchDeps', 'build', 'copy', 'link'];
+    } else {
+        cmds = [process.argv[2]];
     }
-
-    const cmd = process.argv[2];
-    if (GENERALCOMMANDS.includes(cmd)) {
-        if (cmd === 'target') {
-            console.log(hakEnv.getNodeTriple());
-        }
-        return;
-    }
-
-    if (!MODULECOMMANDS.includes(cmd)) {
-        console.error("Unknown command: " + cmd);
-        console.log("Commands I know about:");
-        for (const cmd of MODULECOMMANDS) {
-            console.log("\t" + cmd);
-        }
-        process.exit(1);
-    }
-
-    const cmdFunc = require('./' + cmd);
 
     let modules = process.argv.slice(3);
-
     if (modules.length === 0) modules = Object.keys(deps);
 
-    for (const mod of modules) {
-        const depInfo = deps[mod];
-        if (depInfo === undefined) {
-            console.log(
-                "Module " + mod + " not found - is it in hakDependencies " +
-                "in your package.json?",
-            );
+    for (const cmd of cmds) {
+        if (GENERALCOMMANDS.includes(cmd)) {
+            if (cmd === 'target') {
+                console.log(hakEnv.getNodeTriple());
+            }
+            return;
+        }
+
+        if (!MODULECOMMANDS.includes(cmd)) {
+            console.error("Unknown command: " + cmd);
+            console.log("Commands I know about:");
+            for (const cmd of MODULECOMMANDS) {
+                console.log("\t" + cmd);
+            }
             process.exit(1);
         }
-        console.log("hak " + cmd + ": " + mod);
-        await cmdFunc(hakEnv, depInfo);
+
+        const cmdFunc = require('./' + cmd);
+
+        for (const mod of modules) {
+            const depInfo = deps[mod];
+            if (depInfo === undefined) {
+                console.log(
+                    "Module " + mod + " not found - is it in hakDependencies " +
+                    "in your package.json?",
+                );
+                process.exit(1);
+            }
+            console.log("hak " + cmd + ": " + mod);
+            await cmdFunc(hakEnv, depInfo);
+        }
     }
 }
 
