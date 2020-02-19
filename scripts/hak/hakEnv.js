@@ -42,6 +42,21 @@ function getTarget(packageJson) {
     }
 }
 
+function detectArch() {
+    if (process.platform === 'win32') {
+        // vcvarsall.bat (the script that sets up the environment for
+        // visual studio build tools) sets an env var to tell us what
+        // architecture the active build tools target, so we auto-detect
+        // this.
+        const targetArch = process.env.VSCMD_ARG_TGT_ARCH;
+        if (targetArch === 'x86') {
+            return 'ia32';
+        } else if (targetArch === 'x64') {
+            return 'x64';
+        }
+    }
+    return process.arch;
+}
 
 module.exports = class HakEnv {
     constructor(prefix, packageJson) {
@@ -50,7 +65,7 @@ module.exports = class HakEnv {
             runtime: getRuntime(packageJson),
             target: getTarget(packageJson),
             platform: process.platform,
-            arch: process.arch,
+            arch: detectArch(),
 
             // paths
             projectRoot: prefix,
