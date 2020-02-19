@@ -22,7 +22,7 @@ async function main() {
     // set version in package.json: electron-builder will use this to populate
     // all the various version fields
     await new Promise((resolve, reject) => {
-        childProcess.execFile('yarn', [
+        childProcess.execFile(process.platform === 'win32' ? 'yarn.cmd' : 'yarn', [
             'version',
             '-s',
             '--no-git-tag-version', // This also means "don't commit to git" as it turns out
