@@ -17,10 +17,12 @@
     "setversion": "node scripts/set-version.js",
     "start": "electron .",
     "lint": "eslint src/ scripts/ hak/",
+    "build:native": "yarn run hak",
+    "build32": "yarn run setversion && electron-builder --ia32",
+    "build64": "yarn run setversion && electron-builder --x64",
     "build": "yarn run setversion && electron-builder",
-    "buildnative": "yarn run hak",
     "docker:setup": "docker build -t riot-desktop-dockerbuild dockerbuild",
-    "docker:buildnative": "scripts/in-docker.sh yarn run hak",
+    "docker:build:native": "scripts/in-docker.sh yarn run hak",
     "docker:build": "scripts/in-docker.sh yarn run build",
     "docker:install": "scripts/in-docker.sh yarn install",
     "debrepo": "scripts/mkrepo.sh",
@@ -92,11 +94,7 @@
     },
     "win": {
       "target": {
-        "target": "squirrel",
-        "arch": [
-          "x64",
-          "ia32"
-        ]
+        "target": "squirrel"
       },
       "certificateSubjectName": "New Vector Ltd"
     },
