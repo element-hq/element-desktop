@@ -76,7 +76,7 @@ async function main() {
             moduleHakDir: path.join(prefix, 'hak', dep),
             moduleDotHakDir: path.join(hakEnv.dotHakDir, dep),
             moduleBuildDir: path.join(hakEnv.dotHakDir, dep, 'build'),
-            moduleOutDir: path.join(hakEnv.dotHakDir, dep, 'out'),
+            moduleOutDir: path.join(hakEnv.dotHakDir, 'hakModules', dep),
             nodeModuleBinDir: path.join(hakEnv.dotHakDir, dep, 'build', 'node_modules', '.bin'),
             depPrefix: path.join(hakEnv.dotHakDir, dep, 'opt'),
             scripts: {},
