@@ -592,6 +592,9 @@ app.on('ready', async () => {
 
     const preloadScript = path.normalize(`${__dirname}/preload.js`);
     mainWindow = global.mainWindow = new BrowserWindow({
+        // https://www.electronjs.org/docs/faq#the-font-looks-blurry-what-is-this-and-what-can-i-do
+        backgroundColor: '#fff',
+
         icon: iconPath,
         show: false,
         autoHideMenuBar: store.get('autoHideMenuBar', true),
