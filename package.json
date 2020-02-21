@@ -65,7 +65,11 @@
     "appId": "im.riot.app",
     "electronVersion": "7.1.3",
     "files": [
-      "node_modules/**",
+      "package.json",
+      {
+        "from": ".hak/hakModules",
+        "to": "node_modules"
+      },
       "src/**"
     ],
     "extraResources": [

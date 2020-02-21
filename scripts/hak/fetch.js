@@ -105,7 +105,15 @@ async function fetch(hakEnv, moduleInfo) {
     });
 
     // also extract another copy to the output directory at this point
-    // nb. we do not yarn install in the output copy
+    // nb. we do not yarn install in the output copy: we could install in
+    // production mode to get only runtime dependencies and not devDependencies,
+    // but usually native modules come with dependencies that are needed for
+    // building/fetching the native modules (eg. node-pre-gyp) rather than
+    // actually used at runtime: we do not want to bundle these into our app.
+    // We therefore just install no dependencies at all, and accept that any
+    // actual runtime dependencies will have to be added to the main app's
+    // dependencies. We can't tell what dependencies are real runtime deps
+    // and which are just used for native module building.
     await mkdirp(moduleInfo.moduleOutDir);
     await tar.x({
         file: tarballFile,
