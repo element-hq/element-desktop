@@ -81,7 +81,7 @@ async function downloadToFile(url, filename) {
     console.log("Downloading " + url + "...");
 
     try {
-        const bob = await needle('get', url, null,
+        await needle('get', url, null,
             {
                 follow_max: 5,
                 output: filename,
@@ -184,14 +184,7 @@ async function main() {
                 }
                 resolve(!error);
             });
-            https.get(PUB_KEY_URL, (resp) => {
-                resp.on('data', (chunk) => {
-                    gpgProc.stdin.write(chunk);
-                });
-                resp.on('end', (chunk) => {
-                    gpgProc.stdin.end();
-                });
-            });
+            needle.get(PUB_KEY_URL).pipe(gpgProc.stdin);
         });
         return 0;
     }
