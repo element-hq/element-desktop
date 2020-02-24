@@ -126,7 +126,30 @@ function onLinkContextMenu(ev, params) {
 }
 
 function _CutCopyPasteSelectContextMenus(params) {
-    return [{
+    const options = [];
+
+    if (params.misspelledWord) {
+        params.dictionarySuggestions.forEach(word => {
+            options.push({
+                label: word,
+                click: (menuItem, browserWindow) => {
+                    browserWindow.webContents.replaceMisspelling(word);
+                },
+            });
+        });
+        options.push({
+            type: 'separator',
+        }, {
+            label: 'Add to dictionary',
+            click: (menuItem, browserWindow) => {
+                browserWindow.webContents.session.addWordToSpellCheckerDictionary(params.misspelledWord);
+            },
+        }, {
+            type: 'separator',
+        });
+    }
+
+    options.push({
         role: 'cut',
         label: 'Cu&t',
         enabled: params.editFlags.canCut,
@@ -145,7 +168,8 @@ function _CutCopyPasteSelectContextMenus(params) {
         role: 'selectall',
         label: "Select &All",
         enabled: params.editFlags.canSelectAll,
-    }];
+    });
+    return options;
 }
 
 function onSelectedContextMenu(ev, params) {

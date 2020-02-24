@@ -285,6 +285,35 @@ ipcMain.on('ipcCall', async function(ev, payload) {
         case 'getConfig':
             ret = vectorConfig;
             break;
+        case 'setLanguage': {
+            // work around `setSpellCheckerLanguages` being case-sensitive by converting to expected case
+            const caseMap = {};
+            const availableLanguages = mainWindow.webContents.session.availableSpellCheckerLanguages;
+            availableLanguages.forEach(lang => {
+                caseMap[lang.toLowerCase()] = lang;
+            });
+
+            const languages = args[0].map(lang => {
+                const lcLang = lang.toLowerCase();
+                if (caseMap[lcLang]) {
+                    return caseMap[lcLang];
+                }
+
+                // as a fallback if the language is unknown check if the language group is known, e.g en for en-AU
+                const langGroup = lcLang.substr(0, lcLang.indexOf("-"));
+                if (caseMap[langGroup]) {
+                    return caseMap[langGroup];
+                }
+
+                // as a further fallback, pick another variant from the same language group
+                return availableLanguages.find(availableLang => availableLang.startsWith(langGroup));
+            }).filter(Boolean);
+
+            if (languages.length) {
+                mainWindow.webContents.session.setSpellCheckerLanguages(languages);
+            }
+            break;
+        }
 
         default:
             mainWindow.webContents.send('ipcReply', {
@@ -614,6 +643,7 @@ app.on('ready', async () => {
             // main page from the background script.
             contextIsolation: false,
             webgl: false,
+            spellcheck: true,
         },
     });
     mainWindow.loadURL('vector://vector/webapp/');
