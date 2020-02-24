@@ -34,7 +34,7 @@ module.exports = async function(hakEnv, moduleInfo) {
         });
     }
 
-    const tools = ['python', '--version']; // node-gyp uses python for reasons beyond comprehension
+    const tools = [['python', '--version']]; // node-gyp uses python for reasons beyond comprehension
     if (hakEnv.isWin()) {
         tools.push(['perl', '--version']); // for openssl configure
         tools.push(['patch', '--version']); // to patch sqlcipher Makefile.msc
