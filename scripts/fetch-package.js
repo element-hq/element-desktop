@@ -4,10 +4,10 @@ const process = require('process');
 const path = require('path');
 const fs = require('fs');
 const fsPromises = require('fs').promises;
-const { https } = require('follow-redirects');
 const childProcess = require('child_process');
 const tar = require('tar');
 const asar = require('asar');
+const needle = require('needle');
 
 const riotDesktopPackageJson = require('../package.json');
 
@@ -15,30 +15,84 @@ const PUB_KEY_URL = "https://packages.riot.im/riot-release-key.asc";
 const PACKAGE_URL_PREFIX = "https://github.com/vector-im/riot-web/releases/download/";
 const ASAR_PATH = 'webapp.asar';
 
+async function getLatestDevelopUrl(bkToken) {
+    const buildsResult = await needle('get',
+        "https://api.buildkite.com/v2/organizations/matrix-dot-org/pipelines/riot-web/builds",
+        {
+            branch: 'develop',
+            state: 'passed',
+            per_page: 1,
+        },
+        {
+            headers: {
+                authorization: "Bearer " + bkToken,
+            },
+        },
+    );
+    const latestBuild = buildsResult.body[0];
+    console.log("Latest build is " + latestBuild.number);
+    let artifactUrl;
+    for (const job of latestBuild.jobs) {
+        // Strip any colon-form emoji from the build name
+        if (job.name && job.name.replace(/:\w*:\s*/, '') === 'Package') {
+            artifactUrl = job.artifacts_url;
+            break;
+        }
+    }
+    if (artifactUrl === undefined) {
+        throw new Error("Couldn't find artifact URL - has the name of the package job changed?");
+    }
+
+    const artifactsResult = await needle('get', artifactUrl, {},
+        {
+            headers: {
+                authorization: "Bearer " + bkToken,
+            },
+        },
+    );
+    let dlUrl;
+    let dlFilename;
+    for (const artifact of artifactsResult.body) {
+        if (artifact.filename && /^riot-.*\.tar.gz$/.test(artifact.filename)) {
+            dlUrl = artifact.download_url;
+            dlFilename = artifact.filename;
+            break;
+        }
+    }
+    if (dlUrl === undefined) {
+        throw new Error("Couldn't find artifact download URL - has the artifact filename changed?");
+    }
+    console.log("Fetching artifact URL...");
+    const dlResult = await needle('get', dlUrl, {},
+        {
+            headers: {
+                authorization: "Bearer " + bkToken,
+            },
+            // This URL will give us a Location header, but will also give us
+            // a JSON object with the direct URL. We'll take the URL and pass it
+            // back, then we can easily support specifying a URL directly.
+            follow_max: 0,
+        },
+    );
+    return [dlFilename, dlResult.body.url];
+}
+
 async function downloadToFile(url, filename) {
     console.log("Downloading " + url + "...");
-    const outStream = await fs.createWriteStream(filename);
 
-    return new Promise((resolve, reject) => {
-        https.get(url, (resp) => {
-            if (resp.statusCode / 100 !== 2) {
-                reject("Download failed: " + resp.statusCode);
-                return;
-            }
-
-            resp.on('data', (chunk) => {
-                outStream.write(chunk);
-            });
-            resp.on('end', (chunk) => {
-                outStream.end();
-                resolve();
-            });
-        });
-    }).catch(async (e) => {
-        outStream.end();
-        await fsPromises.unlink(filename);
+    try {
+        await needle('get', url, null,
+            {
+                follow_max: 5,
+                output: filename,
+            },
+        );
+    } catch (e) {
+        try {
+            await fsPromises.unlink(filename);
+        } catch (_) {}
         throw e;
-    });
+    }
 }
 
 async function verifyFile(filename) {
@@ -60,6 +114,8 @@ async function main() {
     let deployDir = 'deploys';
     let cfgDir;
     let targetVersion;
+    let filename;
+    let url;
 
     while (process.argv.length > 2) {
         switch (process.argv[2]) {
@@ -90,6 +146,21 @@ async function main() {
 
     if (targetVersion === undefined) {
         targetVersion = 'v' + riotDesktopPackageJson.version;
+    } else if (targetVersion === 'develop') {
+        const buildKiteApiKey = process.env.BUILDKITE_API_KEY;
+        if (buildKiteApiKey === undefined) {
+            console.log("Set BUILDKITE_API_KEY to fetch latest develop version");
+            console.log(
+                "Sorry - Buildkite's API requires authentication to access builds, " +
+                "even if those builds are accessible on the web with no auth.",
+            );
+            process.exit(1);
+        }
+        [filename, url] = await getLatestDevelopUrl(buildKiteApiKey);
+        verify = false; // develop builds aren't signed
+    } else {
+        filename = 'riot-' + targetVersion + '.tar.gz';
+        url = PACKAGE_URL_PREFIX + targetVersion + '/' + filename;
     }
 
     const haveGpg = await new Promise((resolve) => {
@@ -113,14 +184,7 @@ async function main() {
                 }
                 resolve(!error);
             });
-            https.get(PUB_KEY_URL, (resp) => {
-                resp.on('data', (chunk) => {
-                    gpgProc.stdin.write(chunk);
-                });
-                resp.on('end', (chunk) => {
-                    gpgProc.stdin.end();
-                });
-            });
+            needle.get(PUB_KEY_URL).pipe(gpgProc.stdin);
         });
         return 0;
     }
@@ -138,7 +202,7 @@ async function main() {
     }
 
     let haveDeploy = false;
-    const expectedDeployDir = path.join(deployDir, 'riot-' + targetVersion);
+    const expectedDeployDir = path.join(deployDir, path.basename(filename).replace(/\.tar\.gz/, ''));
     try {
         await fs.opendir(expectedDeployDir);
         console.log(expectedDeployDir + "already exists");
@@ -147,9 +211,7 @@ async function main() {
     }
 
     if (!haveDeploy) {
-        const filename = 'riot-' + targetVersion + '.tar.gz';
         const outPath = path.join(pkgDir, filename);
-        const url = PACKAGE_URL_PREFIX + targetVersion + '/' + filename;
         try {
             await fsPromises.stat(outPath);
             console.log("Already have " + filename + ": not redownloading");
