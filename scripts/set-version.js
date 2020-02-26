@@ -69,8 +69,8 @@ async function main(args) {
 
     if (version === undefined) version = await versionFromAsar();
 
-    if (setPkg) setDebVersion(ver);
-    if (setDeb) setDebVersion(ver);
+    if (setPkg) setDebVersion(version);
+    if (setDeb) setDebVersion(version);
 }
 
 if (require.main === module) {
