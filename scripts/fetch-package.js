@@ -15,6 +15,8 @@ const PUB_KEY_URL = "https://packages.riot.im/riot-release-key.asc";
 const PACKAGE_URL_PREFIX = "https://github.com/vector-im/riot-web/releases/download/";
 const ASAR_PATH = 'webapp.asar';
 
+const {setPackageVersion, setDebVersion} = require('./set-version.js');
+
 async function getLatestDevelopUrl(bkToken) {
     const buildsResult = await needle('get',
         "https://api.buildkite.com/v2/organizations/matrix-dot-org/pipelines/riot-web/builds",
@@ -116,6 +118,7 @@ async function main() {
     let targetVersion;
     let filename;
     let url;
+    let setVersion = false;
 
     while (process.argv.length > 2) {
         switch (process.argv[2]) {
@@ -146,6 +149,8 @@ async function main() {
 
     if (targetVersion === undefined) {
         targetVersion = 'v' + riotDesktopPackageJson.version;
+        filename = 'riot-' + targetVersion + '.tar.gz';
+        url = PACKAGE_URL_PREFIX + targetVersion + '/' + filename;
     } else if (targetVersion === 'develop') {
         const buildKiteApiKey = process.env.BUILDKITE_API_KEY;
         if (buildKiteApiKey === undefined) {
@@ -161,6 +166,7 @@ async function main() {
     } else {
         filename = 'riot-' + targetVersion + '.tar.gz';
         url = PACKAGE_URL_PREFIX + targetVersion + '/' + filename;
+        setVersion = true;
     }
 
     const haveGpg = await new Promise((resolve) => {
@@ -272,6 +278,14 @@ async function main() {
 
     console.log("Pack " + expectedDeployDir + " -> " + ASAR_PATH);
     await asar.createPackage(expectedDeployDir, ASAR_PATH);
+
+    if (setVersion) {
+        const semVer = targetVersion.slice(1);
+        console.log("Updating version to " + semVer);
+        await setPackageVersion(semVer);
+        await setDebVersion(semVer);
+    }
+
     console.log("Done!");
 }
 

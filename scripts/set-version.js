@@ -9,7 +9,7 @@ const fs = require('fs').promises;
 const asar = require('asar');
 const childProcess = require('child_process');
 
-async function main() {
+async function versionFromAsar() {
     try {
         await fs.stat('webapp.asar');
     } catch (e) {
@@ -17,8 +17,10 @@ async function main() {
         return 1;
     }
 
-    const ver = asar.extractFile('webapp.asar', 'version').toString().trim();
+    return asar.extractFile('webapp.asar', 'version').toString().trim();
+}
 
+async function setPackageVersion(ver) {
     // set version in package.json: electron-builder will use this to populate
     // all the various version fields
     await new Promise((resolve, reject) => {
@@ -36,7 +38,9 @@ async function main() {
             }
         });
     });
+}
 
+async function setDebVersion(ver) {
     // Also create a debian package control file with the version.
     // We use a custom control file so we need to do this ourselves
     const outFile = await fs.open('pkg/control', 'w');
@@ -48,4 +52,29 @@ async function main() {
     console.log("Version set to " + ver);
 }
 
-main().then((ret) => process.exit(ret));
+async function main(args) {
+    let setDeb = false;
+    let setPkg = false;
+    let version;
+
+    for (const arg of args) {
+        if (arg === '--deb') {
+            setDeb = true;
+        } else if (arg === '--pkg') {
+            setPkg = true;
+        } else {
+            version = arg;
+        }
+    }
+
+    if (version === undefined) version = await versionFromAsar();
+
+    if (setPkg) setDebVersion(version);
+    if (setDeb) setDebVersion(version);
+}
+
+if (require.main === module) {
+    main(process.argv.slice(2)).then((ret) => process.exit(ret));
+}
+
+module.exports = {versionFromAsar, setPackageVersion, setDebVersion};
