@@ -118,7 +118,7 @@ async function main() {
     let targetVersion;
     let filename;
     let url;
-    let setVersion = false;
+    let setPackageVersion = false;
 
     while (process.argv.length > 2) {
         switch (process.argv[2]) {
@@ -166,7 +166,7 @@ async function main() {
     } else {
         filename = 'riot-' + targetVersion + '.tar.gz';
         url = PACKAGE_URL_PREFIX + targetVersion + '/' + filename;
-        setVersion = true;
+        setPackageVersion = true;
     }
 
     const haveGpg = await new Promise((resolve) => {
@@ -279,12 +279,14 @@ async function main() {
     console.log("Pack " + expectedDeployDir + " -> " + ASAR_PATH);
     await asar.createPackage(expectedDeployDir, ASAR_PATH);
 
-    if (setVersion) {
+    if (setPackageVersion) {
         const semVer = targetVersion.slice(1);
-        console.log("Updating version to " + semVer);
+        console.log("Updating package version to " + semVer);
         await setPackageVersion(semVer);
-        await setDebVersion(semVer);
     }
+
+    console.log("Updating deb version to " + targetVersion);
+    await setDebVersion(targetVersion);
 
     console.log("Done!");
 }
