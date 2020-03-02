@@ -103,6 +103,10 @@
     "directories": {
       "output": "dist"
     },
-    "afterSign": "scripts/electron_afterSign.js"
+    "afterSign": "scripts/electron_afterSign.js",
+    "protocols": [{
+      "name": "riot",
+      "schemes": ["riot"]
+    }]
   }
 }

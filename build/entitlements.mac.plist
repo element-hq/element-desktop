@@ -24,5 +24,20 @@
     <true/>
     <key>com.apple.security.device.audio-input</key>
     <true/>
+
+    <!-- Entitlements to support the riot:// protocol handler -->
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>riot</string>
+            </array>
+            <key>CFBundleURLName</key>
+            <string>riot-web</string>
+            <key>CFBundleTypeRole</key>
+            <string>None</string>
+        </dict>
+    </array>
 </dict>
 </plist>
