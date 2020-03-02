@@ -24,13 +24,13 @@ const processUrl = (url) => {
 
 module.exports = () => {
     // get all args except `hidden` as it'd mean the app would not get focused
+    // XXX: passing args to protocol handlers only works on Windows,
+    // so unpackaged deep-linking and --profile passing won't work on Mac/Linux
     const args = process.argv.slice(1).filter(arg => arg !== "--hidden" && arg !== "-hidden");
     if (app.isPackaged) {
         app.setAsDefaultProtocolClient('riot', process.execPath, args);
-    } else {
+    } else if (process.platform === 'win32') { // on Mac/Linux this would just cause the electron binary to open
         // special handler for running without being packaged, e.g `electron .` by passing our app path to electron
-        // XXX: passing args to protocol handlers only works on Windows,
-        // so unpackaged (electron .) deep-linking won't work on Mac/Linux
         app.setAsDefaultProtocolClient('riot', process.execPath, [app.getAppPath(), ...args]);
     }
 
