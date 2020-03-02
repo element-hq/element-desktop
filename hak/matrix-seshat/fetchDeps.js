@@ -28,7 +28,7 @@ module.exports = async function(hakEnv, moduleInfo) {
     }
 
     if (hakEnv.isWin()) {
-        getOpenSsl(hakEnv, moduleInfo);
+        await getOpenSsl(hakEnv, moduleInfo);
     }
 };
 
