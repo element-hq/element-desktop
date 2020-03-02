@@ -24,6 +24,7 @@ const processUrl = (url) => {
 
 module.exports = () => {
     // get all args except `hidden` as it'd mean the app would not get focused
+    // XXX: passing args to protocol handlers only works on Windows, so unpackaged deep-linking won't work on Mac/Linux
     const args = process.argv.slice(1).filter(arg => arg !== "--hidden" && arg !== "-hidden");
     if (app.isPackaged) {
         app.setAsDefaultProtocolClient('riot', process.execPath, args);

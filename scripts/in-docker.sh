@@ -2,7 +2,7 @@
 
 docker inspect riot-desktop-dockerbuild 2> /dev/null > /dev/null
 if [ $? != 0 ]; then
-    echo "Docker image riot-desktop-builder not found. Have you run yarn run docker:setup?"
+    echo "Docker image riot-desktop-dockerbuild not found. Have you run yarn run docker:setup?"
     exit 1
 fi
 
