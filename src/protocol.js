@@ -34,14 +34,14 @@ module.exports = () => {
         app.setAsDefaultProtocolClient('riot', process.execPath, [app.getAppPath(), ...args]);
     }
 
-    // Protocol handler for macos
-    app.on('open-url', function(ev, url) {
-        ev.preventDefault();
-        processUrl(url);
-    });
-
-    // Protocol handler for win32/Linux
-    if (process.platform !== 'darwin') {
+    if (process.platform === 'darwin') {
+        // Protocol handler for macos
+        app.on('open-url', function(ev, url) {
+            ev.preventDefault();
+            processUrl(url);
+        });
+    } else {
+        // Protocol handler for win32/Linux
         app.on('second-instance', (ev, commandLine) => {
             const url = commandLine[commandLine.length - 1];
             if (!url.startsWith("riot://")) return;
