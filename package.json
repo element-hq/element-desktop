@@ -97,8 +97,7 @@
     "win": {
       "target": {
         "target": "squirrel"
-      },
-      "certificateSubjectName": "New Vector Ltd"
+      }
     },
     "directories": {
       "output": "dist"
