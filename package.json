@@ -61,7 +61,7 @@
   },
   "build": {
     "appId": "im.riot.app",
-    "electronVersion": "8.0.1",
+    "electronVersion": "8.0.3",
     "files": [
       "package.json",
       {
