@@ -61,7 +61,7 @@
   },
   "build": {
     "appId": "im.riot.app",
-    "electronVersion": "8.0.1",
+    "electronVersion": "8.0.2",
     "files": [
       "package.json",
       {
@@ -102,6 +102,10 @@
     "directories": {
       "output": "dist"
     },
-    "afterSign": "scripts/electron_afterSign.js"
+    "afterSign": "scripts/electron_afterSign.js",
+    "protocols": [{
+      "name": "riot",
+      "schemes": ["riot"]
+    }]
   }
 }
