@@ -11,8 +11,8 @@ function computeSignToolArgs(options, keyContainer, inputFile) {
     }
  
     // We simplify and just specify the certificate subject name for our purposes
-    options.push('/n', options.certificateSubjectName);
-    options.push('/kc', keyContainer);
+    args.push('/n', options.certificateSubjectName);
+    args.push('/kc', keyContainer);
 
     if (options.hash !== "sha1") {
         args.push("/fd", options.hash)
