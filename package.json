@@ -97,12 +97,13 @@
     "win": {
       "target": {
         "target": "squirrel"
-      }
+      },
+      "sign": "scripts/electron_winSign"
     },
     "directories": {
       "output": "dist"
     },
-    "afterSign": "scripts/electron_afterSign.js",
+    "afterSign": "scripts/electron_afterSign",
     "protocols": [{
       "name": "riot",
       "schemes": ["riot"]
