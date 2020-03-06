@@ -54,7 +54,6 @@ exports.default = async function(options) {
     return new Promise((resolve, reject) => {
         const args = ['sign'].concat(computeSignToolArgs(options, keyContainer));
         
-        console.log("Running signtool with args", args);
         execFile('signtool', args, {}, (error, stdout) => {
             if (error) {
                 console.error("signtool failed with code " + error);
