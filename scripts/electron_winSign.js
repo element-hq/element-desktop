@@ -30,6 +30,8 @@ function computeSignToolArgs(options, keyContainer, inputFile) {
     args.push("/debug")
     // must be last argument
     args.push(inputFile)
+
+    return args;
 }
 
 exports.default = async function(cfg) {
