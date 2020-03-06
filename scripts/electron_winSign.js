@@ -54,7 +54,7 @@ exports.default = async function(cfg) {
         execFile('signtool', args, {}, (error, stdout) => {
             if (error) {
                 console.error("signtool failed with code " + error);
-                reject("signtool failed with code " + code);
+                reject("signtool failed with code " + error);
                 console.log(stdout);
             } else {
                 resolve();
