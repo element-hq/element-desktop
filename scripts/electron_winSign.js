@@ -11,10 +11,11 @@ function computeSignToolArgs(options, keyContainer) {
     }
  
     // We simplify and just specify the certificate subject name for our purposes
-    args.push('/n', options.options.certificateSubjectName);
+    //args.push('/n', options.options.certificateSubjectName);
     args.push('/kc', keyContainer);
     // To use the hardware token (this should probably be less hardcoded)
     args.push('/csp', 'eToken Base Cryptographic Provider');
+    args.push('/sha1', '83:0B:DA:5F:80:07:B1:74:6D:E9:32:DD:EC:8A:28:5B:69:41:3D:6C');
 
     if (options.hash !== "sha1") {
         args.push("/fd", options.hash)
