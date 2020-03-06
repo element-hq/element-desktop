@@ -10,11 +10,14 @@ function computeSignToolArgs(options, keyContainer) {
       args.push(options.isNest || options.hash === "sha256" ? "/tr" : "/t", options.isNest || options.hash === "sha256" ? (options.options.rfc3161TimeStampServer || "http://timestamp.comodoca.com/rfc3161") : timestampingServiceUrl);
     }
  
-    // We simplify and just specify the certificate subject name for our purposes
-    //args.push('/n', options.options.certificateSubjectName);
     args.push('/kc', keyContainer);
     // To use the hardware token (this should probably be less hardcoded)
     args.push('/csp', 'eToken Base Cryptographic Provider');
+    // The certificate file. Somehow this appears to be the only way to specify
+    // the cert that works. If you specify the subject name or hash, it will
+    // say it can't associate the private key to the certificate.
+    // TODO: Find a way to pass this through from the electron-builder config
+    // so we don't have to hard-code this here
     args.push('/f', 'riot.im\\New_Vector_Ltd.pem');
 
     if (options.hash !== "sha1") {
