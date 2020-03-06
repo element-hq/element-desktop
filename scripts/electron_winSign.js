@@ -47,7 +47,7 @@ exports.default = async function(cfg) {
 
     return new Promise((resolve, reject) => {
         const args = ['sign'];
-        args.push(....computeSignToolArgs(cfg.options, keyContainer, cfg.path));
+        args.push(...computeSignToolArgs(cfg.options, keyContainer, cfg.path));
         
         console.log("Running signtool with args", args);
         execFile('signtool', args, {}, (error, stdout) => {
