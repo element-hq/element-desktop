@@ -3,6 +3,8 @@ const path = require('path');
 
 // Loosely based on computeSignToolArgs from app-builder-lib/src/codeSign/windowsCodeSign.ts
 function computeSignToolArgs(options, keyContainer, inputFile) {
+    const args = [];
+
     if (process.env.ELECTRON_BUILDER_OFFLINE !== "true") {
       const timestampingServiceUrl = options.timeStampServer || "http://timestamp.digicert.com";
       args.push(options.isNest || options.hash === "sha256" ? "/tr" : "/t", options.isNest || options.hash === "sha256" ? (options.options.rfc3161TimeStampServer || "http://timestamp.comodoca.com/rfc3161") : timestampingServiceUrl);
@@ -52,8 +54,8 @@ exports.default = async function(cfg) {
         console.log("Running signtool with args", args);
         execFile('signtool', args, {}, (error, stdout) => {
             if (error) {
-                console.error("osslsigncode failed with code " + error);
-                reject("osslsigncode failed with code " + code);
+                console.error("signtool failed with code " + error);
+                reject("signtool failed with code " + code);
                 console.log(stdout);
             } else {
                 resolve();
