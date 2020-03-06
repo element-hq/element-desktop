@@ -15,7 +15,7 @@ function computeSignToolArgs(options, keyContainer) {
     args.push('/kc', keyContainer);
     // To use the hardware token (this should probably be less hardcoded)
     args.push('/csp', 'eToken Base Cryptographic Provider');
-    args.push('/sha1', '83:0B:DA:5F:80:07:B1:74:6D:E9:32:DD:EC:8A:28:5B:69:41:3D:6C');
+    args.push('/sha1', '830BDA5F8007B1746DE932DDEC8A285B69413D6C');
 
     if (options.hash !== "sha1") {
         args.push("/fd", options.hash)
