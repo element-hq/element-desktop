@@ -1,4 +1,5 @@
 {
+    "update_base_url": "https://packages.riot.im/desktop/update/",
     "default_server_name": "matrix.org",
     "brand": "Riot",
     "integrations_ui_url": "https://scalar.vector.im/",
@@ -30,11 +31,20 @@
         }
     },
     "features": {
-        "feature_lazyloading": "enable",
-        "feature_event_indexing": "labs"
+        "feature_lazyloading": "enable"
     },
     "enable_presence_by_hs_url": {
         "https://matrix.org": false,
         "https://matrix-client.matrix.org": false
-    }
+    },
+    "terms_and_conditions_links": [
+        {
+            "url": "https://riot.im/privacy",
+            "text": "Privacy Policy"
+        },
+        {
+            "url": "https://matrix.org/legal/riot-im-cookie-policy",
+            "text": "Cookie Policy"
+        }
+    ]
 }
