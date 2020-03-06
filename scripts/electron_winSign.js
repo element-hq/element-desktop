@@ -1,15 +1,19 @@
 const { execFile } = require('child_process');
-const path = require('path');
 
 // Loosely based on computeSignToolArgs from app-builder-lib/src/codeSign/windowsCodeSign.ts
 function computeSignToolArgs(options, keyContainer) {
     const args = [];
 
     if (process.env.ELECTRON_BUILDER_OFFLINE !== "true") {
-      const timestampingServiceUrl = options.options.timeStampServer || "http://timestamp.digicert.com";
-      args.push(options.isNest || options.hash === "sha256" ? "/tr" : "/t", options.isNest || options.hash === "sha256" ? (options.options.rfc3161TimeStampServer || "http://timestamp.comodoca.com/rfc3161") : timestampingServiceUrl);
+        const timestampingServiceUrl = options.options.timeStampServer || "http://timestamp.digicert.com";
+        args.push(
+            options.isNest || options.hash === "sha256" ? "/tr" : "/t",
+            options.isNest || options.hash === "sha256" ? (
+                options.options.rfc3161TimeStampServer || "http://timestamp.comodoca.com/rfc3161"
+            ) : timestampingServiceUrl,
+        );
     }
- 
+
     args.push('/kc', keyContainer);
     // To use the hardware token (this should probably be less hardcoded)
     args.push('/csp', 'eToken Base Cryptographic Provider');
@@ -23,21 +27,21 @@ function computeSignToolArgs(options, keyContainer) {
     args.push('/f', 'riot.im\\New_Vector_Ltd.pem');
 
     if (options.hash !== "sha1") {
-        args.push("/fd", options.hash)
+        args.push("/fd", options.hash);
         if (process.env.ELECTRON_BUILDER_OFFLINE !== "true") {
-            args.push("/td", "sha256")
+            args.push("/td", "sha256");
         }
     }
- 
+
     // msi does not support dual-signing
     if (options.isNest) {
-      args.push("/as")
+      args.push("/as");
     }
- 
+
     // https://github.com/electron-userland/electron-builder/issues/2875#issuecomment-387233610
-    args.push("/debug")
+    args.push("/debug");
     // must be last argument
-    args.push(options.path)
+    args.push(options.path);
 
     return args;
 }
@@ -54,12 +58,9 @@ exports.default = async function(options) {
         return;
     }
 
-    const inPath = options.path;
-    const appOutDir = path.dirname(inPath);
-
     return new Promise((resolve, reject) => {
         const args = ['sign'].concat(computeSignToolArgs(options, keyContainer));
-        
+
         execFile('signtool', args, {}, (error, stdout) => {
             if (error) {
                 console.error("signtool failed with code " + error);
