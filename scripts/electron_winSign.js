@@ -4,7 +4,7 @@ const path = require('path');
 // Loosely based on computeSignToolArgs from app-builder-lib/src/codeSign/windowsCodeSign.ts
 function computeSignToolArgs(options, keyContainer, inputFile) {
     if (process.env.ELECTRON_BUILDER_OFFLINE !== "true") {
-      const timestampingServiceUrl = options.options.timeStampServer || "http://timestamp.digicert.com";
+      const timestampingServiceUrl = options.timeStampServer || "http://timestamp.digicert.com";
       args.push(options.isNest || options.hash === "sha256" ? "/tr" : "/t", options.isNest || options.hash === "sha256" ? (options.options.rfc3161TimeStampServer || "http://timestamp.comodoca.com/rfc3161") : timestampingServiceUrl);
     }
  
