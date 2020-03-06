@@ -18,6 +18,8 @@ function computeSignToolArgs(options, keyContainer) {
     // say it can't associate the private key to the certificate.
     // TODO: Find a way to pass this through from the electron-builder config
     // so we don't have to hard-code this here
+    // fwiw https://stackoverflow.com/questions/17927895/automate-extended-validation-ev-code-signing
+    // is about the most useful resource on automating code signing...
     args.push('/f', 'riot.im\\New_Vector_Ltd.pem');
 
     if (options.hash !== "sha1") {
