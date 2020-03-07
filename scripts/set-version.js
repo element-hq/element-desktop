@@ -40,41 +40,16 @@ async function setPackageVersion(ver) {
     });
 }
 
-async function setDebVersion(ver) {
-    // Also create a debian package control file with the version.
-    // We use a custom control file so we need to do this ourselves
-    const outFile = await fs.open('pkg/control', 'w');
-    const template = await fs.readFile('pkg/control.template');
-    await outFile.write(template);
-    await outFile.write('Version: ' + ver + "\n");
-    await outFile.close();
-
-    console.log("Version set to " + ver);
-}
-
 async function main(args) {
-    let setDeb = false;
-    let setPkg = false;
-    let version;
-
-    for (const arg of args) {
-        if (arg === '--deb') {
-            setDeb = true;
-        } else if (arg === '--pkg') {
-            setPkg = true;
-        } else {
-            version = arg;
-        }
-    }
+    let version = args[0];
 
     if (version === undefined) version = await versionFromAsar();
 
-    if (setPkg) await setPackageVersion(version);
-    if (setDeb) await setDebVersion(version);
+    await setPackageVersion(version);
 }
 
 if (require.main === module) {
     main(process.argv.slice(2)).then((ret) => process.exit(ret));
 }
 
-module.exports = {versionFromAsar, setPackageVersion, setDebVersion};
+module.exports = {versionFromAsar, setPackageVersion};
