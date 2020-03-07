@@ -1,7 +1,7 @@
 {
     "update_base_url": "https://packages.riot.im/nightly/update/",
     "default_server_name": "matrix.org",
-    "brand": "Riot",
+    "brand": "Riot Nightly",
     "integrations_ui_url": "https://scalar-staging.vector.im/",
     "integrations_rest_url": "https://scalar-staging.vector.im/api",
     "integrations_widgets_urls": [
