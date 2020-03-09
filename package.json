@@ -85,11 +85,6 @@
         "StartupWMClass": "riot"
       }
     },
-    "deb": {
-      "fpm": [
-        "--deb-custom-control=pkg/control"
-      ]
-    },
     "mac": {
       "category": "public.app-category.social-networking",
       "darkModeSupport": true
