@@ -264,11 +264,11 @@ ipcMain.on('ipcCall', async function(ev, payload) {
             store.set('minimizeToTray', args[0]);
             break;
         case 'getAutoHideMenuBarEnabled':
-            ret = global.mainWindow.isMenuBarAutoHide();
+            ret = global.mainWindow.autoHideMenuBar;
             break;
         case 'setAutoHideMenuBarEnabled':
             store.set('autoHideMenuBar', args[0]);
-            global.mainWindow.setAutoHideMenuBar(args[0]);
+            global.mainWindow.autoHideMenuBar = Boolean(args[0]);
             global.mainWindow.setMenuBarVisibility(!args[0]);
             break;
         case 'getAppVersion':
