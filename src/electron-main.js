@@ -51,7 +51,7 @@ let ReindexError;
 const seshatPassphrase = "DEFAULT_PASSPHRASE";
 
 try {
-    seshatModule = require('matrix-seshat');
+    const seshatModule = require('matrix-seshat');
     Seshat = seshatModule.Seshat;
     SeshatRecovery = seshatModule.SeshatRecovery;
     ReindexError = seshatModule.ReindexError;
@@ -373,12 +373,12 @@ ipcMain.on('seshat', async function(ev, payload) {
                         // reindex the database and finally try to open the
                         // database again.
                         try {
-                            recoveryIndex = new SeshatRecovery(eventStorePath, {
-                                passphrase: seshatPassphrase
+                            const recoveryIndex = new SeshatRecovery(eventStorePath, {
+                                passphrase: seshatPassphrase,
                             });
                             await recoveryIndex.reindex();
                             eventIndex = new Seshat(eventStorePath, {
-                                passphrase: seshatPassphrase
+                                passphrase: seshatPassphrase,
                             });
                         } catch (e) {
                             sendError(payload.id, e);
