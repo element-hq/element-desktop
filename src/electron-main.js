@@ -427,6 +427,15 @@ ipcMain.on('seshat', async function(ev, payload) {
             }
             break;
 
+        case 'deleteEvent':
+            try {
+                ret = await eventIndex.deleteEvent(args[0]);
+            } catch (e) {
+                sendError(payload.id, e);
+                return;
+            }
+            break;
+
         case 'commitLiveEvents':
             try {
                 ret = await eventIndex.commit();
