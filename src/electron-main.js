@@ -393,6 +393,14 @@ ipcMain.on('seshat', async function(ev, payload) {
             break;
 
         case 'closeEventIndex':
+            if (eventIndex !== null) {
+                try {
+                    await eventIndex.shutdown();
+                } catch (e) {
+                    sendError(payload.id, e);
+                    return;
+                }
+            }
             eventIndex = null;
             break;
 
