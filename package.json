@@ -57,7 +57,7 @@
     "tar": "^6.0.1"
   },
   "hakDependencies": {
-    "matrix-seshat": "^1.1.0"
+    "matrix-seshat": "^1.2.0"
   },
   "build": {
     "appId": "im.riot.app",
