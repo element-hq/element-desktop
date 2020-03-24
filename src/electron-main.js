@@ -394,7 +394,7 @@ ipcMain.on('seshat', async function(ev, payload) {
 
         case 'closeEventIndex':
             if (eventIndex !== null) {
-                let index = eventIndex;
+                const index = eventIndex;
                 eventIndex = null;
 
                 try {
