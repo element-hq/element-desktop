@@ -303,24 +303,39 @@ ipcMain.on('ipcCall', async function(ev, payload) {
                 caseMap[lang.toLowerCase()] = lang;
             });
 
-            const languages = args[0].map(lang => {
+            if (!caseMap["en"]) {
+                // default special-case for `en` as in Riot is actually implies `en-GB`. `en-US` is distinct.
+                // this way if `en` is requested and not available and `en-GB` is available it'll be used.
+                caseMap["en"] = caseMap["en-gb"];
+            }
+
+            const languages = new Set();
+            args[0].forEach(lang => {
                 const lcLang = lang.toLowerCase();
                 if (caseMap[lcLang]) {
-                    return caseMap[lcLang];
+                    languages.add(caseMap[lcLang]);
+                    return;
                 }
 
                 // as a fallback if the language is unknown check if the language group is known, e.g en for en-AU
-                const langGroup = lcLang.substr(0, lcLang.indexOf("-"));
+                const langGroup = lcLang.split("-")[0];
                 if (caseMap[langGroup]) {
-                    return caseMap[langGroup];
+                    languages.add(caseMap[langGroup]);
+                    return;
                 }
 
-                // as a further fallback, pick another variant from the same language group
-                return availableLanguages.find(availableLang => availableLang.startsWith(langGroup));
-            }).filter(Boolean);
+                // as a further fallback, pick all other matching variants from the same language group
+                // this means that if we cannot find `ar-dz` or `ar` for example, we will pick `ar-*` to
+                // offer a spellcheck which is least likely to wrongly red underline something.
+                availableLanguages.forEach(availableLang => {
+                    if (availableLang.startsWith(langGroup)) {
+                        languages.add(availableLang);
+                    }
+                });
+            });
 
-            if (languages.length) {
-                mainWindow.webContents.session.setSpellCheckerLanguages(languages);
+            if (languages.size > 0) {
+                mainWindow.webContents.session.setSpellCheckerLanguages([...languages]);
             }
             break;
         }
