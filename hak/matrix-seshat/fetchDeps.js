@@ -92,7 +92,9 @@ async function getSqlCipher(hakEnv, moduleInfo) {
 }
 
 async function getOpenSsl(hakEnv, moduleInfo) {
-    const openSslDir = path.join(moduleInfo.moduleDotHakDir, 'openssl-1.1.1d');
+    const osslVersion = '1.1.1f';
+
+    const openSslDir = path.join(moduleInfo.moduleDotHakDir, 'openssl-' + osslVersion);
 
     let haveOpenSsl;
     try {
@@ -104,7 +106,7 @@ async function getOpenSsl(hakEnv, moduleInfo) {
 
     if (haveOpenSsl) return;
 
-    const openSslTarball = path.join(moduleInfo.moduleDotHakDir, 'openssl-1.1.1d.tar.gz');
+    const openSslTarball = path.join(moduleInfo.moduleDotHakDir, 'openssl-' + osslVersion + '.tar.gz');
     let haveOpenSslTar;
     try {
         await fsProm.stat(openSslTarball);
@@ -113,7 +115,7 @@ async function getOpenSsl(hakEnv, moduleInfo) {
         haveOpenSslTar = false;
     }
     if (!haveOpenSslTar) {
-        await needle('get', 'https://www.openssl.org/source/openssl-1.1.1f.tar.gz', {
+        await needle('get', 'https://www.openssl.org/source/openssl-' + osslVersion + '.tar.gz', {
             follow: 10,
             output: openSslTarball,
         });
