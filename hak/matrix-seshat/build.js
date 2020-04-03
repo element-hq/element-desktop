@@ -31,7 +31,7 @@ module.exports = async function(hakEnv, moduleInfo) {
 };
 
 async function buildOpenSslWin(hakEnv, moduleInfo) {
-    const version = moduleInfo.dependencies.openssl;
+    const version = moduleInfo.cfg.dependencies.openssl;
     const openSslDir = path.join(moduleInfo.moduleDotHakDir, `openssl-${version}`);
 
     const openSslArch = hakEnv.arch === 'x64' ? 'VC-WIN64A' : 'VC-WIN32';
@@ -133,7 +133,7 @@ async function buildOpenSslWin(hakEnv, moduleInfo) {
 }
 
 async function buildSqlCipherWin(hakEnv, moduleInfo) {
-    const version = moduleInfo.dependencies.sqlcipher;
+    const version = moduleInfo.cfg.dependencies.sqlcipher;
     const sqlCipherDir = path.join(moduleInfo.moduleDotHakDir, `sqlcipher-${version}`);
     const buildDir = path.join(sqlCipherDir, 'bld');
 
@@ -170,7 +170,7 @@ async function buildSqlCipherWin(hakEnv, moduleInfo) {
 }
 
 async function buildSqlCipherUnix(hakEnv, moduleInfo) {
-    const version = moduleInfo.dependencies.sqlcipher;
+    const version = moduleInfo.cfg.dependencies.sqlcipher;
     const sqlCipherDir = path.join(moduleInfo.moduleDotHakDir, `sqlcipher-${version}`);
 
     const args = [

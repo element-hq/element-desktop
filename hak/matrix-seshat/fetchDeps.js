@@ -33,7 +33,7 @@ module.exports = async function(hakEnv, moduleInfo) {
 };
 
 async function getSqlCipher(hakEnv, moduleInfo) {
-    const version = moduleInfo.dependencies.sqlcipher;
+    const version = moduleInfo.cfg.dependencies.sqlcipher;
     const sqlCipherDir = path.join(moduleInfo.moduleDotHakDir, `sqlcipher-${version}`);
 
     let haveSqlcipher;
@@ -93,7 +93,7 @@ async function getSqlCipher(hakEnv, moduleInfo) {
 }
 
 async function getOpenSsl(hakEnv, moduleInfo) {
-    const version = moduleInfo.dependencies.openssl;
+    const version = moduleInfo.cfg.dependencies.openssl;
     const openSslDir = path.join(moduleInfo.moduleDotHakDir, `openssl-${version}`);
 
     let haveOpenSsl;
