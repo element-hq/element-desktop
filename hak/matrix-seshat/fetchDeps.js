@@ -113,7 +113,7 @@ async function getOpenSsl(hakEnv, moduleInfo) {
         haveOpenSslTar = false;
     }
     if (!haveOpenSslTar) {
-        await needle('get', 'https://www.openssl.org/source/openssl-1.1.1d.tar.gz', {
+        await needle('get', 'https://www.openssl.org/source/openssl-1.1.1f.tar.gz', {
             follow: 10,
             output: openSslTarball,
         });
