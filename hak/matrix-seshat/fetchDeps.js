@@ -33,7 +33,8 @@ module.exports = async function(hakEnv, moduleInfo) {
 };
 
 async function getSqlCipher(hakEnv, moduleInfo) {
-    const sqlCipherDir = path.join(moduleInfo.moduleDotHakDir, 'sqlcipher-4.3.0');
+    const version = moduleInfo.dependencies.sqlcipher;
+    const sqlCipherDir = path.join(moduleInfo.moduleDotHakDir, `sqlcipher-${version}`);
 
     let haveSqlcipher;
     try {
@@ -45,7 +46,7 @@ async function getSqlCipher(hakEnv, moduleInfo) {
 
     if (haveSqlcipher) return;
 
-    const sqlCipherTarball = path.join(moduleInfo.moduleDotHakDir, 'sqlcipher-4.3.0.tar.gz');
+    const sqlCipherTarball = path.join(moduleInfo.moduleDotHakDir, `sqlcipher-${version}.tar.gz`);
     let haveSqlcipherTar;
     try {
         await fsProm.stat(sqlCipherTarball);
@@ -54,7 +55,7 @@ async function getSqlCipher(hakEnv, moduleInfo) {
         haveSqlcipherTar = false;
     }
     if (!haveSqlcipherTar) {
-        const bob = needle('get', 'https://github.com/sqlcipher/sqlcipher/archive/v4.3.0.tar.gz', {
+        const bob = needle('get', `https://github.com/sqlcipher/sqlcipher/archive/v${version}.tar.gz`, {
             follow: 10,
             output: sqlCipherTarball,
         });
@@ -70,7 +71,7 @@ async function getSqlCipher(hakEnv, moduleInfo) {
         // On Windows, we need to patch the makefile because it forces TEMP_STORE to
         // default to files (1) but the README specifically says you '*must*' set it
         // set it to 2 (default to memory).
-        const patchFile = path.join(moduleInfo.moduleHakDir, 'sqlcipher-4.3.0-win.patch');
+        const patchFile = path.join(moduleInfo.moduleHakDir, `sqlcipher-${version}-win.patch`);
 
         await new Promise((resolve, reject) => {
         const readStream = fs.createReadStream(patchFile);
@@ -92,9 +93,8 @@ async function getSqlCipher(hakEnv, moduleInfo) {
 }
 
 async function getOpenSsl(hakEnv, moduleInfo) {
-    const osslVersion = '1.1.1f';
-
-    const openSslDir = path.join(moduleInfo.moduleDotHakDir, 'openssl-' + osslVersion);
+    const version = moduleInfo.dependencies.openssl;
+    const openSslDir = path.join(moduleInfo.moduleDotHakDir, `openssl-${version}`);
 
     let haveOpenSsl;
     try {
@@ -106,7 +106,7 @@ async function getOpenSsl(hakEnv, moduleInfo) {
 
     if (haveOpenSsl) return;
 
-    const openSslTarball = path.join(moduleInfo.moduleDotHakDir, 'openssl-' + osslVersion + '.tar.gz');
+    const openSslTarball = path.join(moduleInfo.moduleDotHakDir, `openssl-${version}.tar.gz`);
     let haveOpenSslTar;
     try {
         await fsProm.stat(openSslTarball);
@@ -115,7 +115,7 @@ async function getOpenSsl(hakEnv, moduleInfo) {
         haveOpenSslTar = false;
     }
     if (!haveOpenSslTar) {
-        await needle('get', 'https://www.openssl.org/source/openssl-' + osslVersion + '.tar.gz', {
+        await needle('get', `https://www.openssl.org/source/openssl-${version}.tar.gz`, {
             follow: 10,
             output: openSslTarball,
         });
