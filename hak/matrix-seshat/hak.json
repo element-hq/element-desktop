@@ -5,5 +5,9 @@
         "build": "build.js"
     },
     "prune": "native",
-    "copy": "native/index.node"
+    "copy": "native/index.node",
+    "dependencies": {
+        "openssl": "1.1.1f",
+        "sqlcipher": "4.3.0"
+    }
 }
