@@ -1,3 +1,10 @@
+Changes in [1.6.0-rc.3](https://github.com/vector-im/riot-desktop/releases/tag/v1.6.0-rc.3) (2020-04-17)
+========================================================================================================
+[Full Changelog](https://github.com/vector-im/riot-desktop/compare/v1.6.0-rc.2...v1.6.0-rc.3)
+
+ * widen search paths / fix vector-im/riot-web#13190 [to release]
+   [\#72](https://github.com/vector-im/riot-desktop/pull/72)
+
 Changes in [1.6.0-rc.2](https://github.com/vector-im/riot-desktop/releases/tag/v1.6.0-rc.2) (2020-04-16)
 ========================================================================================================
 [Full Changelog](https://github.com/vector-im/riot-desktop/compare/v1.6.0-rc.1...v1.6.0-rc.2)
