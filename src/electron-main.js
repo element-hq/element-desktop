@@ -96,9 +96,9 @@ if (userDataPathInProtocol) {
     app.setPath('userData', `${app.getPath('userData')}-${argv['profile']}`);
 }
 
-async function tryAsarPaths(rawPaths) {
-    // Make everything relative to the current file
-    const paths = rawPaths.map(p => path.join(__dirname, p));
+async function tryPaths(name, root, rawPaths) {
+    // Make everything relative to root
+    const paths = rawPaths.map(p => path.join(root, p));
 
     for (const p of paths) {
         try {
@@ -107,27 +107,35 @@ async function tryAsarPaths(rawPaths) {
         } catch (e) {
         }
     }
-    console.log("Couldn't find webapp files in any of: ");
+    console.log(`Couldn't find ${name} files in any of: `);
     for (const p of paths) {
         console.log("\t"+path.resolve(p));
     }
-    throw new Error("Failed to find webapp files");
+    throw new Error(`Failed to find ${name} files`);
 }
 
 // Find the webapp resources and set up things that require them
 async function setupGlobals() {
     // find the webapp asar.
-    asarPath = await tryAsarPaths([
+    asarPath = await tryPaths("webapp", __dirname, [
         // If run from the source checkout, this will be in the directory above
         '../webapp.asar',
         // but if run from a packaged application, electron-main.js will be in
         // a different asar file so it will be two levels above
         '../../webapp.asar',
-    // also try without the 'asar' suffix to allow symlinking in a directory
+        // also try without the 'asar' suffix to allow symlinking in a directory
         '../webapp',
+        // from a packaged application
+        '../../webapp',
     ]);
+
     // we assume the resources path is in the same place as the asar
-    resPath = path.join(path.dirname(asarPath), 'res');
+    resPath = await tryPaths("res", path.dirname(asarPath), [
+        // If run from the source checkout
+        'res',
+        // if run from packaged application
+        '',
+    ]);
 
     try {
         vectorConfig = require(asarPath + 'config.json');
