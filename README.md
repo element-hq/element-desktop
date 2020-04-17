@@ -1,10 +1,7 @@
 Riot Desktop
 ============
 
-This is *not* where the source for Riot desktop lives... yet. As of now,
-it still lives in the main riot-web repo: https://github.com/vector-im/riot-web
-
-This is an experimental split-out of the Riot desktop code from the main repo.
+This is Riot desktop app as of release 1.6.
 
 Fetching Riot
 =============
