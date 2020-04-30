@@ -1,3 +1,12 @@
+Changes in [1.6.0-rc.5](https://github.com/vector-im/riot-desktop/releases/tag/v1.6.0-rc.5) (2020-04-30)
+========================================================================================================
+[Full Changelog](https://github.com/vector-im/riot-desktop/compare/v1.6.0-rc.4...v1.6.0-rc.5)
+
+ * Remove feature flag docs from docs on release
+   [\#78](https://github.com/vector-im/riot-desktop/pull/78)
+ * package.json: Bump the Seshat dep.
+   [\#76](https://github.com/vector-im/riot-desktop/pull/76)
+
 Changes in [1.6.0-rc.4](https://github.com/vector-im/riot-desktop/releases/tag/v1.6.0-rc.4) (2020-04-23)
 ========================================================================================================
 [Full Changelog](https://github.com/vector-im/riot-desktop/compare/v1.6.0-rc.3...v1.6.0-rc.4)
