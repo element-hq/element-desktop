@@ -79,3 +79,10 @@ Architectures: amd64 i386 source
 Components: main
 SignWith: D7B0B66941D01538
 Tracking: minimal
+
+Origin: riot.im
+Codename: focal
+Architectures: amd64 i386 source
+Components: main
+SignWith: D7B0B66941D01538
+Tracking: minimal
