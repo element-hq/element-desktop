@@ -112,3 +112,24 @@ yarn run fetch --cfgdir myconfig
 ```
 The config dir for the official Riot.im app is in `riot.im`. If you use this,
 your app will auto-update itself using builds from Riot.im.
+
+Profiles
+========
+
+To run multiple instances of the desktop app for different accounts, you can
+launch the executable with the `--profile` argument followed by a unique
+identifier, e.g `riot-desktop --profile Work` for it to run a separate profile and
+not interfere with the default one.
+
+Alternatively, a custom location for the profile data can be specified using the
+`--profile-dir` flag followed by the desired path.
+
+User-specified config.json
+==========================
+
++ `%APPDATA%\$NAME\config.json` on Windows
++ `$XDG_CONFIG_HOME\$NAME\config.json` or `~/.config/$NAME/config.json` on Linux
++ `~Library/Application Support/$NAME/config.json` on macOS
+
+In the paths above, `$NAME` is typically `Riot`, unless you use `--profile
+$PROFILE` in which case it becomes `Riot-$PROFILE`.
