@@ -17,8 +17,6 @@ RUN apt-get -qq update && apt-get -qq dist-upgrade && \
   git lfs install && \
   apt-get purge -y --auto-remove && rm -rf /var/lib/apt/lists/*
 
-COPY test.sh /test.sh
-
 WORKDIR /project
 
 # fix error /usr/local/bundle/gems/fpm-1.5.0/lib/fpm/package/freebsd.rb:72:in `encode': "\xE2" from ASCII-8BIT to UTF-8 (Encoding::UndefinedConversionError)
