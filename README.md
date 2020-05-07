@@ -118,7 +118,7 @@ Profiles
 
 To run multiple instances of the desktop app for different accounts, you can
 launch the executable with the `--profile` argument followed by a unique
-identifier, e.g `riot-web --profile Work` for it to run a separate profile and
+identifier, e.g `riot-desktop --profile Work` for it to run a separate profile and
 not interfere with the default one.
 
 Alternatively, a custom location for the profile data can be specified using the
