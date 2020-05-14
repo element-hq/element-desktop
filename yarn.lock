@@ -2862,10 +2862,10 @@ map-age-cleaner@^0.1.1:
   dependencies:
     p-defer "^1.0.0"
 
-matrix-js-sdk@6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/matrix-js-sdk/-/matrix-js-sdk-6.0.0.tgz#2374a583878073871a0202dc237691ef15540575"
-  integrity sha512-NBHb5JIKetCVhOdfETyhUL9lYs2M+v8W/uczTzW6IX9XFOtNaha8X82waXlRt6RJpZRm5aJveODkybvo9VOLtg==
+matrix-js-sdk@6.1.0-rc.1:
+  version "6.1.0-rc.1"
+  resolved "https://registry.yarnpkg.com/matrix-js-sdk/-/matrix-js-sdk-6.1.0-rc.1.tgz#521d5683d10e49bb437b2457d1f0c6696fc7a4e3"
+  integrity sha512-q3XScyroUwY3qTBglRgE1lldfrLlSML5nU4gJzXrEwn2gGpR1P4IU8aT8EcumyOmeZhrrysS2UEE9fWgUmhkBw==
   dependencies:
     "@babel/runtime" "^7.8.3"
     another-json "^0.2.0"
