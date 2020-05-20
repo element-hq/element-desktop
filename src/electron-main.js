@@ -615,6 +615,17 @@ protocol.registerSchemesAsPrivileged([{
     },
 }]);
 
+// Turn the sandbox on for *all* windows we might generate. Doing this means we don't
+// have to specify a `sandbox: true` to each BrowserWindow.
+//
+// This also fixes an issue with window.open where if we only specified the sandbox
+// on the main window we'd run into cryptic "ipc_renderer be broke" errors. Turns out
+// it's trying to jump the sandbox and make some calls into electron, which it can't
+// do when half of it is sandboxed. By turning on the sandbox for everything, the new
+// window (no matter how temporary it may be) is also sandboxed, allowing for a clean
+// transition into the user's browser.
+app.enableSandbox();
+
 app.on('ready', async () => {
     try {
         await setupGlobals();
@@ -725,7 +736,7 @@ app.on('ready', async () => {
         webPreferences: {
             preload: preloadScript,
             nodeIntegration: false,
-            sandbox: true,
+            //sandbox: true, // We enable sandboxing from app.enableSandbox() above
             enableRemoteModule: false,
             // We don't use this: it's useful for the preload script to
             // share a context with the main page so we can give select
