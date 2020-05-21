@@ -14,6 +14,7 @@
   "scripts": {
     "mkdirs": "mkdirp packages deploys",
     "fetch": "yarn run mkdirs && node scripts/fetch-package.js",
+    "asar-webapp": "asar p webapp webapp.asar",
     "start": "electron .",
     "lint": "eslint src/ scripts/ hak/",
     "build:native": "yarn run hak",
