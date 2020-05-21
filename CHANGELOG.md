@@ -1,12 +1,45 @@
+Changes in [1.6.1](https://github.com/vector-im/riot-desktop/releases/tag/v1.6.1) (2020-05-19)
+==============================================================================================
+[Full Changelog](https://github.com/vector-im/riot-desktop/compare/v1.6.1-rc.1...v1.6.1)
+
+ * No changes since rc.1
+
+Changes in [1.6.1-rc.1](https://github.com/vector-im/riot-desktop/releases/tag/v1.6.1-rc.1) (2020-05-14)
+========================================================================================================
+[Full Changelog](https://github.com/vector-im/riot-desktop/compare/v1.6.0...v1.6.1-rc.1)
+
+ * Add CI scripts to install and link JS SDK
+   [\#85](https://github.com/vector-im/riot-desktop/pull/85)
+ * Use Xenial as the build image's base distribution
+   [\#84](https://github.com/vector-im/riot-desktop/pull/84)
+ * Persist GPG keys for Linux builds via Docker
+   [\#83](https://github.com/vector-im/riot-desktop/pull/83)
+ * Update README to mention profile support
+   [\#81](https://github.com/vector-im/riot-desktop/pull/81)
+ * Remove Conflicts from riot-desktop
+   [\#82](https://github.com/vector-im/riot-desktop/pull/82)
+ * Add a default Linux distribution
+   [\#79](https://github.com/vector-im/riot-desktop/pull/79)
+ * Remove invite only padlocks feature flag config
+   [\#77](https://github.com/vector-im/riot-desktop/pull/77)
+ * package.json: Bump the Seshat dep.
+   [\#75](https://github.com/vector-im/riot-desktop/pull/75)
+ * Remove encrypted message search feature flag
+   [\#74](https://github.com/vector-im/riot-desktop/pull/74)
+ * Update readme now it's the real source
+   [\#73](https://github.com/vector-im/riot-desktop/pull/73)
+
 Changes in [1.6.0](https://github.com/vector-im/riot-desktop/releases/tag/v1.6.0) (2020-05-05)
 ==============================================================================================
 [Full Changelog](https://github.com/vector-im/riot-desktop/compare/v1.6.0-rc.6...v1.6.0)
 
+ * No changes since rc.6
 
 Changes in [1.6.0-rc.6](https://github.com/vector-im/riot-desktop/releases/tag/v1.6.0-rc.6) (2020-05-01)
 ========================================================================================================
 [Full Changelog](https://github.com/vector-im/riot-desktop/compare/v1.6.0-rc.5...v1.6.0-rc.6)
 
+ * No changes since rc.5
 
 Changes in [1.6.0-rc.5](https://github.com/vector-im/riot-desktop/releases/tag/v1.6.0-rc.5) (2020-04-30)
 ========================================================================================================
@@ -21,6 +54,7 @@ Changes in [1.6.0-rc.4](https://github.com/vector-im/riot-desktop/releases/tag/v
 ========================================================================================================
 [Full Changelog](https://github.com/vector-im/riot-desktop/compare/v1.6.0-rc.3...v1.6.0-rc.4)
 
+ * No changes since rc.3
 
 Changes in [1.6.0-rc.3](https://github.com/vector-im/riot-desktop/releases/tag/v1.6.0-rc.3) (2020-04-17)
 ========================================================================================================
@@ -33,6 +67,7 @@ Changes in [1.6.0-rc.2](https://github.com/vector-im/riot-desktop/releases/tag/v
 ========================================================================================================
 [Full Changelog](https://github.com/vector-im/riot-desktop/compare/v1.6.0-rc.1...v1.6.0-rc.2)
 
+ * No changes since rc.1
 
 Changes in [1.6.0-rc.1](https://github.com/vector-im/riot-desktop/releases/tag/v1.6.0-rc.1) (2020-04-15)
 ========================================================================================================
