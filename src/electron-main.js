@@ -790,12 +790,15 @@ app.on('activate', () => {
     mainWindow.show();
 });
 
-app.on('before-quit', () => {
+function beforeQuit() {
     global.appQuitting = true;
     if (mainWindow) {
         mainWindow.webContents.send('before-quit');
     }
-});
+}
+
+app.on('before-quit', beforeQuit);
+app.on('before-quit-for-update', beforeQuit);
 
 app.on('second-instance', (ev, commandLine, workingDirectory) => {
     // If other instance launched with --hidden then skip showing window
