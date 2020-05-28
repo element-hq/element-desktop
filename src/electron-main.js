@@ -392,10 +392,11 @@ ipcMain.on('ipcCall', async function(ev, payload) {
             try {
                 const randomArray = await new Promise((resolve, reject) => {
                     crypto.randomBytes(32, (err, buf) => {
-                        if (err)
+                        if (err) {
                             reject(err);
-                        else
+                        } else {
                             resolve(buf);
+                        }
                     });
                 });
                 const pickleKey = randomArray.toString("base64").replace(/=+$/g, '');
