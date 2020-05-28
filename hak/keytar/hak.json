@@ -1,0 +1,12 @@
+{
+    "scripts": {
+        "check": "check.js",
+        "fetchDeps": "fetchDeps.js",
+        "build": "build.js"
+    },
+    "prune": "native",
+    "copy": "build/Release/keytar.node",
+    "dependencies": {
+        "libsecret": "0.20.3"
+    }
+}
