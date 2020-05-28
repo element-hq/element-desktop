@@ -17,9 +17,6 @@ limitations under the License.
 const path = require('path');
 const childProcess = require('child_process');
 
-const mkdirp = require('mkdirp');
-const fsExtra = require('fs-extra');
-
 module.exports = async function(hakEnv, moduleInfo) {
     await buildKeytar(hakEnv, moduleInfo);
 };

@@ -1,7 +1,6 @@
 {
     "scripts": {
         "check": "check.js",
-        "fetchDeps": "fetchDeps.js",
         "build": "build.js"
     },
     "prune": "native",
