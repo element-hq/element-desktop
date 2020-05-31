@@ -99,9 +99,8 @@ function onLinkContextMenu(ev, params) {
         }
     }
 
-    // XXX: We cannot easily save a blob from the main process as only the renderer can resolve them so don't give
-    // the user an option to. One possible workaround was using copyImageAt but there was no way of knowing when
-    // the image would be in the clipboard, it depended on its size.
+    // XXX: We cannot easily save a blob from the main process as
+    // only the renderer can resolve them so don't give the user an option to.
     if (params.hasImageContents && !url.startsWith('blob:')) {
         popupMenu.append(new MenuItem({
             label: 'Sa&ve image as...',
