@@ -35,10 +35,27 @@ function onWindowOrNavigate(ev, target) {
     safeOpenURL(target);
 }
 
+function writeNativeImage(filePath, img) {
+    switch (filePath.split('.').pop().toLowerCase()) {
+        case "jpg":
+        case "jpeg":
+            return fs.promises.writeFile(filePath, img.toJPEG(100));
+        case "bmp":
+            return fs.promises.writeFile(filePath, img.toBitmap());
+        case "png":
+        default:
+            return fs.promises.writeFile(filePath, img.toPNG());
+    }
+}
+
+
 function onLinkContextMenu(ev, params) {
     let url = params.linkURL || params.srcURL;
 
     if (url.startsWith('vector://vector/webapp')) {
+        // Avoid showing a context menu for app icons
+        if (params.hasImageContents) return;
+        // Rewrite URL so that it can be used outside of the app
         url = "https://riot.im/app/" + url.substring(23);
     }
 
@@ -53,22 +70,13 @@ function onLinkContextMenu(ev, params) {
         }));
     }
 
-    let addSaveAs = false;
-    if (params.mediaType && params.mediaType === 'image' && !url.startsWith('file://')) {
+    if (params.hasImageContents) {
         popupMenu.append(new MenuItem({
             label: '&Copy image',
             click() {
-                if (url.startsWith('data:')) {
-                    clipboard.writeImage(nativeImage.createFromDataURL(url));
-                } else {
-                    ev.sender.copyImageAt(params.x, params.y);
-                }
+                ev.sender.copyImageAt(params.x, params.y);
             },
         }));
-
-        // We want the link to be ordered below the copy stuff, but don't want to duplicate
-        // the `if` statement, so use a flag.
-        addSaveAs = true;
     }
 
     // No point offering to copy a blob: URL either
@@ -91,12 +99,15 @@ function onLinkContextMenu(ev, params) {
         }
     }
 
-    if (addSaveAs) {
+    // XXX: We cannot easily save a blob from the main process as only the renderer can resolve them so don't give
+    // the user an option to. One possible workaround was using copyImageAt but there was no way of knowing when
+    // the image would be in the clipboard, it depended on its size.
+    if (params.hasImageContents && !url.startsWith('blob:')) {
         popupMenu.append(new MenuItem({
             label: 'Sa&ve image as...',
-            click() {
+            async click() {
                 const targetFileName = params.titleText || "image.png";
-                const filePath = dialog.showSaveDialog({
+                const {filePath} = await dialog.showSaveDialog({
                     defaultPath: targetFileName,
                 });
 
@@ -104,7 +115,7 @@ function onLinkContextMenu(ev, params) {
 
                 try {
                     if (url.startsWith("data:")) {
-                        fs.writeFileSync(filePath, nativeImage.createFromDataURL(url));
+                        await writeNativeImage(filePath, nativeImage.createFromDataURL(url));
                     } else {
                         request.get(url).pipe(fs.createWriteStream(filePath));
                     }
