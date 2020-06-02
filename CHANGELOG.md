@@ -1,3 +1,30 @@
+Changes in [1.6.3-rc.1](https://github.com/vector-im/riot-desktop/releases/tag/v1.6.3-rc.1) (2020-06-02)
+========================================================================================================
+[Full Changelog](https://github.com/vector-im/riot-desktop/compare/v1.6.2...v1.6.3-rc.1)
+
+ * Fix electron context menu copy/save-as
+   [\#96](https://github.com/vector-im/riot-desktop/pull/96)
+ * Fixed error in README.md/User-specified config.json
+   [\#97](https://github.com/vector-im/riot-desktop/pull/97)
+ * Update Modular hosting link
+   [\#92](https://github.com/vector-im/riot-desktop/pull/92)
+ * Enforce sandbox on all spawned BrowserWindow objects
+   [\#91](https://github.com/vector-im/riot-desktop/pull/91)
+ * Run before-quit on updates too to flush rageshake
+   [\#93](https://github.com/vector-im/riot-desktop/pull/93)
+ * Enable new room list labs flag
+   [\#87](https://github.com/vector-im/riot-desktop/pull/87)
+ * Add asar-webapp script
+   [\#59](https://github.com/vector-im/riot-desktop/pull/59)
+ * Bump acorn from 6.4.0 to 6.4.1
+   [\#50](https://github.com/vector-im/riot-desktop/pull/50)
+ * Enable font scaling flag for nightly
+   [\#89](https://github.com/vector-im/riot-desktop/pull/89)
+ * Enable IRC UI labs flag in nightly
+   [\#88](https://github.com/vector-im/riot-desktop/pull/88)
+ * Update help message to fix broken url to electron docs
+   [\#86](https://github.com/vector-im/riot-desktop/pull/86)
+
 Changes in [1.6.2](https://github.com/vector-im/riot-desktop/releases/tag/v1.6.2) (2020-05-22)
 ==============================================================================================
 [Full Changelog](https://github.com/vector-im/riot-desktop/compare/v1.6.1...v1.6.2)
