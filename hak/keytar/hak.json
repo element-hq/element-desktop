@@ -3,7 +3,6 @@
         "check": "check.js",
         "build": "build.js"
     },
-    "prune": "native",
     "copy": "build/Release/keytar.node",
     "dependencies": {
         "libsecret": "0.20.3"

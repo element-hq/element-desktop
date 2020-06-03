@@ -17,29 +17,7 @@ limitations under the License.
 const childProcess = require('child_process');
 
 module.exports = async function(hakEnv, moduleInfo) {
-    // of course tcl doesn't have a --version
-    if (!hakEnv.isLinux()) {
-        await new Promise((resolve, reject) => {
-            const proc = childProcess.spawn('tclsh', [], {
-                stdio: ['pipe', 'ignore', 'ignore'],
-            });
-            proc.on('exit', (code) => {
-                if (code !== 0) {
-                    reject("Can't find tclsh - have you installed TCL?");
-                } else {
-                    resolve();
-                }
-            });
-            proc.stdin.end();
-        });
-    }
-
     const tools = [['python', '--version']]; // node-gyp uses python for reasons beyond comprehension
-    if (hakEnv.isWin()) {
-        tools.push(['nmake', '/?']);
-    } else {
-        tools.push(['make', '--version']);
-    }
 
     for (const tool of tools) {
         await new Promise((resolve, reject) => {
