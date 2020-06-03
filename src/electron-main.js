@@ -3,6 +3,7 @@ Copyright 2016 Aviral Dasgupta
 Copyright 2016 OpenMarket Ltd
 Copyright 2018, 2019 New Vector Ltd
 Copyright 2017, 2019 Michael Telatynski <7t3chguy@gmail.com>
+Copyright 2020 The Matrix.org Foundation C.I.C.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -42,6 +43,18 @@ const Store = require('electron-store');
 
 const fs = require('fs');
 const afs = fs.promises;
+
+const crypto = require('crypto');
+let keytar;
+try {
+    keytar = require('keytar');
+} catch (e) {
+    if (e.code === "MODULE_NOT_FOUND") {
+        console.log("Keytar isn't installed; secure key storage is disabled.");
+    } else {
+        console.warn("Keytar unexpected error:", e);
+    }
+}
 
 let seshatSupported = false;
 let Seshat;
@@ -363,6 +376,41 @@ ipcMain.on('ipcCall', async function(ev, payload) {
         }
         case 'startSSOFlow':
             recordSSOSession(args[0]);
+            break;
+
+        case 'getPickleKey':
+            try {
+                ret = await keytar.getPassword("riot.im", `${args[0]}|${args[1]}`);
+            } catch (e) {
+                // if an error is thrown (e.g. keytar can't connect to the keychain),
+                // then return null, which means the default pickle key will be used
+                ret = null;
+            }
+            break;
+
+        case 'createPickleKey':
+            try {
+                const randomArray = await new Promise((resolve, reject) => {
+                    crypto.randomBytes(32, (err, buf) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve(buf);
+                        }
+                    });
+                });
+                const pickleKey = randomArray.toString("base64").replace(/=+$/g, '');
+                await keytar.setPassword("riot.im", `${args[0]}|${args[1]}`, pickleKey);
+                ret = pickleKey;
+            } catch (e) {
+                ret = null;
+            }
+            break;
+
+        case 'destroyPickleKey':
+            try {
+                await keytar.deletePassword("riot.im", `${args[0]}|${args[1]}`);
+            } catch (e) {}
             break;
 
         default:

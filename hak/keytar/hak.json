@@ -1,0 +1,10 @@
+{
+    "scripts": {
+        "check": "check.js",
+        "build": "build.js"
+    },
+    "copy": "build/Release/keytar.node",
+    "dependencies": {
+        "libsecret": "0.20.3"
+    }
+}
