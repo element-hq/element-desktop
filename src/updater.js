@@ -69,15 +69,31 @@ ipcMain.on('install_update', installUpdate);
 ipcMain.on('check_updates', pollForUpdates);
 
 function ipcChannelSendUpdateStatus(status) {
-    if (global.mainWindow) {
-        global.mainWindow.webContents.send('check_updates', status);
-    }
+    if (!global.mainWindow) return;
+    global.mainWindow.webContents.send('check_updates', status);
 }
 
+// cache the latest update which has been downloaded as electron offers no api to read it
+let latestUpdateDownloaded;
 autoUpdater.on('update-available', function() {
     ipcChannelSendUpdateStatus(true);
 }).on('update-not-available', function() {
-    ipcChannelSendUpdateStatus(false);
+    if (latestUpdateDownloaded) {
+        // the only time we will get `update-not-available` if `latestUpdateDownloaded` is already set
+        // is if the user used the Manual Update check and there is no update newer than the one we
+        // have downloaded, so show it to them as the latest again.
+        ipcChannelSendUpdateStatus(true);
+        mainWindow.webContents.send('update-downloaded', latestUpdateDownloaded);
+    } else {
+        ipcChannelSendUpdateStatus(false);
+    }
 }).on('error', function(error) {
     ipcChannelSendUpdateStatus(error.message);
+});
+
+autoUpdater.on('update-downloaded', (ev, releaseNotes, releaseName, releaseDate, updateURL) => {
+    if (!global.mainWindow) return;
+    // forward to renderer
+    latestUpdateDownloaded = { releaseNotes, releaseName, releaseDate, updateURL };
+    mainWindow.webContents.send('update-downloaded', latestUpdateDownloaded);
 });

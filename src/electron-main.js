@@ -254,17 +254,6 @@ ipcMain.on('app_onAction', function(ev, payload) {
     }
 });
 
-autoUpdater.on('update-downloaded', (ev, releaseNotes, releaseName, releaseDate, updateURL) => {
-    if (!mainWindow) return;
-    // forward to renderer
-    mainWindow.webContents.send('update-downloaded', {
-        releaseNotes,
-        releaseName,
-        releaseDate,
-        updateURL,
-    });
-});
-
 ipcMain.on('ipcCall', async function(ev, payload) {
     if (!mainWindow) return;
 
