@@ -83,7 +83,7 @@ autoUpdater.on('update-available', function() {
         // is if the user used the Manual Update check and there is no update newer than the one we
         // have downloaded, so show it to them as the latest again.
         ipcChannelSendUpdateStatus(true);
-        mainWindow.webContents.send('update-downloaded', latestUpdateDownloaded);
+        global.mainWindow.webContents.send('update-downloaded', latestUpdateDownloaded);
     } else {
         ipcChannelSendUpdateStatus(false);
     }
@@ -95,5 +95,5 @@ autoUpdater.on('update-downloaded', (ev, releaseNotes, releaseName, releaseDate,
     if (!global.mainWindow) return;
     // forward to renderer
     latestUpdateDownloaded = { releaseNotes, releaseName, releaseDate, updateURL };
-    mainWindow.webContents.send('update-downloaded', latestUpdateDownloaded);
+    global.mainWindow.webContents.send('update-downloaded', latestUpdateDownloaded);
 });
