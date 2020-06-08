@@ -468,6 +468,11 @@ ipcMain.on('seshat', async function(ev, payload) {
             else ret = await eventIndex.isEmpty();
             break;
 
+        case 'isRoomIndexed':
+            if (eventIndex === null) ret = false;
+            else ret = await eventIndex.isRoomIndexed(args[0]);
+            break;
+
         case 'addEventToIndex':
             try {
                 eventIndex.addEvent(args[0], args[1]);
