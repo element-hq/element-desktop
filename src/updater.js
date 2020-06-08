@@ -82,7 +82,7 @@ autoUpdater.on('update-available', function() {
         // the only time we will get `update-not-available` if `latestUpdateDownloaded` is already set
         // is if the user used the Manual Update check and there is no update newer than the one we
         // have downloaded, so show it to them as the latest again.
-        ipcChannelSendUpdateStatus(true);
+        if (!global.mainWindow) return;
         global.mainWindow.webContents.send('update-downloaded', latestUpdateDownloaded);
     } else {
         ipcChannelSendUpdateStatus(false);
