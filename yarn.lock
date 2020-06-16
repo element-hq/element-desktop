@@ -2862,10 +2862,9 @@ map-age-cleaner@^0.1.1:
   dependencies:
     p-defer "^1.0.0"
 
-matrix-js-sdk@6.2.2:
+"matrix-js-sdk@github:matrix-org/matrix-js-sdk#develop":
   version "6.2.2"
-  resolved "https://registry.yarnpkg.com/matrix-js-sdk/-/matrix-js-sdk-6.2.2.tgz#103d951f61945217b110962f55ae43996756f615"
-  integrity sha512-uTXmKVzl7GXM3R70cl2E87H+mtwN3ILqPeB80Z/2ITN9Vaf9pMURCCAuHePEBXbhnD7DOZj7Cke42uP+ByR6Hw==
+  resolved "https://codeload.github.com/matrix-org/matrix-js-sdk/tar.gz/1c194e81637fb07fe6ad67cda33be0d5d4c10115"
   dependencies:
     "@babel/runtime" "^7.8.3"
     another-json "^0.2.0"
