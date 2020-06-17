@@ -38,8 +38,8 @@
   },
   "devDependencies": {
     "asar": "^2.0.1",
-    "electron-builder": "^22.3.2",
-    "electron-builder-squirrel-windows": "^22.3.2",
+    "electron-builder": "^22.7.0",
+    "electron-builder-squirrel-windows": "^22.7.0",
     "electron-devtools-installer": "^2.2.4",
     "electron-notarize": "^0.2.0",
     "eslint": "^5.8.0",
@@ -63,7 +63,7 @@
   },
   "build": {
     "appId": "im.riot.app",
-    "electronVersion": "8.0.3",
+    "electronVersion": "9.0.4",
     "files": [
       "package.json",
       {
