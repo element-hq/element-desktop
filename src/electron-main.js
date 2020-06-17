@@ -613,6 +613,30 @@ ipcMain.on('seshat', async function(ev, payload) {
             }
             break;
 
+        case 'setUserVersion':
+            if (eventIndex === null) break;
+            else {
+                try {
+                    await eventIndex.setUserVersion(args[0]);
+                } catch (e) {
+                    sendError(payload.id, e);
+                    return;
+                }
+            }
+            break;
+
+        case 'getUserVersion':
+            if (eventIndex === null) ret = 0;
+            else {
+                try {
+                    ret = await eventIndex.getUserVersion();
+                } catch (e) {
+                    sendError(payload.id, e);
+                    return;
+                }
+            }
+            break;
+
         default:
             mainWindow.webContents.send('seshatReply', {
                 id: payload.id,
