@@ -3,6 +3,7 @@ Copyright 2016 Aviral Dasgupta
 Copyright 2016 OpenMarket Ltd
 Copyright 2018, 2019 New Vector Ltd
 Copyright 2017, 2019 Michael Telatynski <7t3chguy@gmail.com>
+Copyright 2020 The Matrix.org Foundation C.I.C.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -42,6 +43,18 @@ const Store = require('electron-store');
 
 const fs = require('fs');
 const afs = fs.promises;
+
+const crypto = require('crypto');
+let keytar;
+try {
+    keytar = require('keytar');
+} catch (e) {
+    if (e.code === "MODULE_NOT_FOUND") {
+        console.log("Keytar isn't installed; secure key storage is disabled.");
+    } else {
+        console.warn("Keytar unexpected error:", e);
+    }
+}
 
 let seshatSupported = false;
 let Seshat;
@@ -241,17 +254,6 @@ ipcMain.on('app_onAction', function(ev, payload) {
     }
 });
 
-autoUpdater.on('update-downloaded', (ev, releaseNotes, releaseName, releaseDate, updateURL) => {
-    if (!mainWindow) return;
-    // forward to renderer
-    mainWindow.webContents.send('update-downloaded', {
-        releaseNotes,
-        releaseName,
-        releaseDate,
-        updateURL,
-    });
-});
-
 ipcMain.on('ipcCall', async function(ev, payload) {
     if (!mainWindow) return;
 
@@ -363,6 +365,41 @@ ipcMain.on('ipcCall', async function(ev, payload) {
         }
         case 'startSSOFlow':
             recordSSOSession(args[0]);
+            break;
+
+        case 'getPickleKey':
+            try {
+                ret = await keytar.getPassword("riot.im", `${args[0]}|${args[1]}`);
+            } catch (e) {
+                // if an error is thrown (e.g. keytar can't connect to the keychain),
+                // then return null, which means the default pickle key will be used
+                ret = null;
+            }
+            break;
+
+        case 'createPickleKey':
+            try {
+                const randomArray = await new Promise((resolve, reject) => {
+                    crypto.randomBytes(32, (err, buf) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve(buf);
+                        }
+                    });
+                });
+                const pickleKey = randomArray.toString("base64").replace(/=+$/g, '');
+                await keytar.setPassword("riot.im", `${args[0]}|${args[1]}`, pickleKey);
+                ret = pickleKey;
+            } catch (e) {
+                ret = null;
+            }
+            break;
+
+        case 'destroyPickleKey':
+            try {
+                await keytar.deletePassword("riot.im", `${args[0]}|${args[1]}`);
+            } catch (e) {}
             break;
 
         default:
@@ -615,6 +652,17 @@ protocol.registerSchemesAsPrivileged([{
     },
 }]);
 
+// Turn the sandbox on for *all* windows we might generate. Doing this means we don't
+// have to specify a `sandbox: true` to each BrowserWindow.
+//
+// This also fixes an issue with window.open where if we only specified the sandbox
+// on the main window we'd run into cryptic "ipc_renderer be broke" errors. Turns out
+// it's trying to jump the sandbox and make some calls into electron, which it can't
+// do when half of it is sandboxed. By turning on the sandbox for everything, the new
+// window (no matter how temporary it may be) is also sandboxed, allowing for a clean
+// transition into the user's browser.
+app.enableSandbox();
+
 app.on('ready', async () => {
     try {
         await setupGlobals();
@@ -725,7 +773,7 @@ app.on('ready', async () => {
         webPreferences: {
             preload: preloadScript,
             nodeIntegration: false,
-            sandbox: true,
+            //sandbox: true, // We enable sandboxing from app.enableSandbox() above
             enableRemoteModule: false,
             // We don't use this: it's useful for the preload script to
             // share a context with the main page so we can give select
@@ -790,12 +838,15 @@ app.on('activate', () => {
     mainWindow.show();
 });
 
-app.on('before-quit', () => {
+function beforeQuit() {
     global.appQuitting = true;
     if (mainWindow) {
         mainWindow.webContents.send('before-quit');
     }
-});
+}
+
+app.on('before-quit', beforeQuit);
+app.on('before-quit-for-update', beforeQuit);
 
 app.on('second-instance', (ev, commandLine, workingDirectory) => {
     // If other instance launched with --hidden then skip showing window
