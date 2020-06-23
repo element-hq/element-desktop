@@ -2,7 +2,7 @@
   "name": "riot-desktop",
   "productName": "Riot",
   "main": "src/electron-main.js",
-  "version": "1.6.5",
+  "version": "1.6.6",
   "description": "A feature-rich client for Matrix.org",
   "author": "New Vector Ltd.",
   "repository": {
@@ -48,7 +48,7 @@
     "find-npm-prefix": "^1.0.2",
     "fs-extra": "^8.1.0",
     "glob": "^7.1.6",
-    "matrix-js-sdk": "github:matrix-org/matrix-js-sdk#develop",
+    "matrix-js-sdk": "7.0.0",
     "mkdirp": "^1.0.3",
     "needle": "^2.5.0",
     "node-pre-gyp": "^0.15.0",

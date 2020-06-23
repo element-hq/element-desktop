@@ -1,3 +1,22 @@
+Changes in [1.6.6](https://github.com/vector-im/riot-desktop/releases/tag/v1.6.6) (2020-06-23)
+==============================================================================================
+[Full Changelog](https://github.com/vector-im/riot-desktop/compare/v1.6.6-rc.1...v1.6.6)
+
+ * No changes since rc.1
+
+Changes in [1.6.6-rc.1](https://github.com/vector-im/riot-desktop/releases/tag/v1.6.6-rc.1) (2020-06-17)
+========================================================================================================
+[Full Changelog](https://github.com/vector-im/riot-desktop/compare/v1.6.5...v1.6.6-rc.1)
+
+ * Upgrade needle to avoid bugs with modern Node
+   [\#101](https://github.com/vector-im/riot-desktop/pull/101)
+ * Fix riot-desktop manual update check getting stuck on Downloading...
+   [\#99](https://github.com/vector-im/riot-desktop/pull/99)
+ * Electron recall latest downloaded update for when the user manually asks
+   [\#98](https://github.com/vector-im/riot-desktop/pull/98)
+ * use keytar to store pickle keys
+   [\#95](https://github.com/vector-im/riot-desktop/pull/95)
+
 Changes in [1.6.5](https://github.com/vector-im/riot-desktop/releases/tag/v1.6.5) (2020-06-16)
 ==============================================================================================
 [Full Changelog](https://github.com/vector-im/riot-desktop/compare/v1.6.4...v1.6.5)
