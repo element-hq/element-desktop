@@ -208,7 +208,7 @@ let mainWindow = null;
 global.appQuitting = false;
 
 
-const deleteFolderRecursive = async (p) => {
+const deleteContents = async (p) => {
     for (const entry of await afs.readdir(p)) {
         const curPath = path.join(p, entry);
         await afs.unlink(curPath);
@@ -470,7 +470,7 @@ ipcMain.on('seshat', async function(ev, payload) {
                                 await recoveryIndex.shutdown();
 
                                 try {
-                                    await deleteFolderRecursive(eventStorePath);
+                                    await deleteContents(eventStorePath);
                                 } catch (e) {
                                 }
                             } else {
@@ -509,7 +509,7 @@ ipcMain.on('seshat', async function(ev, payload) {
         case 'deleteEventIndex':
             {
                 try {
-                    await deleteFolderRecursive(eventStorePath);
+                    await deleteContents(eventStorePath);
                 } catch (e) {
                 }
             }
