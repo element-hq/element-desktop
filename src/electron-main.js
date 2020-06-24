@@ -207,6 +207,14 @@ let eventIndex = null;
 let mainWindow = null;
 global.appQuitting = false;
 
+
+const deleteContents = async (p) => {
+    for (const entry of await afs.readdir(p)) {
+        const curPath = path.join(p, entry);
+        await afs.unlink(curPath);
+    }
+};
+
 // handle uncaught errors otherwise it displays
 // stack traces in popup dialogs, which is terrible (which
 // it will do any time the auto update poke fails, and there's
@@ -453,7 +461,22 @@ ipcMain.on('seshat', async function(ev, payload) {
                             const recoveryIndex = new SeshatRecovery(eventStorePath, {
                                 passphrase: seshatPassphrase,
                             });
-                            await recoveryIndex.reindex();
+
+                            const userVersion = await recoveryIndex.getUserVersion();
+
+                            // If our user version is 0 we'll delete the db
+                            // anyways so reindexing it is a waste of time.
+                            if (userVersion === 0) {
+                                await recoveryIndex.shutdown();
+
+                                try {
+                                    await deleteContents(eventStorePath);
+                                } catch (e) {
+                                }
+                            } else {
+                                await recoveryIndex.reindex();
+                            }
+
                             eventIndex = new Seshat(eventStorePath, {
                                 passphrase: seshatPassphrase,
                             });
@@ -485,15 +508,8 @@ ipcMain.on('seshat', async function(ev, payload) {
 
         case 'deleteEventIndex':
             {
-                const deleteFolderRecursive = async (p) => {
-                    for (const entry of await afs.readdir(p)) {
-                        const curPath = path.join(p, entry);
-                        await afs.unlink(curPath);
-                    }
-                };
-
                 try {
-                    await deleteFolderRecursive(eventStorePath);
+                    await deleteContents(eventStorePath);
                 } catch (e) {
                 }
             }
