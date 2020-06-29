@@ -1,3 +1,9 @@
+Changes in [1.6.7](https://github.com/vector-im/riot-desktop/releases/tag/v1.6.7) (2020-06-29)
+==============================================================================================
+[Full Changelog](https://github.com/vector-im/riot-desktop/compare/v1.6.6...v1.6.7)
+
+ * No changes since 1.6.6
+
 Changes in [1.6.6](https://github.com/vector-im/riot-desktop/releases/tag/v1.6.6) (2020-06-23)
 ==============================================================================================
 [Full Changelog](https://github.com/vector-im/riot-desktop/compare/v1.6.6-rc.1...v1.6.6)
