@@ -6,7 +6,7 @@ Element Desktop is a Matrix client for desktop platforms with Element Web at its
 Fetching Element
 ================
 Since this package is just the Electron wrapper for Element Web, it doesn't contain any of the Element Web code,
-so the first step is to get a working copy of Element. There are a few ways of doing this:
+so the first step is to get a working copy of Element Web. There are a few ways of doing this:
 
 ```
 # Fetch the prebuilt release Element package from the riot.im GitHub releases page. The version
