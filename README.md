@@ -1,7 +1,7 @@
 Element Desktop
 ===============
 
-This is Element desktop app as of release 1.6.
+Element Desktop is a Matrix client for desktop platforms with Element Web at its core.
 
 Fetching Element
 ================
