@@ -48,7 +48,7 @@
     "find-npm-prefix": "^1.0.2",
     "fs-extra": "^8.1.0",
     "glob": "^7.1.6",
-    "matrix-js-sdk": "github:matrix-org/matrix-js-sdk#develop",
+    "matrix-js-sdk": "7.1.0-rc.1",
     "mkdirp": "^1.0.3",
     "needle": "^2.5.0",
     "node-pre-gyp": "^0.15.0",
