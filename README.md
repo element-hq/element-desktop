@@ -5,7 +5,7 @@ Element Desktop is a Matrix client for desktop platforms with Element Web at its
 
 Fetching Element
 ================
-Since this package is just the Electron wrapper for Element, it doesn't contain any of the Element code,
+Since this package is just the Electron wrapper for Element Web, it doesn't contain any of the Element Web code,
 so the first step is to get a working copy of Element. There are a few ways of doing this:
 
 ```
