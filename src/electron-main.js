@@ -186,7 +186,7 @@ async function setupGlobals() {
     iconPath = path.join(resPath, "img", iconFile);
     trayConfig = {
         icon_path: iconPath,
-        brand: vectorConfig.brand || 'Riot',
+        brand: vectorConfig.brand || 'Element',
     };
 
     // launcher
