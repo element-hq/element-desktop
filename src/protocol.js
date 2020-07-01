@@ -18,8 +18,8 @@ const {app} = require("electron");
 const path = require("path");
 const fs = require("fs");
 
-const PROTOCOL = "riot://";
-const SEARCH_PARAM = "riot-desktop-ssoid";
+const PROTOCOL = "element://";
+const SEARCH_PARAM = "element-desktop-ssoid";
 const STORE_FILE_NAME = "sso-sessions.json";
 
 // we getPath userData before electron-main changes it, so this is the default value
@@ -61,10 +61,10 @@ module.exports = {
     },
     getProfileFromDeeplink: (args) => {
         // check if we are passed a profile in the SSO callback url
-        const deeplinkUrl = args.find(arg => arg.startsWith('riot://'));
+        const deeplinkUrl = args.find(arg => arg.startsWith('element://'));
         if (deeplinkUrl && deeplinkUrl.includes(SEARCH_PARAM)) {
             const parsedUrl = new URL(deeplinkUrl);
-            if (parsedUrl.protocol === 'riot:') {
+            if (parsedUrl.protocol === 'element:') {
                 const ssoID = parsedUrl.searchParams.get(SEARCH_PARAM);
                 const store = readStore();
                 console.log("Forwarding to profile: ", store[ssoID]);
@@ -78,10 +78,10 @@ module.exports = {
         // --profile/--profile-dir are passed via the SEARCH_PARAM var in the callback url
         const args = process.argv.slice(1).filter(arg => arg !== "--hidden" && arg !== "-hidden");
         if (app.isPackaged) {
-            app.setAsDefaultProtocolClient('riot', process.execPath, args);
+            app.setAsDefaultProtocolClient('element', process.execPath, args);
         } else if (process.platform === 'win32') { // on Mac/Linux this would just cause the electron binary to open
             // special handler for running without being packaged, e.g `electron .` by passing our app path to electron
-            app.setAsDefaultProtocolClient('riot', process.execPath, [app.getAppPath(), ...args]);
+            app.setAsDefaultProtocolClient('element', process.execPath, [app.getAppPath(), ...args]);
         }
 
         if (process.platform === 'darwin') {

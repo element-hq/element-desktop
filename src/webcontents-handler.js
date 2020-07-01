@@ -56,7 +56,7 @@ function onLinkContextMenu(ev, params) {
         // Avoid showing a context menu for app icons
         if (params.hasImageContents) return;
         // Rewrite URL so that it can be used outside of the app
-        url = "https://riot.im/app/" + url.substring(23);
+        url = "https://app.element.io/" + url.substring(23);
     }
 
     const popupMenu = new Menu();

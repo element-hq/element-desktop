@@ -1,7 +1,7 @@
 hak
 ===
 
-This tool builds native dependencies for riot-desktop. Here follows some very minimal
+This tool builds native dependencies for element-desktop. Here follows some very minimal
 documentation for it.
 
 Goals:

@@ -1,23 +1,23 @@
-Riot Desktop
-============
+Element Desktop
+===============
 
-This is Riot desktop app as of release 1.6.
+Element Desktop is a Matrix client for desktop platforms with Element Web at its core.
 
-Fetching Riot
-=============
-Since this package is just the Electron wrapper for Riot, it doesn't contain any of the Riot code,
-so the first step is to get a working copy of Riot. There are a few ways of doing this:
+Fetching Element
+================
+Since this package is just the Electron wrapper for Element Web, it doesn't contain any of the Element Web code,
+so the first step is to get a working copy of Element Web. There are a few ways of doing this:
 
 ```
-# Fetch the prebuilt release Riot package from the riot.im GitHub releases page. The version
-# fetched will be the same as the local riot-desktop package.
-# We're explicitly asking for no config, so the package Riot will have no config.json.
+# Fetch the prebuilt release Element package from the riot.im GitHub releases page. The version
+# fetched will be the same as the local element-desktop package.
+# We're explicitly asking for no config, so the packaged Element will have no config.json.
 yarn run fetch --noverify --cfgdir ''
 ```
 
 ...or if you'd like to use GPG to verify the downloaded package:
 ```
-# Fetch the Riot public key from the riot.im web server over a secure connection and import
+# Fetch the Element public key from the element.io web server over a secure connection and import
 # it into your local GPG keychain (you'll need GPG installed). You only need to to do this
 # once.
 yarn run fetch --importkey
@@ -25,10 +25,10 @@ yarn run fetch --importkey
 yarn run fetch --cfgdir ''
 ```
 
-...or either of the above, but fetching a specific version of Riot:
+...or either of the above, but fetching a specific version of Element:
 ```
-# Fetch the prebuilt release Riot package from the riot.im GitHub releases page. The version
-# fetched will be the same as the local riot-desktop package.
+# Fetch the prebuilt release Element package from the riot.im GitHub releases page. The version
+# fetched will be the same as the local element-desktop package.
 yarn run fetch --noverify --cfgdir '' v1.5.6
 ```
 
@@ -44,15 +44,15 @@ ln -s ../riot-web/webapp ./
 
 Building
 ========
-Now you have a copy of Riot, you're ready to build packages. If you'd just like to
-run Riot locally, skip to the next section.
+Now you have a copy of Element, you're ready to build packages. If you'd just like to
+run Element locally, skip to the next section.
 
 ```
 yarn run build
 ```
 This will do a couple of things:
  * Run the `setversion` script to set the local package version to match whatever
-   version of Riot you installed above.
+   version of Element you installed above.
  * Run electron-builder to build a package. The package built will match the operating system
    you're running the build process on.
 
@@ -102,7 +102,7 @@ yarn start
 
 Config
 ======
-If you'd like the packaged Riot to have a configuration file, you can create a
+If you'd like the packaged Element to have a configuration file, you can create a
 config directory and place `config.json` in there, then specify this directory
 with the `--cfgdir` option to `yarn run fetch`, eg:
 ```
@@ -110,15 +110,15 @@ mkdir myconfig
 cp /path/to/my/config.json myconfig/
 yarn run fetch --cfgdir myconfig
 ```
-The config dir for the official Riot.im app is in `riot.im`. If you use this,
-your app will auto-update itself using builds from Riot.im.
+The config dir for the official Element.im app is in `riot.im`. If you use this,
+your app will auto-update itself using builds from element.io.
 
 Profiles
 ========
 
 To run multiple instances of the desktop app for different accounts, you can
 launch the executable with the `--profile` argument followed by a unique
-identifier, e.g `riot-desktop --profile Work` for it to run a separate profile and
+identifier, e.g `element-desktop --profile Work` for it to run a separate profile and
 not interfere with the default one.
 
 Alternatively, a custom location for the profile data can be specified using the
@@ -131,5 +131,7 @@ User-specified config.json
 + `$XDG_CONFIG_HOME\$NAME\config.json` or `~/.config/$NAME/config.json` on Linux
 + `~/Library/Application Support/$NAME/config.json` on macOS
 
-In the paths above, `$NAME` is typically `Riot`, unless you use `--profile
-$PROFILE` in which case it becomes `Riot-$PROFILE`.
+In the paths above, `$NAME` is typically `Element`, unless you use `--profile
+$PROFILE` in which case it becomes `Element-$PROFILE`, or it is using one of
+the above created by a pre-1.7 install, in which case it will be `Riot` or
+`Riot-$PROFILE`.

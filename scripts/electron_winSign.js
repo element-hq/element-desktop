@@ -24,7 +24,7 @@ function computeSignToolArgs(options, keyContainer) {
     // so we don't have to hard-code this here
     // fwiw https://stackoverflow.com/questions/17927895/automate-extended-validation-ev-code-signing
     // is about the most useful resource on automating code signing...
-    args.push('/f', 'riot.im\\New_Vector_Ltd.pem');
+    args.push('/f', 'element.io\\New_Vector_Ltd.pem');
 
     if (options.hash !== "sha1") {
         args.push("/fd", options.hash);
