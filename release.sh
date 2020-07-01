@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Script to perform a release of riot-desktop.
+# Script to perform a release of element-desktop.
 #
 # Requires githib-changelog-generator; to install, do 
 #   pip install git+https://github.com/matrix-org/github-changelog-generator.git
