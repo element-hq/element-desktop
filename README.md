@@ -17,7 +17,7 @@ yarn run fetch --noverify --cfgdir ''
 
 ...or if you'd like to use GPG to verify the downloaded package:
 ```
-# Fetch the Element public key from the riot.im web server over a secure connection and import
+# Fetch the Element public key from the element.io web server over a secure connection and import
 # it into your local GPG keychain (you'll need GPG installed). You only need to to do this
 # once.
 yarn run fetch --importkey
