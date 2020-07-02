@@ -218,7 +218,7 @@ async function setupGlobals() {
 }
 
 async function moveAutoLauncher() {
-    // Look for an auto-luancher under 'Riot' and if we find one, port it's
+    // Look for an auto-launcher under 'Riot' and if we find one, port it's
     // enabled/disbaledp-ness over to the new 'Element' launcher
     if (!vectorConfig.brand || vectorConfig.brand === 'Element') {
         const oldLauncher = new AutoLaunch({
