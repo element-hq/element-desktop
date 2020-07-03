@@ -11,19 +11,3 @@ Priority: extra
 Homepage: https://element.io/
 Description: 
   A feature-rich client for Matrix.org
-
-Package: riot-desktop
-Depends: element-desktop, ${misc:Depends}
-Architecture: all
-Priority: optional
-Section: oldlibs
-Description: transitional package
- This is a transitional package. It can safely be removed.
-
-Package: riot-web
-Depends: element-desktop, ${misc:Depends}
-Architecture: all
-Priority: optional
-Section: oldlibs
-Description: transitional package
- This is a transitional package. It can safely be removed.
