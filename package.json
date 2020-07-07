@@ -1,6 +1,6 @@
 {
   "name": "element-desktop",
-  "productName": "Element",
+  "productName": "Element (Riot)",
   "main": "src/electron-main.js",
   "version": "1.6.6",
   "description": "A feature-rich client for Matrix.org",
