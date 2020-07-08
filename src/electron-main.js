@@ -100,13 +100,17 @@ if (argv["help"]) {
 }
 
 // check if we are passed a profile in the SSO callback url
+let userDataPath;
+
 const userDataPathInProtocol = getProfileFromDeeplink(argv["_"]);
 if (userDataPathInProtocol) {
-    app.setPath('userData', userDataPathInProtocol);
+    userDataPath = userDataPathInProtocol;
 } else if (argv['profile-dir']) {
-    app.setPath('userData', argv['profile-dir']);
+    userDataPath = argv['profile-dir'];
 } else {
-    let newUserDataPath = app.getPath('userData');
+    // always override the user data path because electron uses the ${appData}/productName
+    // but we want our productName to be "Element (Riot)" for a transition period after the rename.
+    let newUserDataPath = path.join(app.getPath('appData'), 'Element');
     if (argv['profile']) {
         newUserDataPath += '-' + argv['profile'];
     }
@@ -123,9 +127,12 @@ if (userDataPathInProtocol) {
     console.log(oldUserDataPath + " exists: " + (oldUserDataPathExists ? 'yes' : 'no'));
     if (!newUserDataPathExists && oldUserDataPathExists) {
         console.log("Using legacy user data path: " + oldUserDataPath);
-        app.setPath('userData', oldUserDataPath);
+        userDataPath = oldUserDataPath;
+    } else {
+        userDataPath = newUserDataPath;
     }
 }
+app.setPath('userData', userDataPath);
 
 async function tryPaths(name, root, rawPaths) {
     // Make everything relative to root
