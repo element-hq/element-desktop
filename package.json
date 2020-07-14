@@ -4,7 +4,7 @@
   "main": "src/electron-main.js",
   "version": "1.6.6",
   "description": "A feature-rich client for Matrix.org",
-  "author": "Element Communications Ltd.",
+  "author": "Element",
   "repository": {
     "type": "git",
     "url": "https://github.com/vector-im/riot-desktop"
@@ -100,6 +100,7 @@
     "directories": {
       "output": "dist"
     },
+    "afterPack": "scripts/electron_afterPack",
     "afterSign": "scripts/electron_afterSign",
     "protocols": [
       {
