@@ -3,6 +3,14 @@ Element Desktop
 
 Element Desktop is a Matrix client for desktop platforms with Element Web at its core.
 
+First Steps
+===========
+Before you do anything else, fetch the dependencies:
+
+```
+yarn install
+```
+
 Fetching Element
 ================
 Since this package is just the Electron wrapper for Element Web, it doesn't contain any of the Element Web code,
