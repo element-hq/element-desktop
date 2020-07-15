@@ -208,7 +208,7 @@ async function setupGlobals() {
 
     // The tray icon
     // It's important to call `path.join` so we don't end up with the packaged asar in the final path.
-    const iconFile = `riot.${process.platform === 'win32' ? 'ico' : 'png'}`;
+    const iconFile = `element.${process.platform === 'win32' ? 'ico' : 'png'}`;
     iconPath = path.join(resPath, "img", iconFile);
     trayConfig = {
         icon_path: iconPath,
