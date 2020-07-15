@@ -3,6 +3,14 @@ Element Desktop
 
 Element Desktop is a Matrix client for desktop platforms with Element Web at its core.
 
+First Steps
+===========
+Before you do anything else, fetch the dependencies:
+
+```
+yarn install
+```
+
 Fetching Element
 ================
 Since this package is just the Electron wrapper for Element Web, it doesn't contain any of the Element Web code,
@@ -135,3 +143,10 @@ In the paths above, `$NAME` is typically `Element`, unless you use `--profile
 $PROFILE` in which case it becomes `Element-$PROFILE`, or it is using one of
 the above created by a pre-1.7 install, in which case it will be `Riot` or
 `Riot-$PROFILE`.
+
+Report bugs & give feedback
+==========================
+
+If you run into any bugs or have feedback you'd like to share, please let us know on GitHub.
+
+To help avoid duplicate issues, please [view existing issues](https://github.com/vector-im/riot-web/issues?q=is%3Aopen+is%3Aissue+sort%3Areactions-%2B1-desc) first (and add a +1) or [create a new issue](https://github.com/vector-im/riot-web/issues/new) if you can't find it.  Please note that this issue tracker is associated with the [Riot-Web](https://github.com/vector-im/riot-web) repo, but is also applied to the code in this repo as well.

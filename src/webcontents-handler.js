@@ -1,7 +1,8 @@
-const {clipboard, nativeImage, Menu, MenuItem, shell, dialog} = require('electron');
+const {clipboard, nativeImage, Menu, MenuItem, shell, dialog, ipcMain} = require('electron');
 const url = require('url');
 const fs = require('fs');
 const request = require('request');
+const path = require('path');
 
 const MAILTO_PREFIX = "mailto:";
 
@@ -205,6 +206,9 @@ function onEditableContextMenu(ev, params) {
     ev.preventDefault();
 }
 
+ipcMain.on('userDownloadOpen', function(ev, {path}) {
+    shell.openPath(path);
+});
 
 module.exports = (webContents) => {
     webContents.on('new-window', onWindowOrNavigate);
@@ -221,5 +225,17 @@ module.exports = (webContents) => {
         } else if (params.isEditable) {
             onEditableContextMenu(ev, params);
         }
+    });
+
+    webContents.session.on('will-download', (event, item) => {
+        item.once('done', (event, state) => {
+            if (state === 'completed') {
+                const savePath = item.getSavePath();
+                webContents.send('userDownloadCompleted', {
+                    path: savePath,
+                    name: path.basename(savePath),
+                });
+            }
+        });
     });
 };

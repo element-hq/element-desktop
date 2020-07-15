@@ -99,6 +99,13 @@ if (argv["help"]) {
     app.exit();
 }
 
+// Electron creates the user data directory (with just an empty 'Dictionaries' directory...)
+// as soon as the app path is set, so pick a random path in it that must exist if it's a
+// real user data directory.
+function isRealUserDataDir(d) {
+    return fs.existsSync(path.join(d, 'IndexedDB'));
+}
+
 // check if we are passed a profile in the SSO callback url
 let userDataPath;
 
@@ -113,12 +120,6 @@ if (userDataPathInProtocol) {
     let newUserDataPath = path.join(app.getPath('appData'), 'Element');
     if (argv['profile']) {
         newUserDataPath += '-' + argv['profile'];
-    }
-    // Electron creates the user data directory (with just an empty 'Dictionaries' directory...)
-    // as soon as the app path is set, so pick a random path in it that must exist if it's a
-    // real user data directory.
-    function isRealUserDataDir(d) {
-        return fs.existsSync(path.join(d, 'IndexedDB'));
     }
     const newUserDataPathExists = isRealUserDataDir(newUserDataPath);
     const oldUserDataPath = path.join(app.getPath('appData'), 'Riot');
@@ -207,7 +208,7 @@ async function setupGlobals() {
 
     // The tray icon
     // It's important to call `path.join` so we don't end up with the packaged asar in the final path.
-    const iconFile = `riot.${process.platform === 'win32' ? 'ico' : 'png'}`;
+    const iconFile = `element.${process.platform === 'win32' ? 'ico' : 'png'}`;
     iconPath = path.join(resPath, "img", iconFile);
     trayConfig = {
         icon_path: iconPath,
