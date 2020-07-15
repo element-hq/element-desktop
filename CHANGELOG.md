@@ -1,3 +1,18 @@
+Changes in [1.7.0](https://github.com/vector-im/riot-desktop/releases/tag/v1.7.0) (2020-07-15)
+==============================================================================================
+[Full Changelog](https://github.com/vector-im/riot-desktop/compare/v1.6.8...v1.7.0)
+
+ * Fix lint error
+   [\#113](https://github.com/vector-im/riot-desktop/pull/113)
+ * Delabs font-scaling
+   [\#112](https://github.com/vector-im/riot-desktop/pull/112)
+ * Remove room list labs flag from config
+   [\#109](https://github.com/vector-im/riot-desktop/pull/109)
+ * Remove the irc layout setting from labs
+   [\#111](https://github.com/vector-im/riot-desktop/pull/111)
+ * Update npm to ^6.14.6
+   [\#108](https://github.com/vector-im/riot-desktop/pull/108)
+
 Changes in [1.6.8](https://github.com/vector-im/riot-desktop/releases/tag/v1.6.8) (2020-07-03)
 ==============================================================================================
 [Full Changelog](https://github.com/vector-im/riot-desktop/compare/v1.6.8-rc.1...v1.6.8)
