@@ -1,3 +1,36 @@
+Changes in [1.6.8](https://github.com/vector-im/riot-desktop/releases/tag/v1.6.8) (2020-07-03)
+==============================================================================================
+[Full Changelog](https://github.com/vector-im/riot-desktop/compare/v1.6.8-rc.1...v1.6.8)
+
+ * No changes since rc.1
+
+Changes in [1.6.8-rc.1](https://github.com/vector-im/riot-desktop/releases/tag/v1.6.8-rc.1) (2020-07-01)
+========================================================================================================
+[Full Changelog](https://github.com/vector-im/riot-desktop/compare/v1.6.7...v1.6.8-rc.1)
+
+ * Show expiring toast on completed downloads to prompt user to open
+   [\#106](https://github.com/vector-im/riot-desktop/pull/106)
+ * Upgrade to Electron 9.0.5
+   [\#107](https://github.com/vector-im/riot-desktop/pull/107)
+ * Add new spinner labs option to config.json
+   [\#105](https://github.com/vector-im/riot-desktop/pull/105)
+ * electron-main: Skip the reindex if we're going to delete the db anyways.
+   [\#104](https://github.com/vector-im/riot-desktop/pull/104)
+ * riot-desktop: Bump the required seshat version.
+   [\#103](https://github.com/vector-im/riot-desktop/pull/103)
+ * main: Add an event index IPC method to check if a room is being indexed.
+   [\#100](https://github.com/vector-im/riot-desktop/pull/100)
+ * electron-main: Add support to set and get the user version.
+   [\#102](https://github.com/vector-im/riot-desktop/pull/102)
+ * Upgrade to Electron 9
+   [\#94](https://github.com/vector-im/riot-desktop/pull/94)
+
+Changes in [1.6.7](https://github.com/vector-im/riot-desktop/releases/tag/v1.6.7) (2020-06-29)
+==============================================================================================
+[Full Changelog](https://github.com/vector-im/riot-desktop/compare/v1.6.6...v1.6.7)
+
+ * No changes since 1.6.6
+
 Changes in [1.6.6](https://github.com/vector-im/riot-desktop/releases/tag/v1.6.6) (2020-06-23)
 ==============================================================================================
 [Full Changelog](https://github.com/vector-im/riot-desktop/compare/v1.6.6-rc.1...v1.6.6)
