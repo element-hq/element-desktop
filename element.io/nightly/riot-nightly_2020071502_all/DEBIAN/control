@@ -1,5 +1,5 @@
 Package: riot-nightly
-Version: 2020071301
+Version: 2020071502
 Depends: element-nightly
 Maintainer: packages@element.io
 Architecture: all
