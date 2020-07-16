@@ -1,3 +1,22 @@
+Changes in [1.7.1](https://github.com/vector-im/riot-desktop/releases/tag/v1.7.1) (2020-07-16)
+==============================================================================================
+[Full Changelog](https://github.com/vector-im/riot-desktop/compare/v1.7.0...v1.7.1)
+
+ * Bump lodash from 4.17.15 to 4.17.19
+   [\#121](https://github.com/vector-im/riot-desktop/pull/121)
+ * Don't forget nightly when computing userData path
+   [\#120](https://github.com/vector-im/riot-desktop/pull/120)
+ * Fix hosting link
+   [\#119](https://github.com/vector-im/riot-desktop/pull/119)
+ * New macOS icon
+   [\#117](https://github.com/vector-im/riot-desktop/pull/117)
+ * Update README.md
+   [\#118](https://github.com/vector-im/riot-desktop/pull/118)
+ * More icon updates
+   [\#115](https://github.com/vector-im/riot-desktop/pull/115)
+ * Don't forget to yarn install
+   [\#114](https://github.com/vector-im/riot-desktop/pull/114)
+
 Changes in [1.7.0](https://github.com/vector-im/riot-desktop/releases/tag/v1.7.0) (2020-07-15)
 ==============================================================================================
 [Full Changelog](https://github.com/vector-im/riot-desktop/compare/v1.6.8...v1.7.0)
