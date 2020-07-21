@@ -115,18 +115,16 @@ if (userDataPathInProtocol) {
 } else if (argv['profile-dir']) {
     userDataPath = argv['profile-dir'];
 } else {
-    // strip the bracketed riot suffix from the app name, if any: we don't want to
-    // store user data in a dir with that transitional suffix.
-    const appName = app.getName().replace(' (Riot)', '');
-
-    // always override the user data path because electron uses the ${appData}/productName
-    // but we want our productName to be "Element (Riot)" for a transition period after the rename.
-    let newUserDataPath = path.join(app.getPath('appData'), appName);
+    let newUserDataPath = app.getPath('userData');
     if (argv['profile']) {
         newUserDataPath += '-' + argv['profile'];
     }
     const newUserDataPathExists = isRealUserDataDir(newUserDataPath);
-    const oldUserDataPath = path.join(app.getPath('appData'), appName.replace('Element', 'Riot'));
+    let oldUserDataPath = path.join(app.getPath('appData'), app.getName().replace('Element', 'Riot'));
+    if (argv['profile']) {
+        oldUserDataPath += '-' + argv['profile'];
+    }
+
     const oldUserDataPathExists = isRealUserDataDir(oldUserDataPath);
     console.log(newUserDataPath + " exists: " + (newUserDataPathExists ? 'yes' : 'no'));
     console.log(oldUserDataPath + " exists: " + (oldUserDataPathExists ? 'yes' : 'no'));
