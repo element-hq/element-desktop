@@ -289,4 +289,4 @@ async function main() {
     console.log("Done!");
 }
 
-main().then((ret) => process.exit(ret));
+main().then((ret) => process.exit(ret)).catch(e => process.exit(1));
