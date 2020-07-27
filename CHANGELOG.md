@@ -1,3 +1,14 @@
+Changes in [1.7.2](https://github.com/vector-im/riot-desktop/releases/tag/v1.7.2) (2020-07-27)
+==============================================================================================
+[Full Changelog](https://github.com/vector-im/riot-desktop/compare/v1.7.1...v1.7.2)
+
+ * Catch exceptions from main method in fetch script
+   [\#124](https://github.com/vector-im/riot-desktop/pull/124)
+ * Use new eslint package
+   [\#122](https://github.com/vector-im/riot-desktop/pull/122)
+ * Remove ' (Riot)' from app name
+   [\#123](https://github.com/vector-im/riot-desktop/pull/123)
+
 Changes in [1.7.1](https://github.com/vector-im/riot-desktop/releases/tag/v1.7.1) (2020-07-16)
 ==============================================================================================
 [Full Changelog](https://github.com/vector-im/riot-desktop/compare/v1.7.0...v1.7.1)
