@@ -4,7 +4,7 @@
 #include <tchar.h>
 
 /*
- * This just runs 'Element (Riot).exe' with the same args as
+ * This just runs 'Element.exe' with the same args as
  * this process was invoked with. This gets around the fact that
  * squirrel always tries to run an executable with the same name,
  * so fails to restart if the app's name has changed.
@@ -15,7 +15,7 @@ void _tmain( int argc, TCHAR *argv[] )
     char cmdLine[32767];
 
     LPSTR cmdLinePos = cmdLine;
-    LPSTR toRun = "\"Element (Riot).exe\" ";
+    LPSTR toRun = "\"Element.exe\" ";
     strncpy(cmdLinePos, toRun, strlen(toRun));
     cmdLinePos += strlen(toRun);
 

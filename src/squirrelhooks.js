@@ -52,6 +52,19 @@ function checkSquirrelHooks() {
             );
             return fsProm.rmdir(startMenuDir, { recursive: true });
         }).then(() => {
+            // same for 'Element (Riot) which is old now too (we have to try to delete both because
+            // we don't know what version we're updating from, but of course we do know this version
+            // is 'Element' so the two old ones are all safe to delete).
+            const appDataDir = process.env.APPDATA;
+            if (!appDataDir) return;
+            const oldStartMenuLink = path.join(
+                appDataDir, 'Microsoft', 'Windows', 'Start Menu', 'Programs', 'Element', 'Element (Riot).lnk',
+            );
+            return fsProm.unlink(oldStartMenuLink).catch(() => {});
+        }).then(() => {
+            const oldDesktopShortcut = path.join(app.getPath('desktop'), 'Element (Riot).lnk');
+            return fsProm.unlink(oldDesktopShortcut).catch(() => {});
+        }).then(() => {
             const oldDesktopShortcut = path.join(app.getPath('desktop'), 'Riot.lnk');
             return fsProm.unlink(oldDesktopShortcut).catch(() => {});
         }).then(() => {
