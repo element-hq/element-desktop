@@ -55,6 +55,20 @@ Building
 Now you have a copy of Element, you're ready to build packages. If you'd just like to
 run Element locally, skip to the next section.
 
+If you'd like to build the native modules (for searching in encrypted rooms and
+secure storage), do this first. This will take 10 minutes or so, and will
+require a number of native tools to be installed, depending on your OS (eg.
+rust, tcl, make/nmake). If you don't need these features, you can skip this
+step.
+```
+yarn run build:native
+```
+
+On Windows, this will automatically determine the architecture to build for based
+on the environment (ie. set up by vcvarsall.bat).
+
+Now you can build the package:
+
 ```
 yarn run build
 ```
@@ -74,16 +88,6 @@ yarn run build64
 ```
 
 This build step will not build any native modules.
-
-If you'd like to build the native modules (for searching in encrypted rooms):
-This will take 10 minutes or so, and will require a number of native tools
-to be installed, depending on your OS (eg. rust, tcl, make/nmake).
-```
-yarn run build:native
-```
-
-On Windows, this will automatically determine the architecture to build for based
-on the environment (ie. set up by vcvarsall.bat).
 
 You can also build using docker, which will always produce the linux package:
 ```
