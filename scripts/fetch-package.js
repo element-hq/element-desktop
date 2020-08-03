@@ -12,7 +12,7 @@ const needle = require('needle');
 const riotDesktopPackageJson = require('../package.json');
 
 const PUB_KEY_URL = "https://packages.riot.im/riot-release-key.asc";
-const PACKAGE_URL_PREFIX = "https://github.com/vector-im/riot-web/releases/download/";
+const PACKAGE_URL_PREFIX = "https://github.com/vector-im/element-web/releases/download/";
 const ASAR_PATH = 'webapp.asar';
 
 const {setPackageVersion, setDebVersion} = require('./set-version.js');
