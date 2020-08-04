@@ -17,7 +17,7 @@ Since this package is just the Electron wrapper for Element Web, it doesn't cont
 so the first step is to get a working copy of Element Web. There are a few ways of doing this:
 
 ```
-# Fetch the prebuilt release Element package from the riot.im GitHub releases page. The version
+# Fetch the prebuilt release Element package from the element-web GitHub releases page. The version
 # fetched will be the same as the local element-desktop package.
 # We're explicitly asking for no config, so the packaged Element will have no config.json.
 yarn run fetch --noverify --cfgdir ''
@@ -35,7 +35,7 @@ yarn run fetch --cfgdir ''
 
 ...or either of the above, but fetching a specific version of Element:
 ```
-# Fetch the prebuilt release Element package from the riot.im GitHub releases page. The version
+# Fetch the prebuilt release Element package from the element-web GitHub releases page. The version
 # fetched will be the same as the local element-desktop package.
 yarn run fetch --noverify --cfgdir '' v1.5.6
 ```
@@ -43,8 +43,8 @@ yarn run fetch --noverify --cfgdir '' v1.5.6
 If you only want to run the app locally and don't need to build packages, you can
 provide the `webapp` directory directly:
 ```
-# Assuming you've checked out and built a copy of riot-web in ../riot-web
-ln -s ../riot-web/webapp ./
+# Assuming you've checked out and built a copy of element-web in ../element-web
+ln -s ../element-web/webapp ./
 ```
 
 [TODO: add support for fetching develop builds, arbitrary URLs and arbitrary paths]
@@ -122,7 +122,7 @@ mkdir myconfig
 cp /path/to/my/config.json myconfig/
 yarn run fetch --cfgdir myconfig
 ```
-The config dir for the official Element.im app is in `riot.im`. If you use this,
+The config dir for the official Element app is in `element.io`. If you use this,
 your app will auto-update itself using builds from element.io.
 
 Profiles
@@ -153,4 +153,4 @@ Report bugs & give feedback
 
 If you run into any bugs or have feedback you'd like to share, please let us know on GitHub.
 
-To help avoid duplicate issues, please [view existing issues](https://github.com/vector-im/riot-web/issues?q=is%3Aopen+is%3Aissue+sort%3Areactions-%2B1-desc) first (and add a +1) or [create a new issue](https://github.com/vector-im/riot-web/issues/new) if you can't find it.  Please note that this issue tracker is associated with the [Riot-Web](https://github.com/vector-im/riot-web) repo, but is also applied to the code in this repo as well.
+To help avoid duplicate issues, please [view existing issues](https://github.com/vector-im/element-web/issues?q=is%3Aopen+is%3Aissue+sort%3Areactions-%2B1-desc) first (and add a +1) or [create a new issue](https://github.com/vector-im/element-web/issues/new) if you can't find it.  Please note that this issue tracker is associated with the [element-web](https://github.com/vector-im/element-web) repo, but is also applied to the code in this repo as well.
