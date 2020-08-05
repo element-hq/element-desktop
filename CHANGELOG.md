@@ -1,3 +1,18 @@
+Changes in [1.7.3](https://github.com/vector-im/element-desktop/releases/tag/v1.7.3) (2020-08-05)
+=================================================================================================
+[Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.3-rc.1...v1.7.3)
+
+ * No changes since 1.7.3-rc.1
+
+Changes in [1.7.3-rc.1](https://github.com/vector-im/riot-desktop/releases/tag/v1.7.3-rc.1) (2020-07-31)
+========================================================================================================
+[Full Changelog](https://github.com/vector-im/riot-desktop/compare/v1.7.2...v1.7.3-rc.1)
+
+ * Clean up linting
+   [\#126](https://github.com/vector-im/riot-desktop/pull/126)
+ * Update renaming workaround for 'Element' name
+   [\#125](https://github.com/vector-im/riot-desktop/pull/125)
+
 Changes in [1.7.2](https://github.com/vector-im/riot-desktop/releases/tag/v1.7.2) (2020-07-27)
 ==============================================================================================
 [Full Changelog](https://github.com/vector-im/riot-desktop/compare/v1.7.1...v1.7.2)
