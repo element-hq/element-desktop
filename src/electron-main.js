@@ -41,6 +41,8 @@ const {getProfileFromDeeplink, protocolInit, recordSSOSession} = require('./prot
 const windowStateKeeper = require('electron-window-state');
 const Store = require('electron-store');
 
+const doNotDisturb = require('./do-not-disturb');
+
 const fs = require('fs');
 const afs = fs.promises;
 
@@ -767,6 +769,7 @@ app.on('ready', async () => {
     try {
         await setupGlobals();
         await moveAutoLauncher();
+        await doNotDisturb.init();
     } catch (e) {
         console.log("App setup failed: exiting", e);
         process.exit(1);
