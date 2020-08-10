@@ -47,6 +47,7 @@ const fs = require('fs');
 const afs = fs.promises;
 
 const crypto = require('crypto');
+
 let keytar;
 try {
     keytar = require('keytar');
@@ -350,6 +351,9 @@ ipcMain.on('ipcCall', async function(ev, payload) {
             store.set('autoHideMenuBar', args[0]);
             global.mainWindow.autoHideMenuBar = Boolean(args[0]);
             global.mainWindow.setMenuBarVisibility(!args[0]);
+            break;
+        case 'getMaySendNotifications':
+            ret = !global.isDoNotDisturb;
             break;
         case 'getAppVersion':
             ret = app.getVersion();
