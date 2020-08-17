@@ -18,6 +18,7 @@
             "matrix.org"
         ]
     },
+    "showLabsSettings": false,
     "piwik": {
         "url": "https://piwik.riot.im/",
         "siteId": 1,
