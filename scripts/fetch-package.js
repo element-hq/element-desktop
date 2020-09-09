@@ -19,7 +19,7 @@ const {setPackageVersion, setDebVersion} = require('./set-version.js');
 
 async function getLatestDevelopUrl(bkToken) {
     const buildsResult = await needle('get',
-        "https://api.buildkite.com/v2/organizations/matrix-dot-org/pipelines/riot-web/builds",
+        "https://api.buildkite.com/v2/organizations/matrix-dot-org/pipelines/element-web/builds",
         {
             branch: 'develop',
             state: 'passed',
