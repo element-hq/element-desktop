@@ -1,3 +1,9 @@
+Changes in [1.7.7](https://github.com/vector-im/element-desktop/releases/tag/v1.7.7) (2020-09-14)
+=================================================================================================
+[Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.6...v1.7.7)
+
+ * No changes since 1.7.6
+
 Changes in [1.7.6](https://github.com/vector-im/element-desktop/releases/tag/v1.7.6) (2020-09-14)
 =================================================================================================
 [Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.6-rc.1...v1.7.6)
