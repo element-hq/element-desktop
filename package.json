@@ -34,7 +34,7 @@
     "electron-store": "^2.0.0",
     "electron-window-state": "^4.1.0",
     "minimist": "^1.2.3",
-    "png-to-ico": "^1.0.2"
+    "png-to-ico": "^2.1.0"
   },
   "devDependencies": {
     "asar": "^2.0.1",
