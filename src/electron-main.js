@@ -352,8 +352,8 @@ ipcMain.on('ipcCall', async function(ev, payload) {
             global.mainWindow.autoHideMenuBar = Boolean(args[0]);
             global.mainWindow.setMenuBarVisibility(!args[0]);
             break;
-        case 'getMaySendNotifications':
-            ret = !global.isDoNotDisturb;
+        case 'getDoNotDisturbEnabled':
+            ret = doNotDisturb.isDoNotDisturb();
             break;
         case 'getAppVersion':
             ret = app.getVersion();
