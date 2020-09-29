@@ -1,3 +1,77 @@
+Changes in [1.7.8](https://github.com/vector-im/element-desktop/releases/tag/v1.7.8) (2020-09-28)
+=================================================================================================
+[Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.8-rc.1...v1.7.8)
+
+ * No changes since rc.1
+
+Changes in [1.7.8-rc.1](https://github.com/vector-im/element-desktop/releases/tag/v1.7.8-rc.1) (2020-09-23)
+===========================================================================================================
+[Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.7...v1.7.8-rc.1)
+
+ * Fix neon error by upgrading Seshat
+   [\#141](https://github.com/vector-im/element-desktop/pull/141)
+ * Upgrade to Electron 10.1.1
+   [\#140](https://github.com/vector-im/element-desktop/pull/140)
+
+Changes in [1.7.7](https://github.com/vector-im/element-desktop/releases/tag/v1.7.7) (2020-09-14)
+=================================================================================================
+[Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.6...v1.7.7)
+
+ * No changes since 1.7.6
+
+Changes in [1.7.6](https://github.com/vector-im/element-desktop/releases/tag/v1.7.6) (2020-09-14)
+=================================================================================================
+[Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.6-rc.1...v1.7.6)
+
+ * No changes since rc.1
+
+Changes in [1.7.6-rc.1](https://github.com/vector-im/element-desktop/releases/tag/v1.7.6-rc.1) (2020-09-09)
+===========================================================================================================
+[Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.5...v1.7.6-rc.1)
+
+ * Update to Element pipeline name
+   [\#139](https://github.com/vector-im/element-desktop/pull/139)
+ * Bump bl from 4.0.2 to 4.0.3
+   [\#137](https://github.com/vector-im/element-desktop/pull/137)
+
+Changes in [1.7.5](https://github.com/vector-im/element-desktop/releases/tag/v1.7.5) (2020-09-01)
+=================================================================================================
+[Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.5-rc.1...v1.7.5)
+
+ * No changes since 1.7.5-rc.1
+
+Changes in [1.7.5-rc.1](https://github.com/vector-im/element-desktop/releases/tag/v1.7.5-rc.1) (2020-08-26)
+===========================================================================================================
+[Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.4...v1.7.5-rc.1)
+
+ * Settings v3: Update configs for new feature flag behaviour
+   [\#135](https://github.com/vector-im/element-desktop/pull/135)
+ * Add reaction preview labs flags to nightly
+   [\#134](https://github.com/vector-im/element-desktop/pull/134)
+
+Changes in [1.7.4](https://github.com/vector-im/element-desktop/releases/tag/v1.7.4) (2020-08-17)
+=================================================================================================
+[Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.4-rc.1...v1.7.4)
+
+ * No changes since 1.7.4-rc.1
+
+Changes in [1.7.4-rc.1](https://github.com/vector-im/element-desktop/releases/tag/v1.7.4-rc.1) (2020-08-13)
+===========================================================================================================
+[Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.3...v1.7.4-rc.1)
+
+ * Update policy links to element.io
+   [\#132](https://github.com/vector-im/element-desktop/pull/132)
+ * Update bug report submission URL
+   [\#131](https://github.com/vector-im/element-desktop/pull/131)
+ * Update code signing cert for Windows
+   [\#130](https://github.com/vector-im/element-desktop/pull/130)
+ * Replace Riot with Element in docs and comments
+   [\#129](https://github.com/vector-im/element-desktop/pull/129)
+ * Fix order of README steps
+   [\#128](https://github.com/vector-im/element-desktop/pull/128)
+ * Upgrade to Electron 9.1.2
+   [\#127](https://github.com/vector-im/element-desktop/pull/127)
+
 Changes in [1.7.3](https://github.com/vector-im/element-desktop/releases/tag/v1.7.3) (2020-08-05)
 =================================================================================================
 [Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.3-rc.1...v1.7.3)
