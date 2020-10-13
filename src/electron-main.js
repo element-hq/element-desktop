@@ -262,6 +262,18 @@ const deleteContents = async (p) => {
     }
 };
 
+async function randomArray(size) {
+    return new Promise((resolve, reject) => {
+        crypto.randomBytes(size, (err, buf) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(buf.toString("base64").replace(/=+$/g, ''));
+            }
+        });
+    });
+}
+
 // handle uncaught errors otherwise it displays
 // stack traces in popup dialogs, which is terrible (which
 // it will do any time the auto update poke fails, and there's
@@ -439,16 +451,7 @@ ipcMain.on('ipcCall', async function(ev, payload) {
 
         case 'createPickleKey':
             try {
-                const randomArray = await new Promise((resolve, reject) => {
-                    crypto.randomBytes(32, (err, buf) => {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            resolve(buf);
-                        }
-                    });
-                });
-                const pickleKey = randomArray.toString("base64").replace(/=+$/g, '');
+                const pickleKey = await randomArray(32);
                 await keytar.setPassword("element.io", `${args[0]}|${args[1]}`, pickleKey);
                 ret = pickleKey;
             } catch (e) {
