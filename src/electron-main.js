@@ -505,17 +505,17 @@ ipcMain.on('seshat', async function(ev, payload) {
             break;
 
         case 'initEventIndex':
-            const userId = args[0];
-            const deviceId = args[1];
-
             if (eventIndex === null) {
+                const userId = args[0];
+                const deviceId = args[1];
+                const passphraseKey = `seshat|${userId}|${deviceId}`;
+
                 let changePassphrase = false;
                 let passphrase = seshatDefaultPassphrase;
 
                 if (keytar) {
                     try {
                         // Try to get a passphrase for seshat.
-                        const passphraseKey = `seshat|${userId}|${deviceId}`;
                         const storedPassphrase = await keytar.getPassword("element.io", passphraseKey);
 
                         // If no passphrase was found mark that we should change
@@ -564,11 +564,11 @@ ipcMain.on('seshat', async function(ev, payload) {
                             throw (e);
                         }
                     }
-                }
+                };
 
                 try {
                     eventIndex = await openSeshat();
-                } catch(e) {
+                } catch (e) {
                     sendError(payload.id, e);
                     return;
                 }
@@ -585,7 +585,7 @@ ipcMain.on('seshat', async function(ev, payload) {
 
                         // Re-open the event index with the new passphrase.
                         eventIndex = new Seshat(eventStorePath, {newPassphrase});
-                    } catch(e) {
+                    } catch (e) {
                         sendError(payload.id, e);
                         return;
                     }
