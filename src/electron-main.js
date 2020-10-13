@@ -61,7 +61,7 @@ let Seshat;
 let SeshatRecovery;
 let ReindexError;
 
-const seshatPassphrase = "DEFAULT_PASSPHRASE";
+const seshatDefaultPassphrase = "DEFAULT_PASSPHRASE";
 
 try {
     const seshatModule = require('matrix-seshat');
@@ -505,19 +505,43 @@ ipcMain.on('seshat', async function(ev, payload) {
             break;
 
         case 'initEventIndex':
+            const userId = args[0];
+            const deviceId = args[1];
+
             if (eventIndex === null) {
-                try {
-                    await afs.mkdir(eventStorePath, {recursive: true});
-                    eventIndex = new Seshat(eventStorePath, {passphrase: seshatPassphrase});
-                } catch (e) {
-                    if (e instanceof ReindexError) {
-                        // If this is a reindex error, the index schema
-                        // changed. Try to open the database in recovery mode,
-                        // reindex the database and finally try to open the
-                        // database again.
-                        try {
+                let changePassphrase = false;
+                let passphrase = seshatDefaultPassphrase;
+
+                if (keytar) {
+                    try {
+                        // Try to get a passphrase for seshat.
+                        const passphraseKey = `seshat|${userId}|${deviceId}`;
+                        const storedPassphrase = await keytar.getPassword("element.io", passphraseKey);
+
+                        // If no passphrase was found mark that we should change
+                        // it, if one is found, use that one.
+                        if (storedPassphrase === null) {
+                            changePassphrase = true;
+                        } else {
+                            passphrase = storedPassphrase;
+                        }
+                    } catch (e) {
+                        console.log("Error getting the event index passphrase out of the secret store", e);
+                    }
+                }
+
+                const openSeshat = async () => {
+                    try {
+                        await afs.mkdir(eventStorePath, {recursive: true});
+                        return new Seshat(eventStorePath, {passphrase});
+                    } catch (e) {
+                        if (e instanceof ReindexError) {
+                            // If this is a reindex error, the index schema
+                            // changed. Try to open the database in recovery mode,
+                            // reindex the database and finally try to open the
+                            // database again.
                             const recoveryIndex = new SeshatRecovery(eventStorePath, {
-                                passphrase: seshatPassphrase,
+                                passphrase,
                             });
 
                             const userVersion = await recoveryIndex.getUserVersion();
@@ -535,14 +559,33 @@ ipcMain.on('seshat', async function(ev, payload) {
                                 await recoveryIndex.reindex();
                             }
 
-                            eventIndex = new Seshat(eventStorePath, {
-                                passphrase: seshatPassphrase,
-                            });
-                        } catch (e) {
-                            sendError(payload.id, e);
-                            return;
+                            return new Seshat(eventStorePath, {passphrase});
+                        } else {
+                            throw (e);
                         }
-                    } else {
+                    }
+                }
+
+                try {
+                    eventIndex = await openSeshat();
+                } catch(e) {
+                    sendError(payload.id, e);
+                    return;
+                }
+
+                if (changePassphrase) {
+                    try {
+                        // Generate a new random passphrase.
+                        const newPassphrase = await randomArray(32);
+                        await keytar.setPassword("element.io", passphraseKey, newPassphrase);
+
+                        // Set the new passphrase, this will close the event
+                        // index.
+                        await eventIndex.changePassphrase(newPassphrase);
+
+                        // Re-open the event index with the new passphrase.
+                        eventIndex = new Seshat(eventStorePath, {newPassphrase});
+                    } catch(e) {
                         sendError(payload.id, e);
                         return;
                     }
