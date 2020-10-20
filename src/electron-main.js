@@ -1002,7 +1002,7 @@ app.on('select-client-certificate', (event, webContents, url, list, callback) =>
                 break;
             }
         }
-        if(found === false) {
+        if (found === false) {
             console.log('No certificate found');
         }
     } else if (clientCertPickFirst === true && list.length > 0) {
@@ -1012,13 +1012,13 @@ app.on('select-client-certificate', (event, webContents, url, list, callback) =>
     } else {
       console.log('No client certificate available');
     }
-})
+});
 
 app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
     // Ensure we don't trust certificate causing a verification error
     console.log('Untrusted server certificate');
     callback(false);
-})
+});
 
 function beforeQuit() {
     global.appQuitting = true;
