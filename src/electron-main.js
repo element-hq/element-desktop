@@ -985,6 +985,41 @@ app.on('activate', () => {
     mainWindow.show();
 });
 
+app.on('select-client-certificate', (event, webContents, url, list, callback) => {
+    console.log('select-client-certificate', url, list)
+
+    const clientCertPickFirst = vectorConfig['clientCertPickFirst']
+    const clientCertFingerprint = vectorConfig['clientCertFingerprint']
+
+    if (clientCertFingerprint) {
+        let found = false
+			  for (const cert of list) {
+            if (cert.fingerprint === clientCertFingerprint) {
+                console.log('Selected client certificate ' + cert.fingerprint)
+                event.preventDefault()
+                callback(cert)
+                found = true
+                break
+            }
+        }
+        if(found === false) {
+            console.log('No certificate found')
+        }
+		} else if (clientCertPickFirst === true && list.length > 0) {
+        console.log('Selected first available client certificate ' + list[0].fingerprint)
+        event.preventDefault()
+        callback(list[0])
+    } else {
+      console.log('No client certificate available')
+    }
+})
+
+app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
+    // Ensure we don't trust certificate causing a verification error
+    console.log('Untrusted server certificate')
+    callback(false)
+})
+
 function beforeQuit() {
     global.appQuitting = true;
     if (mainWindow) {
