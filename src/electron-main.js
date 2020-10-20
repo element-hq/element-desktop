@@ -993,7 +993,7 @@ app.on('select-client-certificate', (event, webContents, url, list, callback) =>
 
     if (clientCertFingerprint) {
         let found = false
-			  for (const cert of list) {
+            for (const cert of list) {
             if (cert.fingerprint === clientCertFingerprint) {
                 console.log('Selected client certificate ' + cert.fingerprint)
                 event.preventDefault()
@@ -1005,7 +1005,7 @@ app.on('select-client-certificate', (event, webContents, url, list, callback) =>
         if(found === false) {
             console.log('No certificate found')
         }
-		} else if (clientCertPickFirst === true && list.length > 0) {
+    } else if (clientCertPickFirst === true && list.length > 0) {
         console.log('Selected first available client certificate ' + list[0].fingerprint)
         event.preventDefault()
         callback(list[0])
