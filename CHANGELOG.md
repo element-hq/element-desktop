@@ -1,3 +1,14 @@
+Changes in [1.7.11-rc.1](https://github.com/vector-im/element-desktop/releases/tag/v1.7.11-rc.1) (2020-10-21)
+=============================================================================================================
+[Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.10...v1.7.11-rc.1)
+
+ * Bump npm-user-validate from 1.0.0 to 1.0.1
+   [\#148](https://github.com/vector-im/element-desktop/pull/148)
+ * Use keytar for the seshat passphrase.
+   [\#147](https://github.com/vector-im/element-desktop/pull/147)
+ * Upgrade to Electron 10.1.3
+   [\#146](https://github.com/vector-im/element-desktop/pull/146)
+
 Changes in [1.7.10](https://github.com/vector-im/element-desktop/releases/tag/v1.7.10) (2020-10-20)
 ===================================================================================================
 [Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.9...v1.7.10)
