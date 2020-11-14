@@ -396,7 +396,7 @@ Changes in [1.6.0-rc.1](https://github.com/vector-im/riot-desktop/releases/tag/v
    [\#57](https://github.com/vector-im/riot-desktop/pull/57)
  * Remove welcome user from config
    [\#56](https://github.com/vector-im/riot-desktop/pull/56)
- * electron-main: Immediatelly set the eventIndex variable to null when
+ * electron-main: Immediately set the eventIndex variable to null when
    closing.
    [\#55](https://github.com/vector-im/riot-desktop/pull/55)
  * Enable Seshat on Nightly

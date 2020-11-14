@@ -182,7 +182,7 @@ async function setupGlobals() {
         vectorConfig = require(asarPath + 'config.json');
     } catch (e) {
         // it would be nice to check the error code here and bail if the config
-        // is unparseable, but we get MODULE_NOT_FOUND in the case of a missing
+        // is unparsable, but we get MODULE_NOT_FOUND in the case of a missing
         // file or invalid json, so node is just very unhelpful.
         // Continue with the defaults (ie. an empty config)
         vectorConfig = {};
