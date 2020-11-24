@@ -7,7 +7,7 @@
   "author": "Element",
   "repository": {
     "type": "git",
-    "url": "https://github.com/vector-im/riot-desktop"
+    "url": "https://github.com/vector-im/element-desktop"
   },
   "license": "Apache-2.0",
   "files": [],
@@ -21,7 +21,7 @@
     "build32": "electron-builder --ia32",
     "build64": "electron-builder --x64",
     "build": "electron-builder",
-    "docker:setup": "docker build -t riot-desktop-dockerbuild dockerbuild",
+    "docker:setup": "docker build -t element-desktop-dockerbuild dockerbuild",
     "docker:build:native": "scripts/in-docker.sh yarn run hak",
     "docker:build": "scripts/in-docker.sh yarn run build",
     "docker:install": "scripts/in-docker.sh yarn install",
