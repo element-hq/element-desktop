@@ -22,10 +22,10 @@ cp $confdir/conf_distributions $repodir/conf/distributions
 pushd $repodir
 for i in `cat conf/distributions | grep Codename | cut -d ' ' -f 2`
 do
-    reprepro includedeb $i $distdir/riot-desktop_${ver}_amd64.deb
+    reprepro includedeb $i $distdir/element-desktop_${ver}_amd64.deb
 done
 
-tar cvzf $distdir/riot-desktop_repo_$ver.tar.gz .
+tar cvzf $distdir/element-desktop_repo_$ver.tar.gz .
 
 popd
 

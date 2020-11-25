@@ -1,8 +1,8 @@
 #!/bin/bash
 
-docker inspect riot-desktop-dockerbuild 2> /dev/null > /dev/null
+docker inspect element-desktop-dockerbuild 2> /dev/null > /dev/null
 if [ $? != 0 ]; then
-    echo "Docker image riot-desktop-dockerbuild not found. Have you run yarn run docker:setup?"
+    echo "Docker image element-desktop-dockerbuild not found. Have you run yarn run docker:setup?"
     exit 1
 fi
 
@@ -17,4 +17,4 @@ docker run --rm -ti \
  -v ${PWD}/docker/.gnupg:/root/.gnupg \
  -v ~/.cache/electron:/root/.cache/electron \
  -v ~/.cache/electron-builder:/root/.cache/electron-builder \
- riot-desktop-dockerbuild "$@"
+ element-desktop-dockerbuild "$@"
