@@ -430,6 +430,11 @@ ipcMain.on('ipcCall', async function(ev, payload) {
             }
             break;
         }
+
+        case 'getAvailableSpellCheckLanguages':
+            ret = mainWindow.webContents.session.availableSpellCheckerLanguages;
+            break;
+
         case 'startSSOFlow':
             recordSSOSession(args[0]);
             break;
