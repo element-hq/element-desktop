@@ -386,50 +386,15 @@ ipcMain.on('ipcCall', async function(ev, payload) {
                 mainWindow.webContents.goForward();
             }
             break;
-        case 'setLanguage': {
-            // work around `setSpellCheckerLanguages` being case-sensitive by converting to expected case
-            const caseMap = {};
-            const availableLanguages = mainWindow.webContents.session.availableSpellCheckerLanguages;
-            availableLanguages.forEach(lang => {
-                caseMap[lang.toLowerCase()] = lang;
-            });
-
-            if (!caseMap["en"]) {
-                // default special-case for `en` as in Riot is actually implies `en-GB`. `en-US` is distinct.
-                // this way if `en` is requested and not available and `en-GB` is available it'll be used.
-                caseMap["en"] = caseMap["en-gb"];
+        case 'setSpellCheckLanguages':
+            if (args[0] && args[0] != [])
+            {
+                mainWindow.webContents.session.setSpellCheckerLanguages(args[0]);
             }
-
-            const languages = new Set();
-            args[0].forEach(lang => {
-                const lcLang = lang.toLowerCase();
-                if (caseMap[lcLang]) {
-                    languages.add(caseMap[lcLang]);
-                    return;
-                }
-
-                // as a fallback if the language is unknown check if the language group is known, e.g en for en-AU
-                const langGroup = lcLang.split("-")[0];
-                if (caseMap[langGroup]) {
-                    languages.add(caseMap[langGroup]);
-                    return;
-                }
-
-                // as a further fallback, pick all other matching variants from the same language group
-                // this means that if we cannot find `ar-dz` or `ar` for example, we will pick `ar-*` to
-                // offer a spellcheck which is least likely to wrongly red underline something.
-                availableLanguages.forEach(availableLang => {
-                    if (availableLang.startsWith(langGroup)) {
-                        languages.add(availableLang);
-                    }
-                });
-            });
-
-            if (languages.size > 0) {
-                mainWindow.webContents.session.setSpellCheckerLanguages([...languages]);
+            else {
+                mainWindow.webContents.session.spellcheck = false;
             }
             break;
-        }
 
         case 'getAvailableSpellCheckLanguages':
             ret = mainWindow.webContents.session.availableSpellCheckerLanguages;
