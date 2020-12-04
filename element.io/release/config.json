@@ -15,7 +15,8 @@
     "bug_report_endpoint_url": "https://element.io/bugreports/submit",
     "roomDirectory": {
         "servers": [
-            "matrix.org"
+            "matrix.org",
+            "gitter.im"
         ]
     },
     "showLabsSettings": false,
