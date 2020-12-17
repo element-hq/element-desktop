@@ -163,7 +163,7 @@ Sometimes there is Cache from an old Riot folder or an old Element folder:
 
 Close Element:
 
-On Windows go to task bar (bottom right), click on show hidden icons (the arrow that shows upwards).
+On Windows go to task bar (bottom right, see [here](https://photos.app.goo.gl/sv3LsdB2qKZU4Uu56)), click on show hidden icons (the arrow that shows upwards).
 
 On macOS open Element then click on file on the top left of the screen and  click on quit.
 
