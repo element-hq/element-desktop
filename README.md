@@ -169,7 +169,7 @@ On macOS open Element then click on file on the top left of the screen and  cli
 
 Delete these folders (Element and Riot):
 
-Don't forget to replace YOUR_USERSNAME with the your computers username!
+Don't forget to replace YOUR_USERNAME with the your computers username!
 
 On Windows you will usually find them here:
 `Users\YOUR_USERNAME\Library\Application Support\Roaming\`
