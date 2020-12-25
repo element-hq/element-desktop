@@ -23,6 +23,7 @@ window.ipcRenderer = ipcRenderer;
 window.navigator.mediaDevices.getDisplayMedia = () => {
     return new Promise(async (resolve, reject) => {
         try {
+            // Get screen-sharing sources
             const sources = await desktopCapturer.getSources({
                 types: ["screen", "window"],
             });
@@ -32,16 +33,15 @@ window.navigator.mediaDevices.getDisplayMedia = () => {
             const windows = sources.filter((source) => {
                 return source.id.startsWith("window");
             });
-            console.log(screens);
-            console.log(windows);
 
-            const selectionElem = document.createElement("div");
-            selectionElem.classList = "desktop-capturer-selection";
-            selectionElem.innerHTML = `
+            const streamSelector = document.createElement("div");
+            streamSelector.classList = "stream-selector";
+            streamSelector.innerHTML = `
+                <h1>Screens</h1>
                 <div class="desktop-capturer-selection-scroller">
                     <ul class="desktop-capturer-selection-list">
                         ${
-                            sources.map(({
+                            screens.map(({
                                 id,
                                 name,
                                 thumbnail,
@@ -50,9 +50,28 @@ window.navigator.mediaDevices.getDisplayMedia = () => {
                             }) => `
                                 <li class="desktop-capturer-selection-item">
                                     <button class="desktop-capturer-selection-button" data-id="${id}" title="${name}">
-                                    <img class="desktop-capturer-selection-thumbnail" src="${
-                                        thumbnail.toDataURL()
-                                    }" />
+                                    <img class="desktop-capturer-selection-thumbnail" src="${thumbnail.toDataURL()}"/>
+                                    <span class="desktop-capturer-selection-name">${name}</span>
+                                    </button>
+                                </li>
+                            `).join("")
+                        }
+                    </ul>
+                </div>
+                <h1>Windows</h1>
+                <div class="desktop-capturer-selection-scroller">
+                    <ul class="desktop-capturer-selection-list">
+                        ${
+                            windows.map(({
+                                id,
+                                name,
+                                thumbnail,
+                                displayId,
+                                appIcon,
+                            }) => `
+                                <li class="desktop-capturer-selection-item">
+                                    <button class="desktop-capturer-selection-button" data-id="${id}" title="${name}">
+                                    <img class="desktop-capturer-selection-thumbnail" src="${thumbnail.toDataURL()}"/>
                                     <span class="desktop-capturer-selection-name">${name}</span>
                                     </button>
                                 </li>
@@ -62,18 +81,19 @@ window.navigator.mediaDevices.getDisplayMedia = () => {
                 </div>
 
                 <style>
-                    .desktop-capturer-selection {
+                    .stream-selector {
                         position: fixed;
                         top: 0;
                         left: 0;
                         width: 100%;
                         height: 100vh;
-                        background: rgba(30,30,30,.75);
+                        background: rgba(0,0,0,0.8);
                         color: #fff;
                         z-index: 10000000;
                         display: flex;
                         align-items: center;
                         justify-content: center;
+                        flex-direction: column;
                     }
                     .desktop-capturer-selection-scroller {
                         width: 100%;
@@ -82,7 +102,7 @@ window.navigator.mediaDevices.getDisplayMedia = () => {
                     }
                     .desktop-capturer-selection-list {
                         max-width: calc(100% - 100px);
-                        margin: 50px;
+                        margin: 0 50px 0 50px;
                         padding: 0;
                         display: flex;
                         flex-wrap: wrap;
@@ -125,16 +145,18 @@ window.navigator.mediaDevices.getDisplayMedia = () => {
                     }
                 </style>
             `;
-            document.body.appendChild(selectionElem);
+            document.body.appendChild(streamSelector);
 
             document.querySelectorAll(".desktop-capturer-selection-button").forEach((button) => {
-                button.addEventListener("click", async () => {
-                    console.log("Click");
+                button.addEventListener("click", async (ev) => {
+                    ev.stopPropagation();
+
                     try {
                         const id = button.getAttribute("data-id");
                         const source = sources.find((source) => source.id === id);
-                        if (! source) {
-                            throw new Error(`Source with id ${id} does not exist`);
+                        if (!source) {
+                            streamSelector.remove();
+                            reject(new Error(`Source with id ${id} does not exist`));
                         }
 
                         const stream = await window.navigator.mediaDevices.getUserMedia({
@@ -146,17 +168,22 @@ window.navigator.mediaDevices.getDisplayMedia = () => {
                                 },
                             },
                         });
-                        resolve(stream);
 
-                        selectionElem.remove();
+                        streamSelector.remove();
+                        resolve(stream);
                     } catch (err) {
-                        console.error("Error selecting desktop capture source:", err);
+                        streamSelector.remove();
                         reject(err);
                     }
                 });
             });
+
+            const background = document.querySelector(".stream-selector");
+            background.addEventListener("click", async (ev) => {
+                streamSelector.remove();
+                reject(new Error("No source selected"));
+            });
         } catch (err) {
-            console.error("Error displaying desktop capture sources:", err);
             reject(err);
         }
     });
