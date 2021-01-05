@@ -20,6 +20,4 @@ const { ipcRenderer, desktopCapturer } = require('electron');
 window.ipcRenderer = ipcRenderer;
 
 // expose desktopCapturer to the render process to make screen-sharing work
-process.once('loaded', () => {
-  global.desktopCapturer = desktopCapturer;
-});
+global.desktopCapturer = desktopCapturer;
