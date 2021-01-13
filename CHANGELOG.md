@@ -1,3 +1,12 @@
+Changes in [1.7.17-rc.1](https://github.com/vector-im/element-desktop/releases/tag/v1.7.17-rc.1) (2021-01-13)
+=============================================================================================================
+[Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.16...v1.7.17-rc.1)
+
+ * package: Bump our Seshat version
+   [\#162](https://github.com/vector-im/element-desktop/pull/162)
+ * Upgrade to Electron 10.2.0
+   [\#159](https://github.com/vector-im/element-desktop/pull/159)
+
 Changes in [1.7.16](https://github.com/vector-im/element-desktop/releases/tag/v1.7.16) (2020-12-21)
 ===================================================================================================
 [Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.16-rc.1...v1.7.16)
