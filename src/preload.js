@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const { contextBridge, ipcRenderer } = require("electron");
+const { ipcRenderer, desktopCapturer, contextBridge } = require('electron');
 
 // Expose only expected IPC wrapper APIs to the renderer process to avoid
 // handing out generalised messaging access.
@@ -52,6 +52,20 @@ contextBridge.exposeInMainWorld(
                 return;
             }
             ipcRenderer.send(channel, ...args);
+        },
+        async getDesktopCapturerSources(options) {
+            const sources = await desktopCapturer.getSources(options);
+            const desktopCapturerSources = [];
+
+            for (const source of sources) {
+                desktopCapturerSources.push({
+                    id: source.id,
+                    name: source.name,
+                    thumbnailURL: source.thumbnail.toDataURL(),
+                });
+            }
+
+            return desktopCapturerSources;
         },
     },
 );
