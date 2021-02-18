@@ -387,7 +387,11 @@ ipcMain.on('ipcCall', async function(ev, payload) {
             break;
         case 'setSpellCheckLanguages':
             if (args[0] && args[0].length > 0) {
-                mainWindow.webContents.session.setSpellCheckerLanguages(args[0]);
+                try {
+                    mainWindow.webContents.session.setSpellCheckerLanguages(args[0]);
+                } catch (er) {
+                    console.log("There were problems setting the spellcheck languages", er);
+                }
             } else {
                 mainWindow.webContents.session.spellcheck = false;
             }
