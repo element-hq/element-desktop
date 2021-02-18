@@ -1,8 +1,0 @@
-steps:
-  - label: ":eslint: Lint"
-    command:
-      - "yarn install"
-      - "yarn lint"
-    plugins:
-      - docker#v3.0.1:
-          image: "node:10"

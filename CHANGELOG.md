@@ -1,3 +1,77 @@
+Changes in [1.7.20](https://github.com/vector-im/element-desktop/releases/tag/v1.7.20) (2021-02-04)
+===================================================================================================
+[Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.19...v1.7.20)
+
+ * No changes since 1.7.19
+
+Changes in [1.7.19](https://github.com/vector-im/element-desktop/releases/tag/v1.7.19) (2021-02-03)
+===================================================================================================
+[Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.19-rc.1...v1.7.19)
+
+ * No changes since rc.1
+
+Changes in [1.7.19-rc.1](https://github.com/vector-im/element-desktop/releases/tag/v1.7.19-rc.1) (2021-01-29)
+=============================================================================================================
+[Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.18...v1.7.19-rc.1)
+
+ * Remove Buildkite pipeline file
+   [\#167](https://github.com/vector-im/element-desktop/pull/167)
+ * Upgrade deps 2021-01-18
+   [\#166](https://github.com/vector-im/element-desktop/pull/166)
+ * package: Bump our seshat version
+   [\#164](https://github.com/vector-im/element-desktop/pull/164)
+ * Enable context isolation, bridge expected IPC
+   [\#163](https://github.com/vector-im/element-desktop/pull/163)
+
+Changes in [1.7.18](https://github.com/vector-im/element-desktop/releases/tag/v1.7.18) (2021-01-26)
+===================================================================================================
+[Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.17...v1.7.18)
+
+ * No changes since 1.7.17
+
+Changes in [1.7.17](https://github.com/vector-im/element-desktop/releases/tag/v1.7.17) (2021-01-18)
+===================================================================================================
+[Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.17-rc.1...v1.7.17)
+
+ * [Release] package: Bump our seshat version
+   [\#165](https://github.com/vector-im/element-desktop/pull/165)
+
+Changes in [1.7.17-rc.1](https://github.com/vector-im/element-desktop/releases/tag/v1.7.17-rc.1) (2021-01-13)
+=============================================================================================================
+[Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.16...v1.7.17-rc.1)
+
+ * package: Bump our Seshat version
+   [\#162](https://github.com/vector-im/element-desktop/pull/162)
+ * Upgrade to Electron 10.2.0
+   [\#159](https://github.com/vector-im/element-desktop/pull/159)
+
+Changes in [1.7.16](https://github.com/vector-im/element-desktop/releases/tag/v1.7.16) (2020-12-21)
+===================================================================================================
+[Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.16-rc.1...v1.7.16)
+
+ * No changes since rc.1
+
+Changes in [1.7.16-rc.1](https://github.com/vector-im/element-desktop/releases/tag/v1.7.16-rc.1) (2020-12-16)
+=============================================================================================================
+[Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.15...v1.7.16-rc.1)
+
+ * Bump ini from 1.3.5 to 1.3.8
+   [\#158](https://github.com/vector-im/element-desktop/pull/158)
+ * Add gitter.im to room directory
+   [\#157](https://github.com/vector-im/element-desktop/pull/157)
+
+Changes in [1.7.15](https://github.com/vector-im/element-desktop/releases/tag/v1.7.15) (2020-12-07)
+===================================================================================================
+[Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.15-rc.1...v1.7.15)
+
+ * No changes since rc.1
+
+Changes in [1.7.15-rc.1](https://github.com/vector-im/element-desktop/releases/tag/v1.7.15-rc.1) (2020-12-02)
+===================================================================================================
+[Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.14...v1.7.15-rc.1)
+
+ * No changes since 1.7.14
+
 Changes in [1.7.14](https://github.com/vector-im/element-desktop/releases/tag/v1.7.14) (2020-11-23)
 ===================================================================================================
 [Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.14-rc.1...v1.7.14)
