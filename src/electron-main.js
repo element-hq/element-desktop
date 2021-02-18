@@ -396,7 +396,9 @@ ipcMain.on('ipcCall', async function(ev, payload) {
                 mainWindow.webContents.session.spellcheck = false;
             }
             break;
-
+        case 'getSpellCheckLanguages':
+            ret = mainWindow.webContents.session.getSpellCheckerLanguages();
+            break;
         case 'getAvailableSpellCheckLanguages':
             ret = mainWindow.webContents.session.availableSpellCheckerLanguages;
             break;
