@@ -393,7 +393,7 @@ ipcMain.on('ipcCall', async function(ev, payload) {
                     console.log("There were problems setting the spellcheck languages", er);
                 }
             } else {
-                mainWindow.webContents.session.spellcheck = false;
+                mainWindow.webContents.session.setSpellCheckerLanguages([]);
             }
             break;
         case 'getSpellCheckLanguages':
