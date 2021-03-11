@@ -1,3 +1,12 @@
+Changes in [1.7.23-rc.1](https://github.com/vector-im/element-desktop/releases/tag/v1.7.23-rc.1) (2021-03-11)
+=============================================================================================================
+[Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.22...v1.7.23-rc.1)
+
+ * Fix disabling spell-checker
+   [\#171](https://github.com/vector-im/element-desktop/pull/171)
+ * Add multi language spell check
+   [\#154](https://github.com/vector-im/element-desktop/pull/154)
+
 Changes in [1.7.22](https://github.com/vector-im/element-desktop/releases/tag/v1.7.22) (2021-03-01)
 ===================================================================================================
 [Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.22-rc.1...v1.7.22)
