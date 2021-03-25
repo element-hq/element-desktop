@@ -340,6 +340,12 @@ ipcMain.on('ipcCall', async function(ev, payload) {
                 launcher.disable();
             }
             break;
+        case 'shouldWarnBeforeExit':
+            ret = store.get('warnBeforeExit', true);
+            break;
+        case 'setWarnBeforeExit':
+            store.set('warnBeforeExit', args[0]);
+            break;
         case 'getMinimizeToTrayEnabled':
             ret = tray.hasTray();
             break;
@@ -921,19 +927,21 @@ app.on('ready', async () => {
         mainWindow = global.mainWindow = null;
     });
     mainWindow.on('close', async (e) => {
-        const shouldCancelCloseRequest = dialog.showMessageBoxSync(mainWindow, {
-            type: "question",
-            buttons: ["Cancel", "Close Element"],
-            message: "Are you sure you want to quit?",
-            defaultId: 1,
-            cancelId: 0,
-            checkboxLabel: "Do not show this again",
-            checkboxChecked: false,
-        }) === 0;
+        if (store.get('warnBeforeExit', true)) {
+            const shouldCancelCloseRequest = dialog.showMessageBoxSync(mainWindow, {
+                type: "question",
+                buttons: ["Cancel", "Close Element"],
+                message: "Are you sure you want to quit?",
+                defaultId: 1,
+                cancelId: 0,
+                checkboxLabel: "Do not show this again",
+                checkboxChecked: false,
+            }) === 0;
 
-        if (shouldCancelCloseRequest) {
-            e.preventDefault();
-            return false;
+            if (shouldCancelCloseRequest) {
+                e.preventDefault();
+                return false;
+            }
         }
 
         // If we are not quitting and have a tray icon then minimize to tray
