@@ -934,8 +934,6 @@ app.on('ready', async () => {
                 message: "Are you sure you want to quit?",
                 defaultId: 1,
                 cancelId: 0,
-                checkboxLabel: "Do not show this again",
-                checkboxChecked: false,
             }) === 0;
 
             if (shouldCancelCloseRequest) {
