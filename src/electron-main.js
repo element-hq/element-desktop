@@ -927,6 +927,16 @@ app.on('ready', async () => {
         mainWindow = global.mainWindow = null;
     });
     mainWindow.on('close', async (e) => {
+        // If we are not quitting and have a tray icon then minimize to tray
+        if (!global.appQuitting && (tray.hasTray() || process.platform === 'darwin')) {
+            // On Mac, closing the window just hides it
+            // (this is generally how single-window Mac apps
+            // behave, eg. Mail.app)
+            e.preventDefault();
+            mainWindow.hide();
+            return false;
+        }
+
         if (store.get('warnBeforeExit', true)) {
             const shouldCancelCloseRequest = dialog.showMessageBoxSync(mainWindow, {
                 type: "question",
@@ -940,16 +950,6 @@ app.on('ready', async () => {
                 e.preventDefault();
                 return false;
             }
-        }
-
-        // If we are not quitting and have a tray icon then minimize to tray
-        if (!global.appQuitting && (tray.hasTray() || process.platform === 'darwin')) {
-            // On Mac, closing the window just hides it
-            // (this is generally how single-window Mac apps
-            // behave, eg. Mail.app)
-            e.preventDefault();
-            mainWindow.hide();
-            return false;
         }
     });
 
