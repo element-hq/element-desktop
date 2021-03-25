@@ -96,7 +96,7 @@ yarn run docker:setup
 
 yarn run docker:install
 # if you want to build the native modules (this will take a while)
-yarn run docker:buildnative
+yarn run docker:build:native
 yarn run docker:build
 ```
 
