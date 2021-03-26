@@ -471,6 +471,7 @@ ipcMain.on('seshat', async function(ev, payload) {
 
     const args = payload.args || [];
     let ret;
+    let err;
 
     switch (payload.name) {
         case 'supportsEventIndexing':
@@ -732,6 +733,17 @@ ipcMain.on('seshat', async function(ev, payload) {
             }
             break;
 
+        case 'resetEventStore':
+            err = await fs.promises.rmdir(eventStorePath, { recursive: true });
+            if (!err) {
+                console.log("Seshat Event Store successfully deleted");
+                app.relaunch();
+                app.exit();
+            } else {
+                console.error("An error occurred deleting Seshat Event Store", err);
+                sendError(payload.id, err);
+            }
+            break;
         default:
             mainWindow.webContents.send('seshatReply', {
                 id: payload.id,
