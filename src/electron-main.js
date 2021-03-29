@@ -27,7 +27,9 @@ const argv = require('minimist')(process.argv, {
     alias: {help: "h"},
 });
 
-const {app, ipcMain, powerSaveBlocker, BrowserWindow, Menu, autoUpdater, protocol, dialog} = require('electron');
+const {
+    app, ipcMain, powerSaveBlocker, BrowserWindow, Menu, autoUpdater, protocol, dialog, globalShortcut,
+} = require('electron');
 const AutoLaunch = require('auto-launch');
 const path = require('path');
 
@@ -253,6 +255,22 @@ let eventIndex = null;
 let mainWindow = null;
 global.appQuitting = false;
 
+const warnBeforeExit = (event) => {
+    if (store.get('warnBeforeExit', true)) {
+        const shouldCancelCloseRequest = dialog.showMessageBoxSync(mainWindow, {
+            type: "question",
+            buttons: ["Cancel", "Close Element"],
+            message: "Are you sure you want to quit?",
+            defaultId: 1,
+            cancelId: 0,
+        }) === 0;
+
+        if (shouldCancelCloseRequest) {
+            event.preventDefault();
+            return false;
+        }
+    }
+};
 
 const deleteContents = async (p) => {
     for (const entry of await afs.readdir(p)) {
@@ -923,6 +941,12 @@ app.on('ready', async () => {
         }
     });
 
+    globalShortcut.register("CommandOrControl+Q", warnBeforeExit);
+    if (process.platform !== 'darwin') {
+        globalShortcut.register("Alt+F4", warnBeforeExit);
+        globalShortcut.register("AltGr+F4 ", warnBeforeExit);
+    }
+
     mainWindow.on('closed', () => {
         mainWindow = global.mainWindow = null;
     });
@@ -935,21 +959,6 @@ app.on('ready', async () => {
             e.preventDefault();
             mainWindow.hide();
             return false;
-        }
-
-        if (store.get('warnBeforeExit', true)) {
-            const shouldCancelCloseRequest = dialog.showMessageBoxSync(mainWindow, {
-                type: "question",
-                buttons: ["Cancel", "Close Element"],
-                message: "Are you sure you want to quit?",
-                defaultId: 1,
-                cancelId: 0,
-            }) === 0;
-
-            if (shouldCancelCloseRequest) {
-                e.preventDefault();
-                return false;
-            }
         }
     });
 
