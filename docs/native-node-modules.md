@@ -1,7 +1,7 @@
 # Native Node Modules
 
 For some features, the desktop version of Element can make use of native Node
-modules. These allow Riot to integrate with the desktop in ways that a browser
+modules. These allow Element to integrate with the desktop in ways that a browser
 cannot.
 
 While native modules enable powerful new features, they must be complied for
@@ -15,12 +15,15 @@ Do note that compiling a module for a particular operating system
 Cross-compiling from a host OS for a different target OS may be possible, but
 we don't support this flow with Element dependencies at this time.
 
-At the moment, we need to make some changes to the Element release process before
-we can support native Node modules at release time, so these features are
-currently disabled by default until that is resolved. The following sections
-explain the manual steps you can use with a custom build of Element to enable
+The process is automated by [vector-im/element-builder](https://github.com/vector-im/element-builder)
+when releasing. 
+The following sections explain the manual steps you can use with a custom build of Element to enable
 these features if you'd like to try them out.
+It is possible to [build those native modules locally automatically](https://github.com/vector-im/element-desktop#building)
 
+```
+yarn run build:native
+```
 ## Adding Seshat for search in E2E encrypted rooms
 
 Seshat is a native Node module that adds support for local event indexing and
