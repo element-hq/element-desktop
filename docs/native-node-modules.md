@@ -19,7 +19,7 @@ The process is automated by [vector-im/element-builder](https://github.com/vecto
 when releasing. 
 The following sections explain the manual steps you can use with a custom build of Element to enable
 these features if you'd like to try them out.
-It is possible to [build those native modules locally automatically](https://github.com/vector-im/element-desktop#building)
+It is possible to [build those native modules locally automatically](https://github.com/vector-im/element-desktop#building).
 
 ```
 yarn run build:native
@@ -59,4 +59,3 @@ After this is done the Electron version of Element can be run from the main fold
 as usual using:
 
     yarn start
-
