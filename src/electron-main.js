@@ -264,9 +264,9 @@ const exitShortcuts = [
 
 const warnBeforeExit = (event, input) => {
     const shouldWarnBeforeExit = store.get('warnBeforeExit', true);
-    const shortcutPressed = exitShortcuts.some(shortcutFn => shortcutFn(input, process.platform));
+    const exitShortcutPressed = exitShortcuts.some(shortcutFn => shortcutFn(input, process.platform));
 
-    if (shouldWarnBeforeExit && shortcutPressed) {
+    if (shouldWarnBeforeExit && exitShortcutPressed) {
         const shouldCancelCloseRequest = dialog.showMessageBoxSync(mainWindow, {
             type: "question",
             buttons: ["Cancel", "Close Element"],
