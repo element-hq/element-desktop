@@ -28,7 +28,7 @@ const argv = require('minimist')(process.argv, {
 });
 
 const {
-    app, ipcMain, powerSaveBlocker, BrowserWindow, Menu, autoUpdater, protocol, dialog, globalShortcut,
+    app, ipcMain, powerSaveBlocker, BrowserWindow, Menu, autoUpdater, protocol, dialog,
 } = require('electron');
 const AutoLaunch = require('auto-launch');
 const path = require('path');
@@ -46,7 +46,6 @@ const fs = require('fs');
 const afs = fs.promises;
 
 const crypto = require('crypto');
-const { platform } = require('os');
 let keytar;
 try {
     keytar = require('keytar');
