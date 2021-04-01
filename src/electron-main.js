@@ -28,7 +28,7 @@ const argv = require('minimist')(process.argv, {
 });
 
 const {
-    app, ipcMain, powerSaveBlocker, BrowserWindow, Menu, autoUpdater, protocol, dialog, globalShortcut,
+    app, ipcMain, powerSaveBlocker, BrowserWindow, Menu, autoUpdater, protocol, dialog,
 } = require('electron');
 const AutoLaunch = require('auto-launch');
 const path = require('path');
@@ -255,8 +255,17 @@ let eventIndex = null;
 let mainWindow = null;
 global.appQuitting = false;
 
-const warnBeforeExit = (event) => {
-    if (store.get('warnBeforeExit', true)) {
+const exitShortcuts = [
+    (input, platform) => platform !== 'darwin' && input.alt && input.code === 'F4',
+    (input, platform) => platform !== 'darwin' && input.control && input.code === 'KeyQ',
+    (input, platform) => platform === 'darwin' && input.meta && input.code === 'KeyQ',
+];
+
+const warnBeforeExit = (event, input) => {
+    const shouldWarnBeforeExit = store.get('warnBeforeExit', true);
+    const exitShortcutPressed = exitShortcuts.some(shortcutFn => shortcutFn(input, process.platform));
+
+    if (shouldWarnBeforeExit && exitShortcutPressed) {
         const shouldCancelCloseRequest = dialog.showMessageBoxSync(mainWindow, {
             type: "question",
             buttons: ["Cancel", "Close Element"],
@@ -267,7 +276,6 @@ const warnBeforeExit = (event) => {
 
         if (shouldCancelCloseRequest) {
             event.preventDefault();
-            return false;
         }
     }
 };
@@ -941,11 +949,7 @@ app.on('ready', async () => {
         }
     });
 
-    globalShortcut.register("CommandOrControl+Q", warnBeforeExit);
-    if (process.platform !== 'darwin') {
-        globalShortcut.register("Alt+F4", warnBeforeExit);
-        globalShortcut.register("AltGr+F4 ", warnBeforeExit);
-    }
+    mainWindow.webContents.on('before-input-event', warnBeforeExit);
 
     mainWindow.on('closed', () => {
         mainWindow = global.mainWindow = null;
