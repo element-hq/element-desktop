@@ -814,6 +814,8 @@ protocol.registerSchemesAsPrivileged([{
 // transition into the user's browser.
 app.enableSandbox();
 
+app.commandLine.appendSwitch('disable-features', 'HardwareMediaKeyHandling,MediaSessionService');
+
 app.on('ready', async () => {
     try {
         await setupGlobals();
