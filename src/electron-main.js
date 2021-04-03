@@ -814,6 +814,7 @@ protocol.registerSchemesAsPrivileged([{
 // transition into the user's browser.
 app.enableSandbox();
 
+// We disable media controls here. We do this because calls use audio and video elements and they sometimes capture the media keys. See https://github.com/vector-im/element-web/issues/15704
 app.commandLine.appendSwitch('disable-features', 'HardwareMediaKeyHandling,MediaSessionService');
 
 app.on('ready', async () => {
