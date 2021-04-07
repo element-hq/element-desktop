@@ -419,17 +419,25 @@ ipcMain.on('ipcCall', async function(ev, payload) {
             break;
         case 'setSpellCheckLanguages':
             if (args[0] && args[0].length > 0) {
+                mainWindow.webContents.session.setSpellCheckerEnabled(true);
+                store.set("spellCheckerEnabled", true);
+
                 try {
                     mainWindow.webContents.session.setSpellCheckerLanguages(args[0]);
                 } catch (er) {
                     console.log("There were problems setting the spellcheck languages", er);
                 }
             } else {
-                mainWindow.webContents.session.setSpellCheckerLanguages([]);
+                mainWindow.webContents.session.setSpellCheckerEnabled(false);
+                store.set("spellCheckerEnabled", false);
             }
             break;
         case 'getSpellCheckLanguages':
-            ret = mainWindow.webContents.session.getSpellCheckerLanguages();
+            if (store.get("spellCheckerEnabled", true)) {
+                ret = mainWindow.webContents.session.getSpellCheckerLanguages();
+            } else {
+                ret = [];
+            }
             break;
         case 'getAvailableSpellCheckLanguages':
             ret = mainWindow.webContents.session.availableSpellCheckerLanguages;
@@ -929,11 +937,14 @@ app.on('ready', async () => {
             enableRemoteModule: false,
             contextIsolation: true,
             webgl: false,
-            spellcheck: true,
         },
     });
     mainWindow.loadURL('vector://vector/webapp/');
     Menu.setApplicationMenu(vectorMenu);
+
+    // Handle spellchecker
+    // For some reason spellCheckerEnabled isn't persisted so we have to use the store here
+    mainWindow.webContents.session.setSpellCheckerEnabled(store.get("spellCheckerEnabled", true));
 
     // Create trayIcon icon
     if (store.get('minimizeToTray', true)) tray.create(trayConfig);
