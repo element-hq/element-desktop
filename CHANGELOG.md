@@ -1,3 +1,22 @@
+Changes in [1.7.25-rc.1](https://github.com/vector-im/element-desktop/releases/tag/v1.7.25-rc.1) (2021-04-07)
+=============================================================================================================
+[Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.24...v1.7.25-rc.1)
+
+ * Fix disabling spellchecker
+   [\#179](https://github.com/vector-im/element-desktop/pull/179)
+ * Upgrade to Electron 12.0.2
+   [\#178](https://github.com/vector-im/element-desktop/pull/178)
+ * Avoid exit listener to hijack other application shortcuts
+   [\#177](https://github.com/vector-im/element-desktop/pull/177)
+ * Migrate native-node-modules docs to element-desktop
+   [\#176](https://github.com/vector-im/element-desktop/pull/176)
+ * Add prompt to warn before quitting the application
+   [\#173](https://github.com/vector-im/element-desktop/pull/173)
+ * Upgrade to Electron 11.4.1
+   [\#172](https://github.com/vector-im/element-desktop/pull/172)
+ * Fix docker:build:native documentation typo
+   [\#174](https://github.com/vector-im/element-desktop/pull/174)
+
 Changes in [1.7.24](https://github.com/vector-im/element-desktop/releases/tag/v1.7.24) (2021-03-29)
 ===================================================================================================
 [Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.24-rc.1...v1.7.24)
