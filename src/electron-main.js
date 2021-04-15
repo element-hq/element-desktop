@@ -256,9 +256,9 @@ let mainWindow = null;
 global.appQuitting = false;
 
 const exitShortcuts = [
-    (input, platform) => platform !== 'darwin' && input.alt && input.code === 'F4',
-    (input, platform) => platform !== 'darwin' && input.control && input.code === 'KeyQ',
-    (input, platform) => platform === 'darwin' && input.meta && input.code === 'KeyQ',
+    (input, platform) => platform !== 'darwin' && input.alt && input.key.toUpperCase() === 'F4',
+    (input, platform) => platform !== 'darwin' && input.control && input.key.toUpperCase() === 'Q',
+    (input, platform) => platform === 'darwin' && input.meta && input.key.toUpperCase() === 'Q',
 ];
 
 const warnBeforeExit = (event, input) => {
