@@ -3,7 +3,8 @@ License: Apache-2.0
 Vendor: support@element.io
 Architecture: amd64
 Maintainer: support@element.io
-Depends: libgtk-3-0, libnotify4, libnss3, libxss1, libxtst6, xdg-utils, libatspi2.0-0, libuuid1, libappindicator3-1, libsecret-1-0, libsqlcipher0
+Depends: libgtk-3-0, libnotify4, libnss3, libxss1, libxtst6, xdg-utils, libatspi2.0-0, libuuid1, libsecret-1-0, libsqlcipher0
+Recommends: libappindicator3-1
 Replaces: riot-desktop (<< 1.7.0), riot-web (<< 1.7.0)
 Breaks: riot-desktop (<< 1.7.0), riot-web (<< 1.7.0)
 Section: net
