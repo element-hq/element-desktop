@@ -100,6 +100,12 @@ if (argv["help"]) {
     app.exit();
 }
 
+function delay(timeout) {
+    return new Promise(res => {
+        setTimeout(() => res(), timeout);
+    });
+}
+
 // Electron creates the user data directory (with just an empty 'Dictionaries' directory...)
 // as soon as the app path is set, so pick a random path in it that must exist if it's a
 // real user data directory.
@@ -596,8 +602,15 @@ ipcMain.on('seshat', async function(ev, payload) {
                         // index.
                         await eventIndex.changePassphrase(newPassphrase);
 
+                        // Keep this delay to avoid race conditions where the DB
+                        // lock has not been released properly when trying to
+                        // create a new event index
+                        await delay(500);
+
                         // Re-open the event index with the new passphrase.
-                        eventIndex = new Seshat(eventStorePath, {newPassphrase});
+                        eventIndex = new Seshat(eventStorePath, {
+                            passphrase: newPassphrase,
+                        });
                     } catch (e) {
                         sendError(payload.id, e);
                         return;
