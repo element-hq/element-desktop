@@ -19,6 +19,7 @@ const {app, Tray, Menu, nativeImage} = require('electron');
 const pngToIco = require('png-to-ico');
 const path = require('path');
 const fs = require('fs');
+const { _td } = require('./language-helper');
 
 let trayIcon = null;
 
@@ -49,12 +50,12 @@ exports.create = function(config) {
 
     const contextMenu = Menu.buildFromTemplate([
         {
-            label: `Show/Hide ${config.brand}`,
+            label: _td('Show/Hide'),
             click: toggleWin,
         },
         { type: 'separator' },
         {
-            label: 'Quit',
+            label: _td('Quit'),
             click: function() {
                 app.quit();
             },

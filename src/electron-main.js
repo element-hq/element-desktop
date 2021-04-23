@@ -57,6 +57,8 @@ try {
     }
 }
 
+const { _td } = require('./language-helper');
+
 let seshatSupported = false;
 let Seshat;
 let SeshatRecovery;
@@ -268,8 +270,8 @@ const warnBeforeExit = (event, input) => {
     if (shouldWarnBeforeExit && exitShortcutPressed) {
         const shouldCancelCloseRequest = dialog.showMessageBoxSync(mainWindow, {
             type: "question",
-            buttons: ["Cancel", "Close Element"],
-            message: "Are you sure you want to quit?",
+            buttons: [_td("Cancel"), _td("Close Element")],
+            message: _td("Are you sure you want to quit?"),
             defaultId: 1,
             cancelId: 0,
         }) === 0;

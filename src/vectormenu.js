@@ -15,11 +15,13 @@ limitations under the License.
 */
 
 const {app, shell, Menu} = require('electron');
+const { _td } = require('./language-helper');
 
 // Menu template from http://electron.atom.io/docs/api/menu/, edited
 const template = [
     {
-        label: '&Edit',
+        label: _td('Edit'),
+        accelerator: 'e',
         submenu: [
             { role: 'undo' },
             { role: 'redo' },
@@ -33,7 +35,8 @@ const template = [
         ],
     },
     {
-        label: '&View',
+        label: _td('View'),
+        accelerator: 'V',
         submenu: [
             { type: 'separator' },
             { role: 'resetzoom' },
@@ -41,7 +44,7 @@ const template = [
             { role: 'zoomout' },
             { type: 'separator' },
             {
-                label: 'Preferences',
+                label: _td('Preferences'),
                 accelerator: 'Command+,', // Mac-only accelerator
                 click() { global.mainWindow.webContents.send('preferences'); },
             },
@@ -50,7 +53,8 @@ const template = [
         ],
     },
     {
-        label: '&Window',
+        label: _td('Window'),
+        accelerator: 'w',
         role: 'window',
         submenu: [
             { role: 'minimize' },
@@ -58,11 +62,12 @@ const template = [
         ],
     },
     {
-        label: '&Help',
+        label: _td('Help'),
+        accelerator: 'h',
         role: 'help',
         submenu: [
             {
-                label: 'Element Help',
+                label: _td('Element Help'),
                 click() { shell.openExternal('https://element.io/help'); },
             },
         ],
@@ -94,7 +99,7 @@ if (process.platform === 'darwin') {
     template[1].submenu.push(
         { type: 'separator' },
         {
-            label: 'Speech',
+            label: _td('Speech'),
             submenu: [
                 { role: 'startspeaking' },
                 { role: 'stopspeaking' },
@@ -105,30 +110,31 @@ if (process.platform === 'darwin') {
     // This also has specific functionality on macOS
     template[3].submenu = [
         {
-            label: 'Close',
+            label: _td('Close'),
             accelerator: 'CmdOrCtrl+W',
             role: 'close',
         },
         {
-            label: 'Minimize',
+            label: _td('Minimize'),
             accelerator: 'CmdOrCtrl+M',
             role: 'minimize',
         },
         {
-            label: 'Zoom',
+            label: _td('Zoom'),
             role: 'zoom',
         },
         {
             type: 'separator',
         },
         {
-            label: 'Bring All to Front',
+            label: _td('Bring All to Front'),
             role: 'front',
         },
     ];
 } else {
     template.unshift({
-        label: '&File',
+        label: _td('File'),
+        accelerator: 'f',
         submenu: [
             // For some reason, 'about' does not seem to work on windows.
             /*{

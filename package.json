@@ -11,7 +11,11 @@
   },
   "license": "Apache-2.0",
   "files": [],
+  "bin": {
+    "matrix-gen-i18n": "scripts/gen-i18n.js"
+  },
   "scripts": {
+    "i18n": "matrix-gen-i18n",
     "mkdirs": "mkdirp packages deploys",
     "fetch": "yarn run mkdirs && node scripts/fetch-package.js",
     "asar-webapp": "asar p webapp webapp.asar",
