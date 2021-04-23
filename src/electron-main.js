@@ -98,12 +98,6 @@ if (argv["help"]) {
     app.exit();
 }
 
-function delay(timeout) {
-    return new Promise(res => {
-        setTimeout(() => res(), timeout);
-    });
-}
-
 // Electron creates the user data directory (with just an empty 'Dictionaries' directory...)
 // as soon as the app path is set, so pick a random path in it that must exist if it's a
 // real user data directory.
@@ -508,7 +502,9 @@ async function getOrCreatePassphrase(key) {
             if (storedPassphrase !== null) {
                 return storedPassphrase;
             } else {
-                return await randomArray(32);
+                const newPassphrase = await randomArray(32);
+                await keytar.setPassword("element.io", key, newPassphrase);
+                return newPassphrase;
             }
         } catch (e) {
             console.log("Error getting the event index passphrase out of the secret store", e);
