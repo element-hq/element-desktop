@@ -125,6 +125,7 @@ function buildMenuTemplate() {
     if (process.platform === 'darwin') {
         template.unshift({
             // first macOS menu is the name of the app
+            role: 'appMenu',
             label: app.name,
             submenu: [
                 {
