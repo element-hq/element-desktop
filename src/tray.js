@@ -34,39 +34,24 @@ exports.destroy = function() {
     }
 };
 
+const toggleWin = function() {
+    if (global.mainWindow.isVisible() && !global.mainWindow.isMinimized()) {
+        global.mainWindow.hide();
+    } else {
+        if (global.mainWindow.isMinimized()) global.mainWindow.restore();
+        if (!global.mainWindow.isVisible()) global.mainWindow.show();
+        global.mainWindow.focus();
+    }
+};
+
 exports.create = function(config) {
     // no trays on darwin
     if (process.platform === 'darwin' || trayIcon) return;
-
-    const toggleWin = function() {
-        if (global.mainWindow.isVisible() && !global.mainWindow.isMinimized()) {
-            global.mainWindow.hide();
-        } else {
-            if (global.mainWindow.isMinimized()) global.mainWindow.restore();
-            if (!global.mainWindow.isVisible()) global.mainWindow.show();
-            global.mainWindow.focus();
-        }
-    };
-
-    const contextMenu = Menu.buildFromTemplate([
-        {
-            label: _td('Show/Hide'),
-            click: toggleWin,
-        },
-        { type: 'separator' },
-        {
-            label: _td('Quit'),
-            click: function() {
-                app.quit();
-            },
-        },
-    ]);
-
     const defaultIcon = nativeImage.createFromPath(config.icon_path);
 
     trayIcon = new Tray(defaultIcon);
     trayIcon.setToolTip(config.brand);
-    trayIcon.setContextMenu(contextMenu);
+    initApplicationMenu();
     trayIcon.on('click', toggleWin);
 
     let lastFavicon = null;
@@ -105,3 +90,27 @@ exports.create = function(config) {
         trayIcon.setToolTip(title);
     });
 };
+
+function initApplicationMenu() {
+    if (!trayIcon) {
+        return;
+    }
+
+    const contextMenu = Menu.buildFromTemplate([
+        {
+            label: _td('Show/Hide'),
+            click: toggleWin,
+        },
+        { type: 'separator' },
+        {
+            label: _td('Quit'),
+            click: function() {
+                app.quit();
+            },
+        },
+    ]);
+
+    trayIcon.setContextMenu(contextMenu);
+}
+
+exports.initApplicationMenu = initApplicationMenu;
