@@ -1,3 +1,22 @@
+Changes in [1.7.26](https://github.com/vector-im/element-desktop/releases/tag/v1.7.26) (2021-04-26)
+===================================================================================================
+[Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.26-rc.1...v1.7.26)
+
+ * No changes since rc.1
+
+Changes in [1.7.26-rc.1](https://github.com/vector-im/element-desktop/releases/tag/v1.7.26-rc.1) (2021-04-21)
+=============================================================================================================
+[Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.25...v1.7.26-rc.1)
+
+ * Remove Debian dependency libappindicator3-1
+   [\#170](https://github.com/vector-im/element-desktop/pull/170)
+ * Fix exit shortcuts for non QWERTY keyboards
+   [\#185](https://github.com/vector-im/element-desktop/pull/185)
+ * Fix using yarn run fetch with a specific version
+   [\#182](https://github.com/vector-im/element-desktop/pull/182)
+ * Switch nightly to not-staging Scalar by default
+   [\#181](https://github.com/vector-im/element-desktop/pull/181)
+
 Changes in [1.7.25](https://github.com/vector-im/element-desktop/releases/tag/v1.7.25) (2021-04-12)
 ===================================================================================================
 [Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.25-rc.1...v1.7.25)
