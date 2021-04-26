@@ -41,7 +41,7 @@ function _t(text, variables = {}) {
 
 class AppLocalization {
     static STORE_KEY = "locale"
-    #store = null
+    store = null
 
     constructor({ store, components = [] }) {
         counterpart.registerTranslations("en", this.fetchTranslationJson("en_EN"));
@@ -52,9 +52,9 @@ class AppLocalization {
             this.localizedComponents = new Set(components);
         }
 
-        this.#store = store;
-        if (this.#store.has(AppLocalization.STORE_KEY)) {
-            const locales = this.#store.get(AppLocalization.STORE_KEY);
+        this.store = store;
+        if (this.store.has(AppLocalization.STORE_KEY)) {
+            const locales = this.store.get(AppLocalization.STORE_KEY);
             this.setAppLocale(locales);
         }
 
@@ -90,7 +90,7 @@ class AppLocalization {
         });
 
         counterpart.setLocale(locales);
-        this.#store.set(AppLocalization.STORE_KEY, locales);
+        this.store.set(AppLocalization.STORE_KEY, locales);
 
         this.resetLocalizedUI();
     }
