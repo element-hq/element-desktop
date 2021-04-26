@@ -2,8 +2,8 @@ const counterpart = require('counterpart');
 
 const DEFAULT_LOCALE = "en";
 
-function _td(text) {
-    return _t(text);
+function _t(text) {
+    return text;
 }
 
 function _t(text, variables = {}) {
@@ -109,5 +109,5 @@ class AppLocalization {
 module.exports = {
     AppLocalization,
     _t,
-    _td,
+    _t,
 };

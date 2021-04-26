@@ -3,7 +3,7 @@ const url = require('url');
 const fs = require('fs');
 const request = require('request');
 const path = require('path');
-const { _td } = require('./language-helper');
+const { _t } = require('./language-helper');
 
 const MAILTO_PREFIX = "mailto:";
 
@@ -74,7 +74,7 @@ function onLinkContextMenu(ev, params) {
 
     if (params.hasImageContents) {
         popupMenu.append(new MenuItem({
-            label: _td('Copy image'),
+            label: _t('Copy image'),
             accelerator: 'c',
             click() {
                 ev.sender.copyImageAt(params.x, params.y);
@@ -87,7 +87,7 @@ function onLinkContextMenu(ev, params) {
         // Special-case e-mail URLs to strip the `mailto:` like modern browsers do
         if (url.startsWith(MAILTO_PREFIX)) {
             popupMenu.append(new MenuItem({
-                label: _td('Copy email address'),
+                label: _t('Copy email address'),
                 accelerator: 'a',
                 click() {
                     clipboard.writeText(url.substr(MAILTO_PREFIX.length));
@@ -95,7 +95,7 @@ function onLinkContextMenu(ev, params) {
             }));
         } else {
             popupMenu.append(new MenuItem({
-                label: _td('Copy link address'),
+                label: _t('Copy link address'),
                 accelerator: 'a',
                 click() {
                     clipboard.writeText(url);
@@ -108,7 +108,7 @@ function onLinkContextMenu(ev, params) {
     // only the renderer can resolve them so don't give the user an option to.
     if (params.hasImageContents && !url.startsWith('blob:')) {
         popupMenu.append(new MenuItem({
-            label: _td('Save image as...'),
+            label: _t('Save image as...'),
             accelerator: 'a',
             async click() {
                 const targetFileName = params.titleText || "image.png";
@@ -128,8 +128,8 @@ function onLinkContextMenu(ev, params) {
                     console.error(err);
                     dialog.showMessageBox({
                         type: "error",
-                        title: _td("Failed to save image"),
-                        message: _td("The image failed to save"),
+                        title: _t("Failed to save image"),
+                        message: _t("The image failed to save"),
                     });
                 }
             },
@@ -156,7 +156,7 @@ function _CutCopyPasteSelectContextMenus(params) {
         options.push({
             type: 'separator',
         }, {
-            label: _td('Add to dictionary'),
+            label: _t('Add to dictionary'),
             click: (menuItem, browserWindow) => {
                 browserWindow.webContents.session.addWordToSpellCheckerDictionary(params.misspelledWord);
             },
@@ -167,17 +167,17 @@ function _CutCopyPasteSelectContextMenus(params) {
 
     options.push({
         role: 'cut',
-        label: _td('Cut'),
+        label: _t('Cut'),
         accelerator: 't',
         enabled: params.editFlags.canCut,
     }, {
         role: 'copy',
-        label: _td('Copy'),
+        label: _t('Copy'),
         accelerator: 'c',
         enabled: params.editFlags.canCopy,
     }, {
         role: 'paste',
-        label: _td('Paste'),
+        label: _t('Paste'),
         accelerator: 'p',
         enabled: params.editFlags.canPaste,
     }, {
@@ -185,7 +185,7 @@ function _CutCopyPasteSelectContextMenus(params) {
         enabled: params.editFlags.canPaste,
     }, {
         role: 'selectall',
-        label: _td("Select All"),
+        label: _t("Select All"),
         accelerator: 'a',
         enabled: params.editFlags.canSelectAll,
     });

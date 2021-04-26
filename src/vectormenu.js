@@ -15,106 +15,106 @@ limitations under the License.
 */
 
 const {app, shell, Menu} = require('electron');
-const { _td } = require('./language-helper');
+const { _t } = require('./language-helper');
 
 function buildMenuTemplate() {
     // Menu template from http://electron.atom.io/docs/api/menu/, edited
     const template = [
         {
-            label: _td('Edit'),
+            label: _t('Edit'),
             accelerator: 'e',
             submenu: [
                 {
                     role: 'undo',
-                    label: _td('Undo'),
+                    label: _t('Undo'),
                 },
                 {
                     role: 'redo',
-                    label: _td('Redo'),
+                    label: _t('Redo'),
                 },
                 { type: 'separator' },
                 {
                     role: 'cut',
-                    label: _td('Cut'),
+                    label: _t('Cut'),
                 },
                 {
                     role: 'copy',
-                    label: _td('Copy'),
+                    label: _t('Copy'),
                 },
                 {
                     role: 'paste',
-                    label: _td('Paste'),
+                    label: _t('Paste'),
                 },
                 {
                     role: 'pasteandmatchstyle',
-                    label: _td('Paste and Match Style'),
+                    label: _t('Paste and Match Style'),
                 },
                 {
                     role: 'delete',
-                    label: _td('Delete'),
+                    label: _t('Delete'),
                 },
                 {
                     role: 'selectall',
-                    label: _td('Select All'),
+                    label: _t('Select All'),
                 },
             ],
         },
         {
-            label: _td('View'),
+            label: _t('View'),
             accelerator: 'V',
             submenu: [
                 { type: 'separator' },
                 {
                     role: 'resetzoom',
-                    label: _td('Actual Size'),
+                    label: _t('Actual Size'),
                 },
                 {
                     role: 'zoomin',
                     accelerator: 'CommandOrControl+=',
-                    label: _td('Zoom In'),
+                    label: _t('Zoom In'),
                 },
                 {
                     role: 'zoomout',
-                    label: _td('Zoom Out'),
+                    label: _t('Zoom Out'),
                 },
                 { type: 'separator' },
                 {
-                    label: _td('Preferences'),
+                    label: _t('Preferences'),
                     accelerator: 'Command+,', // Mac-only accelerator
                     click() { global.mainWindow.webContents.send('preferences'); },
                 },
                 {
                     role: 'togglefullscreen',
-                    label: _td('Toggle Full Screen'),
+                    label: _t('Toggle Full Screen'),
                 },
                 {
                     role: 'toggledevtools',
-                    label: _td('Toggle Developer Tools'),
+                    label: _t('Toggle Developer Tools'),
                 },
             ],
         },
         {
-            label: _td('Window'),
+            label: _t('Window'),
             accelerator: 'w',
             role: 'window',
             submenu: [
                 {
                     role: 'minimize',
-                    label: _td('Minimize'),
+                    label: _t('Minimize'),
                 },
                 {
                     role: 'close',
-                    label: _td('Close'),
+                    label: _t('Close'),
                 },
             ],
         },
         {
-            label: _td('Help'),
+            label: _t('Help'),
             accelerator: 'h',
             role: 'help',
             submenu: [
                 {
-                    label: _td('Element Help'),
+                    label: _t('Element Help'),
                     click() { shell.openExternal('https://element.io/help'); },
                 },
             ],
@@ -129,31 +129,31 @@ function buildMenuTemplate() {
             submenu: [
                 {
                     role: 'about',
-                    label: _td('About'),
+                    label: _t('About'),
                 },
                 { type: 'separator' },
                 {
                     role: 'services',
-                    label: _td('Services'),
+                    label: _t('Services'),
                     submenu: [],
                 },
                 { type: 'separator' },
                 {
                     role: 'hide',
-                    label: _td('Hide'),
+                    label: _t('Hide'),
                 },
                 {
                     role: 'hideothers',
-                    label: _td('Hide Others'),
+                    label: _t('Hide Others'),
                 },
                 {
                     role: 'unhide',
-                    label: _td('Unhide'),
+                    label: _t('Unhide'),
                 },
                 { type: 'separator' },
                 {
                     role: 'quit',
-                    label: _td('Quit'),
+                    label: _t('Quit'),
                 },
             ],
         });
@@ -162,15 +162,15 @@ function buildMenuTemplate() {
         template[1].submenu.push(
             { type: 'separator' },
             {
-                label: _td('Speech'),
+                label: _t('Speech'),
                 submenu: [
                     {
                         role: 'startspeaking',
-                        label: _td('Start Speaking'),
+                        label: _t('Start Speaking'),
                     },
                     {
                         role: 'stopspeaking',
-                        label: _td('Stop Speaking'),
+                        label: _t('Stop Speaking'),
                     },
                 ],
             });
@@ -179,40 +179,40 @@ function buildMenuTemplate() {
         // This also has specific functionality on macOS
         template[3].submenu = [
             {
-                label: _td('Close'),
+                label: _t('Close'),
                 accelerator: 'CmdOrCtrl+W',
                 role: 'close',
             },
             {
-                label: _td('Minimize'),
+                label: _t('Minimize'),
                 accelerator: 'CmdOrCtrl+M',
                 role: 'minimize',
             },
             {
-                label: _td('Zoom'),
+                label: _t('Zoom'),
                 role: 'zoom',
             },
             {
                 type: 'separator',
             },
             {
-                label: _td('Bring All to Front'),
+                label: _t('Bring All to Front'),
                 role: 'front',
             },
         ];
     } else {
         template.unshift({
-            label: _td('File'),
+            label: _t('File'),
             accelerator: 'f',
             submenu: [
                 // For some reason, 'about' does not seem to work on windows.
                 /*{
                     role: 'about',
-                    label: _td('About'),
+                    label: _t('About'),
                 },*/
                 {
                     role: 'quit',
-                    label: _td('Quit'),
+                    label: _t('Quit'),
                 },
             ],
         });
