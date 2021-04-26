@@ -18,7 +18,7 @@ const counterpart = require('counterpart');
 
 const DEFAULT_LOCALE = "en";
 
-function _t(text) {
+function _td(text) {
     return text;
 }
 
@@ -125,5 +125,5 @@ class AppLocalization {
 module.exports = {
     AppLocalization,
     _t,
-    _t,
+    _td,
 };
