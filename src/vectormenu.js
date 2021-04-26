@@ -24,15 +24,39 @@ function buildMenuTemplate() {
             label: _td('Edit'),
             accelerator: 'e',
             submenu: [
-                { role: 'undo' },
-                { role: 'redo' },
+                {
+                    role: 'undo',
+                    label: _td('Undo'),
+                },
+                {
+                    role: 'redo',
+                    label: _td('Redo'),
+                },
                 { type: 'separator' },
-                { role: 'cut' },
-                { role: 'copy' },
-                { role: 'paste' },
-                { role: 'pasteandmatchstyle' },
-                { role: 'delete' },
-                { role: 'selectall' },
+                {
+                    role: 'cut',
+                    label: _td('Cut'),
+                },
+                {
+                    role: 'copy',
+                    label: _td('Copy'),
+                },
+                {
+                    role: 'paste',
+                    label: _td('Paste'),
+                },
+                {
+                    role: 'pasteandmatchstyle',
+                    label: _td('Paste and Match Style'),
+                },
+                {
+                    role: 'delete',
+                    label: _td('Delete'),
+                },
+                {
+                    role: 'selectall',
+                    label: _td('Select All'),
+                },
             ],
         },
         {
@@ -40,17 +64,33 @@ function buildMenuTemplate() {
             accelerator: 'V',
             submenu: [
                 { type: 'separator' },
-                { role: 'resetzoom' },
-                { role: 'zoomin', accelerator: 'CommandOrControl+=' },
-                { role: 'zoomout' },
+                {
+                    role: 'resetzoom',
+                    label: _td('Actual Size'),
+                },
+                {
+                    role: 'zoomin',
+                    accelerator: 'CommandOrControl+=',
+                    label: _td('Zoom In'),
+                },
+                {
+                    role: 'zoomout',
+                    label: _td('Zoom Out'),
+                },
                 { type: 'separator' },
                 {
                     label: _td('Preferences'),
                     accelerator: 'Command+,', // Mac-only accelerator
                     click() { global.mainWindow.webContents.send('preferences'); },
                 },
-                { role: 'togglefullscreen' },
-                { role: 'toggledevtools' },
+                {
+                    role: 'togglefullscreen',
+                    label: _td('Toggle Full Screen'),
+                },
+                {
+                    role: 'toggledevtools',
+                    label: _td('Toggle Developer Tools'),
+                },
             ],
         },
         {
@@ -58,8 +98,14 @@ function buildMenuTemplate() {
             accelerator: 'w',
             role: 'window',
             submenu: [
-                { role: 'minimize' },
-                { role: 'close' },
+                {
+                    role: 'minimize',
+                    label: _td('Minimize'),
+                },
+                {
+                    role: 'close',
+                    label: _td('Close'),
+                },
             ],
         },
         {
@@ -81,18 +127,34 @@ function buildMenuTemplate() {
             // first macOS menu is the name of the app
             label: app.name,
             submenu: [
-                { role: 'about' },
+                {
+                    role: 'about',
+                    label: _td('About'),
+                },
                 { type: 'separator' },
                 {
                     role: 'services',
+                    label: _td('Services'),
                     submenu: [],
                 },
                 { type: 'separator' },
-                { role: 'hide' },
-                { role: 'hideothers' },
-                { role: 'unhide' },
+                {
+                    role: 'hide',
+                    label: _td('Hide'),
+                },
+                {
+                    role: 'hideothers',
+                    label: _td('Hide Others'),
+                },
+                {
+                    role: 'unhide',
+                    label: _td('Unhide'),
+                },
                 { type: 'separator' },
-                { role: 'quit' },
+                {
+                    role: 'quit',
+                    label: _td('Quit'),
+                },
             ],
         });
         // Edit menu.
@@ -102,8 +164,14 @@ function buildMenuTemplate() {
             {
                 label: _td('Speech'),
                 submenu: [
-                    { role: 'startspeaking' },
-                    { role: 'stopspeaking' },
+                    {
+                        role: 'startspeaking',
+                        label: _td('Start Speaking'),
+                    },
+                    {
+                        role: 'stopspeaking',
+                        label: _td('Stop Speaking'),
+                    },
                 ],
             });
 
@@ -139,9 +207,13 @@ function buildMenuTemplate() {
             submenu: [
                 // For some reason, 'about' does not seem to work on windows.
                 /*{
-                    role: 'about'
+                    role: 'about',
+                    label: _td('About'),
                 },*/
-                { role: 'quit' },
+                {
+                    role: 'quit',
+                    label: _td('Quit'),
+                },
             ],
         });
     }
