@@ -11,11 +11,8 @@
   },
   "license": "Apache-2.0",
   "files": [],
-  "bin": {
-    "matrix-gen-i18n": "scripts/gen-i18n.js"
-  },
   "scripts": {
-    "i18n": "matrix-gen-i18n",
+    "i18n": "gen-18n",
     "mkdirs": "mkdirp packages deploys",
     "fetch": "yarn run mkdirs && node scripts/fetch-package.js",
     "asar-webapp": "asar p webapp webapp.asar",
@@ -53,6 +50,7 @@
     "find-npm-prefix": "^1.0.2",
     "fs-extra": "^8.1.0",
     "glob": "^7.1.6",
+    "matrix-web-i18n": "github:matrix-org/matrix-web-i18n",
     "mkdirp": "^1.0.3",
     "needle": "^2.5.0",
     "node-pre-gyp": "^0.15.0",
