@@ -166,6 +166,7 @@ function getTranslationsJs(file) {
                                     if (prop.key.type === 'Literal') {
                                         const tag = prop.key.value;
                                         // RegExp same as in src/languageHandler.js
+                                        // eslint-disable-next-line
                                         const regexp = new RegExp(`(<${tag}>(.*?)<\\/${tag}>|<${tag}>|<${tag}\\s*\\/>)`);
                                         if (!tKey.match(regexp)) {
                                             throw new Error(`No match for ${regexp} in ${tKey}`);
