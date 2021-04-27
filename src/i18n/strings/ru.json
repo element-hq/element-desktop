@@ -33,5 +33,8 @@
     "Redo": "Повторить",
     "Undo": "Отменить",
     "Save image as...": "Сохранить изображение как...",
-    "Copy link address": "Копировать ссылку"
+    "Copy link address": "Копировать ссылку",
+    "Add to dictionary": "Добавить в словарь",
+    "The image failed to save": "Не удалось сохранить изображение",
+    "Failed to save image": "Не удалось сохранить изображение"
 }
