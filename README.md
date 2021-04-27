@@ -148,6 +148,15 @@ $PROFILE` in which case it becomes `Element-$PROFILE`, or it is using one of
 the above created by a pre-1.7 install, in which case it will be `Riot` or
 `Riot-$PROFILE`.
 
+Translations
+==========================
+
+To add a new translation, head to the [translating doc](https://github.com/vector-im/element-web/blob/develop/docs/translating.md).
+
+For a developer guide, see the [translating dev doc](https://github.com/vector-im/element-web/blob/develop/docs/translating-dev.md).
+
+[<img src="https://translate.element.io/widgets/element-desktop/-/multi-auto.svg" alt="translationsstatus" width="340">](https://translate.element.io/engage/element-desktop/?utm_source=widget)
+
 Report bugs & give feedback
 ==========================
 

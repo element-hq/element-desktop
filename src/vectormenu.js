@@ -15,129 +15,212 @@ limitations under the License.
 */
 
 const {app, shell, Menu} = require('electron');
+const { _t } = require('./language-helper');
 
-// Menu template from http://electron.atom.io/docs/api/menu/, edited
-const template = [
-    {
-        label: '&Edit',
-        submenu: [
-            { role: 'undo' },
-            { role: 'redo' },
-            { type: 'separator' },
-            { role: 'cut' },
-            { role: 'copy' },
-            { role: 'paste' },
-            { role: 'pasteandmatchstyle' },
-            { role: 'delete' },
-            { role: 'selectall' },
-        ],
-    },
-    {
-        label: '&View',
-        submenu: [
-            { type: 'separator' },
-            { role: 'resetzoom' },
-            { role: 'zoomin', accelerator: 'CommandOrControl+=' },
-            { role: 'zoomout' },
-            { type: 'separator' },
-            {
-                label: 'Preferences',
-                accelerator: 'Command+,', // Mac-only accelerator
-                click() { global.mainWindow.webContents.send('preferences'); },
-            },
-            { role: 'togglefullscreen' },
-            { role: 'toggledevtools' },
-        ],
-    },
-    {
-        label: '&Window',
-        role: 'window',
-        submenu: [
-            { role: 'minimize' },
-            { role: 'close' },
-        ],
-    },
-    {
-        label: '&Help',
-        role: 'help',
-        submenu: [
-            {
-                label: 'Element Help',
-                click() { shell.openExternal('https://element.io/help'); },
-            },
-        ],
-    },
-];
-
-// macOS has specific menu conventions...
-if (process.platform === 'darwin') {
-    template.unshift({
-        // first macOS menu is the name of the app
-        label: app.name,
-        submenu: [
-            { role: 'about' },
-            { type: 'separator' },
-            {
-                role: 'services',
-                submenu: [],
-            },
-            { type: 'separator' },
-            { role: 'hide' },
-            { role: 'hideothers' },
-            { role: 'unhide' },
-            { type: 'separator' },
-            { role: 'quit' },
-        ],
-    });
-    // Edit menu.
-    // This has a 'speech' section on macOS
-    template[1].submenu.push(
-        { type: 'separator' },
+function buildMenuTemplate() {
+    // Menu template from http://electron.atom.io/docs/api/menu/, edited
+    const template = [
         {
-            label: 'Speech',
+            label: _t('Edit'),
+            accelerator: 'e',
             submenu: [
-                { role: 'startspeaking' },
-                { role: 'stopspeaking' },
+                {
+                    role: 'undo',
+                    label: _t('Undo'),
+                },
+                {
+                    role: 'redo',
+                    label: _t('Redo'),
+                },
+                { type: 'separator' },
+                {
+                    role: 'cut',
+                    label: _t('Cut'),
+                },
+                {
+                    role: 'copy',
+                    label: _t('Copy'),
+                },
+                {
+                    role: 'paste',
+                    label: _t('Paste'),
+                },
+                {
+                    role: 'pasteandmatchstyle',
+                    label: _t('Paste and Match Style'),
+                },
+                {
+                    role: 'delete',
+                    label: _t('Delete'),
+                },
+                {
+                    role: 'selectall',
+                    label: _t('Select All'),
+                },
             ],
-        });
-
-    // Window menu.
-    // This also has specific functionality on macOS
-    template[3].submenu = [
-        {
-            label: 'Close',
-            accelerator: 'CmdOrCtrl+W',
-            role: 'close',
         },
         {
-            label: 'Minimize',
-            accelerator: 'CmdOrCtrl+M',
-            role: 'minimize',
+            label: _t('View'),
+            accelerator: 'V',
+            submenu: [
+                { type: 'separator' },
+                {
+                    role: 'resetzoom',
+                    label: _t('Actual Size'),
+                },
+                {
+                    role: 'zoomin',
+                    accelerator: 'CommandOrControl+=',
+                    label: _t('Zoom In'),
+                },
+                {
+                    role: 'zoomout',
+                    label: _t('Zoom Out'),
+                },
+                { type: 'separator' },
+                {
+                    label: _t('Preferences'),
+                    accelerator: 'Command+,', // Mac-only accelerator
+                    click() { global.mainWindow.webContents.send('preferences'); },
+                },
+                {
+                    role: 'togglefullscreen',
+                    label: _t('Toggle Full Screen'),
+                },
+                {
+                    role: 'toggledevtools',
+                    label: _t('Toggle Developer Tools'),
+                },
+            ],
         },
         {
-            label: 'Zoom',
-            role: 'zoom',
+            label: _t('Window'),
+            accelerator: 'w',
+            role: 'window',
+            submenu: [
+                {
+                    role: 'minimize',
+                    label: _t('Minimize'),
+                },
+                {
+                    role: 'close',
+                    label: _t('Close'),
+                },
+            ],
         },
         {
-            type: 'separator',
-        },
-        {
-            label: 'Bring All to Front',
-            role: 'front',
+            label: _t('Help'),
+            accelerator: 'h',
+            role: 'help',
+            submenu: [
+                {
+                    label: _t('Element Help'),
+                    click() { shell.openExternal('https://element.io/help'); },
+                },
+            ],
         },
     ];
-} else {
-    template.unshift({
-        label: '&File',
-        submenu: [
-            // For some reason, 'about' does not seem to work on windows.
-            /*{
-                role: 'about'
-            },*/
-            { role: 'quit' },
-        ],
-    });
+
+    // macOS has specific menu conventions...
+    if (process.platform === 'darwin') {
+        template.unshift({
+            // first macOS menu is the name of the app
+            role: 'appMenu',
+            label: app.name,
+            submenu: [
+                {
+                    role: 'about',
+                    label: _t('About'),
+                },
+                { type: 'separator' },
+                {
+                    role: 'services',
+                    label: _t('Services'),
+                    submenu: [],
+                },
+                { type: 'separator' },
+                {
+                    role: 'hide',
+                    label: _t('Hide'),
+                },
+                {
+                    role: 'hideothers',
+                    label: _t('Hide Others'),
+                },
+                {
+                    role: 'unhide',
+                    label: _t('Unhide'),
+                },
+                { type: 'separator' },
+                {
+                    role: 'quit',
+                    label: _t('Quit'),
+                },
+            ],
+        });
+        // Edit menu.
+        // This has a 'speech' section on macOS
+        template[1].submenu.push(
+            { type: 'separator' },
+            {
+                label: _t('Speech'),
+                submenu: [
+                    {
+                        role: 'startspeaking',
+                        label: _t('Start Speaking'),
+                    },
+                    {
+                        role: 'stopspeaking',
+                        label: _t('Stop Speaking'),
+                    },
+                ],
+            });
+
+        // Window menu.
+        // This also has specific functionality on macOS
+        template[3].submenu = [
+            {
+                label: _t('Close'),
+                accelerator: 'CmdOrCtrl+W',
+                role: 'close',
+            },
+            {
+                label: _t('Minimize'),
+                accelerator: 'CmdOrCtrl+M',
+                role: 'minimize',
+            },
+            {
+                label: _t('Zoom'),
+                role: 'zoom',
+            },
+            {
+                type: 'separator',
+            },
+            {
+                label: _t('Bring All to Front'),
+                role: 'front',
+            },
+        ];
+    } else {
+        template.unshift({
+            label: _t('File'),
+            accelerator: 'f',
+            submenu: [
+                // For some reason, 'about' does not seem to work on windows.
+                /*{
+                    role: 'about',
+                    label: _t('About'),
+                },*/
+                {
+                    role: 'quit',
+                    label: _t('Quit'),
+                },
+            ],
+        });
+    }
+
+    return Menu.buildFromTemplate(template);
 }
 
-module.exports = Menu.buildFromTemplate(template);
+module.exports = buildMenuTemplate;
 

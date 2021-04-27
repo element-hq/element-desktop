@@ -34,7 +34,7 @@ const AutoLaunch = require('auto-launch');
 const path = require('path');
 
 const tray = require('./tray');
-const vectorMenu = require('./vectormenu');
+const buildMenuTemplate = require('./vectormenu');
 const webContentsHandler = require('./webcontents-handler');
 const updater = require('./updater');
 const {getProfileFromDeeplink, protocolInit, recordSSOSession} = require('./protocol');
@@ -56,6 +56,8 @@ try {
         console.warn("Keytar unexpected error:", e);
     }
 }
+
+const { _t, AppLocalization } = require('./language-helper');
 
 let seshatSupported = false;
 let Seshat;
@@ -84,6 +86,7 @@ let vectorConfig;
 let iconPath;
 let trayConfig;
 let launcher;
+let appLocalization;
 
 if (argv["help"]) {
     console.log("Options:");
@@ -266,8 +269,8 @@ const warnBeforeExit = (event, input) => {
     if (shouldWarnBeforeExit && exitShortcutPressed) {
         const shouldCancelCloseRequest = dialog.showMessageBoxSync(mainWindow, {
             type: "question",
-            buttons: ["Cancel", "Close Element"],
-            message: "Are you sure you want to quit?",
+            buttons: [_t("Cancel"), _t("Close Element")],
+            message: _t("Are you sure you want to quit?"),
             defaultId: 1,
             cancelId: 0,
         }) === 0;
@@ -363,6 +366,9 @@ ipcMain.on('ipcCall', async function(ev, payload) {
             } else {
                 launcher.disable();
             }
+            break;
+        case 'setLanguage':
+            appLocalization.setAppLocale(args[0]);
             break;
         case 'shouldWarnBeforeExit':
             ret = store.get('warnBeforeExit', true);
@@ -915,7 +921,6 @@ app.on('ready', async () => {
         },
     });
     mainWindow.loadURL('vector://vector/webapp/');
-    Menu.setApplicationMenu(vectorMenu);
 
     // Handle spellchecker
     // For some reason spellCheckerEnabled isn't persisted so we have to use the store here
@@ -964,6 +969,14 @@ app.on('ready', async () => {
     }
 
     webContentsHandler(mainWindow.webContents);
+
+    appLocalization = new AppLocalization({
+        store,
+        components: [
+            () => tray.initApplicationMenu(),
+            () => Menu.setApplicationMenu(buildMenuTemplate()),
+        ],
+    });
 });
 
 app.on('window-all-closed', () => {
