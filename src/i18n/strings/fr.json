@@ -29,5 +29,17 @@
     "Paste": "Coller",
     "Copy": "Copier",
     "Cut": "Couper",
-    "Speech": "Dictée"
+    "Speech": "Dictée",
+    "Add to dictionary": "Ajouter au dictionnaire",
+    "The image failed to save": "L’image n’a pas pu être sauvegardée",
+    "Failed to save image": "Échec de la sauvegarde de l’image",
+    "Save image as...": "Enregistrer l’image sous…",
+    "Copy link address": "Copier l’adresse du lien",
+    "Copy email address": "Copier l’adresse e-mail",
+    "Copy image": "Copier l’image",
+    "File": "Fichier",
+    "Bring All to Front": "Tout amener au premier plan",
+    "Zoom": "Zoom",
+    "Stop Speaking": "Arrêter la dictée",
+    "Start Speaking": "Commencer la dictée"
 }
