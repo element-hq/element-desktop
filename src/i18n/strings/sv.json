@@ -30,5 +30,12 @@
     "Undo": "Ångra",
     "Edit": "Redigera",
     "Quit": "Avsluta",
-    "Cancel": "Avbryt"
+    "Cancel": "Avbryt",
+    "Zoom": "Zooma",
+    "Toggle Developer Tools": "Växla utvecklarverktyg",
+    "Toggle Full Screen": "Växla helskärm",
+    "Unhide": "Göm inte",
+    "Zoom Out": "Zooma ut",
+    "Zoom In": "Zooma in",
+    "Close Element": "Stäng Element"
 }
