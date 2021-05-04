@@ -33,5 +33,14 @@
     "Redo": "Повторить",
     "Undo": "Отменить",
     "Save image as...": "Сохранить изображение как...",
-    "Copy link address": "Копировать ссылку"
+    "Copy link address": "Копировать ссылку",
+    "Add to dictionary": "Добавить в словарь",
+    "The image failed to save": "Не удалось сохранить изображение",
+    "Failed to save image": "Не удалось сохранить изображение",
+    "Bring All to Front": "Вынести всё вперёд",
+    "Stop Speaking": "Перестаньте говорить",
+    "Start Speaking": "Говорите",
+    "Speech": "Голос",
+    "Hide Others": "Скрыть прочие",
+    "Paste and Match Style": "Вставить с тем же стилем"
 }
