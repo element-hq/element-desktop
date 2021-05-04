@@ -1,3 +1,20 @@
+Changes in [1.7.27-rc.1](https://github.com/vector-im/element-desktop/releases/tag/v1.7.27-rc.1) (2021-05-04)
+=============================================================================================================
+[Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.26...v1.7.27-rc.1)
+
+ * Translations update from Weblate
+   [\#191](https://github.com/vector-im/element-desktop/pull/191)
+ * Bump ssri from 6.0.1 to 6.0.2
+   [\#187](https://github.com/vector-im/element-desktop/pull/187)
+ * Disables HardwareMediaKeyHandling
+   [\#180](https://github.com/vector-im/element-desktop/pull/180)
+ * Translations update from Weblate
+   [\#189](https://github.com/vector-im/element-desktop/pull/189)
+ * Add internationalisation support
+   [\#188](https://github.com/vector-im/element-desktop/pull/188)
+ * Fix event index passphrase change process
+   [\#186](https://github.com/vector-im/element-desktop/pull/186)
+
 Changes in [1.7.26](https://github.com/vector-im/element-desktop/releases/tag/v1.7.26) (2021-04-26)
 ===================================================================================================
 [Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.26-rc.1...v1.7.26)
