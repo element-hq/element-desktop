@@ -955,7 +955,15 @@ app.on('ready', async () => {
             // (this is generally how single-window Mac apps
             // behave, eg. Mail.app)
             e.preventDefault();
-            mainWindow.hide();
+
+            if (mainWindow.isFullScreen()) {
+                mainWindow.once('leave-full-screen', () => mainWindow.hide());
+
+                mainWindow.setFullScreen(false);
+            } else {
+                mainWindow.hide();
+            }
+
             return false;
         }
     });
