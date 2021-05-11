@@ -1,3 +1,12 @@
+Changes in [1.7.28-rc.1](https://github.com/vector-im/element-desktop/releases/tag/v1.7.28-rc.1) (2021-05-11)
+=============================================================================================================
+[Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.27...v1.7.28-rc.1)
+
+ * Add Windows native module requirements
+   [\#190](https://github.com/vector-im/element-desktop/pull/190)
+ * Prevent black screen when closing window while in full screen mode on macOS
+   [\#192](https://github.com/vector-im/element-desktop/pull/192)
+
 Changes in [1.7.27](https://github.com/vector-im/element-desktop/releases/tag/v1.7.27) (2021-05-10)
 ===================================================================================================
 [Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.27-rc.1...v1.7.27)
