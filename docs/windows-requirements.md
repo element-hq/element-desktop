@@ -8,10 +8,13 @@ If you want to build native modules, make sure that the following tools are inst
 - [Python 3](https://www.python.org/downloads/)
 - [Strawberry Perl](https://strawberryperl.com/)
 - [Rust](https://rustup.rs/)
-- [Visual Studio](https://visualstudio.microsoft.com/downloads/) with the following packages
-  - MSVC VS 2019 C++
-  - Windows 10 SDK
-  - C++ Clang tools
+- [Build Tools for Visual Studio 2019](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2019) with the following configuration:
+  - On the Workloads tab:
+    - Desktop & Mobile -> C++ build tools
+  - On the Individual components tab:
+    - MSVC VS 2019 C++ build tools
+    - Windows 10 SDK (latest version available)
+    - C++ CMake tools for Windows
 
 Once installed make sure all those utilities are accessible in your `PATH`.
 In order to load all the C++ utilities installed by Visual Studio you can run the following in a terminal window.
