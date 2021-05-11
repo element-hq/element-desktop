@@ -65,7 +65,7 @@ yarn run build:native
 ```
 
 On Windows, this will automatically determine the architecture to build for based
-on the environment (ie. set up by vcvarsall.bat).
+on the environment. Make sure that you have all the [tools required to perform the native modules build](docs/windows-requirements.md)
 
 Now you can build the package:
 
