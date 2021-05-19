@@ -1,3 +1,12 @@
+Changes in [1.7.29-rc.1](https://github.com/vector-im/element-desktop/releases/tag/v1.7.29-rc.1) (2021-05-19)
+=============================================================================================================
+[Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.28...v1.7.29-rc.1)
+
+ * Translations update from Weblate
+   [\#196](https://github.com/vector-im/element-desktop/pull/196)
+ * Translations update from Weblate
+   [\#195](https://github.com/vector-im/element-desktop/pull/195)
+
 Changes in [1.7.28](https://github.com/vector-im/element-desktop/releases/tag/v1.7.28) (2021-05-17)
 ===================================================================================================
 [Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.28-rc.1...v1.7.28)
