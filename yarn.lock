@@ -2013,8 +2013,8 @@ escape-string-regexp@^1.0.5:
   integrity sha1-G2HAViGQqN/2rjuyzwIAyhMLhtQ=
 
 "eslint-plugin-matrix-org@github:matrix-org/eslint-plugin-matrix-org#main":
-  version "0.2.0"
-  resolved "https://codeload.github.com/matrix-org/eslint-plugin-matrix-org/tar.gz/2d49e6c1493b4adaa5c75a373a5c0d9493214f13"
+  version "0.3.0"
+  resolved "https://codeload.github.com/matrix-org/eslint-plugin-matrix-org/tar.gz/53000626a9256811f6b355de4eafeb5575bda7fc"
 
 eslint-scope@^5.1.1:
   version "5.1.1"
