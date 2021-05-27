@@ -30,7 +30,7 @@ module.exports.start = function startAutoUpdate(updateBaseUrl) {
         // hits a URL that either gives it a 200 with some json or
         // 204 No Content. On windows it takes a base path and looks for
         // files under that path.
-        if (process.platform === 'darwin') {
+        if (process.platform === 'darwin' && process.arch === 'x64') {
             // include the current version in the URL we hit. Electron doesn't add
             // it anywhere (apart from the User-Agent) so it's up to us. We could
             // (and previously did) just use the User-Agent, but this doesn't
