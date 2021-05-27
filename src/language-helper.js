@@ -48,7 +48,7 @@ function _t(text, variables = {}) {
     if (translated === undefined && count !== undefined) {
         // counterpart does not do fallback if no pluralisation exists
         // in the preferred language, so do it here
-        translated = counterpart.translate(text, Object.assign({}, args, {locale: DEFAULT_LOCALE}));
+        translated = counterpart.translate(text, Object.assign({}, args, { locale: DEFAULT_LOCALE }));
     }
 
     // The translation returns text so there's no XSS vector here (no unsafe HTML, no code execution)
@@ -120,7 +120,6 @@ class AppLocalization {
         });
     }
 }
-
 
 module.exports = {
     AppLocalization,

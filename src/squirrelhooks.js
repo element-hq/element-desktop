@@ -16,7 +16,7 @@ limitations under the License.
 
 const path = require('path');
 const spawn = require('child_process').spawn;
-const {app} = require('electron');
+const { app } = require('electron');
 const fsProm = require('fs').promises;
 
 function runUpdateExe(args) {
