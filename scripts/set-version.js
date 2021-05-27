@@ -52,4 +52,4 @@ if (require.main === module) {
     main(process.argv.slice(2)).then((ret) => process.exit(ret));
 }
 
-module.exports = {versionFromAsar, setPackageVersion};
+module.exports = { versionFromAsar, setPackageVersion };

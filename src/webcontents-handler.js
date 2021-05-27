@@ -1,4 +1,4 @@
-const {clipboard, nativeImage, Menu, MenuItem, shell, dialog, ipcMain} = require('electron');
+const { clipboard, nativeImage, Menu, MenuItem, shell, dialog, ipcMain } = require('electron');
 const url = require('url');
 const fs = require('fs');
 const request = require('request');
@@ -49,7 +49,6 @@ function writeNativeImage(filePath, img) {
             return fs.promises.writeFile(filePath, img.toPNG());
     }
 }
-
 
 function onLinkContextMenu(ev, params) {
     let url = params.linkURL || params.srcURL;
@@ -112,7 +111,7 @@ function onLinkContextMenu(ev, params) {
             accelerator: 'a',
             async click() {
                 const targetFileName = params.titleText || "image.png";
-                const {filePath} = await dialog.showSaveDialog({
+                const { filePath } = await dialog.showSaveDialog({
                     defaultPath: targetFileName,
                 });
 
@@ -215,7 +214,7 @@ function onEditableContextMenu(ev, params) {
     ev.preventDefault();
 }
 
-ipcMain.on('userDownloadOpen', function(ev, {path}) {
+ipcMain.on('userDownloadOpen', function(ev, { path }) {
     shell.openPath(path);
 });
 

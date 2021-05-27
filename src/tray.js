@@ -15,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const {app, Tray, Menu, nativeImage} = require('electron');
+const { app, Tray, Menu, nativeImage } = require('electron');
 const pngToIco = require('png-to-ico');
 const path = require('path');
 const fs = require('fs');

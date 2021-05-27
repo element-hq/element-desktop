@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const {app, shell, Menu} = require('electron');
+const { app, shell, Menu } = require('electron');
 const { _t } = require('./language-helper');
 
 function buildMenuTemplate() {

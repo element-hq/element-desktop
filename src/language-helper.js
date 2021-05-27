@@ -48,7 +48,7 @@ function _t(text, variables = {}) {
     if (translated === undefined && count !== undefined) {
         // counterpart does not do fallback if no pluralisation exists
         // in the preferred language, so do it here
-        translated = counterpart.translate(text, Object.assign({}, args, {locale: DEFAULT_LOCALE}));
+        translated = counterpart.translate(text, Object.assign({}, args, { locale: DEFAULT_LOCALE }));
     }
 
     // The translation returns text so there's no XSS vector here (no unsafe HTML, no code execution)
@@ -56,10 +56,10 @@ function _t(text, variables = {}) {
 }
 
 class AppLocalization {
-    static STORE_KEY = "locale"
-    store = null
-
     constructor({ store, components = [] }) {
+        // TODO: Should be static field, but that doesn't parse without Babel
+        this.STORE_KEY = "locale";
+
         counterpart.registerTranslations("en", this.fetchTranslationJson("en_EN"));
         counterpart.setFallbackLocale('en');
         counterpart.setSeparator('|');
@@ -69,8 +69,8 @@ class AppLocalization {
         }
 
         this.store = store;
-        if (this.store.has(AppLocalization.STORE_KEY)) {
-            const locales = this.store.get(AppLocalization.STORE_KEY);
+        if (this.store.has(this.STORE_KEY)) {
+            const locales = this.store.get(this.STORE_KEY);
             this.setAppLocale(locales);
         }
 
@@ -106,7 +106,7 @@ class AppLocalization {
         });
 
         counterpart.setLocale(locales);
-        this.store.set(AppLocalization.STORE_KEY, locales);
+        this.store.set(this.STORE_KEY, locales);
 
         this.resetLocalizedUI();
     }
@@ -120,7 +120,6 @@ class AppLocalization {
         });
     }
 }
-
 
 module.exports = {
     AppLocalization,

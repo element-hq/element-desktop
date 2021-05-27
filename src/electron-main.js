@@ -24,7 +24,7 @@ const checkSquirrelHooks = require('./squirrelhooks');
 if (checkSquirrelHooks()) return;
 
 const argv = require('minimist')(process.argv, {
-    alias: {help: "h"},
+    alias: { help: "h" },
 });
 
 const {
@@ -37,7 +37,7 @@ const tray = require('./tray');
 const buildMenuTemplate = require('./vectormenu');
 const webContentsHandler = require('./webcontents-handler');
 const updater = require('./updater');
-const {getProfileFromDeeplink, protocolInit, recordSSOSession} = require('./protocol');
+const { getProfileFromDeeplink, protocolInit, recordSSOSession } = require('./protocol');
 
 const windowStateKeeper = require('electron-window-state');
 const Store = require('electron-store');
@@ -499,7 +499,6 @@ ipcMain.on('ipcCall', async function(ev, payload) {
     });
 });
 
-
 const seshatDefaultPassphrase = "DEFAULT_PASSPHRASE";
 async function getOrCreatePassphrase(key) {
     if (keytar) {
@@ -551,8 +550,8 @@ ipcMain.on('seshat', async function(ev, payload) {
                 const passphrase = await getOrCreatePassphrase(passphraseKey);
 
                 try {
-                    await afs.mkdir(eventStorePath, {recursive: true});
-                    eventIndex = new Seshat(eventStorePath, {passphrase});
+                    await afs.mkdir(eventStorePath, { recursive: true });
+                    eventIndex = new Seshat(eventStorePath, { passphrase });
                 } catch (e) {
                     if (e instanceof ReindexError) {
                         // If this is a reindex error, the index schema
@@ -578,7 +577,7 @@ ipcMain.on('seshat', async function(ev, payload) {
                             await recoveryIndex.reindex();
                         }
 
-                        eventIndex = new Seshat(eventStorePath, {passphrase});
+                        eventIndex = new Seshat(eventStorePath, { passphrase });
                     } else {
                         sendError(payload.id, e);
                         return;
@@ -836,17 +835,17 @@ app.on('ready', async () => {
 
     protocol.registerFileProtocol('vector', (request, callback) => {
         if (request.method !== 'GET') {
-            callback({error: -322}); // METHOD_NOT_SUPPORTED from chromium/src/net/base/net_error_list.h
+            callback({ error: -322 }); // METHOD_NOT_SUPPORTED from chromium/src/net/base/net_error_list.h
             return null;
         }
 
         const parsedUrl = new URL(request.url);
         if (parsedUrl.protocol !== 'vector:') {
-            callback({error: -302}); // UNKNOWN_URL_SCHEME
+            callback({ error: -302 }); // UNKNOWN_URL_SCHEME
             return;
         }
         if (parsedUrl.host !== 'vector') {
-            callback({error: -105}); // NAME_NOT_RESOLVED
+            callback({ error: -105 }); // NAME_NOT_RESOLVED
             return;
         }
 
@@ -854,7 +853,7 @@ app.on('ready', async () => {
 
         // path starts with a '/'
         if (target[0] !== '') {
-            callback({error: -6}); // FILE_NOT_FOUND
+            callback({ error: -6 }); // FILE_NOT_FOUND
             return;
         }
 
@@ -866,7 +865,7 @@ app.on('ready', async () => {
         if (target[1] === 'webapp') {
             baseDir = asarPath;
         } else {
-            callback({error: -6}); // FILE_NOT_FOUND
+            callback({ error: -6 }); // FILE_NOT_FOUND
             return;
         }
 
@@ -876,7 +875,7 @@ app.on('ready', async () => {
 
         const relTarget = path.normalize(path.join(...target.slice(2)));
         if (relTarget.startsWith('..')) {
-            callback({error: -6}); // FILE_NOT_FOUND
+            callback({ error: -6 }); // FILE_NOT_FOUND
             return;
         }
         const absTarget = path.join(baseDir, relTarget);

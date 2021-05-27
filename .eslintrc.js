@@ -1,6 +1,12 @@
 module.exports = {
+    plugins: [
+        "matrix-org",
+    ],
+    extends: [
+        "plugin:matrix-org/javascript",
+    ],
     parserOptions: {
-        ecmaVersion: 8,
+        ecmaVersion: 2021,
     },
     env: {
         es6: true,
@@ -8,12 +14,7 @@ module.exports = {
         // we also have some browser code (ie. the preload script)
         browser: true,
     },
-    extends: ["matrix-org"],
     rules: {
-        // js-sdk uses a babel rule which we can't use because we
-        // don't use babel, so remove it & put the original back
-        "babel/no-invalid-this": "off",
-        "no-invalid-this": "error",
         "quotes": "off",
         "indent": "off",
         "prefer-promise-reject-errors": "off",

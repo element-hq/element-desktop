@@ -37,7 +37,7 @@ async function fetch(hakEnv, moduleInfo) {
     if (haveModuleBuildDir) return;
 
     await new Promise((resolve) => {
-        npm.load({'loglevel': 'silent'}, resolve);
+        npm.load({ 'loglevel': 'silent' }, resolve);
     });
 
     console.log("Fetching " + moduleInfo.name + " at version " + moduleInfo.version);
