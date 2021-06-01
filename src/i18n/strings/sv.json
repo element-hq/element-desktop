@@ -37,5 +37,10 @@
     "Unhide": "Göm inte",
     "Zoom Out": "Zooma ut",
     "Zoom In": "Zooma in",
-    "Close Element": "Stäng Element"
+    "Close Element": "Stäng Element",
+    "Show/Hide": "Visa/dölj",
+    "Add to dictionary": "Lägg till i ordlistan",
+    "The image failed to save": "Bilden sparades inte",
+    "Failed to save image": "Misslyckades med att spara bilden",
+    "Are you sure you want to quit?": "Är du säker att du vill avsluta?"
 }
