@@ -1,4 +1,6 @@
 {
+    "Your %(brand)s is misconfigured": "Your %(brand)s is misconfigured",
+    "Your custom %(brand)s configuration contains invalid JSON. Please correct the problem and reopen %(brand)s.": "Your custom %(brand)s configuration contains invalid JSON. Please correct the problem and reopen %(brand)s.",
     "Cancel": "Cancel",
     "Close Element": "Close Element",
     "Are you sure you want to quit?": "Are you sure you want to quit?",
