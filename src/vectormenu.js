@@ -71,6 +71,7 @@ function buildMenuTemplate() {
                 {
                     role: 'zoomin',
                     accelerator: 'CommandOrControl+=',
+                    accelerator: 'CommandOrControl+Plus',
                     label: _t('Zoom In'),
                 },
                 {
