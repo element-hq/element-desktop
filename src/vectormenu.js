@@ -70,7 +70,6 @@ function buildMenuTemplate() {
                 },
                 {
                     role: 'zoomin',
-                    accelerator: 'CommandOrControl+=',
                     label: _t('Zoom In'),
                 },
                 {
