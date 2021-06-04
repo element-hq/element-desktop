@@ -210,10 +210,9 @@ async function setupGlobals() {
         if (e instanceof SyntaxError) {
             dialog.showMessageBox({
                 type: "error",
-                title: _t("Your %(brand)s is misconfigured", { brand: vectorConfig.brand || 'Element' }),
-                message: _t("Your custom %(brand)s configuration contains invalid JSON. " +
-                            "Please correct the problem and reopen %(brand)s.",
-                            { brand: vectorConfig.brand || 'Element' }),
+                title: `Your ${vectorConfig.brand || 'Element'} is misconfigured`,
+                message: `Your custom ${vectorConfig.brand || 'Element'} configuration contains invalid JSON. ` +
+                         `Please correct the problem and reopen ${vectorConfig.brand || 'Element'}.`,
                 detail: e.message || "",
             });
         }
