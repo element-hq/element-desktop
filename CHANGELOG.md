@@ -1,3 +1,20 @@
+Changes in [1.7.30](https://github.com/vector-im/element-desktop/releases/tag/v1.7.30) (2021-06-07)
+===================================================================================================
+[Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.30-rc.1...v1.7.30)
+
+ * No changes since rc.1
+
+Changes in [1.7.30-rc.1](https://github.com/vector-im/element-desktop/releases/tag/v1.7.30-rc.1) (2021-06-01)
+=============================================================================================================
+[Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.29...v1.7.30-rc.1)
+
+ * Translations update from Weblate
+   [\#199](https://github.com/vector-im/element-desktop/pull/199)
+ * Migrate to `eslint-plugin-matrix-org`
+   [\#197](https://github.com/vector-im/element-desktop/pull/197)
+ * Upgrade to Electron 12.0.9
+   [\#198](https://github.com/vector-im/element-desktop/pull/198)
+
 Changes in [1.7.29](https://github.com/vector-im/element-desktop/releases/tag/v1.7.29) (2021-05-24)
 ===================================================================================================
 [Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.29-rc.1...v1.7.29)
