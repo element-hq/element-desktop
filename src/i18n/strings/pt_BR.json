@@ -26,8 +26,8 @@
     "Zoom Out": "Dar Zoom Out",
     "Zoom In": "Dar Zoom In",
     "Actual Size": "Tamanho de Verdade",
-    "View": "Ver",
-    "Select All": "Selecionar Tudo",
+    "View": "Visualizar",
+    "Select All": "Selecionar Todas",
     "Delete": "Deletar",
     "Paste and Match Style": "Colar e Adequar Estilo",
     "Paste": "Colar",
@@ -38,7 +38,9 @@
     "Edit": "Editar",
     "Quit": "Sair",
     "Show/Hide": "Mostrar/Esconder",
-    "Are you sure you want to quit?": "Você tem certeza que quer sair?",
+    "Are you sure you want to quit?": "Você tem certeza que você quer sair?",
     "Close Element": "Fechar Element",
-    "Cancel": "Cancelar"
+    "Cancel": "Cancelar",
+    "Bring All to Front": "Trazer Todas Para Frente",
+    "Hide Others": "Esconder Outras(os)"
 }
