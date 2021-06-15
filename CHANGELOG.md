@@ -1,3 +1,32 @@
+Changes in [1.7.31-rc.1](https://github.com/vector-im/element-desktop/releases/tag/v1.7.31-rc.1) (2021-06-15)
+=============================================================================================================
+[Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.30...v1.7.31-rc.1)
+
+ * Upgrade to Electron 12.0.11
+   [\#211](https://github.com/vector-im/element-desktop/pull/211)
+ * Translations update from Weblate
+   [\#214](https://github.com/vector-im/element-desktop/pull/214)
+ * Upgrade to Node 14
+   [\#212](https://github.com/vector-im/element-desktop/pull/212)
+ * Bump npm-registry-fetch from 4.0.2 to 4.0.7
+   [\#210](https://github.com/vector-im/element-desktop/pull/210)
+ * Update electron-builder for Node 16 compatibility
+   [\#204](https://github.com/vector-im/element-desktop/pull/204)
+ * Bump hosted-git-info from 2.8.5 to 2.8.9
+   [\#209](https://github.com/vector-im/element-desktop/pull/209)
+ * Bump glob-parent from 5.1.1 to 5.1.2
+   [\#206](https://github.com/vector-im/element-desktop/pull/206)
+ * Bump dot-prop from 4.2.0 to 4.2.1
+   [\#208](https://github.com/vector-im/element-desktop/pull/208)
+ * Bump y18n from 3.2.1 to 3.2.2
+   [\#207](https://github.com/vector-im/element-desktop/pull/207)
+ * Bump normalize-url from 4.5.0 to 4.5.1
+   [\#205](https://github.com/vector-im/element-desktop/pull/205)
+ * Put Preferences menu item in correct location on macOS
+   [\#200](https://github.com/vector-im/element-desktop/pull/200)
+ * Switch zoomIn accelerator to default
+   [\#202](https://github.com/vector-im/element-desktop/pull/202)
+
 Changes in [1.7.30](https://github.com/vector-im/element-desktop/releases/tag/v1.7.30) (2021-06-07)
 ===================================================================================================
 [Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.30-rc.1...v1.7.30)
