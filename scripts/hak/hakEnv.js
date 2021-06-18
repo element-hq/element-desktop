@@ -33,7 +33,7 @@ function getRuntime(packageJson) {
     return electronVersion ? 'electron' : 'node-webkit';
 }
 
-function getTarget(packageJson) {
+function getRuntimeVersion(packageJson) {
     const electronVersion = getElectronVersion(packageJson);
     if (electronVersion) {
         return electronVersion;
@@ -63,7 +63,7 @@ module.exports = class HakEnv {
         Object.assign(this, {
             // what we're targeting
             runtime: getRuntime(packageJson),
-            target: getTarget(packageJson),
+            runtimeVersion: getRuntimeVersion(packageJson),
             platform: process.platform,
             arch: detectArch(),
 
@@ -76,7 +76,7 @@ module.exports = class HakEnv {
     getRuntimeAbi() {
         return nodePreGypVersioning.get_runtime_abi(
             this.runtime,
-            this.target,
+            this.runtimeVersion,
         );
     }
 
@@ -99,11 +99,11 @@ module.exports = class HakEnv {
 
     makeGypEnv() {
         return Object.assign({}, process.env, {
-            npm_config_target: this.target,
             npm_config_arch: this.arch,
             npm_config_target_arch: this.arch,
             npm_config_disturl: 'https://atom.io/download/electron',
             npm_config_runtime: this.runtime,
+            npm_config_target: this.runtimeVersion,
             npm_config_build_from_source: true,
             npm_config_devdir: path.join(os.homedir(), ".electron-gyp"),
         });
