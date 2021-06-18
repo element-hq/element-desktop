@@ -15,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ENABLED_TARGETS = exports.TARGETS = void 0;
+exports.isHost = exports.isHostId = exports.getHost = exports.ENABLED_TARGETS = exports.TARGETS = void 0;
 const aarch64AppleDarwin = {
     id: 'aarch64-apple-darwin',
     platform: 'darwin',
@@ -58,3 +58,16 @@ exports.ENABLED_TARGETS = [
     exports.TARGETS['x86_64-unknown-linux-gnu'],
     exports.TARGETS['i686-pc-windows-msvc'],
 ];
+function getHost() {
+    return Object.values(exports.TARGETS).find(target => (target.platform === process.platform &&
+        target.arch === process.arch));
+}
+exports.getHost = getHost;
+function isHostId(id) {
+    return getHost()?.id === id;
+}
+exports.isHostId = isHostId;
+function isHost(target) {
+    return getHost()?.id === target.id;
+}
+exports.isHost = isHost;

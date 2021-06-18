@@ -1,5 +1,5 @@
 /*
-Copyright 2020 The Matrix.org Foundation C.I.C.
+Copyright 2020-2021 The Matrix.org Foundation C.I.C.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -53,7 +53,19 @@ async function main() {
         process.exit(1);
     }
 
-    const hakEnv = new HakEnv(prefix, packageJson);
+    // Apply `--target <target>` option if specified
+    const targetIndex = process.argv.indexOf('--target');
+    let targetId;
+    if (targetIndex >= 0) {
+        if ((targetIndex + 1) >= process.argv.length) {
+            console.error("--target option specified without a target");
+            process.exit(1);
+        }
+        // Extract target ID and remove from args
+        targetId = process.argv.splice(targetIndex, 2)[1];
+    }
+
+    const hakEnv = new HakEnv(prefix, packageJson, targetId);
 
     const deps = {};
 
