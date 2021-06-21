@@ -264,7 +264,8 @@ const exitShortcuts = [
 
 const warnBeforeExit = (event, input) => {
     const shouldWarnBeforeExit = store.get('warnBeforeExit', true);
-    const exitShortcutPressed = exitShortcuts.some(shortcutFn => shortcutFn(input, process.platform));
+    const exitShortcutPressed =
+        input.type === 'keyDown' && exitShortcuts.some(shortcutFn => shortcutFn(input, process.platform));
 
     if (shouldWarnBeforeExit && exitShortcutPressed) {
         const shouldCancelCloseRequest = dialog.showMessageBoxSync(mainWindow, {
