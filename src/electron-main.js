@@ -207,6 +207,16 @@ async function setupGlobals() {
 
         vectorConfig = Object.assign(vectorConfig, localConfig);
     } catch (e) {
+        if (e instanceof SyntaxError) {
+            dialog.showMessageBox({
+                type: "error",
+                title: `Your ${vectorConfig.brand || 'Element'} is misconfigured`,
+                message: `Your custom ${vectorConfig.brand || 'Element'} configuration contains invalid JSON. ` +
+                         `Please correct the problem and reopen ${vectorConfig.brand || 'Element'}.`,
+                detail: e.message || "",
+            });
+        }
+
         // Could not load local config, this is expected in most cases.
     }
 
