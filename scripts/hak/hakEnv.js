@@ -80,6 +80,10 @@ module.exports = class HakEnv {
         return this.getRuntimeAbi() + '-' + this.target.platform + '-' + this.target.arch;
     }
 
+    getRustTarget() {
+        return this.target.id;
+    }
+
     isWin() {
         return this.target.platform === 'win32';
     }
