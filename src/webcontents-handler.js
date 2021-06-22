@@ -108,7 +108,7 @@ function onLinkContextMenu(ev, params) {
     if (params.hasImageContents && !url.startsWith('blob:')) {
         popupMenu.append(new MenuItem({
             label: _t('Save image as...'),
-            accelerator: 'a',
+            accelerator: 's',
             async click() {
                 const targetFileName = params.titleText || "image.png";
                 const { filePath } = await dialog.showSaveDialog({
