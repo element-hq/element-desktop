@@ -80,7 +80,7 @@ module.exports = class HakEnv {
         return this.getRuntimeAbi() + '-' + this.target.platform + '-' + this.target.arch;
     }
 
-    getRustTarget() {
+    getTargetId() {
         return this.target.id;
     }
 

@@ -182,9 +182,36 @@ async function buildSqlCipherUnix(hakEnv, moduleInfo) {
     if (hakEnv.isMac()) {
         args.push('--with-crypto-lib=commoncrypto');
     }
-    args.push('CFLAGS=-DSQLITE_HAS_CODEC');
+
+    if (!hakEnv.isHost()) {
+        // In the nonsense world of `configure`, it is assumed you are building
+        // a compiler like `gcc`, so the `host` option actually means the target
+        // the build output runs on.
+        args.push(`--host=${hakEnv.getTargetId()}`);
+    }
+
+    const cflags = [
+        '-DSQLITE_HAS_CODEC',
+    ];
+
+    if (!hakEnv.isHost()) {
+        // `clang` uses more logical option naming.
+        cflags.push(`--target=${hakEnv.getTargetId()}`);
+    }
+
+    if (cflags.length) {
+        args.push(`CFLAGS=${cflags.join(' ')}`);
+    }
+
+    const ldflags = [];
+
     if (hakEnv.isMac()) {
-        args.push('LDFLAGS=-framework Security -framework Foundation');
+        ldflags.push('-framework Security');
+        ldflags.push('-framework Foundation');
+    }
+
+    if (ldflags.length) {
+        args.push(`LDFLAGS=${ldflags.join(' ')}`);
     }
 
     await new Promise((resolve, reject) => {

@@ -67,7 +67,7 @@ module.exports = async function(hakEnv, moduleInfo) {
             if (err) {
                 reject("Can't find rustup");
             }
-            const target = hakEnv.getRustTarget();
+            const target = hakEnv.getTargetId();
             if (!out.includes(target)) {
                 reject(`Rust target ${target} not installed`);
             }
