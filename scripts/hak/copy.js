@@ -41,8 +41,8 @@ async function copy(hakEnv, moduleInfo) {
 
     if (moduleInfo.cfg.copy) {
         console.log(
-            "Copying " + moduleInfo.cfg.prune + " from " +
-            moduleInfo.moduleOutDir + " to " + moduleInfo.moduleOutDir,
+            "Copying files from " +
+            moduleInfo.moduleBuildDir + " to " + moduleInfo.moduleOutDir,
         );
         const files = await new Promise(async (resolve, reject) => {
             glob(moduleInfo.cfg.copy, {
