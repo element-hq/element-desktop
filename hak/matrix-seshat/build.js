@@ -278,6 +278,10 @@ async function buildMatrixSeshat(hakEnv, moduleInfo) {
         env.RUSTUP_TOOLCHAIN = hakEnv.arch == 'x64' ? 'stable-x86_64-pc-windows-msvc' : 'stable-i686-pc-windows-msvc';
     }
 
+    if (!hakEnv.isHost()) {
+        env.CARGO_BUILD_TARGET = hakEnv.getTargetId();
+    }
+
     console.log("Running neon with env", env);
     await new Promise((resolve, reject) => {
         const proc = childProcess.spawn(
