@@ -30,14 +30,14 @@ module.exports.start = function startAutoUpdate(updateBaseUrl) {
         // hits a URL that either gives it a 200 with some json or
         // 204 No Content. On windows it takes a base path and looks for
         // files under that path.
-        if (process.platform === 'darwin' && process.arch === 'x64') {
+        if (process.platform === 'darwin') {
             // include the current version in the URL we hit. Electron doesn't add
             // it anywhere (apart from the User-Agent) so it's up to us. We could
             // (and previously did) just use the User-Agent, but this doesn't
             // rely on NSURLConnection setting the User-Agent to what we expect,
             // and also acts as a convenient cache-buster to ensure that when the
             // app updates it always gets a fresh value to avoid update-looping.
-            url = `${updateBaseUrl}macos/?localVersion=${encodeURIComponent(app.getVersion())}`;
+            url = `${updateBaseUrl}macos/${process.arch}/?localVersion=${encodeURIComponent(app.getVersion())}`;
         } else if (process.platform === 'win32') {
             url = `${updateBaseUrl}win32/${process.arch}/`;
         } else {
