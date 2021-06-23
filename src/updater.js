@@ -1,4 +1,5 @@
 const { app, autoUpdater, ipcMain } = require('electron');
+const childProcess = require('child_process');
 
 const UPDATE_POLL_INTERVAL_MS = 60 * 60 * 1000;
 const INITIAL_UPDATE_DELAY_MS = 30 * 1000;
@@ -19,7 +20,7 @@ function pollForUpdates() {
 }
 
 module.exports = {};
-module.exports.start = function startAutoUpdate(updateBaseUrl) {
+module.exports.start = async function startAutoUpdate(updateBaseUrl) {
     if (updateBaseUrl.slice(-1) !== '/') {
         updateBaseUrl = updateBaseUrl + '/';
     }
@@ -31,13 +32,30 @@ module.exports.start = function startAutoUpdate(updateBaseUrl) {
         // 204 No Content. On windows it takes a base path and looks for
         // files under that path.
         if (process.platform === 'darwin') {
+            // Check the machine's native architecture, which differs from
+            // `process.arch` when using emulation
+            let nativeArch = process.arch;
+            try {
+                nativeArch = await new Promise((resolve, reject) => {
+                    childProcess.execFile('uname', ['-m'], (err, out) => {
+                        if (err) {
+                            reject("Failed to run uname");
+                        }
+                        resolve(out.trim());
+                    });
+                });
+                // Canonicalise to match `process.arch` naming
+                if (nativeArch === "x86_64") nativeArch = "x64";
+            } catch (e) {
+                console.error("Failed to check native arch", e);
+            }
             // include the current version in the URL we hit. Electron doesn't add
             // it anywhere (apart from the User-Agent) so it's up to us. We could
             // (and previously did) just use the User-Agent, but this doesn't
             // rely on NSURLConnection setting the User-Agent to what we expect,
             // and also acts as a convenient cache-buster to ensure that when the
             // app updates it always gets a fresh value to avoid update-looping.
-            url = `${updateBaseUrl}macos/${process.arch}/?localVersion=${encodeURIComponent(app.getVersion())}`;
+            url = `${updateBaseUrl}macos/${nativeArch}/?localVersion=${encodeURIComponent(app.getVersion())}`;
         } else if (process.platform === 'win32') {
             url = `${updateBaseUrl}win32/${process.arch}/`;
         } else {
@@ -48,6 +66,7 @@ module.exports.start = function startAutoUpdate(updateBaseUrl) {
         }
 
         if (url) {
+            console.log(`Update URL: ${url}`);
             autoUpdater.setFeedURL(url);
             // We check for updates ourselves rather than using 'updater' because we need to
             // do it in the main process (and we don't really need to check every 10 minutes:
