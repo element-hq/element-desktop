@@ -68,6 +68,21 @@ function buildMenuTemplate() {
                 { type: 'separator' },
                 {
                     role: 'resetzoom',
+                    accelerator: 'CmdOrCtrl+Num0',
+                    visible: false,
+                },
+                {
+                    role: 'zoomin',
+                    accelerator: 'CmdOrCtrl+NumAdd',
+                    visible: false,
+                },
+                {
+                    role: 'zoomout',
+                    accelerator: 'CmdOrCtrl+NumSub',
+                    visible: false,
+                },
+                {
+                    role: 'resetzoom',
                     label: _t('Actual Size'),
                 },
                 {
