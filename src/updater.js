@@ -48,6 +48,7 @@ module.exports.start = function startAutoUpdate(updateBaseUrl) {
         }
 
         if (url) {
+            console.log(`Update URL: ${url}`);
             autoUpdater.setFeedURL(url);
             // We check for updates ourselves rather than using 'updater' because we need to
             // do it in the main process (and we don't really need to check every 10 minutes:
