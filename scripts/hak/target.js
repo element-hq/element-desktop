@@ -14,6 +14,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
+/*
+ * THIS FILE IS GENERATED, NOT MEANT FOR EDITING DIRECTLY
+ * The original source is `target.ts` in the `element-builder` repo. You can
+ * edit it over there, run `yarn build`, and paste the changes here. It is
+ * currently assumed this file will rarely change, so a spearate package is not
+ * yet warranted.
+ */
+
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.isHost = exports.isHostId = exports.getHost = exports.ENABLED_TARGETS = exports.TARGETS = void 0;
 const aarch64AppleDarwin = {
