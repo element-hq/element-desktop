@@ -1,5 +1,5 @@
 /*
-Copyright 2020 The Matrix.org Foundation C.I.C.
+Copyright 2020-2021 The Matrix.org Foundation C.I.C.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -182,9 +182,36 @@ async function buildSqlCipherUnix(hakEnv, moduleInfo) {
     if (hakEnv.isMac()) {
         args.push('--with-crypto-lib=commoncrypto');
     }
-    args.push('CFLAGS=-DSQLITE_HAS_CODEC');
+
+    if (!hakEnv.isHost()) {
+        // In the nonsense world of `configure`, it is assumed you are building
+        // a compiler like `gcc`, so the `host` option actually means the target
+        // the build output runs on.
+        args.push(`--host=${hakEnv.getTargetId()}`);
+    }
+
+    const cflags = [
+        '-DSQLITE_HAS_CODEC',
+    ];
+
+    if (!hakEnv.isHost()) {
+        // `clang` uses more logical option naming.
+        cflags.push(`--target=${hakEnv.getTargetId()}`);
+    }
+
+    if (cflags.length) {
+        args.push(`CFLAGS=${cflags.join(' ')}`);
+    }
+
+    const ldflags = [];
+
     if (hakEnv.isMac()) {
-        args.push('LDFLAGS=-framework Security -framework Foundation');
+        ldflags.push('-framework Security');
+        ldflags.push('-framework Foundation');
+    }
+
+    if (ldflags.length) {
+        args.push(`LDFLAGS=${ldflags.join(' ')}`);
     }
 
     await new Promise((resolve, reject) => {
@@ -249,6 +276,10 @@ async function buildMatrixSeshat(hakEnv, moduleInfo) {
         // compiler in the path to be the one for the target, so we just use the matching
         // toolchain for the target architecture which makes everything happy.
         env.RUSTUP_TOOLCHAIN = hakEnv.arch == 'x64' ? 'stable-x86_64-pc-windows-msvc' : 'stable-i686-pc-windows-msvc';
+    }
+
+    if (!hakEnv.isHost()) {
+        env.CARGO_BUILD_TARGET = hakEnv.getTargetId();
     }
 
     console.log("Running neon with env", env);

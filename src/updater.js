@@ -1,3 +1,19 @@
+/*
+Copyright 2016-2021 New Vector Ltd
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 const { app, autoUpdater, ipcMain } = require('electron');
 
 const UPDATE_POLL_INTERVAL_MS = 60 * 60 * 1000;
@@ -37,7 +53,7 @@ module.exports.start = function startAutoUpdate(updateBaseUrl) {
             // rely on NSURLConnection setting the User-Agent to what we expect,
             // and also acts as a convenient cache-buster to ensure that when the
             // app updates it always gets a fresh value to avoid update-looping.
-            url = `${updateBaseUrl}macos/?localVersion=${encodeURIComponent(app.getVersion())}`;
+            url = `${updateBaseUrl}macos/${process.arch}/?localVersion=${encodeURIComponent(app.getVersion())}`;
         } else if (process.platform === 'win32') {
             url = `${updateBaseUrl}win32/${process.arch}/`;
         } else {
@@ -48,6 +64,7 @@ module.exports.start = function startAutoUpdate(updateBaseUrl) {
         }
 
         if (url) {
+            console.log(`Update URL: ${url}`);
             autoUpdater.setFeedURL(url);
             // We check for updates ourselves rather than using 'updater' because we need to
             // do it in the main process (and we don't really need to check every 10 minutes:

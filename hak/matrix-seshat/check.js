@@ -1,5 +1,5 @@
 /*
-Copyright 2020 The Matrix.org Foundation C.I.C.
+Copyright 2020-2021 The Matrix.org Foundation C.I.C.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -34,7 +34,10 @@ module.exports = async function(hakEnv, moduleInfo) {
         });
     }
 
-    const tools = [['python', '--version']]; // node-gyp uses python for reasons beyond comprehension
+    const tools = [
+        ['rustc', '--version'],
+        ['python', '--version'], // node-gyp uses python for reasons beyond comprehension
+    ];
     if (hakEnv.isWin()) {
         tools.push(['perl', '--version']); // for openssl configure
         tools.push(['patch', '--version']); // to patch sqlcipher Makefile.msc
@@ -57,4 +60,18 @@ module.exports = async function(hakEnv, moduleInfo) {
             });
         });
     }
+
+    // Ensure Rust target exists
+    await new Promise((resolve, reject) => {
+        childProcess.execFile('rustup', ['target', 'list', '--installed'], (err, out) => {
+            if (err) {
+                reject("Can't find rustup");
+            }
+            const target = hakEnv.getTargetId();
+            if (!out.includes(target)) {
+                reject(`Rust target ${target} not installed`);
+            }
+            resolve();
+        });
+    });
 };

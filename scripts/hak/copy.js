@@ -1,5 +1,5 @@
 /*
-Copyright 2020 The Matrix.org Foundation C.I.C.
+Copyright 2020-2021 The Matrix.org Foundation C.I.C.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -41,8 +41,8 @@ async function copy(hakEnv, moduleInfo) {
 
     if (moduleInfo.cfg.copy) {
         console.log(
-            "Copying " + moduleInfo.cfg.prune + " from " +
-            moduleInfo.moduleOutDir + " to " + moduleInfo.moduleOutDir,
+            "Copying files from " +
+            moduleInfo.moduleBuildDir + " to " + moduleInfo.moduleOutDir,
         );
         const files = await new Promise(async (resolve, reject) => {
             glob(moduleInfo.cfg.copy, {
