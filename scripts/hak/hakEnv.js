@@ -96,6 +96,10 @@ module.exports = class HakEnv {
         return this.target.platform === 'linux';
     }
 
+    getTargetArch() {
+        return this.target.arch;
+    }
+
     isHost() {
         return isHostId(this.target.id);
     }

@@ -34,7 +34,7 @@ async function buildOpenSslWin(hakEnv, moduleInfo) {
     const version = moduleInfo.cfg.dependencies.openssl;
     const openSslDir = path.join(moduleInfo.moduleDotHakDir, `openssl-${version}`);
 
-    const openSslArch = hakEnv.arch === 'x64' ? 'VC-WIN64A' : 'VC-WIN32';
+    const openSslArch = hakEnv.getTargetArch() === 'x64' ? 'VC-WIN64A' : 'VC-WIN32';
 
     console.log("Building openssl in " + openSslDir);
     await new Promise((resolve, reject) => {
@@ -275,7 +275,7 @@ async function buildMatrixSeshat(hakEnv, moduleInfo) {
         // the build scripts since they run on the host, but vcvarsall.bat sets the c
         // compiler in the path to be the one for the target, so we just use the matching
         // toolchain for the target architecture which makes everything happy.
-        env.RUSTUP_TOOLCHAIN = hakEnv.arch == 'x64' ? 'stable-x86_64-pc-windows-msvc' : 'stable-i686-pc-windows-msvc';
+        env.RUSTUP_TOOLCHAIN = `stable-${hakEnv.getTargetId()}`;
     }
 
     if (!hakEnv.isHost()) {
