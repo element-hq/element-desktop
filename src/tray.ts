@@ -15,26 +15,26 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const { app, Tray, Menu, nativeImage } = require('electron');
-const pngToIco = require('png-to-ico');
-const path = require('path');
-const fs = require('fs');
-const { _t } = require('./language-helper');
+import { app, Tray, Menu, nativeImage } from "electron";
+import pngToIco from "png-to-ico";
+import path from "path";
+import fs from "fs";
+import { _t } from "./language-helper";
 
-let trayIcon = null;
+let trayIcon: Tray = null;
 
-exports.hasTray = function hasTray() {
+export function hasTray(): boolean {
     return (trayIcon !== null);
-};
+}
 
-exports.destroy = function() {
+export function destroy(): void {
     if (trayIcon) {
         trayIcon.destroy();
         trayIcon = null;
     }
-};
+}
 
-const toggleWin = function() {
+function toggleWin(): void {
     if (global.mainWindow.isVisible() && !global.mainWindow.isMinimized()) {
         global.mainWindow.hide();
     } else {
@@ -42,9 +42,14 @@ const toggleWin = function() {
         if (!global.mainWindow.isVisible()) global.mainWindow.show();
         global.mainWindow.focus();
     }
-};
+}
 
-exports.create = function(config) {
+interface IConfig {
+    icon_path: string;
+    brand: string;
+}
+
+export function create(config: IConfig): void {
     // no trays on darwin
     if (process.platform === 'darwin' || trayIcon) return;
     const defaultIcon = nativeImage.createFromPath(config.icon_path);
@@ -89,9 +94,9 @@ exports.create = function(config) {
     global.mainWindow.webContents.on('page-title-updated', function(ev, title) {
         trayIcon.setToolTip(title);
     });
-};
+}
 
-function initApplicationMenu() {
+export function initApplicationMenu(): void {
     if (!trayIcon) {
         return;
     }
@@ -112,5 +117,3 @@ function initApplicationMenu() {
 
     trayIcon.setContextMenu(contextMenu);
 }
-
-exports.initApplicationMenu = initApplicationMenu;

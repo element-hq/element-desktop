@@ -14,12 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const path = require('path');
-const spawn = require('child_process').spawn;
-const { app } = require('electron');
-const fsProm = require('fs').promises;
+import path from "path";
+import { spawn } from "child_process";
+import { app } from "electron";
+import { promises as fsProm } from "fs";
 
-function runUpdateExe(args) {
+function runUpdateExe(args: string[]): Promise<void> {
     // Invokes Squirrel's Update.exe which will do things for us like create shortcuts
     // Note that there's an Update.exe in the app-x.x.x directory and one in the parent
     // directory: we need to run the one in the parent directory, because it discovers
@@ -33,7 +33,7 @@ function runUpdateExe(args) {
     });
 }
 
-function checkSquirrelHooks() {
+export function checkSquirrelHooks(): boolean {
     if (process.platform !== 'win32') return false;
 
     const cmd = process.argv[1];
@@ -82,5 +82,3 @@ function checkSquirrelHooks() {
     }
     return false;
 }
-
-module.exports = checkSquirrelHooks;

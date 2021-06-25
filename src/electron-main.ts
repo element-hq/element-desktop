@@ -20,32 +20,29 @@ limitations under the License.
 // Squirrel on windows starts the app with various flags
 // as hooks to tell us when we've been installed/uninstalled
 // etc.
-const checkSquirrelHooks = require('./squirrelhooks');
-if (checkSquirrelHooks()) return;
+import { checkSquirrelHooks } from "./squirrelhooks";
+if (checkSquirrelHooks()) process.exit(1);
 
 const argv = require('minimist')(process.argv, {
     alias: { help: "h" },
 });
 
-const {
-    app, ipcMain, powerSaveBlocker, BrowserWindow, Menu, autoUpdater, protocol, dialog,
-} = require('electron');
-const AutoLaunch = require('auto-launch');
-const path = require('path');
+import { app, ipcMain, powerSaveBlocker, BrowserWindow, Menu, autoUpdater, protocol, dialog } from "electron";
+import AutoLaunch from "auto-launch";
+import path from "path";
+import windowStateKeeper from 'electron-window-state';
+import Store from 'electron-store';
+import fs, { promises as afs } from "fs";
+import crypto from "crypto";
+import { URL } from "url";
 
-const tray = require('./tray');
-const buildMenuTemplate = require('./vectormenu');
-const webContentsHandler = require('./webcontents-handler');
-const updater = require('./updater');
-const { getProfileFromDeeplink, protocolInit, recordSSOSession } = require('./protocol');
+import * as tray from "./tray";
+import { buildMenuTemplate } from './vectormenu';
+import webContentsHandler from './webcontents-handler';
+import * as updater from './updater';
+import { getProfileFromDeeplink, protocolInit, recordSSOSession } from './protocol';
+import { _t, AppLocalization } from './language-helper';
 
-const windowStateKeeper = require('electron-window-state');
-const Store = require('electron-store');
-
-const fs = require('fs');
-const afs = fs.promises;
-
-const crypto = require('crypto');
 let keytar;
 try {
     keytar = require('keytar');
@@ -56,8 +53,6 @@ try {
         console.warn("Keytar unexpected error:", e);
     }
 }
-
-const { _t, AppLocalization } = require('./language-helper');
 
 let seshatSupported = false;
 let Seshat;
@@ -259,7 +254,13 @@ async function moveAutoLauncher() {
 }
 
 const eventStorePath = path.join(app.getPath('userData'), 'EventStore');
-const store = new Store({ name: "electron-config" });
+const store = new Store<{
+    warnBeforeExit?: boolean;
+    minimizeToTray?: boolean;
+    spellCheckerEnabled?: boolean;
+    autoHideMenuBar?: boolean;
+    locale?: string | string[];
+}>({ name: "electron-config" });
 
 let eventIndex = null;
 
@@ -1016,7 +1017,7 @@ function beforeQuit() {
 }
 
 app.on('before-quit', beforeQuit);
-app.on('before-quit-for-update', beforeQuit);
+autoUpdater.on('before-quit-for-update', beforeQuit);
 
 app.on('second-instance', (ev, commandLine, workingDirectory) => {
     // If other instance launched with --hidden then skip showing window

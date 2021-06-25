@@ -14,14 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const { app, shell, Menu } = require('electron');
-const { _t } = require('./language-helper');
+import { app, shell, Menu, MenuItem, MenuItemConstructorOptions } from 'electron';
+import { _t } from './language-helper';
 
 const isMac = process.platform === 'darwin';
 
-function buildMenuTemplate() {
+export function buildMenuTemplate(): Menu {
     // Menu template from http://electron.atom.io/docs/api/menu/, edited
-    const template = [
+    const template: Array<(MenuItemConstructorOptions) | (MenuItem)> = [
         {
             label: _t('Edit'),
             accelerator: 'e',
@@ -48,7 +48,7 @@ function buildMenuTemplate() {
                     label: _t('Paste'),
                 },
                 {
-                    role: 'pasteandmatchstyle',
+                    role: 'pasteAndMatchStyle',
                     label: _t('Paste and Match Style'),
                 },
                 {
@@ -56,7 +56,7 @@ function buildMenuTemplate() {
                     label: _t('Delete'),
                 },
                 {
-                    role: 'selectall',
+                    role: 'selectAll',
                     label: _t('Select All'),
                 },
             ],
@@ -67,30 +67,30 @@ function buildMenuTemplate() {
             submenu: [
                 { type: 'separator' },
                 {
-                    role: 'resetzoom',
+                    role: 'resetZoom',
                     accelerator: 'CmdOrCtrl+Num0',
                     visible: false,
                 },
                 {
-                    role: 'zoomin',
+                    role: 'zoomIn',
                     accelerator: 'CmdOrCtrl+NumAdd',
                     visible: false,
                 },
                 {
-                    role: 'zoomout',
+                    role: 'zoomOut',
                     accelerator: 'CmdOrCtrl+NumSub',
                     visible: false,
                 },
                 {
-                    role: 'resetzoom',
+                    role: 'resetZoom',
                     label: _t('Actual Size'),
                 },
                 {
-                    role: 'zoomin',
+                    role: 'zoomIn',
                     label: _t('Zoom In'),
                 },
                 {
-                    role: 'zoomout',
+                    role: 'zoomOut',
                     label: _t('Zoom Out'),
                 },
                 { type: 'separator' },
@@ -104,7 +104,7 @@ function buildMenuTemplate() {
                     label: _t('Toggle Full Screen'),
                 },
                 {
-                    role: 'toggledevtools',
+                    role: 'toggleDevTools',
                     label: _t('Toggle Developer Tools'),
                 },
             ],
@@ -166,7 +166,7 @@ function buildMenuTemplate() {
                     label: _t('Hide'),
                 },
                 {
-                    role: 'hideothers',
+                    role: 'hideOthers',
                     label: _t('Hide Others'),
                 },
                 {
@@ -182,17 +182,17 @@ function buildMenuTemplate() {
         });
         // Edit menu.
         // This has a 'speech' section on macOS
-        template[1].submenu.push(
+        (template[1].submenu as MenuItemConstructorOptions[]).push(
             { type: 'separator' },
             {
                 label: _t('Speech'),
                 submenu: [
                     {
-                        role: 'startspeaking',
+                        role: 'startSpeaking',
                         label: _t('Start Speaking'),
                     },
                     {
-                        role: 'stopspeaking',
+                        role: 'stopSpeaking',
                         label: _t('Stop Speaking'),
                     },
                 ],
@@ -243,6 +243,3 @@ function buildMenuTemplate() {
 
     return Menu.buildFromTemplate(template);
 }
-
-module.exports = buildMenuTemplate;
-
