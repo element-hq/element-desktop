@@ -16,7 +16,8 @@
     "roomDirectory": {
         "servers": [
             "matrix.org",
-            "gitter.im"
+            "gitter.im",
+            "libera.chat"
         ]
     },
     "showLabsSettings": false,
