@@ -82,7 +82,7 @@
         "from": ".hak/hakModules",
         "to": "node_modules"
       },
-      "src/**"
+      "lib/**"
     ],
     "extraResources": [
       {
