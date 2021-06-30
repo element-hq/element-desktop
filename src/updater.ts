@@ -14,19 +14,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const { app, autoUpdater, ipcMain } = require('electron');
+import { app, autoUpdater, ipcMain } from "electron";
 
 const UPDATE_POLL_INTERVAL_MS = 60 * 60 * 1000;
 const INITIAL_UPDATE_DELAY_MS = 30 * 1000;
 
-function installUpdate() {
+function installUpdate(): void {
     // for some reason, quitAndInstall does not fire the
     // before-quit event, so we need to set the flag here.
     global.appQuitting = true;
     autoUpdater.quitAndInstall();
 }
 
-function pollForUpdates() {
+function pollForUpdates(): void {
     try {
         autoUpdater.checkForUpdates();
     } catch (e) {
@@ -34,8 +34,7 @@ function pollForUpdates() {
     }
 }
 
-module.exports = {};
-module.exports.start = function startAutoUpdate(updateBaseUrl) {
+export function start(updateBaseUrl: string): void {
     if (updateBaseUrl.slice(-1) !== '/') {
         updateBaseUrl = updateBaseUrl + '/';
     }
@@ -80,18 +79,25 @@ module.exports.start = function startAutoUpdate(updateBaseUrl) {
         // will fail if running in debug mode
         console.log('Couldn\'t enable update checking', err);
     }
-};
+}
 
 ipcMain.on('install_update', installUpdate);
 ipcMain.on('check_updates', pollForUpdates);
 
-function ipcChannelSendUpdateStatus(status) {
+function ipcChannelSendUpdateStatus(status: boolean | string): void {
     if (!global.mainWindow) return;
     global.mainWindow.webContents.send('check_updates', status);
 }
 
+interface ICachedUpdate {
+    releaseNotes: string;
+    releaseName: string;
+    releaseDate: Date;
+    updateURL : string;
+}
+
 // cache the latest update which has been downloaded as electron offers no api to read it
-let latestUpdateDownloaded;
+let latestUpdateDownloaded: ICachedUpdate;
 autoUpdater.on('update-available', function() {
     ipcChannelSendUpdateStatus(true);
 }).on('update-not-available', function() {

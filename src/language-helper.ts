@@ -14,15 +14,23 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const counterpart = require('counterpart');
+import counterpart from "counterpart";
+import type Store from 'electron-store';
 
 const DEFAULT_LOCALE = "en";
 
-function _td(text) {
+export function _td(text: string): string {
     return text;
 }
 
-function _t(text, variables = {}) {
+type SubstitutionValue = number | string;
+
+interface IVariables {
+    [key: string]: SubstitutionValue;
+    count?: number;
+}
+
+export function _t(text: string, variables: IVariables = {}): string {
     const args = Object.assign({ interpolate: false }, variables);
 
     const { count } = args;
@@ -55,11 +63,17 @@ function _t(text, variables = {}) {
     return translated;
 }
 
-class AppLocalization {
-    constructor({ store, components = [] }) {
-        // TODO: Should be static field, but that doesn't parse without Babel
-        this.STORE_KEY = "locale";
+type Component = () => void;
 
+type TypedStore = Store<{ locale?: string | string[] }>;
+
+export class AppLocalization {
+    private static readonly STORE_KEY = "locale";
+
+    private readonly store: TypedStore;
+    private readonly localizedComponents: Set<Component>;
+
+    constructor({ store, components = [] }: { store: TypedStore, components: Component[] }) {
         counterpart.registerTranslations("en", this.fetchTranslationJson("en_EN"));
         counterpart.setFallbackLocale('en');
         counterpart.setSeparator('|');
@@ -69,15 +83,15 @@ class AppLocalization {
         }
 
         this.store = store;
-        if (this.store.has(this.STORE_KEY)) {
-            const locales = this.store.get(this.STORE_KEY);
+        if (this.store.has(AppLocalization.STORE_KEY)) {
+            const locales = this.store.get(AppLocalization.STORE_KEY);
             this.setAppLocale(locales);
         }
 
         this.resetLocalizedUI();
     }
 
-    fetchTranslationJson(locale) {
+    public fetchTranslationJson(locale: string): Record<string, string> {
         try {
             console.log("Fetching translation json for locale: " + locale);
             return require(`./i18n/strings/${locale}.json`);
@@ -87,11 +101,7 @@ class AppLocalization {
         }
     }
 
-    get languageTranslationJson() {
-        return this.translationJsonMap.get(this.language);
-    }
-
-    setAppLocale(locales) {
+    public setAppLocale(locales: string | string[]): void {
         console.log(`Changing application language to ${locales}`);
 
         if (!Array.isArray(locales)) {
@@ -105,13 +115,14 @@ class AppLocalization {
             }
         });
 
+        // @ts-ignore - this looks like a bug but is out of scope for this conversion
         counterpart.setLocale(locales);
-        this.store.set(this.STORE_KEY, locales);
+        this.store.set(AppLocalization.STORE_KEY, locales);
 
         this.resetLocalizedUI();
     }
 
-    resetLocalizedUI() {
+    public resetLocalizedUI(): void {
         console.log("Resetting the UI components after locale change");
         this.localizedComponents.forEach(componentSetup => {
             if (typeof componentSetup === "function") {
@@ -120,9 +131,3 @@ class AppLocalization {
         });
     }
 }
-
-module.exports = {
-    AppLocalization,
-    _t,
-    _td,
-};

@@ -1,19 +1,49 @@
-const { clipboard, nativeImage, Menu, MenuItem, shell, dialog, ipcMain } = require('electron');
-const url = require('url');
-const fs = require('fs');
-const request = require('request');
-const path = require('path');
-const { _t } = require('./language-helper');
+/*
+Copyright 2021 New Vector Ltd
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+import {
+    clipboard,
+    nativeImage,
+    Menu,
+    MenuItem,
+    shell,
+    dialog,
+    ipcMain,
+    NativeImage,
+    WebContents,
+    ContextMenuParams,
+    DownloadItem,
+    MenuItemConstructorOptions,
+    IpcMainEvent,
+} from 'electron';
+import url from 'url';
+import fs from 'fs';
+import request from 'request';
+import path from 'path';
+import { _t } from './language-helper';
 
 const MAILTO_PREFIX = "mailto:";
 
-const PERMITTED_URL_SCHEMES = [
+const PERMITTED_URL_SCHEMES: string[] = [
     'http:',
     'https:',
     MAILTO_PREFIX,
 ];
 
-function safeOpenURL(target) {
+function safeOpenURL(target: string): void {
     // openExternal passes the target to open/start/xdg-open,
     // so put fairly stringent limits on what can be opened
     // (for instance, open /bin/sh does indeed open a terminal
@@ -28,7 +58,7 @@ function safeOpenURL(target) {
     }
 }
 
-function onWindowOrNavigate(ev, target) {
+function onWindowOrNavigate(ev: Event, target: string): void {
     // always prevent the default: if something goes wrong,
     // we don't want to end up opening it in the electron
     // app, as we could end up opening any sort of random
@@ -37,7 +67,7 @@ function onWindowOrNavigate(ev, target) {
     safeOpenURL(target);
 }
 
-function writeNativeImage(filePath, img) {
+function writeNativeImage(filePath: string, img: NativeImage): Promise<void> {
     switch (filePath.split('.').pop().toLowerCase()) {
         case "jpg":
         case "jpeg":
@@ -50,7 +80,7 @@ function writeNativeImage(filePath, img) {
     }
 }
 
-function onLinkContextMenu(ev, params) {
+function onLinkContextMenu(ev: Event, params: ContextMenuParams, webContents: WebContents): void {
     let url = params.linkURL || params.srcURL;
 
     if (url.startsWith('vector://vector/webapp')) {
@@ -76,7 +106,7 @@ function onLinkContextMenu(ev, params) {
             label: _t('Copy image'),
             accelerator: 'c',
             click() {
-                ev.sender.copyImageAt(params.x, params.y);
+                webContents.copyImageAt(params.x, params.y);
             },
         }));
     }
@@ -140,8 +170,8 @@ function onLinkContextMenu(ev, params) {
     ev.preventDefault();
 }
 
-function _CutCopyPasteSelectContextMenus(params) {
-    const options = [];
+function CutCopyPasteSelectContextMenus(params: ContextMenuParams): MenuItemConstructorOptions[] {
+    const options: MenuItemConstructorOptions[] = [];
 
     if (params.misspelledWord) {
         params.dictionarySuggestions.forEach(word => {
@@ -180,10 +210,10 @@ function _CutCopyPasteSelectContextMenus(params) {
         accelerator: 'p',
         enabled: params.editFlags.canPaste,
     }, {
-        role: 'pasteandmatchstyle',
+        role: 'pasteAndMatchStyle',
         enabled: params.editFlags.canPaste,
     }, {
-        role: 'selectall',
+        role: 'selectAll',
         label: _t("Select All"),
         accelerator: 'a',
         enabled: params.editFlags.canSelectAll,
@@ -192,7 +222,7 @@ function _CutCopyPasteSelectContextMenus(params) {
 }
 
 function onSelectedContextMenu(ev, params) {
-    const items = _CutCopyPasteSelectContextMenus(params);
+    const items = CutCopyPasteSelectContextMenus(params);
     const popupMenu = Menu.buildFromTemplate(items);
 
     // popup() requires an options object even for no options
@@ -200,12 +230,13 @@ function onSelectedContextMenu(ev, params) {
     ev.preventDefault();
 }
 
-function onEditableContextMenu(ev, params) {
-    const items = [
+function onEditableContextMenu(ev: Event, params: ContextMenuParams) {
+    const items: MenuItemConstructorOptions[] = [
         { role: 'undo' },
         { role: 'redo', enabled: params.editFlags.canRedo },
         { type: 'separator' },
-    ].concat(_CutCopyPasteSelectContextMenus(params));
+        ...CutCopyPasteSelectContextMenus(params),
+    ];
 
     const popupMenu = Menu.buildFromTemplate(items);
 
@@ -214,20 +245,20 @@ function onEditableContextMenu(ev, params) {
     ev.preventDefault();
 }
 
-ipcMain.on('userDownloadOpen', function(ev, { path }) {
+ipcMain.on('userDownloadOpen', function(ev: IpcMainEvent, { path }) {
     shell.openPath(path);
 });
 
-module.exports = (webContents) => {
+export default (webContents: WebContents): void => {
     webContents.on('new-window', onWindowOrNavigate);
-    webContents.on('will-navigate', (ev, target) => {
+    webContents.on('will-navigate', (ev: Event, target: string): void => {
         if (target.startsWith("vector://")) return;
         return onWindowOrNavigate(ev, target);
     });
 
-    webContents.on('context-menu', function(ev, params) {
+    webContents.on('context-menu', function(ev: Event, params: ContextMenuParams): void {
         if (params.linkURL || params.srcURL) {
-            onLinkContextMenu(ev, params);
+            onLinkContextMenu(ev, params, webContents);
         } else if (params.selectionText) {
             onSelectedContextMenu(ev, params);
         } else if (params.isEditable) {
@@ -235,7 +266,7 @@ module.exports = (webContents) => {
         }
     });
 
-    webContents.session.on('will-download', (event, item) => {
+    webContents.session.on('will-download', (event: Event, item: DownloadItem): void => {
         item.once('done', (event, state) => {
             if (state === 'completed') {
                 const savePath = item.getSavePath();

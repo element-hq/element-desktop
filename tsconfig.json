@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "es2016",
+    "noImplicitAny": false,
+    "sourceMap": false,
+    "outDir": "./lib",
+    "declaration": true,
+    "types": [
+      "node"
+    ],
+    "lib": [
+      "es2019",
+      "dom"
+    ]
+  },
+  "include": [
+    ".eslintrc.js",
+    "./src/**/*.ts"
+  ]
+}
