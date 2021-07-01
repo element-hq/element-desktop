@@ -33,7 +33,7 @@
     "docker:build": "scripts/in-docker.sh yarn run build",
     "docker:install": "scripts/in-docker.sh yarn install",
     "debrepo": "scripts/mkrepo.sh",
-    "clean": "rimraf webapp.asar dist packages deploys",
+    "clean": "rimraf webapp.asar dist packages deploys lib",
     "hak": "node scripts/hak/index.js"
   },
   "dependencies": {
