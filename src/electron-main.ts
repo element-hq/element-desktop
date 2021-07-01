@@ -191,6 +191,7 @@ async function setupGlobals() {
 
     try {
         // Load local config and use it to override values from the one baked with the build
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         const localConfig = require(path.join(app.getPath('userData'), 'config.json'));
 
         // If the local config has a homeserver defined, don't use the homeserver from the build
@@ -837,6 +838,7 @@ app.on('ready', async () => {
 
     if (argv['devtools']) {
         try {
+            // eslint-disable-next-line @typescript-eslint/no-var-requires
             const { default: installExt, REACT_DEVELOPER_TOOLS, REACT_PERF } = require('electron-devtools-installer');
             installExt(REACT_DEVELOPER_TOOLS)
                 .then((name) => console.log(`Added Extension: ${name}`))
