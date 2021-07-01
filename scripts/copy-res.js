@@ -32,7 +32,7 @@ function genLangFile(file, dest) {
             try {
                 Object.assign(
                     translations,
-                    JSON.parse(fs.readFileSync(f).toString())
+                    JSON.parse(fs.readFileSync(f).toString()),
                 );
             } catch (e) {
                 console.error("Failed: " + f, e);
@@ -52,7 +52,7 @@ function genLangFile(file, dest) {
     }
 }
 
-/**
+/*
  * Convert translation key from weblate format
  * (which only supports a single level) to counterpart
  * which requires object values for 'count' translations.
@@ -100,7 +100,7 @@ function watchLanguage(file, dest) {
             clearTimeout(makeLangDebouncer);
         }
         makeLangDebouncer = setTimeout(() => {
-            genLangFile(lang, dest);
+            genLangFile(file, dest);
         }, 500);
     };
 
