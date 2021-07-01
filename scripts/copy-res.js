@@ -86,7 +86,7 @@ function weblateToCounterpart(inTrs) {
     return outTrs;
 }
 
-/**
+/*
  watch the input files for a given language,
  regenerate the file, and regenerating languages.json with the new filename
  */
