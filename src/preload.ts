@@ -36,26 +36,32 @@ const CHANNELS = [
     "userDownloadOpen",
 ];
 
+interface ISource {
+    id: string;
+    name: string;
+    thumbnailURL: string;
+}
+
 contextBridge.exposeInMainWorld(
     "electron",
     {
-        on(channel: string, listener: (event: IpcRendererEvent, ...args: any[]) => void) {
+        on(channel: string, listener: (event: IpcRendererEvent, ...args: any[]) => void): void {
             if (!CHANNELS.includes(channel)) {
                 console.error(`Unknown IPC channel ${channel} ignored`);
                 return;
             }
             ipcRenderer.on(channel, listener);
         },
-        send(channel: string, ...args: any[]) {
+        send(channel: string, ...args: any[]): void {
             if (!CHANNELS.includes(channel)) {
                 console.error(`Unknown IPC channel ${channel} ignored`);
                 return;
             }
             ipcRenderer.send(channel, ...args);
         },
-        async getDesktopCapturerSources(options: SourcesOptions) {
+        async getDesktopCapturerSources(options: SourcesOptions): Promise<ISource[]> {
             const sources = await desktopCapturer.getSources(options);
-            const desktopCapturerSources = [];
+            const desktopCapturerSources: ISource[] = [];
 
             for (const source of sources) {
                 desktopCapturerSources.push({
