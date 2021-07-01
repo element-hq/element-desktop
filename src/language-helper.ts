@@ -115,6 +115,7 @@ export class AppLocalization {
             }
         });
 
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore - this looks like a bug but is out of scope for this conversion
         counterpart.setLocale(locales);
         this.store.set(AppLocalization.STORE_KEY, locales);

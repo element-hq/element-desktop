@@ -22,7 +22,6 @@ module.exports = {
         files: ["src/**/*.{ts,tsx}"],
         extends: [
             "plugin:matrix-org/typescript",
-            "plugin:matrix-org/react",
         ],
         rules: {
             // Things we do that break the ideal style
