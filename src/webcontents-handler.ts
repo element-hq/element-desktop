@@ -170,7 +170,7 @@ function onLinkContextMenu(ev: Event, params: ContextMenuParams, webContents: We
     ev.preventDefault();
 }
 
-function CutCopyPasteSelectContextMenus(params: ContextMenuParams): MenuItemConstructorOptions[] {
+function cutCopyPasteSelectContextMenus(params: ContextMenuParams): MenuItemConstructorOptions[] {
     const options: MenuItemConstructorOptions[] = [];
 
     if (params.misspelledWord) {
@@ -222,7 +222,7 @@ function CutCopyPasteSelectContextMenus(params: ContextMenuParams): MenuItemCons
 }
 
 function onSelectedContextMenu(ev, params) {
-    const items = CutCopyPasteSelectContextMenus(params);
+    const items = cutCopyPasteSelectContextMenus(params);
     const popupMenu = Menu.buildFromTemplate(items);
 
     // popup() requires an options object even for no options
@@ -235,7 +235,7 @@ function onEditableContextMenu(ev: Event, params: ContextMenuParams) {
         { role: 'undo' },
         { role: 'redo', enabled: params.editFlags.canRedo },
         { type: 'separator' },
-        ...CutCopyPasteSelectContextMenus(params),
+        ...cutCopyPasteSelectContextMenus(params),
     ];
 
     const popupMenu = Menu.buildFromTemplate(items);

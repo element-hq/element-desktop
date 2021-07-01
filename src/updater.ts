@@ -93,7 +93,7 @@ interface ICachedUpdate {
     releaseNotes: string;
     releaseName: string;
     releaseDate: Date;
-    updateURL : string;
+    updateURL: string;
 }
 
 // cache the latest update which has been downloaded as electron offers no api to read it

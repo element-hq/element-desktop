@@ -45,7 +45,7 @@ function toggleWin(): void {
 }
 
 interface IConfig {
-    icon_path: string;
+    icon_path: string; // eslint-disable-line camelcase
     brand: string;
 }
 

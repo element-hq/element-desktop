@@ -23,10 +23,6 @@ limitations under the License.
 import { checkSquirrelHooks } from "./squirrelhooks";
 if (checkSquirrelHooks()) process.exit(1);
 
-const argv = require('minimist')(process.argv, {
-    alias: { help: "h" },
-});
-
 import { app, ipcMain, powerSaveBlocker, BrowserWindow, Menu, autoUpdater, protocol, dialog } from "electron";
 import AutoLaunch from "auto-launch";
 import path from "path";
@@ -35,6 +31,7 @@ import Store from 'electron-store';
 import fs, { promises as afs } from "fs";
 import crypto from "crypto";
 import { URL } from "url";
+import minimist from "minimist";
 
 import * as tray from "./tray";
 import { buildMenuTemplate } from './vectormenu';
@@ -43,8 +40,13 @@ import * as updater from './updater';
 import { getProfileFromDeeplink, protocolInit, recordSSOSession } from './protocol';
 import { _t, AppLocalization } from './language-helper';
 
+const argv = minimist(process.argv, {
+    alias: { help: "h" },
+});
+
 let keytar;
 try {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     keytar = require('keytar');
 } catch (e) {
     if (e.code === "MODULE_NOT_FOUND") {
@@ -60,6 +62,7 @@ let SeshatRecovery;
 let ReindexError;
 
 try {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const seshatModule = require('matrix-seshat');
     Seshat = seshatModule.Seshat;
     SeshatRecovery = seshatModule.SeshatRecovery;
@@ -176,6 +179,7 @@ async function setupGlobals() {
     ]);
 
     try {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         vectorConfig = require(asarPath + 'config.json');
     } catch (e) {
         // it would be nice to check the error code here and bail if the config
@@ -187,6 +191,7 @@ async function setupGlobals() {
 
     try {
         // Load local config and use it to override values from the one baked with the build
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         const localConfig = require(path.join(app.getPath('userData'), 'config.json'));
 
         // If the local config has a homeserver defined, don't use the homeserver from the build
@@ -833,6 +838,7 @@ app.on('ready', async () => {
 
     if (argv['devtools']) {
         try {
+            // eslint-disable-next-line @typescript-eslint/no-var-requires
             const { default: installExt, REACT_DEVELOPER_TOOLS, REACT_PERF } = require('electron-devtools-installer');
             installExt(REACT_DEVELOPER_TOOLS)
                 .then((name) => console.log(`Added Extension: ${name}`))
