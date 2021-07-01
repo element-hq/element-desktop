@@ -2,13 +2,13 @@
   "compilerOptions": {
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "allowJs": true,
     "module": "commonjs",
     "moduleResolution": "node",
     "target": "es2016",
     "noImplicitAny": false,
     "sourceMap": false,
     "outDir": "./lib",
+    "rootDir": "./src",
     "declaration": true,
     "types": [
       "node"
@@ -19,7 +19,6 @@
     ]
   },
   "include": [
-    ".eslintrc.js",
     "./src/**/*.ts"
   ]
 }
