@@ -1,3 +1,34 @@
+Changes in [1.7.32](https://github.com/vector-im/element-desktop/releases/tag/v1.7.32) (2021-07-05)
+===================================================================================================
+[Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.31...v1.7.32)
+
+ * Fix the build: make the rootDir correct
+   [\#224](https://github.com/vector-im/element-desktop/pull/224)
+ * Fix i18n in Element Desktop
+   [\#223](https://github.com/vector-im/element-desktop/pull/223)
+ * Convert preload.js to Typescript so that it gets copied to `lib`
+   [\#222](https://github.com/vector-im/element-desktop/pull/222)
+ * Bundle the `lib` dir now, not `src`
+   [\#221](https://github.com/vector-im/element-desktop/pull/221)
+ * Initial Typescripting for Element Desktop
+   [\#219](https://github.com/vector-im/element-desktop/pull/219)
+ * Translations update from Weblate
+   [\#220](https://github.com/vector-im/element-desktop/pull/220)
+ * Fix Windows target arch in native build
+   [\#218](https://github.com/vector-im/element-desktop/pull/218)
+ * Add libera.chat to default room directory
+   [\#217](https://github.com/vector-im/element-desktop/pull/217)
+ * Add update and native build support for Apple silicon
+   [\#216](https://github.com/vector-im/element-desktop/pull/216)
+ * Add numpad accelerators for zooming
+   [\#203](https://github.com/vector-im/element-desktop/pull/203)
+ * Add warning dialog when custom config.json is invalid
+   [\#201](https://github.com/vector-im/element-desktop/pull/201)
+ * Don't show Quit warning on keyUp residual event
+   [\#215](https://github.com/vector-im/element-desktop/pull/215)
+ * Fix accelerator for save-image-as clashing with copy-link-address
+   [\#213](https://github.com/vector-im/element-desktop/pull/213)
+
 Changes in [1.7.31](https://github.com/vector-im/element-desktop/releases/tag/v1.7.31) (2021-06-21)
 ===================================================================================================
 [Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.31-rc.1...v1.7.31)
