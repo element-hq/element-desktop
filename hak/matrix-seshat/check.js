@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 const childProcess = require('child_process');
+const fsProm = require('fs').promises;
 
 module.exports = async function(hakEnv, moduleInfo) {
     // of course tcl doesn't have a --version
@@ -61,17 +62,15 @@ module.exports = async function(hakEnv, moduleInfo) {
         });
     }
 
-    // Ensure Rust target exists
+    // Ensure Rust target exists (nb. we avoid depending on rustup)
     await new Promise((resolve, reject) => {
-        childProcess.execFile('rustup', ['target', 'list', '--installed'], (err, out) => {
+        const rustc = childProcess.execFile('rustc', ['--target', hakEnv.getTargetId(), '-o', 'tmp', '-'], (err, out) => {
             if (err) {
-                reject("Can't find rustup");
+                reject("rustc can't build for target " + hakEnv.getTargetId() + ": ensure the correct toolchain is installed");
             }
-            const target = hakEnv.getTargetId();
-            if (!out.includes(target)) {
-                reject(`Rust target ${target} not installed`);
-            }
-            resolve();
+            fsProm.unlink('tmp').then(resolve);
         });
+        rustc.stdin.write('fn main() {}');
+        rustc.stdin.end();
     });
 };
