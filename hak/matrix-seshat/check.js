@@ -64,9 +64,14 @@ module.exports = async function(hakEnv, moduleInfo) {
 
     // Ensure Rust target exists (nb. we avoid depending on rustup)
     await new Promise((resolve, reject) => {
-        const rustc = childProcess.execFile('rustc', ['--target', hakEnv.getTargetId(), '-o', 'tmp', '-'], (err, out) => {
+        const rustc = childProcess.execFile('rustc', [
+            '--target', hakEnv.getTargetId(), '-o', 'tmp', '-',
+        ], (err, out) => {
             if (err) {
-                reject("rustc can't build for target " + hakEnv.getTargetId() + ": ensure the correct toolchain is installed");
+                reject(
+                    "rustc can't build for target " + hakEnv.getTargetId() +
+                    ": ensure the correct toolchain is installed",
+                );
             }
             fsProm.unlink('tmp').then(resolve);
         });
