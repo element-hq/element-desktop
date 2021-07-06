@@ -62,9 +62,10 @@ async function getSqlCipher(hakEnv, moduleInfo) {
         await bob;
     }
 
+    // Extract the tarball to per-target directories, then we avoid cross-contaiminating archs
     await tar.x({
         file: sqlCipherTarball,
-        cwd: moduleInfo.moduleDotHakDir,
+        cwd: moduleInfo.moduleTargetDotHakDir,
     });
 
     if (hakEnv.isWin()) {
@@ -124,6 +125,6 @@ async function getOpenSsl(hakEnv, moduleInfo) {
     console.log("extracting " + openSslTarball + " in " + moduleInfo.moduleDotHakDir);
     await tar.x({
         file: openSslTarball,
-        cwd: moduleInfo.moduleDotHakDir,
+        cwd: moduleInfo.moduleTargetDotHakDir,
     });
 }
