@@ -32,7 +32,7 @@ module.exports = async function(hakEnv, moduleInfo) {
 
 async function buildOpenSslWin(hakEnv, moduleInfo) {
     const version = moduleInfo.cfg.dependencies.openssl;
-    const openSslDir = path.join(moduleInfo.moduleDotHakDir, `openssl-${version}`);
+    const openSslDir = path.join(moduleInfo.moduleTargetDotHakDir, `openssl-${version}`);
 
     const openSslArch = hakEnv.getTargetArch() === 'x64' ? 'VC-WIN64A' : 'VC-WIN32';
 
@@ -134,7 +134,7 @@ async function buildOpenSslWin(hakEnv, moduleInfo) {
 
 async function buildSqlCipherWin(hakEnv, moduleInfo) {
     const version = moduleInfo.cfg.dependencies.sqlcipher;
-    const sqlCipherDir = path.join(moduleInfo.moduleDotHakDir, `sqlcipher-${version}`);
+    const sqlCipherDir = path.join(moduleInfo.moduleTargetDotHakDir, `sqlcipher-${version}`);
     const buildDir = path.join(sqlCipherDir, 'bld');
 
     await mkdirp(buildDir);
@@ -171,7 +171,7 @@ async function buildSqlCipherWin(hakEnv, moduleInfo) {
 
 async function buildSqlCipherUnix(hakEnv, moduleInfo) {
     const version = moduleInfo.cfg.dependencies.sqlcipher;
-    const sqlCipherDir = path.join(moduleInfo.moduleDotHakDir, `sqlcipher-${version}`);
+    const sqlCipherDir = path.join(moduleInfo.moduleTargetDotHakDir, `sqlcipher-${version}`);
 
     const args = [
         '--prefix=' + moduleInfo.depPrefix + '',
