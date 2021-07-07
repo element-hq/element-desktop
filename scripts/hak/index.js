@@ -77,6 +77,7 @@ async function main() {
     }
 
     const hakEnvs = targetIds.map(tid => new HakEnv(prefix, packageJson, tid));
+    if (hakEnvs.length == 0) hakEnvs.push(new HakEnv(prefix, packageJson, null));
     const hakEnv = hakEnvs[0];
 
     const deps = {};
