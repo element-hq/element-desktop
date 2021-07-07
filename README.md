@@ -133,16 +133,16 @@ You'll then need to create a built bundle with the same architecture.
 To bundle a universal build for macOS, run:
 
 ```
-yarn run builduniversal
+yarn run build:universal
 ```
 
 If you're on Windows, you can choose to build specifically for 32 or 64 bit:
 ```
-yarn run build32
+yarn run build:32
 ```
 or
 ```
-yarn run build64
+yarn run build:64
 ```
 
 Note that the native module build system keeps the different architectures
