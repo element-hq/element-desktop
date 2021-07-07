@@ -20,7 +20,7 @@ so the first step is to get a working copy of Element Web. There are a few ways 
 # Fetch the prebuilt release Element package from the element-web GitHub releases page. The version
 # fetched will be the same as the local element-desktop package.
 # We're explicitly asking for no config, so the packaged Element will have no config.json.
-yarn run fetch --noverify --cfgdir ''
+yarn run fetch --noverify --cfgdir ""
 ```
 
 ...or if you'd like to use GPG to verify the downloaded package:
@@ -30,14 +30,14 @@ yarn run fetch --noverify --cfgdir ''
 # once.
 yarn run fetch --importkey
 # Fetch the package and verify the signature
-yarn run fetch --cfgdir ''
+yarn run fetch --cfgdir ""
 ```
 
 ...or either of the above, but fetching a specific version of Element:
 ```
 # Fetch the prebuilt release Element package from the element-web GitHub releases page. The version
 # fetched will be the same as the local element-desktop package.
-yarn run fetch --noverify --cfgdir '' v1.5.6
+yarn run fetch --noverify --cfgdir "" v1.5.6
 ```
 
 If you only want to run the app locally and don't need to build packages, you can
