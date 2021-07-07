@@ -58,7 +58,7 @@ async function copy(hakEnv, moduleInfo) {
             if (!hakEnv.isMac()) {
                 console.error(
                     "You asked me to copy multiple targets but I've only been taught " +
-                    "how to do that on a mac.",
+                    "how to do that on macOS.",
                 );
                 throw new Error("Can't copy multiple targets on this platform");
             }
