@@ -2,4 +2,4 @@
 
 set -ex
 
-yarn install $@
+yarn install --pure-lockfile $@
