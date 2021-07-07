@@ -70,7 +70,8 @@ module.exports = async function(hakEnv, moduleInfo) {
             if (err) {
                 reject(
                     "rustc can't build for target " + hakEnv.getTargetId() +
-                    ": ensure the correct toolchain is installed",
+                    ": ensure target is installed via `rustup target add " + hakEnv.getTargetId() + "` " +
+                    "or your package manager if not using `rustup`",
                 );
             }
             fsProm.unlink('tmp').then(resolve);
