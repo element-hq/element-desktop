@@ -11,3 +11,5 @@
 /.yarnrc
 /docker
 /.npmrc
+.vscode
+.vscode/
