@@ -14,16 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const path = require('path');
-const url = require('url');
 const fsProm = require('fs').promises;
 const childProcess = require('child_process');
 
-const npm = require('npm');
-const semver = require('semver');
-const needle = require('needle');
-const mkdirp = require('mkdirp');
-const tar = require('tar');
+const pacote = require('pacote');
 
 async function fetch(hakEnv, moduleInfo) {
     let haveModuleBuildDir;
@@ -36,57 +30,11 @@ async function fetch(hakEnv, moduleInfo) {
 
     if (haveModuleBuildDir) return;
 
-    await new Promise((resolve) => {
-        npm.load({ 'loglevel': 'silent' }, resolve);
-    });
+    console.log("Fetching " + moduleInfo.name + "@" + moduleInfo.version);
 
-    console.log("Fetching " + moduleInfo.name + " at version " + moduleInfo.version);
-    const versions = await new Promise((resolve, reject) => {
-        npm.view([
-            moduleInfo.name + '@' + moduleInfo.version,
-            'dist.tarball',
-            (err, versions) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(versions);
-                }
-            },
-        ]);
-    });
-
-    const orderedVersions = Object.keys(versions);
-    semver.sort(orderedVersions);
-
-    console.log("Resolved version " + orderedVersions[0] + " for " + moduleInfo.name);
-
-    const tarballUrl = versions[orderedVersions[0]]['dist.tarball'];
-
-    await mkdirp(moduleInfo.moduleDotHakDir);
-
-    const parsedUrl = url.parse(tarballUrl);
-    const tarballFile = path.join(moduleInfo.moduleDotHakDir, path.basename(parsedUrl.path));
-
-    let haveTarball;
-    try {
-        await fsProm.stat(tarballFile);
-        haveTarball = true;
-    } catch (e) {
-        haveTarball = false;
-    }
-    if (!haveTarball) {
-        console.log("Downloading " + tarballUrl);
-        await needle('get', tarballUrl, { output: tarballFile });
-    } else {
-        console.log(tarballFile + " already exists.");
-    }
-
-    await mkdirp(moduleInfo.moduleBuildDir);
-
-    await tar.x({
-        file: tarballFile,
-        cwd: moduleInfo.moduleBuildDir,
-        strip: 1,
+    const packumentCache = new Map();
+    await pacote.extract(`${moduleInfo.name}@${moduleInfo.version}`, moduleInfo.moduleBuildDir, {
+        packumentCache,
     });
 
     console.log("Running yarn install in " + moduleInfo.moduleBuildDir);
@@ -114,11 +62,8 @@ async function fetch(hakEnv, moduleInfo) {
     // actual runtime dependencies will have to be added to the main app's
     // dependencies. We can't tell what dependencies are real runtime deps
     // and which are just used for native module building.
-    await mkdirp(moduleInfo.moduleOutDir);
-    await tar.x({
-        file: tarballFile,
-        cwd: moduleInfo.moduleOutDir,
-        strip: 1,
+    await pacote.extract(`${moduleInfo.name}@${moduleInfo.version}`, moduleInfo.moduleOutDir, {
+        packumentCache,
     });
 }
 
