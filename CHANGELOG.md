@@ -1,3 +1,24 @@
+Changes in [1.7.33](https://github.com/vector-im/element-desktop/releases/tag/v1.7.33) (2021-07-19)
+===================================================================================================
+[Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.32...v1.7.33)
+
+ * Translations update from Weblate
+   [\#232](https://github.com/vector-im/element-desktop/pull/232)
+ * Add VS Code to gitignore
+   [\#231](https://github.com/vector-im/element-desktop/pull/231)
+ * Use the target-specific build dir for sqlcipher / openssl
+   [\#230](https://github.com/vector-im/element-desktop/pull/230)
+ * Fix not specifying a target
+   [\#229](https://github.com/vector-im/element-desktop/pull/229)
+ * Do not generate a lockfile when running in CI
+   [\#227](https://github.com/vector-im/element-desktop/pull/227)
+ * Use double quotes in readme
+   [\#228](https://github.com/vector-im/element-desktop/pull/228)
+ * Support universal builds
+   [\#226](https://github.com/vector-im/element-desktop/pull/226)
+ * Check target with rustc directly
+   [\#225](https://github.com/vector-im/element-desktop/pull/225)
+
 Changes in [1.7.32](https://github.com/vector-im/element-desktop/releases/tag/v1.7.32) (2021-07-05)
 ===================================================================================================
 [Full Changelog](https://github.com/vector-im/element-desktop/compare/v1.7.31...v1.7.32)
