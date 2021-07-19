@@ -8,7 +8,8 @@ fi
 
 # Taken from https://www.electron.build/multi-platform-build#docker
 docker run --rm -ti \
- --env-file <(env | grep -iE '^BUILDKITE_API_KEY=') \
+# Pass through any vars prefixed with INDOCKER_, removing the prefix
+ --env-file <(env | grep -E '^INDOCKER_=' | sed -e 's/^INDOCKER_//') \
  --env ELECTRON_CACHE="/root/.cache/electron" \
  --env ELECTRON_BUILDER_CACHE="/root/.cache/electron-builder" \
  -v ${PWD}:/project \
