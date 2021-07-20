@@ -21,6 +21,7 @@
     "start": "yarn run build:ts && yarn run build:res && electron .",
     "lint": "yarn lint:types && yarn lint:js",
     "lint:js": "eslint src/ scripts/ hak/",
+    "lint:js-fix": "eslint --fix src scripts hak",
     "lint:types": "tsc --noEmit",
     "build:native": "yarn run hak",
     "build:native:universal": "yarn run hak --target x86_64-apple-darwin fetchandbuild && yarn run hak --target aarch64-apple-darwin fetchandbuild && yarn run hak --target x86_64-apple-darwin --target aarch64-apple-darwin copyandlink",
