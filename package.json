@@ -56,7 +56,7 @@
     "@typescript-eslint/parser": "^4.17.0",
     "asar": "^2.0.1",
     "chokidar": "^3.5.2",
-    "electron": "12.0.11",
+    "electron": "^13.1.7",
     "electron-builder": "22.11.4",
     "electron-builder-squirrel-windows": "22.11.4",
     "electron-devtools-installer": "^3.1.1",
