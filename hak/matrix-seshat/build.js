@@ -258,6 +258,9 @@ async function buildSqlCipherUnix(hakEnv, moduleInfo) {
 }
 
 async function buildMatrixSeshat(hakEnv, moduleInfo) {
+    // seshat now uses n-api so we shouldn't need to specify a node version to
+    // build against, but it does seems to still need something in here, so leaving
+    // it for now: we should confirm how much of this it still actually needs.
     const env = hakEnv.makeGypEnv();
 
     if (!hakEnv.isLinux()) {
