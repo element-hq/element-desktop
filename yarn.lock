@@ -1844,10 +1844,10 @@ electron-window-state@^5.0.3:
     jsonfile "^4.0.0"
     mkdirp "^0.5.1"
 
-electron@12.0.11:
-  version "12.0.11"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-12.0.11.tgz#555dc1cf663e320f2f2cbdf89319352b08fc59f2"
-  integrity sha512-6gPjcce3QCeAWZ8UVAqVy6os+86D5BcxgkIzlROxX89u+du/i7WpZXF5F1vgv419rspds9OHejP3JrJnoUGh6w==
+electron@^13:
+  version "13.1.7"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-13.1.7.tgz#7e17f5c93a8d182a2a486884fed3dc34ab101be9"
+  integrity sha512-sVfpP/0s6a82FK32LMuEe9L+aWZw15u3uYn9xUJArPjy4OZHteE6yM5871YCNXNiDnoCLQ5eqQWipiVgHsf8nQ==
   dependencies:
     "@electron/get" "^1.0.1"
     "@types/node" "^14.6.2"
