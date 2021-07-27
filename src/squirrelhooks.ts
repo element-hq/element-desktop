@@ -33,15 +33,13 @@ function runUpdateExe(args: string[]): Promise<void> {
     });
 }
 
-export function checkSquirrelHooks(): boolean {
+function checkSquirrelHooks(): boolean {
     if (process.platform !== 'win32') return false;
 
     const cmd = process.argv[1];
     const target = path.basename(process.execPath);
     if (cmd === '--squirrel-install' || cmd === '--squirrel-updated') {
-        Promise.resolve().then(() => {
-            return runUpdateExe(['--createShortcut=' + target]);
-        }).then(() => {
+        runUpdateExe(['--createShortcut=' + target]).then(() => {
             // remove the old 'Riot' shortcuts, if they exist (update.exe --removeShortcut doesn't work
             // because it always uses the name of the product as the name of the shortcut: the only variable
             // is what executable you're linking to)
@@ -81,4 +79,8 @@ export function checkSquirrelHooks(): boolean {
         return true;
     }
     return false;
+}
+
+if (checkSquirrelHooks()) {
+    process.exit(1);
 }
