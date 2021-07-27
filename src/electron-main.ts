@@ -17,12 +17,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// Squirrel on windows starts the app with various flags
-// as hooks to tell us when we've been installed/uninstalled
-// etc.
-import { checkSquirrelHooks } from "./squirrelhooks";
-if (checkSquirrelHooks()) process.exit(1);
-
+// Squirrel on windows starts the app with various flags as hooks to tell us when we've been installed/uninstalled etc.
+import "./squirrelhooks";
 import { app, ipcMain, powerSaveBlocker, BrowserWindow, Menu, autoUpdater, protocol, dialog } from "electron";
 import AutoLaunch from "auto-launch";
 import path from "path";
