@@ -28,7 +28,7 @@ function runUpdateExe(args: string[]): Promise<void> {
     console.log(`Spawning '${updateExe}' with args '${args}'`);
     return new Promise(resolve => {
         spawn(updateExe, args, {
-          detached: true,
+            detached: true,
         }).on('close', resolve);
     });
 }
