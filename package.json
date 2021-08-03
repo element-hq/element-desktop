@@ -73,7 +73,7 @@
     "node-pre-gyp": "^0.15.0",
     "pacote": "^11.3.5",
     "rimraf": "^3.0.2",
-    "tar": "^6.1.0",
+    "tar": "^6.1.2",
     "typescript": "^4.1.3"
   },
   "hakDependencies": {
