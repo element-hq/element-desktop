@@ -10,9 +10,6 @@
     "outDir": "./lib",
     "rootDir": "./src",
     "declaration": true,
-    "types": [
-      "node"
-    ],
     "lib": [
       "es2019",
       "dom"
