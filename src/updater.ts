@@ -52,7 +52,7 @@ export function start(updateBaseUrl: string): void {
             // rely on NSURLConnection setting the User-Agent to what we expect,
             // and also acts as a convenient cache-buster to ensure that when the
             // app updates it always gets a fresh value to avoid update-looping.
-            url = `${updateBaseUrl}macos/${process.arch}/?localVersion=${encodeURIComponent(app.getVersion())}`;
+            url = `${updateBaseUrl}macos/?localVersion=${encodeURIComponent(app.getVersion())}`;
         } else if (process.platform === 'win32') {
             url = `${updateBaseUrl}win32/${process.arch}/`;
         } else {
