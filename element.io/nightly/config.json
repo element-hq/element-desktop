@@ -1,5 +1,5 @@
 {
-    "update_base_url": "https://packages.riot.im/nightly/update/",
+    "update_base_url": "https://packages.element.io/nightly/update/",
     "default_server_name": "matrix.org",
     "brand": "Element Nightly",
     "integrations_ui_url": "https://scalar.vector.im/",
