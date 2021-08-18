@@ -780,6 +780,7 @@ ipcMain.on('seshat', async function(ev, payload) {
 });
 
 app.commandLine.appendSwitch('--enable-usermedia-screen-capturing');
+app.commandLine.appendSwitch('enable-features', 'WebRTCPipeWireCapturer');
 
 const gotLock = app.requestSingleInstanceLock();
 if (!gotLock) {
