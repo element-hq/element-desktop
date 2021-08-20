@@ -1,5 +1,5 @@
 {
-    "update_base_url": "https://packages.riot.im/desktop/update/",
+    "update_base_url": "https://packages.element.io/desktop/update/",
     "default_server_name": "matrix.org",
     "brand": "Element",
     "integrations_ui_url": "https://scalar.vector.im/",
