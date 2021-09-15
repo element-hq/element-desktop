@@ -932,7 +932,6 @@ app.on('ready', async () => {
             preload: preloadScript,
             nodeIntegration: false,
             //sandbox: true, // We enable sandboxing from app.enableSandbox() above
-            enableRemoteModule: false,
             contextIsolation: true,
             webgl: false,
         },
