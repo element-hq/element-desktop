@@ -765,6 +765,11 @@
     "@types/node" "*"
     xmlbuilder ">=11.0.1"
 
+"@types/semver@^7.3.5":
+  version "7.3.8"
+  resolved "https://registry.yarnpkg.com/@types/semver/-/semver-7.3.8.tgz#508a27995498d7586dcecd77c25e289bfaf90c59"
+  integrity sha512-D/2EJvAlCEtYFEYmmlGwbGXuK886HzyCc3nZX/tkFTQdEU8jZDAgiv08P162yB17y4ZXZoq7yFAnW4GDBb9Now==
+
 "@types/verror@^1.10.3":
   version "1.10.5"
   resolved "https://registry.yarnpkg.com/@types/verror/-/verror-1.10.5.tgz#2a1413aded46e67a1fe2386800e291123ed75eb1"
@@ -1946,6 +1951,20 @@ electron-store@^6.0.1:
   dependencies:
     conf "^7.1.2"
     type-fest "^0.16.0"
+
+electron-updater@^4.3.9:
+  version "4.3.9"
+  resolved "https://registry.yarnpkg.com/electron-updater/-/electron-updater-4.3.9.tgz#247c660bafad7c07935e1b81acd3e9a5fd733154"
+  integrity sha512-LCNfedSwZfS4Hza+pDyPR05LqHtGorCStaBgVpRnfKxOlZcvpYEX0AbMeH5XUtbtGRoH2V8osbbf2qKPNb7AsA==
+  dependencies:
+    "@types/semver" "^7.3.5"
+    builder-util-runtime "8.7.5"
+    fs-extra "^10.0.0"
+    js-yaml "^4.1.0"
+    lazy-val "^1.0.4"
+    lodash.escaperegexp "^4.1.2"
+    lodash.isequal "^4.5.0"
+    semver "^7.3.5"
 
 electron-window-state@^5.0.3:
   version "5.0.3"
@@ -3133,10 +3152,20 @@ lodash.difference@^4.5.0:
   resolved "https://registry.yarnpkg.com/lodash.difference/-/lodash.difference-4.5.0.tgz#9ccb4e505d486b91651345772885a2df27fd017c"
   integrity sha1-nMtOUF1Ia5FlE0V3KIWi3yf9AXw=
 
+lodash.escaperegexp@^4.1.2:
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/lodash.escaperegexp/-/lodash.escaperegexp-4.1.2.tgz#64762c48618082518ac3df4ccf5d5886dae20347"
+  integrity sha1-ZHYsSGGAglGKw99Mz11YhtriA0c=
+
 lodash.flatten@^4.4.0:
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/lodash.flatten/-/lodash.flatten-4.4.0.tgz#f31c22225a9632d2bbf8e4addbef240aa765a61f"
   integrity sha1-8xwiIlqWMtK7+OSt2+8kCqdlph8=
+
+lodash.isequal@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/lodash.isequal/-/lodash.isequal-4.5.0.tgz#415c4478f2bcc30120c22ce10ed3226f7d3e18e0"
+  integrity sha1-QVxEePK8wwEgwizhDtMib30+GOA=
 
 lodash.isplainobject@^4.0.6:
   version "4.0.6"

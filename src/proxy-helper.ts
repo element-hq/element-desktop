@@ -32,14 +32,14 @@ export class Proxy {
     private static readonly STORE_KEY = "proxy";
 
     private readonly store: TypedStore;
-    private readonly session: Session
+    private readonly sessions: Array<Session>
     private proxy: ProxyConfig;
     private pacWatcher: fs.FSWatcher;
 
-    constructor( { store, session }: { store: TypedStore, session: Session }) {
+    constructor( { store, sessions = [] }: { store: TypedStore, sessions: Session[] }) {
 
         this.store = store;
-        this.session = session;
+        this.sessions = sessions;
 
         if (this.store.has(Proxy.STORE_KEY)) {
             console.log("Setting up proxy.");
@@ -62,12 +62,16 @@ export class Proxy {
     }
 
     public async applyProxy(): Promise<any> {
-        // Apply the proxy config to the session
+        // Apply the proxy config to the sessions
         if (!this.proxy) return;
 
-        return this.session.closeAllConnections() // Ensure all in-progress connections are closed
-            .then(() => this.session.setProxy(this.proxy)) // Set the proxy settings
-            .then(() => this.session.forceReloadProxyConfig()); // Ensure the updated config has been reloaded
+        return Promise.allSettled(
+            this.sessions.map((session) =>
+                session.closeAllConnections() // Ensure all in-progress connections are closed
+                .then(() => session.setProxy(this.proxy)) // Set the proxy settings
+                .then(() => session.forceReloadProxyConfig()) // Ensure the updated config has been reloaded
+            )
+        );
     }
 
     private setProxyFromPACFile(pacFile: fs.PathLike): void {

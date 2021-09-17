@@ -19,7 +19,8 @@ limitations under the License.
 
 // Squirrel on windows starts the app with various flags as hooks to tell us when we've been installed/uninstalled etc.
 import "./squirrelhooks";
-import { app, ipcMain, powerSaveBlocker, BrowserWindow, Menu, autoUpdater, protocol, dialog } from "electron";
+import { app, ipcMain, powerSaveBlocker, BrowserWindow, Menu, protocol, dialog } from "electron";
+import { autoUpdater } from "electron-updater";
 import AutoLaunch from "auto-launch";
 import path from "path";
 import windowStateKeeper from 'electron-window-state';
@@ -944,7 +945,10 @@ app.on('ready', async () => {
 
     proxy = new Proxy({
         store: store,
-        session: mainWindow.webContents.session // apply proxy to main window
+        sessions: [
+            mainWindow.webContents.session, // apply proxy to main window
+            autoUpdater.netSession // apply proxy to autoUpdater
+        ]
     });
 
     await proxy.applyProxy(); // wait for proxy settings to be applied

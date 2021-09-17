@@ -14,7 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { app, autoUpdater, ipcMain } from "electron";
+import { app, ipcMain, autoUpdater } from "electron";
+// import { autoUpdater } from "electron-updater";
+
 
 const UPDATE_POLL_INTERVAL_MS = 60 * 60 * 1000;
 const INITIAL_UPDATE_DELAY_MS = 30 * 1000;
