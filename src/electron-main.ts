@@ -947,8 +947,8 @@ app.on('ready', async () => {
         store: store,
         sessions: [
             mainWindow.webContents.session, // apply proxy to main window
-            autoUpdater.netSession // apply proxy to autoUpdater
-        ]
+            autoUpdater.netSession, // apply proxy to autoUpdater
+        ],
     });
 
     await proxy.applyProxy(); // wait for proxy settings to be applied

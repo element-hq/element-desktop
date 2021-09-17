@@ -32,12 +32,11 @@ export class Proxy {
     private static readonly STORE_KEY = "proxy";
 
     private readonly store: TypedStore;
-    private readonly sessions: Array<Session>
+    private readonly sessions: Array<Session>;
     private proxy: ProxyConfig;
     private pacWatcher: fs.FSWatcher;
 
     constructor( { store, sessions = [] }: { store: TypedStore, sessions: Session[] }) {
-
         this.store = store;
         this.sessions = sessions;
 
@@ -68,10 +67,9 @@ export class Proxy {
         return Promise.allSettled(
             this.sessions.map((session) =>
                 session.closeAllConnections() // Ensure all in-progress connections are closed
-                .then(() => session.setProxy(this.proxy)) // Set the proxy settings
-                .then(() => session.forceReloadProxyConfig()) // Ensure the updated config has been reloaded
-            )
-        );
+                    .then(() => session.setProxy(this.proxy)) // Set the proxy settings
+                    .then(() => session.forceReloadProxyConfig()), // Ensure the updated config has been reloaded
+            ));
     }
 
     private setProxyFromPACFile(pacFile: fs.PathLike): void {
@@ -87,18 +85,17 @@ export class Proxy {
         if (this.pacWatcher) return;
 
         this.pacWatcher = fs.watch(pacFile, async (event) => {
-            console.log("Started watching PAC file.")
+            console.log("Started watching PAC file.");
         });
 
         this.pacWatcher.on('change', (eventType: string) => {
             console.log("PAC file changed, updating proxy settings.");
             this.setProxyFromPACFile(pacFile);
             this.applyProxy();
-
         });
 
         this.pacWatcher.on('close', () => {
-            console.log("Stopped watching PAC file.")
+            console.log("Stopped watching PAC file.");
         });
     }
 
