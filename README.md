@@ -207,6 +207,49 @@ $PROFILE` in which case it becomes `Element-$PROFILE`, or it is using one of
 the above created by a pre-1.7 install, in which case it will be `Riot` or
 `Riot-$PROFILE`.
 
+See https://github.com/vector-im/element-web/blob/develop/docs/config.md
+
+Electron Config
+===============
+
+Electron config is stored in the same folder as the [user specified config](#user-specified-configjson) 
+in `electron-config.json`.
+This is for configuring Electron options as opposed to Matrix/Element options from `config.json`. 
+
+This has the following config options:
+
+* `warnBeforeExit`: boolean, optional (default: `true`)
+  * `true`: Element will display a confirmation box before exiting.
+* `minimizeToTray`: boolean, optional (default: `true`)
+  * `true`: Element will enable the tray.
+* `spellCheckerEnabled`: boolean, optional (default: `true`)
+  * `true`: Element spell checking is enabled.
+* `autoHideMenuBar`: boolean, optional (default: `true`)
+  * `true`: Element will automatically hide the menu bar.
+* `locale`: string[], optional
+  * A list of locales for Element to enable.
+* `proxy`: object, optional (default: `null`)
+  * Proxy configuration for Electron to use. [More info](https://www.electronjs.org/docs/api/session#sessetproxyconfig).
+  * `mode`: string, optional (default: `null`)
+    * Proxy mode. If it's unspecified, it will be automatically determined based on other specified options.
+    * `direct`: All connections go direct without a proxy involved.
+    * `auto_detect`: The proxy configuration is determined by a PAC script that will be downloaded from `wpad/wpad.dat`.
+    * `pac_script`: The proxy configuration is determined by a PAC script specified in `pacScript`.
+      This is the default mode if `pacScript` is specified.
+    * `fixed_servers`: The proxy configuration is specified in `proxyRules`.
+      This is the default mode if `proxyRules` is specified and `pacScript` is not specified.
+    * `system`: The proxy configuration is taken from the operating system.
+  * `pacScript`: string, optional (default: null)
+    * The URL for a PAC file.
+    * This supports local files through the `file:` URI scheme,
+      e.g. `file:///home/$USER/proxy.pac` or `file://c:/Users/Username/Documents/proxy.pac`,
+      as well as `data:`, `http:`, and `https:` URI schemes.
+    * A `data:` URI should follow the format `data:application/x-javascript-config;base64,$BASE64_PAC_CONTENT`;
+  * `proxyRules`: string, optional (default: `null`)
+    * Rules indicating which proxies to use.
+  * `proxyBypassRules`: string, optional (default: `null`)
+    * Rules indication which URLs should bypass the proxy settings.
+
 Translations
 ==========================
 
