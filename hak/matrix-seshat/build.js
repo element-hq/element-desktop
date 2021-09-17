@@ -1,5 +1,5 @@
 /*
-Copyright 2020 The Matrix.org Foundation C.I.C.
+Copyright 2020-2021 The Matrix.org Foundation C.I.C.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -31,9 +31,10 @@ module.exports = async function(hakEnv, moduleInfo) {
 };
 
 async function buildOpenSslWin(hakEnv, moduleInfo) {
-    const openSslDir = path.join(moduleInfo.moduleDotHakDir, 'openssl-1.1.1d');
+    const version = moduleInfo.cfg.dependencies.openssl;
+    const openSslDir = path.join(moduleInfo.moduleTargetDotHakDir, `openssl-${version}`);
 
-    const openSslArch = hakEnv.arch === 'x64' ? 'VC-WIN64A' : 'VC-WIN32';
+    const openSslArch = hakEnv.getTargetArch() === 'x64' ? 'VC-WIN64A' : 'VC-WIN32';
 
     console.log("Building openssl in " + openSslDir);
     await new Promise((resolve, reject) => {
@@ -132,7 +133,8 @@ async function buildOpenSslWin(hakEnv, moduleInfo) {
 }
 
 async function buildSqlCipherWin(hakEnv, moduleInfo) {
-    const sqlCipherDir = path.join(moduleInfo.moduleDotHakDir, 'sqlcipher-4.3.0');
+    const version = moduleInfo.cfg.dependencies.sqlcipher;
+    const sqlCipherDir = path.join(moduleInfo.moduleTargetDotHakDir, `sqlcipher-${version}`);
     const buildDir = path.join(sqlCipherDir, 'bld');
 
     await mkdirp(buildDir);
@@ -168,7 +170,8 @@ async function buildSqlCipherWin(hakEnv, moduleInfo) {
 }
 
 async function buildSqlCipherUnix(hakEnv, moduleInfo) {
-    const sqlCipherDir = path.join(moduleInfo.moduleDotHakDir, 'sqlcipher-4.3.0');
+    const version = moduleInfo.cfg.dependencies.sqlcipher;
+    const sqlCipherDir = path.join(moduleInfo.moduleTargetDotHakDir, `sqlcipher-${version}`);
 
     const args = [
         '--prefix=' + moduleInfo.depPrefix + '',
@@ -179,9 +182,36 @@ async function buildSqlCipherUnix(hakEnv, moduleInfo) {
     if (hakEnv.isMac()) {
         args.push('--with-crypto-lib=commoncrypto');
     }
-    args.push('CFLAGS=-DSQLITE_HAS_CODEC');
+
+    if (!hakEnv.isHost()) {
+        // In the nonsense world of `configure`, it is assumed you are building
+        // a compiler like `gcc`, so the `host` option actually means the target
+        // the build output runs on.
+        args.push(`--host=${hakEnv.getTargetId()}`);
+    }
+
+    const cflags = [
+        '-DSQLITE_HAS_CODEC',
+    ];
+
+    if (!hakEnv.isHost()) {
+        // `clang` uses more logical option naming.
+        cflags.push(`--target=${hakEnv.getTargetId()}`);
+    }
+
+    if (cflags.length) {
+        args.push(`CFLAGS=${cflags.join(' ')}`);
+    }
+
+    const ldflags = [];
+
     if (hakEnv.isMac()) {
-        args.push('LDFLAGS=-framework Security -framework Foundation');
+        ldflags.push('-framework Security');
+        ldflags.push('-framework Foundation');
+    }
+
+    if (ldflags.length) {
+        args.push(`LDFLAGS=${ldflags.join(' ')}`);
     }
 
     await new Promise((resolve, reject) => {
@@ -228,6 +258,9 @@ async function buildSqlCipherUnix(hakEnv, moduleInfo) {
 }
 
 async function buildMatrixSeshat(hakEnv, moduleInfo) {
+    // seshat now uses n-api so we shouldn't need to specify a node version to
+    // build against, but it does seems to still need something in here, so leaving
+    // it for now: we should confirm how much of this it still actually needs.
     const env = hakEnv.makeGypEnv();
 
     if (!hakEnv.isLinux()) {
@@ -245,7 +278,11 @@ async function buildMatrixSeshat(hakEnv, moduleInfo) {
         // the build scripts since they run on the host, but vcvarsall.bat sets the c
         // compiler in the path to be the one for the target, so we just use the matching
         // toolchain for the target architecture which makes everything happy.
-        env.RUSTUP_TOOLCHAIN = hakEnv.arch == 'x64' ? 'stable-x86_64-pc-windows-msvc' : 'stable-i686-pc-windows-msvc';
+        env.RUSTUP_TOOLCHAIN = `stable-${hakEnv.getTargetId()}`;
+    }
+
+    if (!hakEnv.isHost()) {
+        env.CARGO_BUILD_TARGET = hakEnv.getTargetId();
     }
 
     console.log("Running neon with env", env);

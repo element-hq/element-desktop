@@ -11,15 +11,15 @@ const needle = require('needle');
 
 const riotDesktopPackageJson = require('../package.json');
 
-const PUB_KEY_URL = "https://packages.riot.im/riot-release-key.asc";
-const PACKAGE_URL_PREFIX = "https://github.com/vector-im/riot-web/releases/download/";
+const PUB_KEY_URL = "https://packages.riot.im/element-release-key.asc";
+const PACKAGE_URL_PREFIX = "https://github.com/vector-im/element-web/releases/download/";
 const ASAR_PATH = 'webapp.asar';
 
-const {setPackageVersion, setDebVersion} = require('./set-version.js');
+const { setPackageVersion } = require('./set-version.js');
 
 async function getLatestDevelopUrl(bkToken) {
     const buildsResult = await needle('get',
-        "https://api.buildkite.com/v2/organizations/matrix-dot-org/pipelines/riot-web/builds",
+        "https://api.buildkite.com/v2/organizations/matrix-dot-org/pipelines/element-web/builds",
         {
             branch: 'develop',
             state: 'passed',
@@ -55,7 +55,7 @@ async function getLatestDevelopUrl(bkToken) {
     let dlUrl;
     let dlFilename;
     for (const artifact of artifactsResult.body) {
-        if (artifact.filename && /^riot-.*\.tar.gz$/.test(artifact.filename)) {
+        if (artifact.filename && /^element-.*\.tar.gz$/.test(artifact.filename)) {
             dlUrl = artifact.download_url;
             dlFilename = artifact.filename;
             break;
@@ -149,7 +149,7 @@ async function main() {
 
     if (targetVersion === undefined) {
         targetVersion = 'v' + riotDesktopPackageJson.version;
-        filename = 'riot-' + targetVersion + '.tar.gz';
+        filename = 'element-' + targetVersion + '.tar.gz';
         url = PACKAGE_URL_PREFIX + targetVersion + '/' + filename;
     } else if (targetVersion === 'develop') {
         const buildKiteApiKey = process.env.BUILDKITE_API_KEY;
@@ -164,7 +164,7 @@ async function main() {
         [filename, url] = await getLatestDevelopUrl(buildKiteApiKey);
         verify = false; // develop builds aren't signed
     } else {
-        filename = 'riot-' + targetVersion + '.tar.gz';
+        filename = 'element-' + targetVersion + '.tar.gz';
         url = PACKAGE_URL_PREFIX + targetVersion + '/' + filename;
         setVersion = true;
     }
@@ -283,10 +283,9 @@ async function main() {
         const semVer = targetVersion.slice(1);
         console.log("Updating version to " + semVer);
         await setPackageVersion(semVer);
-        await setDebVersion(semVer);
     }
 
     console.log("Done!");
 }
 
-main().then((ret) => process.exit(ret));
+main().then((ret) => process.exit(ret)).catch(e => process.exit(1));

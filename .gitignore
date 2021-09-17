@@ -1,4 +1,5 @@
 /dist
+/lib
 /webapp
 /webapp.asar
 /packages
@@ -9,3 +10,6 @@
 /.hak
 /.yarnrc
 /docker
+/.npmrc
+.vscode
+.vscode/
