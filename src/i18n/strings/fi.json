@@ -25,7 +25,7 @@
     "Minimize": "Pienennä",
     "Window": "Ikkuna",
     "Toggle Developer Tools": "Näytä tai piilota kehittäjätyökalut",
-    "Toggle Full Screen": "Vaihda koko näyttö-tilaa",
+    "Toggle Full Screen": "Vaihda koko näytön tilaa",
     "Preferences": "Asetukset",
     "Zoom Out": "Pienennä",
     "Zoom In": "Suurenna",
@@ -39,8 +39,8 @@
     "Undo": "Peru",
     "Edit": "Muokkaa",
     "Quit": "Lopeta",
-    "Show/Hide": "Näytä/Piilota",
-    "Are you sure you want to quit?": "Oletko varma että haluat poistua?",
+    "Show/Hide": "Näytä/piilota",
+    "Are you sure you want to quit?": "Haluatko varmasti poistua?",
     "Close Element": "Sulje Element",
     "Cancel": "Peruuta"
 }
