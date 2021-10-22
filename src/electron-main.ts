@@ -925,7 +925,7 @@ app.on('ready', async () => {
     const preloadScript = path.normalize(`${__dirname}/preload.js`);
     mainWindow = global.mainWindow = new BrowserWindow({
         // https://www.electronjs.org/docs/faq#the-font-looks-blurry-what-is-this-and-what-can-i-do
-        backgroundColor: '#fff',
+        backgroundColor: '#16191e',
 
         icon: iconPath,
         show: false,
@@ -1015,7 +1015,9 @@ app.on('window-all-closed', () => {
 });
 
 app.on('activate', () => {
-    mainWindow.show();
+    mainWindow.once('ready-to-show', () => {
+        mainWindow.show();
+    });
 });
 
 function beforeQuit() {
