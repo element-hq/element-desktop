@@ -940,7 +940,7 @@ app.on('ready', async () => {
             nodeIntegration: false,
             //sandbox: true, // We enable sandboxing from app.enableSandbox() above
             contextIsolation: true,
-            webgl: false,
+            webgl: true,
         },
     });
     mainWindow.loadURL('vector://vector/webapp/');
