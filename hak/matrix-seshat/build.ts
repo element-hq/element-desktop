@@ -14,13 +14,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const path = require('path');
-const childProcess = require('child_process');
+import path from 'path';
+import childProcess from 'child_process';
 
-const mkdirp = require('mkdirp');
-const fsExtra = require('fs-extra');
+import mkdirp from 'mkdirp';
+import fsExtra from 'fs-extra';
 
-module.exports = async function(hakEnv, moduleInfo) {
+import HakEnv from '../../scripts/hak/hakEnv';
+import { DependencyInfo } from '../../scripts/hak/dep';
+
+export default async function(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
     if (hakEnv.isWin()) {
         await buildOpenSslWin(hakEnv, moduleInfo);
         await buildSqlCipherWin(hakEnv, moduleInfo);
@@ -37,7 +40,7 @@ async function buildOpenSslWin(hakEnv, moduleInfo) {
     const openSslArch = hakEnv.getTargetArch() === 'x64' ? 'VC-WIN64A' : 'VC-WIN32';
 
     console.log("Building openssl in " + openSslDir);
-    await new Promise((resolve, reject) => {
+    await new Promise<void>((resolve, reject) => {
         const proc = childProcess.spawn(
             'perl',
             [
@@ -103,7 +106,7 @@ async function buildOpenSslWin(hakEnv, moduleInfo) {
         });
     });
 
-    await new Promise((resolve, reject) => {
+    await new Promise<void>((resolve, reject) => {
         const proc = childProcess.spawn(
             'nmake',
             ['build_libs'],
@@ -117,7 +120,7 @@ async function buildOpenSslWin(hakEnv, moduleInfo) {
         });
     });
 
-    await new Promise((resolve, reject) => {
+    await new Promise<void>((resolve, reject) => {
         const proc = childProcess.spawn(
             'nmake',
             ['install_dev'],
@@ -139,7 +142,7 @@ async function buildSqlCipherWin(hakEnv, moduleInfo) {
 
     await mkdirp(buildDir);
 
-    await new Promise((resolve, reject) => {
+    await new Promise<void>((resolve, reject) => {
         const proc = childProcess.spawn(
             'nmake',
             ['/f', path.join('..', 'Makefile.msc'), 'libsqlite3.lib', 'TOP=..'],
@@ -214,7 +217,7 @@ async function buildSqlCipherUnix(hakEnv, moduleInfo) {
         args.push(`LDFLAGS=${ldflags.join(' ')}`);
     }
 
-    await new Promise((resolve, reject) => {
+    await new Promise<void>((resolve, reject) => {
         const proc = childProcess.spawn(
             path.join(sqlCipherDir, 'configure'),
             args,
@@ -228,7 +231,7 @@ async function buildSqlCipherUnix(hakEnv, moduleInfo) {
         });
     });
 
-    await new Promise((resolve, reject) => {
+    await new Promise<void>((resolve, reject) => {
         const proc = childProcess.spawn(
             'make',
             [],
@@ -242,7 +245,7 @@ async function buildSqlCipherUnix(hakEnv, moduleInfo) {
         });
     });
 
-    await new Promise((resolve, reject) => {
+    await new Promise<void>((resolve, reject) => {
         const proc = childProcess.spawn(
             'make',
             ['install'],
@@ -286,7 +289,7 @@ async function buildMatrixSeshat(hakEnv, moduleInfo) {
     }
 
     console.log("Running neon with env", env);
-    await new Promise((resolve, reject) => {
+    await new Promise<void>((resolve, reject) => {
         const proc = childProcess.spawn(
             path.join(moduleInfo.nodeModuleBinDir, 'neon' + (hakEnv.isWin() ? '.cmd' : '')),
             ['build', '--release'],

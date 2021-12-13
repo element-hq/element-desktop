@@ -14,18 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const path = require('path');
-const childProcess = require('child_process');
+import path from 'path';
+import childProcess from 'child_process';
 
-module.exports = async function(hakEnv, moduleInfo) {
-    await buildKeytar(hakEnv, moduleInfo);
-};
+import HakEnv from '../../scripts/hak/hakEnv';
+import { DependencyInfo } from '../../scripts/hak/dep';
 
-async function buildKeytar(hakEnv, moduleInfo) {
+export default async function buildKeytar(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
     const env = hakEnv.makeGypEnv();
 
     console.log("Running yarn with env", env);
-    await new Promise((resolve, reject) => {
+    await new Promise<void>((resolve, reject) => {
         const proc = childProcess.spawn(
             path.join(moduleInfo.nodeModuleBinDir, 'node-gyp' + (hakEnv.isWin() ? '.cmd' : '')),
             ['rebuild'],

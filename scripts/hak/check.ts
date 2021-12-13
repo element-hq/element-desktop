@@ -14,13 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const mkdirp = require('mkdirp');
+import { DependencyInfo } from "./dep";
+import HakEnv from "./hakEnv";
 
-async function fetchDeps(hakEnv, moduleInfo) {
-    await mkdirp(moduleInfo.moduleDotHakDir);
-    if (moduleInfo.scripts.fetchDeps) {
-        await moduleInfo.scripts.fetchDeps(hakEnv, moduleInfo);
+export default async function check(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
+    if (moduleInfo.scripts.check) {
+        await moduleInfo.scripts.check(hakEnv, moduleInfo);
     }
 }
-
-module.exports = fetchDeps;

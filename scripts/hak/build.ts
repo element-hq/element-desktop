@@ -14,8 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-async function build(hakEnv, moduleInfo) {
+import { DependencyInfo } from "./dep";
+import HakEnv from "./hakEnv";
+
+export default async function build(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
+    console.log("dfg", moduleInfo.scripts)
     await moduleInfo.scripts.build(hakEnv, moduleInfo);
 }
-
-module.exports = build;

@@ -1,7 +1,7 @@
 {
     "scripts": {
-        "check": "check.js",
-        "build": "build.js"
+        "check": "check.ts",
+        "build": "build.ts"
     },
     "copy": "build/Release/keytar.node",
     "dependencies": {

@@ -14,21 +14,21 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const path = require('path');
-const os = require('os');
+import path from 'path';
+import os from 'os';
 
-const nodePreGypVersioning = require('node-pre-gyp/lib/util/versioning');
-const getElectronVersion = require('app-builder-lib/out/electron/electronVersion').getElectronVersion;
+import nodePreGypVersioning from "node-pre-gyp/lib/util/versioning";
+import { getElectronVersion } from "app-builder-lib/out/electron/electronVersion";
 
-const { TARGETS, getHost, isHostId } = require('./target');
+import { Target, TARGETS, getHost, isHostId, TargetId } from './target';
 
-function getRuntime(projectRoot) {
-    const electronVersion = getElectronVersion(projectRoot);
+async function getRuntime(projectRoot: string): Promise<string> {
+    const electronVersion = await getElectronVersion(projectRoot);
     return electronVersion ? 'electron' : 'node-webkit';
 }
 
-function getRuntimeVersion(projectRoot) {
-    const electronVersion = getElectronVersion(projectRoot);
+async function getRuntimeVersion(projectRoot: string) {
+    const electronVersion = await getElectronVersion(projectRoot);
     if (electronVersion) {
         return electronVersion;
     } else {
@@ -36,8 +36,14 @@ function getRuntimeVersion(projectRoot) {
     }
 }
 
-module.exports = class HakEnv {
-    constructor(prefix, targetId) {
+export default class HakEnv {
+    public target: Target;
+    public projectRoot: string;
+    public runtime: string;
+    public runtimeVersion: string;
+    public dotHakDir: string;
+
+    constructor(prefix: string, targetId: TargetId) {
         let target;
         if (targetId) {
             target = TARGETS[targetId];
@@ -50,17 +56,12 @@ module.exports = class HakEnv {
         }
         this.target = target;
         this.projectRoot = prefix;
+        this.dotHakDir = path.join(this.projectRoot, '.hak');
     }
 
     async init() {
-        Object.assign(this, {
-            // what we're targeting
-            runtime: await getRuntime(this.projectRoot),
-            runtimeVersion: await getRuntimeVersion(this.projectRoot),
-
-            // paths
-            dotHakDir: path.join(this.projectRoot, '.hak'),
-        });
+        this.runtime = await getRuntime(this.projectRoot);
+        this.runtimeVersion = await getRuntimeVersion(this.projectRoot);
     }
 
     getRuntimeAbi() {
@@ -111,7 +112,7 @@ module.exports = class HakEnv {
         });
     }
 
-    getNodeModuleBin(name) {
+    getNodeModuleBin(name: string) {
         return path.join(this.projectRoot, 'node_modules', '.bin', name);
     }
 };

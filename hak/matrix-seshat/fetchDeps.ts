@@ -14,15 +14,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const path = require('path');
-const childProcess = require('child_process');
+import path from 'path';
+import childProcess from 'child_process';
 
-const fs = require('fs');
-const fsProm = require('fs').promises;
-const needle = require('needle');
-const tar = require('tar');
+import fs from 'fs';
+import fsProm from 'fs/promises';
+import needle from 'needle';
+import tar from 'tar';
 
-module.exports = async function(hakEnv, moduleInfo) {
+import HakEnv from '../../scripts/hak/hakEnv';
+import { DependencyInfo } from '../../scripts/hak/dep';
+
+export default async function(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
     if (!hakEnv.isLinux()) {
         await getSqlCipher(hakEnv, moduleInfo);
     }
@@ -32,7 +35,7 @@ module.exports = async function(hakEnv, moduleInfo) {
     }
 };
 
-async function getSqlCipher(hakEnv, moduleInfo) {
+async function getSqlCipher(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
     const version = moduleInfo.cfg.dependencies.sqlcipher;
     const sqlCipherDir = path.join(moduleInfo.moduleTargetDotHakDir, `sqlcipher-${version}`);
 
@@ -74,7 +77,7 @@ async function getSqlCipher(hakEnv, moduleInfo) {
         // set it to 2 (default to memory).
         const patchFile = path.join(moduleInfo.moduleHakDir, `sqlcipher-${version}-win.patch`);
 
-        await new Promise((resolve, reject) => {
+        await new Promise<void>((resolve, reject) => {
         const readStream = fs.createReadStream(patchFile);
 
             const proc = childProcess.spawn(
@@ -93,7 +96,7 @@ async function getSqlCipher(hakEnv, moduleInfo) {
     }
 }
 
-async function getOpenSsl(hakEnv, moduleInfo) {
+async function getOpenSsl(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
     const version = moduleInfo.cfg.dependencies.openssl;
     const openSslDir = path.join(moduleInfo.moduleTargetDotHakDir, `openssl-${version}`);
 

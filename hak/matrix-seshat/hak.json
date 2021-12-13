@@ -1,8 +1,8 @@
 {
     "scripts": {
-        "check": "check.js",
-        "fetchDeps": "fetchDeps.js",
-        "build": "build.js"
+        "check": "check.ts",
+        "fetchDeps": "fetchDeps.ts",
+        "build": "build.ts"
     },
     "prune": "native",
     "copy": "native/index.node",
