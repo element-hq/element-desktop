@@ -46,7 +46,7 @@ export default async function copy(hakEnv: HakEnv, moduleInfo: DependencyInfo): 
         // If there are multiple moduleBuildDirs, singular moduleBuildDir
         // is the same as moduleBuildDirs[0], so we're just listing the contents
         // of the first one.
-        const files = await new Promise<string[]>(async (resolve, reject) => {
+        const files = await new Promise<string[]>((resolve, reject) => {
             glob(moduleInfo.cfg.copy, {
                 nosort: true,
                 silent: true,

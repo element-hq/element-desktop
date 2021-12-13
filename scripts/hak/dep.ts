@@ -19,7 +19,7 @@ import HakEnv from "./hakEnv";
 export interface DependencyInfo {
     name: string;
     version: string;
-    cfg: Record<string, any>,
+    cfg: Record<string, any>;
     moduleHakDir: string;
     moduleDotHakDir: string;
     moduleTargetDotHakDir: string;
@@ -28,5 +28,5 @@ export interface DependencyInfo {
     moduleOutDir: string;
     nodeModuleBinDir: string;
     depPrefix: string;
-    scripts: Record<string, (hakEnv: HakEnv, moduleInfo: DependencyInfo) => Promise<void> >,
+    scripts: Record<string, (hakEnv: HakEnv, moduleInfo: DependencyInfo) => Promise<void> >;
 }

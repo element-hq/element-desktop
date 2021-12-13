@@ -3,6 +3,7 @@
     "moduleResolution": "node",
     "esModuleInterop": true,
     "target": "es2016",
+    "module": "esnext",
     "sourceMap": false,
     "lib": [
       "es2019",

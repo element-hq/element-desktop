@@ -116,7 +116,7 @@ async function main() {
 
         for (const s of HAKSCRIPTS) {
             if (hakJson.scripts && hakJson.scripts[s]) {
-                const scriptModule = require(path.join(prefix, 'hak', dep, hakJson.scripts[s]));
+                const scriptModule = await import(path.join(prefix, 'hak', dep, hakJson.scripts[s]));
                 if (scriptModule.__esModule) {
                     deps[dep].scripts[s] = scriptModule.default;
                 } else {
@@ -161,7 +161,7 @@ async function main() {
             process.exit(1);
         }
 
-        const cmdFunc = require('./' + cmd).default;
+        const cmdFunc = (await import('./' + cmd)).default;
 
         for (const mod of modules) {
             const depInfo = deps[mod];

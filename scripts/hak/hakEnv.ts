@@ -115,4 +115,4 @@ export default class HakEnv {
     getNodeModuleBin(name: string) {
         return path.join(this.projectRoot, 'node_modules', '.bin', name);
     }
-};
+}
