@@ -18,6 +18,5 @@ import { DependencyInfo } from "./dep";
 import HakEnv from "./hakEnv";
 
 export default async function build(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
-    console.log("dfg", moduleInfo.scripts)
     await moduleInfo.scripts.build(hakEnv, moduleInfo);
 }

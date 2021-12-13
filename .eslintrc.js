@@ -19,7 +19,7 @@ module.exports = {
         "no-async-promise-executor": "off",
     },
     overrides: [{
-        files: ["src/**/*.{ts,tsx}"],
+        files: ["{src,scripts,hak}/**/*.{ts,tsx}"],
         extends: [
             "plugin:matrix-org/typescript",
         ],

@@ -82,4 +82,4 @@ export default async function(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promi
         rustc.stdin.write('fn main() {}');
         rustc.stdin.end();
     });
-};
+}

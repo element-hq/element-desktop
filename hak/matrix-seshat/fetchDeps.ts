@@ -33,7 +33,7 @@ export default async function(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promi
     if (hakEnv.isWin()) {
         await getOpenSsl(hakEnv, moduleInfo);
     }
-};
+}
 
 async function getSqlCipher(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
     const version = moduleInfo.cfg.dependencies.sqlcipher;
@@ -78,7 +78,7 @@ async function getSqlCipher(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise
         const patchFile = path.join(moduleInfo.moduleHakDir, `sqlcipher-${version}-win.patch`);
 
         await new Promise<void>((resolve, reject) => {
-        const readStream = fs.createReadStream(patchFile);
+            const readStream = fs.createReadStream(patchFile);
 
             const proc = childProcess.spawn(
                 'patch',

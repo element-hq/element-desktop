@@ -31,7 +31,7 @@ export default async function(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promi
         await buildSqlCipherUnix(hakEnv, moduleInfo);
     }
     await buildMatrixSeshat(hakEnv, moduleInfo);
-};
+}
 
 async function buildOpenSslWin(hakEnv, moduleInfo) {
     const version = moduleInfo.cfg.dependencies.openssl;
@@ -46,9 +46,9 @@ async function buildOpenSslWin(hakEnv, moduleInfo) {
             [
                 'Configure',
                 '--prefix=' + moduleInfo.depPrefix,
-                 // sqlcipher only uses about a tiny part of openssl. We link statically
-                 // so will only pull in the symbols we use, but we may as well turn off
-                 // as much as possible to save on build time.
+                // sqlcipher only uses about a tiny part of openssl. We link statically
+                // so will only pull in the symbols we use, but we may as well turn off
+                // as much as possible to save on build time.
                 'no-afalgeng',
                 'no-capieng',
                 'no-cms',
