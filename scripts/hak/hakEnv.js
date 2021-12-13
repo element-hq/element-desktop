@@ -18,24 +18,17 @@ const path = require('path');
 const os = require('os');
 
 const nodePreGypVersioning = require('node-pre-gyp/lib/util/versioning');
+const getElectronVersion = require('app-builder-lib/out/electron/electronVersion').getElectronVersion;
+
 const { TARGETS, getHost, isHostId } = require('./target');
 
-function getElectronVersion(packageJson) {
-    // should we pick the version of an installed electron
-    // dependency, and if so, before or after electronVersion?
-    if (packageJson.build && packageJson.build.electronVersion) {
-        return packageJson.build.electronVersion;
-    }
-    return null;
-}
-
-function getRuntime(packageJson) {
-    const electronVersion = getElectronVersion(packageJson);
+function getRuntime(projectRoot) {
+    const electronVersion = getElectronVersion(projectRoot);
     return electronVersion ? 'electron' : 'node-webkit';
 }
 
-function getRuntimeVersion(packageJson) {
-    const electronVersion = getElectronVersion(packageJson);
+function getRuntimeVersion(projectRoot) {
+    const electronVersion = getElectronVersion(projectRoot);
     if (electronVersion) {
         return electronVersion;
     } else {
@@ -44,7 +37,7 @@ function getRuntimeVersion(packageJson) {
 }
 
 module.exports = class HakEnv {
-    constructor(prefix, packageJson, targetId) {
+    constructor(prefix, targetId) {
         let target;
         if (targetId) {
             target = TARGETS[targetId];
@@ -55,16 +48,18 @@ module.exports = class HakEnv {
         if (!target) {
             throw new Error(`Unknown target ${targetId}!`);
         }
+        this.target = target;
+        this.projectRoot = prefix;
+    }
 
+    async init() {
         Object.assign(this, {
             // what we're targeting
-            runtime: getRuntime(packageJson),
-            runtimeVersion: getRuntimeVersion(packageJson),
-            target,
+            runtime: await getRuntime(this.projectRoot),
+            runtimeVersion: await getRuntimeVersion(this.projectRoot),
 
             // paths
-            projectRoot: prefix,
-            dotHakDir: path.join(prefix, '.hak'),
+            dotHakDir: path.join(this.projectRoot, '.hak'),
         });
     }
 
