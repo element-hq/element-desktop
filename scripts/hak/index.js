@@ -76,8 +76,11 @@ async function main() {
         targetIds.push(process.argv.splice(targetIndex, 2)[1]);
     }
 
-    const hakEnvs = targetIds.map(tid => new HakEnv(prefix, packageJson, tid));
-    if (hakEnvs.length == 0) hakEnvs.push(new HakEnv(prefix, packageJson, null));
+    const hakEnvs = targetIds.map(tid => new HakEnv(prefix, tid));
+    if (hakEnvs.length == 0) hakEnvs.push(new HakEnv(prefix, null));
+    for (const h of hakEnvs) {
+        await h.init();
+    }
     const hakEnv = hakEnvs[0];
 
     const deps = {};
