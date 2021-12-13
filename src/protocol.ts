@@ -19,7 +19,7 @@ import { URL } from "url";
 import path from "path";
 import fs from "fs";
 
-const PROTOCOL = "element://";
+const PROTOCOL = "element:";
 const SEARCH_PARAM = "element-desktop-ssoid";
 const STORE_FILE_NAME = "sso-sessions.json";
 
@@ -28,8 +28,28 @@ const storePath = path.join(app.getPath("userData"), STORE_FILE_NAME);
 
 function processUrl(url: string): void {
     if (!global.mainWindow) return;
-    console.log("Handling link: ", url);
-    global.mainWindow.loadURL(url.replace(PROTOCOL, "vector://"));
+
+    const parsed = new URL(url);
+    // sanity check: we only register for the one protocol, so we shouldn't
+    // be getting anything else unless the user is forcing a URL to open
+    // with the Element app.
+    if (parsed.protocol !== PROTOCOL) {
+        console.log("Ignoring unexpected protocol: ", parsed.protocol);
+        return;
+    }
+
+    const urlToLoad = new URL("vector://vector/webapp/");
+    // ignore anything other than the search (used for SSO login redirect)
+    // and the hash (for general element deep links)
+    // There's no reason to allow anything else, particularly other paths,
+    // since this would allow things like the internal jitsi wrapper to
+    // be loaded, which would get the app stuck on that page and generally
+    // be a bit strange and confusing.
+    urlToLoad.search = parsed.search;
+    urlToLoad.hash = parsed.hash;
+
+    console.log("Opening URL: ", urlToLoad.href);
+    global.mainWindow.loadURL(urlToLoad.href);
 }
 
 function readStore(): object {
@@ -62,10 +82,10 @@ export function recordSSOSession(sessionID: string): void {
 
 export function getProfileFromDeeplink(args): string | undefined {
     // check if we are passed a profile in the SSO callback url
-    const deeplinkUrl = args.find(arg => arg.startsWith('element://'));
+    const deeplinkUrl = args.find(arg => arg.startsWith(PROTOCOL + '//'));
     if (deeplinkUrl && deeplinkUrl.includes(SEARCH_PARAM)) {
         const parsedUrl = new URL(deeplinkUrl);
-        if (parsedUrl.protocol === 'element:') {
+        if (parsedUrl.protocol === PROTOCOL) {
             const ssoID = parsedUrl.searchParams.get(SEARCH_PARAM);
             const store = readStore();
             console.log("Forwarding to profile: ", store[ssoID]);
@@ -96,7 +116,7 @@ export function protocolInit(): void {
         // Protocol handler for win32/Linux
         app.on('second-instance', (ev, commandLine) => {
             const url = commandLine[commandLine.length - 1];
-            if (!url.startsWith(PROTOCOL)) return;
+            if (!url.startsWith(PROTOCOL + '//')) return;
             processUrl(url);
         });
     }
