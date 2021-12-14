@@ -26,14 +26,14 @@ export type TargetId =
     'x86_64-unknown-linux-gnu';
 
 // Values are expected to match those used in `process.platform`.
-type Platform = 'darwin' | 'linux' | 'win32';
+export type Platform = 'darwin' | 'linux' | 'win32';
 
 // Values are expected to match those used in `process.arch`.
-type Arch = 'arm64' | 'ia32' | 'x64' | 'universal';
+export type Arch = 'arm64' | 'ia32' | 'x64' | 'universal';
 
 // Values are expected to match those used by Visual Studio's `vcvarsall.bat`.
 // See https://docs.microsoft.com/cpp/build/building-on-the-command-line?view=msvc-160#vcvarsall-syntax
-type VcVarsArch = 'amd64' | 'arm64' | 'x86';
+export type VcVarsArch = 'amd64' | 'arm64' | 'x86';
 
 export type Target = {
     id: TargetId;

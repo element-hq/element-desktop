@@ -20,14 +20,14 @@ import os from 'os';
 import nodePreGypVersioning from "node-pre-gyp/lib/util/versioning";
 import { getElectronVersion } from "app-builder-lib/out/electron/electronVersion";
 
-import { Target, TARGETS, getHost, isHostId, TargetId } from './target';
+import { Arch, Target, TARGETS, getHost, isHostId, TargetId } from './target';
 
 async function getRuntime(projectRoot: string): Promise<string> {
     const electronVersion = await getElectronVersion(projectRoot);
     return electronVersion ? 'electron' : 'node-webkit';
 }
 
-async function getRuntimeVersion(projectRoot: string) {
+async function getRuntimeVersion(projectRoot: string): Promise<string> {
     const electronVersion = await getElectronVersion(projectRoot);
     if (electronVersion) {
         return electronVersion;
@@ -64,7 +64,7 @@ export default class HakEnv {
         this.runtimeVersion = await getRuntimeVersion(this.projectRoot);
     }
 
-    getRuntimeAbi() {
+    getRuntimeAbi(): string {
         return nodePreGypVersioning.get_runtime_abi(
             this.runtime,
             this.runtimeVersion,
@@ -72,35 +72,35 @@ export default class HakEnv {
     }
 
     // {node_abi}-{platform}-{arch}
-    getNodeTriple() {
+    getNodeTriple(): string {
         return this.getRuntimeAbi() + '-' + this.target.platform + '-' + this.target.arch;
     }
 
-    getTargetId() {
+    getTargetId(): TargetId {
         return this.target.id;
     }
 
-    isWin() {
+    isWin(): boolean {
         return this.target.platform === 'win32';
     }
 
-    isMac() {
+    isMac(): boolean {
         return this.target.platform === 'darwin';
     }
 
-    isLinux() {
+    isLinux(): boolean {
         return this.target.platform === 'linux';
     }
 
-    getTargetArch() {
+    getTargetArch(): Arch {
         return this.target.arch;
     }
 
-    isHost() {
+    isHost(): boolean {
         return isHostId(this.target.id);
     }
 
-    makeGypEnv() {
+    makeGypEnv(): Record<string, string> {
         return Object.assign({}, process.env, {
             npm_config_arch: this.target.arch,
             npm_config_target_arch: this.target.arch,
