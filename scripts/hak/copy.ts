@@ -14,15 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const path = require('path');
-const fsProm = require('fs').promises;
-const childProcess = require('child_process');
+import path from 'path';
+import fsProm from 'fs/promises';
+import childProcess from 'child_process';
 
-const rimraf = require('rimraf');
-const glob = require('glob');
-const mkdirp = require('mkdirp');
+import rimraf from 'rimraf';
+import glob from 'glob';
+import mkdirp from 'mkdirp';
+import HakEnv from './hakEnv';
+import { DependencyInfo } from './dep';
 
-async function copy(hakEnv, moduleInfo) {
+export default async function copy(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
     if (moduleInfo.cfg.prune) {
         console.log("Removing " + moduleInfo.cfg.prune + " from " + moduleInfo.moduleOutDir);
         // rimraf doesn't have a 'cwd' option: it always uses process.cwd()
@@ -30,7 +32,7 @@ async function copy(hakEnv, moduleInfo) {
         const oldCwd = process.cwd();
         try {
             process.chdir(moduleInfo.moduleOutDir);
-            await new Promise((resolve, reject) => {
+            await new Promise<void>((resolve, reject) => {
                 rimraf(moduleInfo.cfg.prune, {}, err => {
                     err ? reject(err) : resolve();
                 });
@@ -44,7 +46,7 @@ async function copy(hakEnv, moduleInfo) {
         // If there are multiple moduleBuildDirs, singular moduleBuildDir
         // is the same as moduleBuildDirs[0], so we're just listing the contents
         // of the first one.
-        const files = await new Promise(async (resolve, reject) => {
+        const files = await new Promise<string[]>((resolve, reject) => {
             glob(moduleInfo.cfg.copy, {
                 nosort: true,
                 silent: true,
@@ -68,7 +70,7 @@ async function copy(hakEnv, moduleInfo) {
                 const dst = path.join(moduleInfo.moduleOutDir, f);
 
                 await mkdirp(path.dirname(dst));
-                await new Promise((resolve, reject) => {
+                await new Promise<void>((resolve, reject) => {
                     childProcess.execFile('lipo',
                         ['-create', '-output', dst, ...components], (err) => {
                             if (err) {
@@ -96,5 +98,3 @@ async function copy(hakEnv, moduleInfo) {
         }
     }
 }
-
-module.exports = copy;

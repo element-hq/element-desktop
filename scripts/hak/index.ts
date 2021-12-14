@@ -14,11 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const path = require('path');
+import path from 'path';
 
-const findNpmPrefix = require('find-npm-prefix');
+import findNpmPrefix from 'find-npm-prefix';
 
-const HakEnv = require('./hakEnv');
+import HakEnv from './hakEnv';
+import { TargetId } from './target';
+import { DependencyInfo } from './dep';
 
 const GENERALCOMMANDS = [
     'target',
@@ -60,7 +62,7 @@ async function main() {
         process.exit(1);
     }
 
-    const targetIds = [];
+    const targetIds = [] as TargetId[];
     // Apply `--target <target>` option if specified
     // Can be specified multiple times for the copy command to bundle
     // multiple archs into a single universal output module)
@@ -73,7 +75,7 @@ async function main() {
             process.exit(1);
         }
         // Extract target ID and remove from args
-        targetIds.push(process.argv.splice(targetIndex, 2)[1]);
+        targetIds.push(process.argv.splice(targetIndex, 2)[1] as TargetId);
     }
 
     const hakEnvs = targetIds.map(tid => new HakEnv(prefix, tid));
@@ -83,7 +85,7 @@ async function main() {
     }
     const hakEnv = hakEnvs[0];
 
-    const deps = {};
+    const deps = {} as Record<string, DependencyInfo>;
 
     const hakDepsCfg = packageJson.hakDependencies || {};
 
@@ -114,7 +116,12 @@ async function main() {
 
         for (const s of HAKSCRIPTS) {
             if (hakJson.scripts && hakJson.scripts[s]) {
-                deps[dep].scripts[s] = require(path.join(prefix, 'hak', dep, hakJson.scripts[s]));
+                const scriptModule = await import(path.join(prefix, 'hak', dep, hakJson.scripts[s]));
+                if (scriptModule.__esModule) {
+                    deps[dep].scripts[s] = scriptModule.default;
+                } else {
+                    deps[dep].scripts[s] = scriptModule;
+                }
             }
         }
     }
@@ -154,7 +161,7 @@ async function main() {
             process.exit(1);
         }
 
-        const cmdFunc = require('./' + cmd);
+        const cmdFunc = (await import('./' + cmd)).default;
 
         for (const mod of modules) {
             const depInfo = deps[mod];

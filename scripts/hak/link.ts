@@ -14,12 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const path = require('path');
-const os = require('os');
-const fsProm = require('fs').promises;
-const childProcess = require('child_process');
+import path from 'path';
+import os from 'os';
+import fsProm from 'fs/promises';
+import childProcess from 'child_process';
+import HakEnv from './hakEnv';
+import { DependencyInfo } from './dep';
 
-async function link(hakEnv, moduleInfo) {
+export default async function link(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
     const yarnrc = path.join(hakEnv.projectRoot, '.yarnrc');
     // this is fairly terrible but it's reasonably clunky to either parse a yarnrc
     // properly or get yarn to do it, so this will probably suffice for now.
@@ -46,7 +48,7 @@ async function link(hakEnv, moduleInfo) {
 
     const yarnCmd = 'yarn' + (hakEnv.isWin() ? '.cmd' : '');
 
-    await new Promise((resolve, reject) => {
+    await new Promise<void>((resolve, reject) => {
         const proc = childProcess.spawn(yarnCmd, ['link'], {
             cwd: moduleInfo.moduleOutDir,
             stdio: 'inherit',
@@ -56,7 +58,7 @@ async function link(hakEnv, moduleInfo) {
         });
     });
 
-    await new Promise((resolve, reject) => {
+    await new Promise<void>((resolve, reject) => {
         const proc = childProcess.spawn(yarnCmd, ['link', moduleInfo.name], {
             cwd: hakEnv.projectRoot,
             stdio: 'inherit',
@@ -66,5 +68,3 @@ async function link(hakEnv, moduleInfo) {
         });
     });
 }
-
-module.exports = link;

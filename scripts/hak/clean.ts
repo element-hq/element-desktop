@@ -14,13 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const path = require('path');
+import path from 'path';
 
-const rimraf = require('rimraf');
+import rimraf from 'rimraf';
+import { DependencyInfo } from './dep';
+import HakEnv from './hakEnv';
 
-async function clean(hakEnv, moduleInfo) {
-    await new Promise((resolve, reject) => {
-        rimraf(moduleInfo.moduleDotHakDir, (err) => {
+export default async function clean(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
+    await new Promise<void>((resolve, reject) => {
+        rimraf(moduleInfo.moduleDotHakDir, (err: Error) => {
             if (err) {
                 reject(err);
             } else {
@@ -29,8 +31,8 @@ async function clean(hakEnv, moduleInfo) {
         });
     });
 
-    await new Promise((resolve, reject) => {
-        rimraf(path.join(hakEnv.dotHakDir, 'links', moduleInfo.name), (err) => {
+    await new Promise<void>((resolve, reject) => {
+        rimraf(path.join(hakEnv.dotHakDir, 'links', moduleInfo.name), (err: Error) => {
             if (err) {
                 reject(err);
             } else {
@@ -39,8 +41,8 @@ async function clean(hakEnv, moduleInfo) {
         });
     });
 
-    await new Promise((resolve, reject) => {
-        rimraf(path.join(hakEnv.projectRoot, 'node_modules', moduleInfo.name), (err) => {
+    await new Promise<void>((resolve, reject) => {
+        rimraf(path.join(hakEnv.projectRoot, 'node_modules', moduleInfo.name), (err: Error) => {
             if (err) {
                 reject(err);
             } else {
@@ -49,5 +51,3 @@ async function clean(hakEnv, moduleInfo) {
         });
     });
 }
-
-module.exports = clean;

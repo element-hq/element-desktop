@@ -14,12 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const fsProm = require('fs').promises;
-const childProcess = require('child_process');
+import fsProm from 'fs/promises';
+import childProcess from 'child_process';
 
-const pacote = require('pacote');
+import pacote from 'pacote';
+import HakEnv from './hakEnv';
+import { DependencyInfo } from './dep';
 
-async function fetch(hakEnv, moduleInfo) {
+export default async function fetch(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
     let haveModuleBuildDir;
     try {
         const stats = await fsProm.stat(moduleInfo.moduleBuildDir);
@@ -38,7 +40,7 @@ async function fetch(hakEnv, moduleInfo) {
     });
 
     console.log("Running yarn install in " + moduleInfo.moduleBuildDir);
-    await new Promise((resolve, reject) => {
+    await new Promise<void>((resolve, reject) => {
         const proc = childProcess.spawn(
             hakEnv.isWin() ? 'yarn.cmd' : 'yarn',
             ['install', '--ignore-scripts'],
@@ -66,5 +68,3 @@ async function fetch(hakEnv, moduleInfo) {
         packumentCache,
     });
 }
-
-module.exports = fetch;
