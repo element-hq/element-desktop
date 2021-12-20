@@ -245,8 +245,13 @@ function onEditableContextMenu(ev: Event, params: ContextMenuParams) {
     ev.preventDefault();
 }
 
-ipcMain.on('userDownloadOpen', function(ev: IpcMainEvent, { path }) {
-    shell.openPath(path);
+let userDownloadIndex = 0;
+const userDownloadMap = new Map<number, string>(); // Map from id to path
+ipcMain.on('userDownloadAction', function(ev: IpcMainEvent, { id, open = false }) {
+    if (open) {
+        shell.openPath(userDownloadMap.get(id));
+    }
+    userDownloadMap.delete(id);
 });
 
 export default (webContents: WebContents): void => {
@@ -270,8 +275,10 @@ export default (webContents: WebContents): void => {
         item.once('done', (event, state) => {
             if (state === 'completed') {
                 const savePath = item.getSavePath();
+                const id = userDownloadIndex++;
+                userDownloadMap.set(id, savePath);
                 webContents.send('userDownloadCompleted', {
-                    path: savePath,
+                    id,
                     name: path.basename(savePath),
                 });
             }
