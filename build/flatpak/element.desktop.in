@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=${FLATPAK_APPNAME}
+Icon=${FLATPAK_ID}
+Exec=element %U
+Categories=Network;InstantMessaging;Chat;VideoConference;
+MimeType=x-scheme-handler/element;
+StartupWMClass=element
+Keywords=Matrix;matrix.org;chat;irc;communications;talk;riot;vector;
