@@ -37,7 +37,8 @@
     "docker:install": "scripts/in-docker.sh yarn install",
     "debrepo": "scripts/mkrepo.sh",
     "clean": "rimraf webapp.asar dist packages deploys lib",
-    "hak": "ts-node scripts/hak/index.ts"
+    "hak": "ts-node scripts/hak/index.ts",
+    "flatpak": "yarn build && scripts/in-docker.sh scripts/build-flatpak.sh"
   },
   "dependencies": {
     "auto-launch": "^5.0.5",
