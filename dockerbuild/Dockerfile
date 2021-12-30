@@ -1,4 +1,4 @@
-FROM buildpack-deps:xenial-curl
+FROM buildpack-deps:bionic-curl
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -17,17 +17,11 @@ RUN apt-get -qq update && apt-get -qq dist-upgrade && \
   # git-lfs
   git lfs install && \
   # used by flathub client \
-  apt-get install -y software-properties-common && \
-  add-apt-repository ppa:flatpak/stable && \
-  add-apt-repository ppa:deadsnakes/ppa && \
-  apt-get -qq update && \
-  apt-get -qq install -y --no-install-recommends flatpak ostree && \
-  apt-get -qq install -y python3.6 python3.6-dev libgirepository1.0-dev gir1.2-ostree-1.0 libcairo2-dev && \
-  curl -sSL https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
-  python3.6 get-pip.py && \
+  apt-get -qq install -y --no-install-recommends flatpak ostree gettext appstream-util curl && \
+  apt-get -qq install -y python3 python3-dev python3-pip libgirepository1.0-dev gir1.2-ostree-1.0 libcairo2-dev && \
   curl -sSL https://raw.githubusercontent.com/flatpak/flat-manager/master/flat-manager-client -o /usr/local/bin/flat-manager-client && \
   chmod +x /usr/local/bin/flat-manager-client && \
-  /usr/local/bin/pip install aiohttp tenacity PyGObject && \
+  pip3 install aiohttp tenacity PyGObject && \
   apt-get purge -y --auto-remove && rm -rf /var/lib/apt/lists/
 
 WORKDIR /project

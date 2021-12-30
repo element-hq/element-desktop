@@ -53,7 +53,7 @@ flatpak build-finish build \
   --filesystem=xdg-run/keyring \
   --command=element
 
-flatpak build-export --disable-sandbox repo build $FLATPAK_BRANCH
+flatpak build-export repo build $FLATPAK_BRANCH
 flatpak build-update-repo --generate-static-deltas repo
 flatpak build-bundle --runtime-repo=https://dl.flathub.org/repo/flathub.flatpakrepo \
   repo ../element.flatpak $FLATPAK_ID $FLATPAK_BRANCH
