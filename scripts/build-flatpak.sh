@@ -24,12 +24,10 @@ sdk=org.freedesktop.Sdk/x86_64/21.08
 EOF
 
 cp -r ../linux-unpacked build/files/element
-install -Dm644 ../../build/icons/512x512.png build/files/share/icons/hicolor/512x512/${FLATPAK_ID}.png
-
-install -d build/files/share/applications
+install -d build/files/share/applications build/files/share/metainfo
+install -Dm755 ../../build/flatpak/element.sh build/files/bin/element
+install -Dm644 ../../build/icons/512x512.png build/files/share/icons/hicolor/512x512/apps/${FLATPAK_ID}.png
 envsubst < ../../build/flatpak/element.desktop.in > build/files/share/applications/${FLATPAK_ID}.desktop
-
-install -d build/files/share/metainfo
 envsubst < ../../build/flatpak/metainfo.xml.in > build/files/share/metainfo/${FLATPAK_ID}.metainfo.xml
 
 # TODO: baseapp with deps
