@@ -2,11 +2,13 @@
 
 set -eu
 
-: "${FLATPAK_ID:=io.element.Element}"
+: "${FLATPAK_ID:=io.element.ElementNightly}"
 : "${FLATPAK_APPNAME:='Element Nightly'}"
-: "${FLATPAK_VERSION:="0.0.0-nightly"}"
-: "${FLATPAK_DATE:="$(date +%Y%m%d%H%M%S)"}"
+: "${FLATPAK_VERSION:="0.0.0-nightly$(date +%Y%m%d)"}"
+: "${FLATPAK_DATE:="$(date +%Y-%m-%d)"}"
 : "${FLATPAK_BRANCH:=nightly}"
+
+export FLATPAK_ID FLATPAK_APPNAME FLATPAK_VERSION FLATPAK_DATE FLATPAK_BRANCH
 
 install -d dist/flatpak/
 install -d dist/flatpak/build/files
