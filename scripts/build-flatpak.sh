@@ -39,7 +39,19 @@ appstream-util mirror-screenshots build/files/share/app-info/xmls/${FLATPAK_ID}.
 # TODO: zypak-wrapper
 
 flatpak build-finish build \
-    --command=bash
+  --socket=x11 \
+  --share=ipc \
+  --socket=pulseaudio \
+  --device=all \
+  --share=network \
+  --filesystem=xdg-download \
+  --talk-name=org.freedesktop.Notifications \
+  --talk-name=org.kde.StatusNotifierWatcher \
+  --talk-name=org.freedesktop.ScreenSaver \
+  --own-name='org.kde.*' \
+  --talk-name=org.freedesktop.portal.Fcitx \
+  --filesystem=xdg-run/keyring \
+  --command=element
 
 flatpak build-export --disable-sandbox repo build "$FLATPAK_BRANCH"
 flatpak build-update-repo --generate-static-deltas repo
