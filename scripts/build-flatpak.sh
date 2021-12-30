@@ -3,7 +3,7 @@
 set -eu
 
 : "${FLATPAK_ID:=io.element.ElementNightly}"
-: "${FLATPAK_APPNAME:='Element Nightly'}"
+: "${FLATPAK_APPNAME:=Element Nightly}"
 : "${FLATPAK_VERSION:="0.0.0-nightly$(date +%Y%m%d)"}"
 : "${FLATPAK_DATE:="$(date +%Y-%m-%d)"}"
 : "${FLATPAK_BRANCH:=nightly}"
