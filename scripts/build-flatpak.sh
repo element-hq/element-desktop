@@ -10,6 +10,7 @@ set -eu
 
 export FLATPAK_ID FLATPAK_APPNAME FLATPAK_VERSION FLATPAK_DATE FLATPAK_BRANCH
 
+[[ -d dist/flatpak ]] && rm -rf dist/flatpak
 install -d dist/flatpak/
 install -d dist/flatpak/build/files
 
