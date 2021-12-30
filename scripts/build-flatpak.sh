@@ -30,9 +30,12 @@ install -Dm644 ../../build/icons/512x512.png build/files/share/icons/hicolor/512
 envsubst < ../../build/flatpak/element.desktop.in > build/files/share/applications/${FLATPAK_ID}.desktop
 envsubst < ../../build/flatpak/metainfo.xml.in > build/files/share/metainfo/${FLATPAK_ID}.metainfo.xml
 
+appstream-compose --prefix=build/files --origin=flatpak --basename=${FLATPAK_ID} ${FLATPAK_ID}
+appstream-util mirror-screenshots build/files/share/app-info/xmls/${FLATPAK_ID}.xml.gz \
+  "https://dl.flathub.org/repo/screenshots/${FLATPAK_ID}-${FLATPAK_BRANCH}" \
+  build/screenshots "build/screeshots/${FLATPAK_ID}-${FLATPAK_BRANCH}"
+
 # TODO: baseapp with deps
-# TODO: appstream-compose
-# TODO: mirror screenshots
 # TODO: zypak-wrapper
 
 flatpak build-finish build \
