@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 import counterpart from "counterpart";
+
 import type Store from 'electron-store';
 
 const DEFAULT_LOCALE = "en";

@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 import mkdirp from 'mkdirp';
+
 import { DependencyInfo } from './dep';
 import HakEnv from './hakEnv';
 

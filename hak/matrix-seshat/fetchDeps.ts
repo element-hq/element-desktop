@@ -16,7 +16,6 @@ limitations under the License.
 
 import path from 'path';
 import childProcess from 'child_process';
-
 import fs from 'fs';
 import fsProm from 'fs/promises';
 import needle from 'needle';

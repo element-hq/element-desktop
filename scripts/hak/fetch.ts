@@ -16,8 +16,8 @@ limitations under the License.
 
 import fsProm from 'fs/promises';
 import childProcess from 'child_process';
-
 import pacote from 'pacote';
+
 import HakEnv from './hakEnv';
 import { DependencyInfo } from './dep';
 

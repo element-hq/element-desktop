@@ -16,7 +16,6 @@ limitations under the License.
 
 import path from 'path';
 import childProcess from 'child_process';
-
 import mkdirp from 'mkdirp';
 import fsExtra from 'fs-extra';
 
