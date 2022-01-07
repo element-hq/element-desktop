@@ -68,6 +68,7 @@
     "electron-notarize": "^1.0.0",
     "eslint": "7.18.0",
     "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-matrix-org": "^0.4.0",
     "find-npm-prefix": "^1.0.2",
     "fs-extra": "^8.1.0",
