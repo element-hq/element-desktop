@@ -33,7 +33,7 @@ const CHANNELS = [
     "setBadgeCount",
     "update-downloaded",
     "userDownloadCompleted",
-    "userDownloadOpen",
+    "userDownloadAction",
 ];
 
 interface ISource {
