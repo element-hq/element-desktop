@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 import path from 'path';
-
 import findNpmPrefix from 'find-npm-prefix';
 
 import HakEnv from './hakEnv';

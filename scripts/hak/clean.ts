@@ -15,8 +15,8 @@ limitations under the License.
 */
 
 import path from 'path';
-
 import rimraf from 'rimraf';
+
 import { DependencyInfo } from './dep';
 import HakEnv from './hakEnv';
 

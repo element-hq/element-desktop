@@ -19,6 +19,7 @@ import { app, Tray, Menu, nativeImage } from "electron";
 import pngToIco from "png-to-ico";
 import path from "path";
 import fs from "fs";
+
 import { _t } from "./language-helper";
 
 let trayIcon: Tray = null;

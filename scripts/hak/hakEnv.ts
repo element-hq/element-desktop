@@ -16,7 +16,6 @@ limitations under the License.
 
 import path from 'path';
 import os from 'os';
-
 import nodePreGypVersioning from "node-pre-gyp/lib/util/versioning";
 import { getElectronVersion } from "app-builder-lib/out/electron/electronVersion";
 
