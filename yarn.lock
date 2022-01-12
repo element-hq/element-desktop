@@ -3761,9 +3761,10 @@ matcher@^3.0.0:
   dependencies:
     escape-string-regexp "^4.0.0"
 
-"matrix-web-i18n@github:matrix-org/matrix-web-i18n":
-  version "1.1.2"
-  resolved "https://codeload.github.com/matrix-org/matrix-web-i18n/tar.gz/dbd35b35a925bd8ac8932134046efaa80767f4b2"
+matrix-web-i18n@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/matrix-web-i18n/-/matrix-web-i18n-1.2.0.tgz#3d6f90fa70f3add05e155787f88728c99cf9c01a"
+  integrity sha512-IQMSGnCX2meajxoSW81bWeniZjWTWaTdarc3A5F8wL5klclqLsfoaiNmTDKyJfd12Ph/0+llJ/itIztDUg9Wdg==
   dependencies:
     "@babel/parser" "^7.13.16"
     "@babel/traverse" "^7.13.17"

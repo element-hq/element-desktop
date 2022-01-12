@@ -73,7 +73,7 @@
     "find-npm-prefix": "^1.0.2",
     "fs-extra": "^8.1.0",
     "glob": "^7.1.6",
-    "matrix-web-i18n": "github:matrix-org/matrix-web-i18n",
+    "matrix-web-i18n": "^1.2.0",
     "mkdirp": "^1.0.3",
     "needle": "^2.5.0",
     "node-pre-gyp": "^0.15.0",
