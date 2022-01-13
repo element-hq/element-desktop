@@ -39,5 +39,9 @@
             "url": "https://element.io/cookie-policy",
             "text": "Cookie Policy"
         }
-    ]
+    ],
+    "posthog": {
+        "projectApiKey": "phc_Jzsm6DTm6V2705zeU5dcNvQDlonOR68XvX2sh1sEOHO",
+        "apiHost": "https://posthog.hss.element.io"
+    }
 }
