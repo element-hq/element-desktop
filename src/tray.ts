@@ -36,7 +36,7 @@ export function destroy(): void {
 }
 
 function toggleWin(): void {
-    if (global.mainWindow.isVisible() && !global.mainWindow.isMinimized()) {
+    if (global.mainWindow.isVisible() && !global.mainWindow.isMinimized() && global.mainWindow.isFocused()) {
         global.mainWindow.hide();
     } else {
         if (global.mainWindow.isMinimized()) global.mainWindow.restore();
