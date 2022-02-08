@@ -27,8 +27,4 @@ jobs:
         yarn install
         yarn run fetch --noverify --cfgdir config
         yarn run build
-
-    - name: Build Windows
-        yarn install
-        yarn run fetch --noverify --cfgdir config
         yarn run build:64
