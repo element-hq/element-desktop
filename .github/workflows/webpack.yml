@@ -7,7 +7,7 @@ on:
     branches: [ develop ]
 
 jobs:
-  build:
+  build-ubuntu:
     runs-on: ubuntu-latest
 
     strategy:
@@ -22,15 +22,38 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    - name: Build Ubuntu
+    - name: Ubuntu
       run: |
         yarn install
         yarn run fetch --noverify --cfgdir config
         yarn run build
 
-    - name: Build Windows
-      run: yarn run build:64
+    - name: Archive mapping
+      uses: actions/upload-artifact@v2
+      with:
+        name: Builds
+        path: /dist/element-desktop_1.10.1_amd64.deb
+  build-windows:
+    runs-on: windows-latest
+
+    strategy:
+      matrix:
+        node-version: [17.x]
     
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Windows
+      run: |
+        yarn install
+        yarn run fetch --noverify --cfgdir config
+        yarn run build:native
+
     - name: Archive mapping
       uses: actions/upload-artifact@v2
       with:
