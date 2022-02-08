@@ -32,7 +32,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: Builds
-        path: /dist/element-desktop_1.10.1_amd64.deb
+        path: dist/**/element-desktop_[version].amd64.deb/*
   build-windows:
     runs-on: windows-latest
 
