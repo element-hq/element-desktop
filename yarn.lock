@@ -7,6 +7,11 @@
   resolved "https://registry.yarnpkg.com/7zip-bin/-/7zip-bin-5.1.1.tgz#9274ec7460652f9c632c59addf24efb1684ef876"
   integrity sha512-sAP4LldeWNz0lNzmTird3uWfFDWWTeg6V/MsmyyLR9X1idwKBWIgt/ZvinqQldJm3LecKEs1emkbquO6PCiLVQ==
 
+"7zip@0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/7zip/-/7zip-0.0.6.tgz#9cafb171af82329490353b4816f03347aa150a30"
+  integrity sha1-nK+xca+CMpSQNTtIFvAzR6oVCjA=
+
 "@actions/core@^1.4.0":
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/@actions/core/-/core-1.6.0.tgz#0568e47039bfb6a9170393a73f3b7eb3b22462cb"
@@ -1912,6 +1917,11 @@ cross-spawn@^7.0.1, cross-spawn@^7.0.2, cross-spawn@^7.0.3:
     shebang-command "^2.0.0"
     which "^2.0.1"
 
+cross-unzip@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/cross-unzip/-/cross-unzip-0.0.2.tgz#5183bc47a09559befcf98cc4657964999359372f"
+  integrity sha1-UYO8R6CVWb78+YzEZXlkmZNZNy8=
+
 crypto-random-string@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/crypto-random-string/-/crypto-random-string-2.0.0.tgz#ef2a7a966ec11083388369baa02ebead229b30d5"
@@ -2194,6 +2204,17 @@ electron-osx-sign@^0.5.0:
     isbinaryfile "^3.0.2"
     minimist "^1.2.0"
     plist "^3.0.1"
+
+electron-packager-plugin-non-proprietary-codecs-ffmpeg@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/electron-packager-plugin-non-proprietary-codecs-ffmpeg/-/electron-packager-plugin-non-proprietary-codecs-ffmpeg-1.0.2.tgz#d8bc2a257397613af9d9f577d9d5fbb7b1e88337"
+  integrity sha512-xPkbzndg2KODqmNe9yIx0dhNOfaOqrdNZ1ZSSZN4h1wT0T5SV/YES0tNyN932jQd+c5cFPv6AWYYjuPWKvcITg==
+  dependencies:
+    "7zip" "0.0.6"
+    cross-unzip "0.0.2"
+    mkdirp "^0.5.1"
+    request "^2.73.0"
+    semver "^5.2.0"
 
 electron-publish@22.11.4:
   version "22.11.4"
@@ -4618,7 +4639,7 @@ registry-url@^5.0.0:
   dependencies:
     rc "^1.2.8"
 
-request@^2.88.2:
+request@^2.73.0, request@^2.88.2:
   version "2.88.2"
   resolved "https://registry.yarnpkg.com/request/-/request-2.88.2.tgz#d73c918731cb5a87da047e207234146f664d12b3"
   integrity sha512-MsvtOrfG9ZcrOwAW+Qi+F6HbD0CWXEh9ou77uOb7FM2WPhwT7smM833PzanhJLsgXjN89Ir6V2PczXNnMpwKhw==
@@ -4757,7 +4778,7 @@ semver-diff@^3.1.1:
   dependencies:
     semver "^6.3.0"
 
-semver@^5.3.0:
+semver@^5.2.0, semver@^5.3.0:
   version "5.7.1"
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.7.1.tgz#a954f931aeba508d307bbf069eff0c01c96116f7"
   integrity sha512-sauaDf/PZdVgrLTNYHRtpXa1iRiKcaebiKQ1BJdpQlWH2lCvexQdX55snPFyK7QzpudqbCI0qXFfOasHdyNDGQ==
