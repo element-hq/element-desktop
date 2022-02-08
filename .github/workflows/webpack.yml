@@ -27,4 +27,12 @@ jobs:
         yarn install
         yarn run fetch --noverify --cfgdir config
         yarn run build
+
+    - name: Build Windows
         yarn run build:64
+    
+    - name: Archive mapping
+      uses: actions/upload-artifact@v2
+      with:
+        name: Builds
+        path: /dist
