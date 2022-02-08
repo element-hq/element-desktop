@@ -26,7 +26,6 @@ jobs:
       run: |
         yarn install
         yarn run fetch --noverify --cfgdir config
-        yarn run build:native
         yarn run build
 
     - name: Build Windows
