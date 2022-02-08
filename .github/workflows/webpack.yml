@@ -25,6 +25,6 @@ jobs:
     - name: Build
       run: |
         yarn install
-        yarn run fetch --cfgdir config
+        yarn run fetch --noverify --cfgdir config
         yarn run build:native
         yarn run build
