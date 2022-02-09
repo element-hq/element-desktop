@@ -53,6 +53,7 @@ jobs:
         yarn install
         yarn run fetch --noverify --cfgdir config
         yarn run build:native
+        yarn run build
 
     - name: Archive mapping
       uses: actions/upload-artifact@v2
