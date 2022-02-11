@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { ipcRenderer, desktopCapturer, contextBridge, IpcRendererEvent, SourcesOptions } from 'electron';
+import { ipcRenderer, contextBridge, IpcRendererEvent } from 'electron';
 
 // Expose only expected IPC wrapper APIs to the renderer process to avoid
 // handing out generalised messaging access.
@@ -36,12 +36,6 @@ const CHANNELS = [
     "userDownloadAction",
 ];
 
-interface ISource {
-    id: string;
-    name: string;
-    thumbnailURL: string;
-}
-
 contextBridge.exposeInMainWorld(
     "electron",
     {
@@ -58,20 +52,6 @@ contextBridge.exposeInMainWorld(
                 return;
             }
             ipcRenderer.send(channel, ...args);
-        },
-        async getDesktopCapturerSources(options: SourcesOptions): Promise<ISource[]> {
-            const sources = await desktopCapturer.getSources(options);
-            const desktopCapturerSources: ISource[] = [];
-
-            for (const source of sources) {
-                desktopCapturerSources.push({
-                    id: source.id,
-                    name: source.name,
-                    thumbnailURL: source.thumbnail.toDataURL(),
-                });
-            }
-
-            return desktopCapturerSources;
         },
     },
 );
