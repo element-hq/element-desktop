@@ -19,7 +19,17 @@ limitations under the License.
 
 // Squirrel on windows starts the app with various flags as hooks to tell us when we've been installed/uninstalled etc.
 import "./squirrelhooks";
-import { app, ipcMain, powerSaveBlocker, BrowserWindow, Menu, autoUpdater, protocol, dialog } from "electron";
+import {
+    app,
+    ipcMain,
+    powerSaveBlocker,
+    BrowserWindow,
+    Menu,
+    autoUpdater,
+    protocol,
+    dialog,
+    desktopCapturer,
+} from "electron";
 import AutoLaunch from "auto-launch";
 import path from "path";
 import windowStateKeeper from 'electron-window-state';
@@ -501,6 +511,13 @@ ipcMain.on('ipcCall', async function(ev, payload) {
                 // logins from the time of riot.im)
                 await keytar.deletePassword("riot.im", `${args[0]}|${args[1]}`);
             } catch (e) {}
+            break;
+        case 'getDesktopCapturerSources':
+            ret = (await desktopCapturer.getSources(args[0])).map((source) => ({
+                id: source.id,
+                name: source.name,
+                thumbnailURL: source.thumbnail.toDataURL(),
+            }));
             break;
 
         default:
