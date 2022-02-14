@@ -1,3 +1,8 @@
+Changes in [1.10.3](https://github.com/vector-im/element-desktop/releases/tag/v1.10.3) (2022-02-14)
+===================================================================================================
+
+ * Add map tile config to fix location sharing maps
+
 Changes in [1.10.2](https://github.com/vector-im/element-desktop/releases/tag/v1.10.2) (2022-02-14)
 ===================================================================================================
 
