@@ -23,6 +23,7 @@ export type TargetId =
     'universal-apple-darwin' |
     'i686-pc-windows-msvc' |
     'x86_64-pc-windows-msvc' |
+    'aarch64-unknown-linux-gnu' |
     'x86_64-unknown-linux-gnu';
 
 // Values are expected to match those used in `process.platform`.
@@ -87,6 +88,12 @@ const x8664PcWindowsMsvc: WindowsTarget = {
     vcVarsArch: 'amd64',
 };
 
+const aarch64UnknownLinuxGnu: Target = {
+    id: 'aarch64-unknown-linux-gnu',
+    platform: 'linux',
+    arch: 'arm64',
+};
+
 const x8664UnknownLinuxGnu: Target = {
     id: 'x86_64-unknown-linux-gnu',
     platform: 'linux',
@@ -100,6 +107,7 @@ export const TARGETS: Record<TargetId, Target> = {
     'i686-pc-windows-msvc': i686PcWindowsMsvc,
     'x86_64-pc-windows-msvc': x8664PcWindowsMsvc,
     'x86_64-unknown-linux-gnu': x8664UnknownLinuxGnu,
+    'aarch64-unknown-linux-gnu': aarch64UnknownLinuxGnu,
 };
 
 // The set of targets we build by default, sorted by increasing complexity so

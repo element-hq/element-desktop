@@ -27,6 +27,7 @@
     "build:native:universal": "yarn run hak --target x86_64-apple-darwin fetchandbuild && yarn run hak --target aarch64-apple-darwin fetchandbuild && yarn run hak --target x86_64-apple-darwin --target aarch64-apple-darwin copyandlink",
     "build:32": "yarn run build:ts && yarn run build:res && electron-builder --ia32",
     "build:64": "yarn run build:ts && yarn run build:res && electron-builder --x64",
+    "build:aarch64": "yarn run build:ts && yarn run build:res && USE_SYSTEM_FPM=true electron-builder --arm64",
     "build:universal": "yarn run build:ts && yarn run build:res && electron-builder --universal",
     "build": "yarn run build:ts && yarn run build:res && electron-builder",
     "build:ts": "tsc",
