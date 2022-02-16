@@ -111,7 +111,7 @@ at this time.
 
 ### Switching between architectures
 
-Te native module build system keeps the different architectures
+The native module build system keeps the different architectures
 separate, so you can keep native modules for several architectures at the same
 time and switch which are active using a `yarn run hak copy` command, passing
 the appropriate architectures. This will error if you haven't yet built those
