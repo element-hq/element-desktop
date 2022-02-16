@@ -10,20 +10,26 @@ modules from source to ensure we can trust the compiled output. In the future,
 we may offer a pre-compiled path for those who want to use these features in a
 custom build of Element without installing the various build tools required.
 
-Do note that compiling a module for a particular operating system
-(Linux/macOS/Windows) will need to be done on that operating system.
-Cross-compiling from a host OS for a different target OS may be possible, but
-we don't support this flow with Element dependencies at this time.
-
 The process is automated by [vector-im/element-builder](https://github.com/vector-im/element-builder)
-when releasing. 
-The following sections explain the manual steps you can use with a custom build of Element to enable
-these features if you'd like to try them out.
-It is possible to [build those native modules locally automatically](https://github.com/vector-im/element-desktop#building).
+when releasing.
 
+## Building
+
+Install the pre-requisites for your system:
+
+* [Windows pre-requisites](https://github.com/vector-im/element-desktop/blob/develop/docs/windows-requirements.md)
+* Linux: TODO
+* OS X: TODO
+
+Then optionally, [add seshat and dependencies to support search in E2E rooms](#Adding Seshat for search in E2E encrypted rooms).
+
+Then, to build for an architecture selected automatically based on your system (recommended), run:
 ```
 yarn run build:native
 ```
+
+If you need to build for a specific architecture, see [here](#Compiling for specific architectures).
+
 ## Adding Seshat for search in E2E encrypted rooms
 
 Seshat is a native Node module that adds support for local event indexing and
@@ -59,3 +65,74 @@ After this is done the Electron version of Element can be run from the main fold
 as usual using:
 
     yarn start
+
+## Compiling for specific architectures
+
+### macOS
+
+On macOS, you can build universal native modules too:
+```
+yarn run build:native:universal
+```
+
+...or you can build for a specific architecture:
+```
+yarn run build:native --target x86_64-apple-darwin
+```
+or
+```
+yarn run build:native --target aarch64-apple-darwin
+```
+
+You'll then need to create a built bundle with the same architecture.
+To bundle a universal build for macOS, run:
+
+```
+yarn run build:universal
+```
+
+### Windows
+
+If you're on Windows, you can choose to build specifically for 32 or 64 bit:
+```
+yarn run build:32
+```
+or
+```
+yarn run build:64
+```
+
+### Cross compiling
+
+Compiling a module for a particular operating system (Linux/macOS/Windows) needs
+to be done on that operating system. Cross-compiling from a host OS for a different
+target OS may be possible, but we don't support this flow with Element dependencies
+at this time.
+
+### Switching between architectures
+
+The native module build system keeps the different architectures
+separate, so you can keep native modules for several architectures at the same
+time and switch which are active using a `yarn run hak copy` command, passing
+the appropriate architectures. This will error if you haven't yet built those
+architectures. eg:
+
+```
+yarn run build:native --target x86_64-apple-darwin
+# We've now built & linked into place native modules for Intel
+yarn run build:native --target aarch64-apple-darwin
+# We've now built Apple Silicon modules too, and linked them into place as the active ones
+
+yarn run hak copy --target x86_64-apple-darwin
+# We've now switched back to our Intel modules
+yarn run hak copy --target x86_64-apple-darwin --target aarch64-apple-darwin
+# Now our native modules are universal x86_64+aarch64 binaries
+```
+
+The current set of native modules are stored in `.hak/hakModules`,
+so you can use this to check what architecture is currently in place, eg:
+
+```
+$ lipo -info .hak/hakModules/keytar/build/Release/keytar.node 
+Architectures in the fat file: .hak/hakModules/keytar/build/Release/keytar.node are: x86_64 arm64 
+```
