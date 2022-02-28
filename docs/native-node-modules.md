@@ -21,14 +21,14 @@ Install the pre-requisites for your system:
 * Linux: TODO
 * OS X: TODO
 
-Then optionally, [add seshat and dependencies to support search in E2E rooms](#Adding Seshat for search in E2E encrypted rooms).
+Then optionally, [add seshat and dependencies to support search in E2E rooms](#adding-seshat-for-search-in-e2e-encrypted-rooms).
 
 Then, to build for an architecture selected automatically based on your system (recommended), run:
 ```
 yarn run build:native
 ```
 
-If you need to build for a specific architecture, see [here](#Compiling for specific architectures).
+If you need to build for a specific architecture, see [here](#compiling-for-specific-architectures).
 
 ## Adding Seshat for search in E2E encrypted rooms
 
