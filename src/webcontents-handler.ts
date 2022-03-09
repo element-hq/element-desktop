@@ -125,7 +125,9 @@ function onLinkContextMenu(ev: Event, params: ContextMenuParams, webContents: We
             }));
         } else {
             popupMenu.append(new MenuItem({
-                label: _t('Copy link address'),
+                label: params.hasImageContents
+                    ? _t('Copy image address')
+                    : _t('Copy link address'),
                 accelerator: 'a',
                 click() {
                     clipboard.writeText(url);
