@@ -26,7 +26,7 @@
     "Window": "Fenster",
     "Toggle Developer Tools": "Developer-Tools an/aus",
     "Toggle Full Screen": "Vollbildschirm an/aus",
-    "Preferences": "Einstellungen",
+    "Preferences": "Präferenzen",
     "Zoom Out": "Verkleinern",
     "Zoom In": "Vergrößern",
     "Actual Size": "Tatsächliche Größe",
@@ -42,5 +42,6 @@
     "Quit": "Beenden",
     "Show/Hide": "Anzeigen/Ausblenden",
     "Close Element": "Element schließen",
-    "Cancel": "Abbrechen"
+    "Cancel": "Abbrechen",
+    "Copy image address": "Bild-Adresse kopieren"
 }
