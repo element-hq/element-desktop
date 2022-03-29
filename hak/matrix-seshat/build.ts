@@ -277,7 +277,7 @@ async function buildMatrixSeshat(hakEnv, moduleInfo) {
     });
 
     if (hakEnv.isLinux()) {
-        env.RUSTFLAGS = '-Clink-arg=-Wl,-Bsymbolic -Clink-arg=-Wl,--exclude-libs,ALL'
+        env.RUSTFLAGS = '-Clink-arg=-Wl,-Bsymbolic -Clink-arg=-Wl,--exclude-libs,ALL';
     }
 
     if (hakEnv.isWin()) {
