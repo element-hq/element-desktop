@@ -26,7 +26,7 @@ export default async function(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promi
     if (hakEnv.isWin()) {
         await buildOpenSslWin(hakEnv, moduleInfo);
         await buildSqlCipherWin(hakEnv, moduleInfo);
-    } else if (hakEnv.isMac()) {
+    } else {
         await buildSqlCipherUnix(hakEnv, moduleInfo);
     }
     await buildMatrixSeshat(hakEnv, moduleInfo);
@@ -179,10 +179,15 @@ async function buildSqlCipherUnix(hakEnv, moduleInfo) {
         '--prefix=' + moduleInfo.depPrefix + '',
         '--enable-tempstore=yes',
         '--enable-shared=no',
+        '--enable-tcl=no',
     ];
 
     if (hakEnv.isMac()) {
         args.push('--with-crypto-lib=commoncrypto');
+    }
+
+    if (hakEnv.isLinux()) {
+        args.push('--with-pic=yes');
     }
 
     if (!hakEnv.isHost()) {
@@ -265,12 +270,14 @@ async function buildMatrixSeshat(hakEnv, moduleInfo) {
     // it for now: we should confirm how much of this it still actually needs.
     const env = hakEnv.makeGypEnv();
 
-    if (!hakEnv.isLinux()) {
-        Object.assign(env, {
-            SQLCIPHER_STATIC: 1,
-            SQLCIPHER_LIB_DIR: path.join(moduleInfo.depPrefix, 'lib'),
-            SQLCIPHER_INCLUDE_DIR: path.join(moduleInfo.depPrefix, 'include'),
-        });
+    Object.assign(env, {
+        SQLCIPHER_STATIC: 1,
+        SQLCIPHER_LIB_DIR: path.join(moduleInfo.depPrefix, 'lib'),
+        SQLCIPHER_INCLUDE_DIR: path.join(moduleInfo.depPrefix, 'include'),
+    });
+
+    if (hakEnv.isLinux()) {
+        env.RUSTFLAGS = '-Clink-arg=-Wl,-Bsymbolic -Clink-arg=-Wl,--exclude-libs,ALL'
     }
 
     if (hakEnv.isWin()) {

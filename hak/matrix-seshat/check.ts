@@ -22,21 +22,19 @@ import { DependencyInfo } from '../../scripts/hak/dep';
 
 export default async function(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
     // of course tcl doesn't have a --version
-    if (!hakEnv.isLinux()) {
-        await new Promise<void>((resolve, reject) => {
-            const proc = childProcess.spawn('tclsh', [], {
-                stdio: ['pipe', 'ignore', 'ignore'],
-            });
-            proc.on('exit', (code) => {
-                if (code !== 0) {
-                    reject("Can't find tclsh - have you installed TCL?");
-                } else {
-                    resolve();
-                }
-            });
-            proc.stdin.end();
+    await new Promise<void>((resolve, reject) => {
+        const proc = childProcess.spawn('tclsh', [], {
+            stdio: ['pipe', 'ignore', 'ignore'],
         });
-    }
+        proc.on('exit', (code) => {
+            if (code !== 0) {
+                reject("Can't find tclsh - have you installed TCL?");
+            } else {
+                resolve();
+            }
+        });
+        proc.stdin.end();
+    });
 
     const tools = [
         ['rustc', '--version'],
