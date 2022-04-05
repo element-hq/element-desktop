@@ -18,7 +18,7 @@ when releasing.
 Install the pre-requisites for your system:
 
 * [Windows pre-requisites](https://github.com/vector-im/element-desktop/blob/develop/docs/windows-requirements.md)
-* Linux: TODO
+* [Linux pre-requisites]:()
 * OS X: TODO
 
 Then optionally, [add seshat and dependencies to support search in E2E rooms](#adding-seshat-for-search-in-e2e-encrypted-rooms).
@@ -36,13 +36,21 @@ Seshat is a native Node module that adds support for local event indexing and
 full text search in E2E encrypted rooms.
 
 Since Seshat is written in Rust, the Rust compiler and related tools need to be
-installed before installing Seshat itself. To install Rust please consult the
-official Rust [documentation](https://www.rust-lang.org/tools/install).
+installed before installing Seshat itself. If you're running macOS, Linux, or another Unix-like OS, to download Rustup and install Rust, run the following in your terminal, then follow the on-screen instructions.
+```
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+Or you can consult the official Rust [documentation](https://www.rust-lang.org/tools/install).
 
 Seshat also depends on the SQLCipher library to store its data in encrypted form
-on disk. You'll need to install it via your OS package manager.
+on disk. You'll need to install it via your OS package manager, run:
+```
+sudo apt install sqlcipher
+sudo apt install libsqlcipher-dev
+```
 
-After installing the Rust compiler and SQLCipher, Seshat support can be added
+After installing the Rust compiler and SQLCipher along with libsqlcipher, Seshat support can be added
 using yarn at the root of this project:
 
     yarn add matrix-seshat
