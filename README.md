@@ -5,12 +5,6 @@ Element Desktop is a Matrix client for desktop platforms with Element Web at its
 
 First Steps
 ===========
-Clone the repository using:
-
-```
-git clone https://github.com/vector-im/element-desktop.git
-```
-
 Before you do anything else, fetch the dependencies:
 
 ```
@@ -60,8 +54,10 @@ Building
 
 ## Native Build
 
+TODO: List native pre-requisites
+
 Optionally, [build the native modules](https://github.com/vector-im/element-desktop/blob/develop/docs/native-node-modules.md), 
-which include support for searching in encrypted rooms and secure storage. Make sure that you install all the pre-requisites to [build the native modules](https://github.com/vector-im/element-desktop/blob/develop/docs/native-node-modules.md). Skipping this step is fine, you just won't have those features.  
+which include support for searching in encrypted rooms and secure storage. Skipping this step is fine, you just won't have those features.  
 
 Then, run
 ```
@@ -88,19 +84,6 @@ yarn run docker:build
 
 After running, the packages should be in `dist/`.
 
-Config
-======
-For the packaged Element to have a configuration file, you should create a
-config directory and place `config.json` in there, then specify this directory
-with the `--cfgdir` option to `yarn run fetch`, eg:
-```
-mkdir myconfig
-cp /path/to/my/config.json myconfig/
-yarn run fetch --cfgdir myconfig
-```
-The config dir for the official Element app is in `element.io`. If you use this,
-your app will auto-update itself using builds from element.io.
-
 Starting
 ========
 If you'd just like to run the electron app locally for development:
@@ -110,6 +93,19 @@ If you'd just like to run the electron app locally for development:
 yarn add electron
 yarn start
 ```
+
+Config
+======
+If you'd like the packaged Element to have a configuration file, you can create a
+config directory and place `config.json` in there, then specify this directory
+with the `--cfgdir` option to `yarn run fetch`, eg:
+```
+mkdir myconfig
+cp /path/to/my/config.json myconfig/
+yarn run fetch --cfgdir myconfig
+```
+The config dir for the official Element app is in `element.io`. If you use this,
+your app will auto-update itself using builds from element.io.
 
 Profiles
 ========
