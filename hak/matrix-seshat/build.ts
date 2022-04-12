@@ -277,6 +277,21 @@ async function buildMatrixSeshat(hakEnv, moduleInfo) {
     });
 
     if (hakEnv.isLinux()) {
+        // Ensure Element uses the statically-linked seshat build, and prevent other applications
+        // from attempting to use this one. Detailed explanation:
+        //
+        // RUSTFLAGS
+        //     An environment variable containing a list of arguments to pass to rustc.
+        // -Clink-arg=VALUE
+        //     A rustc argument to pass a single argument to the linker.
+        // -Wl,
+        //     gcc syntax to pass an argument (from gcc) to the linker (ld).
+        // -Bsymbolic:
+        //     Prefer local/statically linked symbols over those in the environment.
+        //     Prevent overriding native libraries by LD_PRELOAD etc.
+        // --exclude-libs ALL
+        //     Prevent symbols from being exported by any archive libraries.
+        //     Reduces output filesize and prevents being dynamically linked against.
         env.RUSTFLAGS = '-Clink-arg=-Wl,-Bsymbolic -Clink-arg=-Wl,--exclude-libs,ALL';
     }
 
