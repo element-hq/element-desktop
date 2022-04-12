@@ -1,5 +1,5 @@
 {
-    "Save image as...": "Spara bild som...",
+    "Save image as...": "Spara bild som…",
     "Copy link address": "Kopiera länkadress",
     "Copy email address": "Kopiera e-postadress",
     "Copy image": "Kopiera bild",
@@ -12,7 +12,7 @@
     "Hide": "Göm",
     "Services": "Tjänster",
     "About": "Om",
-    "Element Help": "Element Hjälp",
+    "Element Help": "Element-Hjälp",
     "Help": "Hjälp",
     "Close": "Stäng",
     "Minimize": "Minimera",
@@ -34,7 +34,7 @@
     "Zoom": "Zooma",
     "Toggle Developer Tools": "Växla utvecklarverktyg",
     "Toggle Full Screen": "Växla helskärm",
-    "Unhide": "Göm inte",
+    "Unhide": "Sluta gömma",
     "Zoom Out": "Zooma ut",
     "Zoom In": "Zooma in",
     "Close Element": "Stäng Element",
@@ -42,5 +42,6 @@
     "Add to dictionary": "Lägg till i ordlistan",
     "The image failed to save": "Bilden sparades inte",
     "Failed to save image": "Misslyckades med att spara bilden",
-    "Are you sure you want to quit?": "Är du säker att du vill avsluta?"
+    "Are you sure you want to quit?": "Är du säker att du vill avsluta?",
+    "Copy image address": "Kopiera bildadress"
 }
