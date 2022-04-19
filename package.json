@@ -89,6 +89,7 @@
   },
   "build": {
     "appId": "im.riot.app",
+    "asarUnpack": "**/*.node",
     "files": [
       "package.json",
       {
