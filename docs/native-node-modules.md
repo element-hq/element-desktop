@@ -18,7 +18,11 @@ when releasing.
 Install the pre-requisites for your system:
 
 * [Windows pre-requisites](https://github.com/vector-im/element-desktop/blob/develop/docs/windows-requirements.md)
+<<<<<<< HEAD
 * [Linux pre-requisites](https://github.com/vector-im/element-desktop/blob/develop/docs/linux-requirements.md)
+=======
+* [Linux pre-requisites](https://github.com/ttheshreeyasingh/element-desktop/blob/develop/docs/linux-requirements.md)
+>>>>>>> cb333e3e4f3246b3c572754c5c14561831c0ad58
 * OS X: TODO
 
 Then optionally, [add seshat and dependencies to support search in E2E rooms](#adding-seshat-for-search-in-e2e-encrypted-rooms).
@@ -37,9 +41,13 @@ Seshat is a native Node module that adds support for local event indexing and
 full text search in E2E encrypted rooms.
 
 Since Seshat is written in Rust, the Rust compiler and related tools need to be
+<<<<<<< HEAD
 installed before installing Seshat itself. If you're running macOS, Linux, or 
 another Unix-like OS, to download Rustup and install Rust, run the following in
 your terminal, then follow the on-screen instructions.
+=======
+installed before installing Seshat itself. If you're running macOS, Linux, or another Unix-like OS, to download Rustup and install Rust, run the following in your terminal, then follow the on-screen instructions.
+>>>>>>> cb333e3e4f3246b3c572754c5c14561831c0ad58
 ```
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
@@ -47,14 +55,23 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 Or you can consult the official Rust [documentation](https://www.rust-lang.org/tools/install).
 
 Seshat also depends on the SQLCipher library to store its data in encrypted form
+<<<<<<< HEAD
 on disk. You'll need to install it via your OS package manager,on Debian/Ubuntu run:
+=======
+on disk. You'll need to install it via your OS package manager, run:
+>>>>>>> cb333e3e4f3246b3c572754c5c14561831c0ad58
 ```
 sudo apt install sqlcipher
 sudo apt install libsqlcipher-dev
 ```
 
+<<<<<<< HEAD
 After installing the Rust compiler and SQLCipher along with libsqlcipher, Seshat 
 support can be added using yarn at the root of this project:
+=======
+After installing the Rust compiler and SQLCipher along with libsqlcipher, Seshat support can be added
+using yarn at the root of this project:
+>>>>>>> cb333e3e4f3246b3c572754c5c14561831c0ad58
 
     yarn add matrix-seshat
 
