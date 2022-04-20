@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Linux
 
 The native modules include support for features like searching in encrypted rooms and secure storage.
@@ -14,14 +13,6 @@ sudo apt install pkg-config
 sudo apt install pkgconf 
 sudo apt install libsecret-1-dev 
 ```
-=======
-
-# Linux
-
-## Requirements to build native modules
-
-If you want to build native modules, make sure that the following tools are installed on your system.
->>>>>>> cb333e3e4f3246b3c572754c5c14561831c0ad58
 
 - [Node 14](https://nodejs.org)
 
@@ -72,13 +63,3 @@ sudo apt install sqlcipher
 sudo apt install libsqlcipher-dev
 ```
 
-<<<<<<< HEAD
-
-=======
-You might need some packages for the build to occur successfully. If they're not already installed on your system, you can run the following commands to install them:
-```
-sudo apt install pkg-config 
-sudo apt install pkgconf 
-sudo apt install libsecret-1-dev 
-```
->>>>>>> cb333e3e4f3246b3c572754c5c14561831c0ad58
