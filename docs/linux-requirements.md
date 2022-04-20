@@ -48,7 +48,14 @@ sudo apt-get install python3.6
 python3 --version
 ```
 
-- [Strawberry Perl](https://strawberryperl.com/)
+- [Perl](https://www.perl.org/get.html)
+
+You can run the following commands to install Perl:
+```
+sudo apt install perl
+apt list --installed | grep -i perl
+perl -v
+```
 
 - [Rust](https://rustup.rs/)
 
@@ -58,6 +65,8 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
 - [SQLCipher](https://www.zetetic.net/sqlcipher/)
+
+You can run the following commands to install SQLCipher:
 ```
 sudo apt install sqlcipher
 sudo apt install libsqlcipher-dev
