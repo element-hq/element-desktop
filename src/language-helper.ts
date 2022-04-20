@@ -97,13 +97,12 @@ export class AppLocalization {
             locale = "en-EN";
         }
         if (locale.indexOf("-") >= 0) {
-            const langDesc = 1;
-            const partsReq = 2;
-            const part = locale.split("-");
-            if (part.length >= partsReq) {
-                part[langDesc] = part[langDesc].toUpperCase();
+            const localeSubIndex = 1;
+            const parts = locale.split("-");
+            if (parts.length > localeSubIndex) {
+                parts[localeSubIndex] = parts[localeSubIndex].toUpperCase();
             }
-            return part.join("_");
+            return parts.join("_");
         }
         return locale;
     }
