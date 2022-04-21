@@ -64,11 +64,3 @@ Run the following in your terminal, then follow the on-screen instructions.
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
-- [SQLCipher](https://www.zetetic.net/sqlcipher/)
-
-You can run the following commands to install SQLCipher:
-```
-sudo apt install sqlcipher
-sudo apt install libsqlcipher-dev
-```
-
