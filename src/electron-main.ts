@@ -29,6 +29,7 @@ import {
     protocol,
     dialog,
     desktopCapturer,
+    nativeTheme
 } from "electron";
 import AutoLaunch from "auto-launch";
 import path from "path";
@@ -45,6 +46,7 @@ import webContentsHandler from './webcontents-handler';
 import * as updater from './updater';
 import { getProfileFromDeeplink, protocolInit, recordSSOSession } from './protocol';
 import { _t, AppLocalization } from './language-helper';
+import bodyToHtml from '@matrix-react-sdk/src/HtmlUtils';
 
 const argv = minimist(process.argv, {
     alias: { help: "h" },
@@ -940,9 +942,11 @@ app.on('ready', async () => {
     });
 
     const preloadScript = path.normalize(`${__dirname}/preload.js`);
+    const html = bodyToHtml(IContent, null);
+   
     mainWindow = global.mainWindow = new BrowserWindow({
         // https://www.electronjs.org/docs/faq#the-font-looks-blurry-what-is-this-and-what-can-i-do
-        backgroundColor: '#fff',
+        backgroundColor: html.attribs['background-color'], //nativeTheme.shouldUseDarkColors ? '#15191e' : '#fff',
 
         icon: iconPath,
         show: false,
