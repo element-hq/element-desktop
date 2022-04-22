@@ -81,7 +81,7 @@
     "rimraf": "^3.0.2",
     "tar": "^6.1.2",
     "ts-node": "^10.4.0",
-    "typescript": "^4.5.3"
+    "typescript": "4.5.5"
   },
   "hakDependencies": {
     "matrix-seshat": "^2.3.0",
