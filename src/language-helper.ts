@@ -92,19 +92,16 @@ export class AppLocalization {
         this.resetLocalizedUI();
     }
 
+    // Format language strings from normalized form to non-normalized form (e.g. en-gb to en_GB)
     private denormalize(locale: string): string {
         if (locale === "en") {
-            locale = "en-EN";
+            locale = "en_EN";
         }
-        if (locale.indexOf("-") >= 0) {
-            const localeSubIndex = 1;
-            const parts = locale.split("-");
-            if (parts.length > localeSubIndex) {
-                parts[localeSubIndex] = parts[localeSubIndex].toUpperCase();
-            }
-            return parts.join("_");
+        const parts = locale.split("-");
+        if (parts.length > 1) {
+            parts[1] = parts[1].toUpperCase();
         }
-        return locale;
+        return parts.join("_");
     }
 
     public fetchTranslationJson(locale: string): Record<string, string> {
