@@ -4,14 +4,46 @@ on:
   push:
     branches: [ develop, master ]
 jobs:
-  build_win_linux:
-    name: "Build ${{ matrix.os }}"
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [windows-latest, ubuntu-latest]
+  build_win:
+    name: "Build Windows"
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
+
+      - name: Install Microsoft Build Tools
+        uses: microsoft/setup-msbuild@v1.1
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+
+      - name: Install Strawberry Perl
+        uses: shogo82148/actions-setup-perl@v1
+        with:
+          perl-version: '5.32'
+          distribution: strawberry
+
+      - uses: actions/setup-node@v3
+        with:
+          cache: 'yarn'
+
+      # Does not need branch matching as only analyses this layer
+      - name: Install Deps
+        run: "yarn install --pure-lockfile"
+
+      - name: Build Natives
+        run: "yarn build:native"
+
+      - name: Build App
+        run: "yarn build"
+
+  build_linux:
+    name: "Build Linux"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
 
       - uses: actions/setup-node@v3
         with:
@@ -28,7 +60,7 @@ jobs:
         run: "yarn build"
 
   build_mac:
-    name: "Build macos-latest"
+    name: "Build macOS"
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
