@@ -24,6 +24,11 @@ jobs:
           perl-version: '5.32'
           distribution: strawberry
 
+      - name: Choco install tclsh
+        uses: crazy-max/ghaction-chocolatey@v1
+        with:
+          args: install activetcl
+
       - uses: actions/setup-node@v3
         with:
           cache: 'yarn'
@@ -68,6 +73,12 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          target: "aarch64-apple-darwin"
+          toolchain: stable
 
       - uses: actions/setup-node@v3
         with:
