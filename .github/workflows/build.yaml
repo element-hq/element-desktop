@@ -5,7 +5,7 @@ on:
     branches: [ develop, master ]
 jobs:
   build_win_linux:
-    name: "Build Windows & Linux"
+    name: "Build ${{ matrix.os }}"
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -28,7 +28,7 @@ jobs:
         run: "yarn build"
 
   build_mac:
-    name: "Build macOS"
+    name: "Build macos-latest"
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
