@@ -1,0 +1,48 @@
+name: Build
+on:
+  pull_request: { }
+  push:
+    branches: [ develop, master ]
+jobs:
+  build_win_linux:
+    name: "Build Windows & Linux"
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v3
+        with:
+          cache: 'yarn'
+
+      # Does not need branch matching as only analyses this layer
+      - name: Install Deps
+        run: "yarn install --pure-lockfile"
+
+      - name: Build Natives
+        run: "yarn build:native"
+
+      - name: Build App
+        run: "yarn build"
+
+  build_mac:
+    name: "Build macOS"
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v3
+        with:
+          cache: 'yarn'
+
+      # Does not need branch matching as only analyses this layer
+      - name: Install Deps
+        run: "yarn install --pure-lockfile"
+
+      - name: Build Natives
+        run: "yarn build:native:universal"
+
+      - name: Build App
+        run: "yarn build:universal"
