@@ -23,8 +23,8 @@ jobs:
             ./.hak
 
       # Windows specific setup tasks
-      - name: Install Microsoft Build Tools
-        uses: microsoft/setup-msbuild@v1.1
+      - name: Install Microsoft Build Tools & nmake
+        uses: ilammy/msvc-dev-cmd@v1
         if: ${{ matrix.os == 'windows-latest' }}
 
       - name: Install Strawberry Perl
