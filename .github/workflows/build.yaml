@@ -11,7 +11,7 @@ jobs:
       fail-fast: false
       matrix:
         # os: [ ubuntu-latest, macos-latest, windows-latest ]
-        os: [ windows-latest ]
+        os: [ windows-2016 ]
     steps:
       - uses: actions/checkout@v2
 
@@ -27,16 +27,16 @@ jobs:
         uses: ilammy/msvc-dev-cmd@v1
         if: ${{ matrix.os == 'windows-latest' }}
 
-      - name: Install Microsoft Build Tools
-        uses: microsoft/setup-msbuild@v1.1
-        if: ${{ matrix.os == 'windows-latest' }}
+#      - name: Install Microsoft Build Tools
+#        uses: microsoft/setup-msbuild@v1.1
+#        if: ${{ matrix.os == 'windows-latest' }}
 
-      - name: Install Strawberry Perl
-        uses: shogo82148/actions-setup-perl@v1
-        with:
-          perl-version: "5.32"
-          distribution: strawberry
-        if: ${{ matrix.os == 'windows-latest' }}
+#      - name: Install Strawberry Perl
+#        uses: shogo82148/actions-setup-perl@v1
+#        with:
+#          perl-version: "5.32"
+#          distribution: strawberry
+#        if: ${{ matrix.os == 'windows-latest' }}
 
       # ActiveTCL package on choco is from 2015,
       # this one is newer but includes more than we need
