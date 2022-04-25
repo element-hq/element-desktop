@@ -4,14 +4,26 @@ on:
   push:
     branches: [ develop, master ]
 jobs:
-  windows:
-    name: "Windows"
-    runs-on: windows-latest
+  build:
+    name: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
     steps:
       - uses: actions/checkout@v2
 
+      - name: Cache .hak
+        uses: actions/cache@v3
+        with:
+          key: ${{ hashFiles('./yarn.lock') }}
+          path: |
+            ./.hak
+
       - name: Install Microsoft Build Tools
         uses: microsoft/setup-msbuild@v1.1
+        if: ${{ matrix.os == 'windows-latest' }}
 
       - name: Install Rust
         uses: actions-rs/toolchain@v1
@@ -23,11 +35,23 @@ jobs:
         with:
           perl-version: "5.32"
           distribution: strawberry
+        if: ${{ matrix.os == 'windows-latest' }}
 
       # ActiveTCL package on choco is from 2015,
       # this one is newer but includes more than we need
       - name: Choco install tclsh
         run: "choco install magicsplat-tcl-tk"
+        if: ${{ matrix.os == 'windows-latest' }}
+
+      - name: Refresh Environment
+        run: "refreshenv"
+        if: ${{ matrix.os == 'windows-latest' }}
+
+      - name: Add TCL to path
+        uses: egor-tensin/cleanup-path@v2
+        with:
+          dirs: "%LOCALAPPDATA%\\Apps\\Tcl86\\bin"
+        if: ${{ matrix.os == 'windows-latest' }}
 
       - uses: actions/setup-node@v3
         with:
@@ -37,59 +61,20 @@ jobs:
       - name: Install Deps
         run: "yarn install --pure-lockfile"
 
+      # Windows/Linux steps
       - name: Build Natives
         run: "yarn build:native"
+        if: ${{ matrix.os != 'macos-latest' }}
 
       - name: Build App
         run: "yarn build --publish never"
+        if: ${{ matrix.os != 'macos-latest' }}
 
-  linux:
-    name: "Linux"
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Install Rust
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-
-      - uses: actions/setup-node@v3
-        with:
-          cache: "yarn"
-
-      # Does not need branch matching as only analyses this layer
-      - name: Install Deps
-        run: "yarn install --pure-lockfile"
-
-      - name: Build Natives
-        run: "yarn build:native"
-
-      - name: Build App
-        run: "yarn build --publish never"
-
-  macos:
-    name: "macOS"
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Install Rust
-        uses: actions-rs/toolchain@v1
-        with:
-          target: "aarch64-apple-darwin"
-          toolchain: stable
-
-      - uses: actions/setup-node@v3
-        with:
-          cache: "yarn"
-
-      # Does not need branch matching as only analyses this layer
-      - name: Install Deps
-        run: "yarn install --pure-lockfile"
-
+      # macOS (Universal) steps
       - name: Build Natives
         run: "yarn build:native:universal"
+        if: ${{ matrix.os == 'macos-latest' }}
 
       - name: Build App
         run: "yarn build:universal --publish never"
+        if: ${{ matrix.os == 'macos-latest' }}
