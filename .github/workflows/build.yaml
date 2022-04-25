@@ -37,16 +37,11 @@ jobs:
       # ActiveTCL package on choco is from 2015,
       # this one is newer but includes more than we need
       - name: Choco install tclsh
-        run: "choco install magicsplat-tcl-tk"
+        run: "choco install -y magicsplat-tcl-tk --no-progress"
         if: ${{ matrix.os == 'windows-latest' }}
 
       - name: Add TCL to path
         run: echo "${HOME}/AppData/Local/Apps/Tcl86/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-        if: ${{ matrix.os == 'windows-latest' }}
-
-      - name: Add TCL to path
-        shell: bash
-        run: echo "${HOME}/AppData/Local/Apps/Tcl86/bin" >> $GITHUB_PATH
         if: ${{ matrix.os == 'windows-latest' }}
 
       - name: Install Rust
@@ -64,7 +59,9 @@ jobs:
 
       # Windows/Linux steps
       - name: Build Natives
-        run: "yarn build:native"
+        run: |
+          refreshenv
+          yarn build:native
         if: ${{ matrix.os != 'macos-latest' }}
 
       - name: Build App
