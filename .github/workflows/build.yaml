@@ -6,15 +6,14 @@ on:
 jobs:
   windows:
     name: Windows
-    # windows-latest (2022) ships w/ Visual Studio Enterprise 2022 which upsets node-gyp
-    runs-on: windows-2019
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
 
       - name: Cache .hak
         uses: actions/cache@v3
         with:
-          key: ${{ hashFiles('./yarn.lock') }}
+          key: ${{ runner.os }}-${{ hashFiles('./yarn.lock') }}
           path: |
             ./.hak
 
