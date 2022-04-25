@@ -22,14 +22,12 @@ jobs:
 
       - name: Install Microsoft Build Tools
         uses: microsoft/setup-msbuild@v1.1
-        with:
-          vs-version: '[15]'
 
-#      - name: Install Strawberry Perl
-#        uses: shogo82148/actions-setup-perl@v1
-#        with:
-#          perl-version: "5.32"
-#          distribution: strawberry
+      #      - name: Install Strawberry Perl
+      #        uses: shogo82148/actions-setup-perl@v1
+      #        with:
+      #          perl-version: "5.32"
+      #          distribution: strawberry
 
       # ActiveTCL package on choco is from 2015,
       # this one is newer but includes more than we need
@@ -66,3 +64,67 @@ jobs:
 
       - name: Build App
         run: "yarn build --publish never"
+
+#  linux:
+#    name: Linux
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v2
+#
+#      - name: Cache .hak
+#        uses: actions/cache@v3
+#        with:
+#          key: ${{ hashFiles('./yarn.lock') }}
+#          path: |
+#            ./.hak
+#
+#      - name: Install Rust
+#        uses: actions-rs/toolchain@v1
+#        with:
+#          toolchain: stable
+#
+#      - uses: actions/setup-node@v3
+#        with:
+#          cache: "yarn"
+#
+#      # Does not need branch matching as only analyses this layer
+#      - name: Install Deps
+#        run: "yarn install --pure-lockfile"
+#
+#      - name: Build Natives
+#        run: "yarn build:native"
+#
+#      - name: Build App
+#        run: "yarn build --publish never"
+#
+#  macos:
+#    name: macOS
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v2
+#
+#      - name: Cache .hak
+#        uses: actions/cache@v3
+#        with:
+#          key: ${{ hashFiles('./yarn.lock') }}
+#          path: |
+#            ./.hak
+#
+#      - name: Install Rust
+#        uses: actions-rs/toolchain@v1
+#        with:
+#          toolchain: stable
+#
+#      - uses: actions/setup-node@v3
+#        with:
+#          cache: "yarn"
+#
+#      # Does not need branch matching as only analyses this layer
+#      - name: Install Deps
+#        run: "yarn install --pure-lockfile"
+#
+#      - name: Build Natives
+#        run: "yarn build:native:universal"
+#
+#      - name: Build App
+#        run: "yarn build:universal --publish never"
