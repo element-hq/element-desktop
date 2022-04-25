@@ -24,8 +24,10 @@ jobs:
           perl-version: "5.32"
           distribution: strawberry
 
+      # ActiveTCL package on choco is from 2015,
+      # this one is newer but includes more than we need
       - name: Choco install tclsh
-        run: "choco install activetcl"
+        run: "choco install magicsplat-tcl-tk"
 
       - uses: actions/setup-node@v3
         with:
