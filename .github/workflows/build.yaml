@@ -21,17 +21,15 @@ jobs:
       - name: Install Strawberry Perl
         uses: shogo82148/actions-setup-perl@v1
         with:
-          perl-version: '5.32'
+          perl-version: "5.32"
           distribution: strawberry
 
       - name: Choco install tclsh
-        uses: crazy-max/ghaction-chocolatey@v1
-        with:
-          args: install activetcl
+        run: "choco install activetcl"
 
       - uses: actions/setup-node@v3
         with:
-          cache: 'yarn'
+          cache: "yarn"
 
       # Does not need branch matching as only analyses this layer
       - name: Install Deps
@@ -56,7 +54,7 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          cache: 'yarn'
+          cache: "yarn"
 
       # Does not need branch matching as only analyses this layer
       - name: Install Deps
@@ -82,7 +80,7 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          cache: 'yarn'
+          cache: "yarn"
 
       # Does not need branch matching as only analyses this layer
       - name: Install Deps
