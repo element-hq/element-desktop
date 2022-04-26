@@ -18,4 +18,4 @@ docker run --rm -ti \
  -v ${PWD}/docker/.gnupg:/root/.gnupg \
  -v ~/.cache/electron:/root/.cache/electron \
  -v ~/.cache/electron-builder:/root/.cache/electron-builder \
- element-desktop-dockerbuild "$@"
+ ${DOCKER_IMAGE_NAME:-"element-desktop-dockerbuild"} "$@"
