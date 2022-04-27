@@ -10,6 +10,7 @@ defbranch="$3"
 
 rm -r "$defrepo" || true
 
+# A function that clones a branch of a repo based on the org, repo and branch
 clone() {
     org=$1
     repo=$2
@@ -22,20 +23,56 @@ clone() {
     fi
 }
 
-# Try the PR author's branch in case it exists on the deps as well.
-# If BUILDKITE_BRANCH is set, it will contain either:
-#   * "branch" when the author's branch and target branch are in the same repo
-#   * "author:branch" when the author's branch is in their fork
-# We can split on `:` into an array to check.
-BUILDKITE_BRANCH_ARRAY=(${BUILDKITE_BRANCH//:/ })
-if [[ "${#BUILDKITE_BRANCH_ARRAY[@]}" == "1" ]]; then
-    clone $deforg $defrepo $BUILDKITE_BRANCH
-elif [[ "${#BUILDKITE_BRANCH_ARRAY[@]}" == "2" ]]; then
-    clone ${BUILDKITE_BRANCH_ARRAY[0]} $defrepo ${BUILDKITE_BRANCH_ARRAY[1]}
+# A function that gets info about a PR from the GitHub API based on its number
+getPRInfo() {
+    number=$1
+    if [ -n "$number" ]; then
+        echo "Getting info about a PR with number $number"
+
+        apiEndpoint="https://api.github.com/repos/matrix-org/matrix-react-sdk/pulls/"
+        apiEndpoint+=$number
+
+        head=$(curl $apiEndpoint | jq -r '.head.label')
+    fi
+}
+
+# Some CIs don't give us enough info, so we just get the PR number and ask the
+# GH API for more info - "fork:branch". Some give us this directly.
+if [ -n "$BUILDKITE_BRANCH" ]; then
+    # BuildKite
+    head=$BUILDKITE_BRANCH
+elif [ -n "$PR_NUMBER" ]; then
+    # GitHub
+    getPRInfo $PR_NUMBER
+elif [ -n "$REVIEW_ID" ]; then
+    # Netlify
+    getPRInfo $REVIEW_ID
 fi
+
+# for forks, $head will be in the format "fork:branch", so we split it by ":"
+# into an array. On non-forks, this has the effect of splitting into a single
+# element array given ":" shouldn't appear in the head - it'll just be the
+# branch name. Based on the results, we clone.
+BRANCH_ARRAY=(${head//:/ })
+TRY_ORG=$deforg
+TRY_BRANCH=${BRANCH_ARRAY[0]}
+if [[ "$head" == *":"* ]]; then
+    # ... but only match that fork if it's a real fork
+    if [ "${BRANCH_ARRAY[0]}" != "matrix-org" ]; then
+        TRY_ORG=${BRANCH_ARRAY[0]}
+    fi
+    TRY_BRANCH=${BRANCH_ARRAY[1]}
+fi
+clone ${TRY_ORG} $defrepo ${TRY_BRANCH}
+
 # Try the target branch of the push or PR.
-clone $deforg $defrepo $BUILDKITE_PULL_REQUEST_BASE_BRANCH
-# Try the current branch from Jenkins.
-clone $deforg $defrepo `"echo $GIT_BRANCH" | sed -e 's/^origin\///'`
+if [ -n "$GITHUB_BASE_REF" ]; then
+    clone $deforg $defrepo $GITHUB_BASE_REF
+elif [ -n "$BUILDKITE_PULL_REQUEST_BASE_BRANCH" ]; then
+    clone $deforg $defrepo $BUILDKITE_PULL_REQUEST_BASE_BRANCH
+fi
+
+# Try HEAD which is the branch name in Netlify (not BRANCH which is pull/xxxx/head for PR builds)
+clone $deforg $defrepo $HEAD
 # Use the default branch as the last resort.
 clone $deforg $defrepo $defbranch
