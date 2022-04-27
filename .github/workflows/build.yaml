@@ -1,0 +1,125 @@
+name: Build
+on:
+  pull_request: { }
+  push:
+    branches: [ develop, master ]
+jobs:
+  windows:
+    name: Windows
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Cache .hak
+        uses: actions/cache@v3
+        with:
+          key: ${{ runner.os }}-${{ hashFiles('./yarn.lock') }}
+          path: |
+            ./.hak
+
+      - name: Install nmake
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Install Microsoft Build Tools
+        uses: microsoft/setup-msbuild@v1.1
+
+      # ActiveTCL package on choco is from 2015,
+      # this one is newer but includes more than we need
+      - name: Choco install tclsh
+        shell: pwsh
+        run: |
+          choco install -y magicsplat-tcl-tk --no-progress
+          echo "${HOME}/AppData/Local/Apps/Tcl86/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+      - name: Choco install NetWide Assembler
+        shell: pwsh
+        run: |
+          choco install -y nasm --no-progress
+          echo "C:/Program Files/NASM" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+
+      - uses: actions/setup-node@v3
+        with:
+          cache: "yarn"
+
+      # Does not need branch matching as only analyses this layer
+      - name: Install Deps
+        run: "yarn install --pure-lockfile"
+
+      - name: Build Natives
+        shell: pwsh
+        run: |
+          refreshenv
+          yarn build:native
+
+      - name: Build App
+        run: "yarn build --publish never"
+
+  linux:
+    name: Linux
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Cache .hak
+        uses: actions/cache@v3
+        with:
+          key: ${{ hashFiles('./yarn.lock') }}
+          path: |
+            ./.hak
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+
+      - uses: actions/setup-node@v3
+        with:
+          cache: "yarn"
+
+      # Does not need branch matching as only analyses this layer
+      - name: Install Deps
+        run: "yarn install --pure-lockfile"
+
+      - name: Build Natives
+        run: "yarn build:native"
+
+      - name: Build App
+        run: "yarn build --publish never"
+
+  macos:
+    name: macOS
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Cache .hak
+        uses: actions/cache@v3
+        with:
+          key: ${{ hashFiles('./yarn.lock') }}
+          path: |
+            ./.hak
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: aarch64-apple-darwin
+
+      - uses: actions/setup-node@v3
+        with:
+          cache: "yarn"
+
+      # Does not need branch matching as only analyses this layer
+      - name: Install Deps
+        run: "yarn install --pure-lockfile"
+
+      - name: Build Natives
+        run: "yarn build:native:universal"
+
+      - name: Build App
+        run: "yarn build:universal --publish never"

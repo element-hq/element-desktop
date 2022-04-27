@@ -1,3 +1,108 @@
+Changes in [1.10.11](https://github.com/vector-im/element-desktop/releases/tag/v1.10.11) (2022-04-26)
+=====================================================================================================
+
+## ✨ Features
+ * Handle forced disconnects from Jitsi ([\#21697](https://github.com/vector-im/element-web/pull/21697)). Fixes vector-im/element-web#21517.
+ * Improve performance of switching to rooms with lots of servers and ACLs ([\#8347](https://github.com/matrix-org/matrix-react-sdk/pull/8347)).
+ * Avoid a reflow when setting caret position on an empty composer ([\#8348](https://github.com/matrix-org/matrix-react-sdk/pull/8348)).
+ * Add message right-click context menu as a labs feature ([\#5672](https://github.com/matrix-org/matrix-react-sdk/pull/5672)).
+ * Live location sharing - basic maximised beacon map ([\#8310](https://github.com/matrix-org/matrix-react-sdk/pull/8310)).
+ * Live location sharing - render users own beacons in timeline ([\#8296](https://github.com/matrix-org/matrix-react-sdk/pull/8296)).
+ * Improve Threads beta around degraded mode ([\#8318](https://github.com/matrix-org/matrix-react-sdk/pull/8318)).
+ * Live location sharing -  beacon in timeline happy path ([\#8285](https://github.com/matrix-org/matrix-react-sdk/pull/8285)).
+ * Add copy button to View Source screen ([\#8278](https://github.com/matrix-org/matrix-react-sdk/pull/8278)). Fixes vector-im/element-web#21482. Contributed by @olivialivia.
+ * Add heart effect ([\#6188](https://github.com/matrix-org/matrix-react-sdk/pull/6188)). Contributed by @CicadaCinema.
+ * Update new room icon ([\#8239](https://github.com/matrix-org/matrix-react-sdk/pull/8239)).
+
+## 🐛 Bug Fixes
+ * Prevent packing of native modules ([\#337](https://github.com/vector-im/element-desktop/pull/337)). Fixes vector-im/element-web#17188. Contributed by @PF4Public.
+ * Fix: "Code formatting button does not escape backticks" ([\#8181](https://github.com/matrix-org/matrix-react-sdk/pull/8181)). Contributed by @yaya-usman.
+ * Fix beta indicator dot causing excessive CPU usage ([\#8340](https://github.com/matrix-org/matrix-react-sdk/pull/8340)). Fixes vector-im/element-web#21793.
+ * Fix overlapping timestamps on empty messages ([\#8205](https://github.com/matrix-org/matrix-react-sdk/pull/8205)). Fixes vector-im/element-web#21381. Contributed by @goelesha.
+ * Fix power selector not showing up in user info when state_default undefined ([\#8297](https://github.com/matrix-org/matrix-react-sdk/pull/8297)). Fixes vector-im/element-web#21669.
+ * Avoid looking up settings during timeline rendering ([\#8313](https://github.com/matrix-org/matrix-react-sdk/pull/8313)). Fixes vector-im/element-web#21740.
+ * Fix a soft crash with video rooms ([\#8333](https://github.com/matrix-org/matrix-react-sdk/pull/8333)).
+ * Fixes call tiles overflow ([\#8096](https://github.com/matrix-org/matrix-react-sdk/pull/8096)). Fixes vector-im/element-web#20254. Contributed by @luixxiul.
+ * Fix a bug with emoji autocomplete sorting where adding the final "&#58;" would cause the emoji with the typed shortcode to no longer be at the top of the autocomplete list. ([\#8086](https://github.com/matrix-org/matrix-react-sdk/pull/8086)). Fixes vector-im/element-web#19302. Contributed by @commonlawfeature.
+ * Fix image preview sizing for edge cases ([\#8322](https://github.com/matrix-org/matrix-react-sdk/pull/8322)). Fixes vector-im/element-web#20088.
+ * Refactor SecurityRoomSettingsTab and remove unused state ([\#8306](https://github.com/matrix-org/matrix-react-sdk/pull/8306)). Fixes matrix-org/element-web-rageshakes#12002.
+ * Don't show the prompt to enable desktop notifications immediately after registration ([\#8274](https://github.com/matrix-org/matrix-react-sdk/pull/8274)).
+ * Stop tracking threads if threads support is disabled ([\#8308](https://github.com/matrix-org/matrix-react-sdk/pull/8308)). Fixes vector-im/element-web#21766.
+ * Fix some issues with threads rendering ([\#8305](https://github.com/matrix-org/matrix-react-sdk/pull/8305)). Fixes vector-im/element-web#21670.
+ * Fix threads rendering issue in Safari ([\#8298](https://github.com/matrix-org/matrix-react-sdk/pull/8298)). Fixes vector-im/element-web#21757.
+ * Fix space panel width change on hovering over space item ([\#8299](https://github.com/matrix-org/matrix-react-sdk/pull/8299)). Fixes vector-im/element-web#19891.
+ * Hide the reply in thread button in deployments where beta is forcibly disabled ([\#8294](https://github.com/matrix-org/matrix-react-sdk/pull/8294)). Fixes vector-im/element-web#21753.
+ * Prevent soft crash around room list header context menu when space changes ([\#8289](https://github.com/matrix-org/matrix-react-sdk/pull/8289)). Fixes matrix-org/element-web-rageshakes#11416, matrix-org/element-web-rageshakes#11692, matrix-org/element-web-rageshakes#11739, matrix-org/element-web-rageshakes#11772, matrix-org/element-web-rageshakes#11891 matrix-org/element-web-rageshakes#11858 and matrix-org/element-web-rageshakes#11456.
+ * When selecting reply in thread on a thread response open existing thread ([\#8291](https://github.com/matrix-org/matrix-react-sdk/pull/8291)). Fixes vector-im/element-web#21743.
+ * Handle thread bundled relationships coming from the server via MSC3666 ([\#8292](https://github.com/matrix-org/matrix-react-sdk/pull/8292)). Fixes vector-im/element-web#21450.
+ * Fix: Avatar preview does not update when same file is selected repeatedly ([\#8288](https://github.com/matrix-org/matrix-react-sdk/pull/8288)). Fixes vector-im/element-web#20098.
+ * Fix a bug where user gets a warning when changing powerlevel from **Admin** to **custom level (100)** ([\#8248](https://github.com/matrix-org/matrix-react-sdk/pull/8248)). Fixes vector-im/element-web#21682. Contributed by @Jumeb.
+ * Use a consistent alignment for all text items in a list ([\#8276](https://github.com/matrix-org/matrix-react-sdk/pull/8276)). Fixes vector-im/element-web#21731. Contributed by @luixxiul.
+ * Fixes button labels being collapsed per a character in CJK languages ([\#8212](https://github.com/matrix-org/matrix-react-sdk/pull/8212)). Fixes vector-im/element-web#21287. Contributed by @luixxiul.
+ * Fix: Remove jittery timeline scrolling after jumping to an event ([\#8263](https://github.com/matrix-org/matrix-react-sdk/pull/8263)).
+ * Fix regression of edits showing up in the timeline with hidden events shown ([\#8260](https://github.com/matrix-org/matrix-react-sdk/pull/8260)). Fixes vector-im/element-web#21694.
+ * Fix reporting events not working ([\#8257](https://github.com/matrix-org/matrix-react-sdk/pull/8257)). Fixes vector-im/element-web#21713.
+ * Make Jitsi widgets in video rooms immutable ([\#8244](https://github.com/matrix-org/matrix-react-sdk/pull/8244)). Fixes vector-im/element-web#21647.
+ * Fix: Ensure links to events scroll the correct events into view ([\#8250](https://github.com/matrix-org/matrix-react-sdk/pull/8250)). Fixes vector-im/element-web#19934.
+
+Changes in [1.10.10](https://github.com/vector-im/element-desktop/releases/tag/v1.10.10) (2022-04-14)
+=====================================================================================================
+
+## 🐛 Bug Fixes
+ * Fixes around threads beta in degraded mode ([\#8319](https://github.com/matrix-org/matrix-react-sdk/pull/8319)). Fixes vector-im/element-web#21762.
+
+Changes in [1.10.9](https://github.com/vector-im/element-desktop/releases/tag/v1.10.9) (2022-04-12)
+===================================================================================================
+
+## ✨ Features
+ * Release threads as a beta feature ([\#8081](https://github.com/matrix-org/matrix-react-sdk/pull/8081)). Fixes vector-im/element-web#21351.
+ * More video rooms design updates ([\#8222](https://github.com/matrix-org/matrix-react-sdk/pull/8222)).
+ * Update video rooms to new design specs ([\#8207](https://github.com/matrix-org/matrix-react-sdk/pull/8207)). Fixes vector-im/element-web#21515, vector-im/element-web#21516 vector-im/element-web#21519 and vector-im/element-web#21526.
+ * Live Location Sharing - left panel warning with error ([\#8201](https://github.com/matrix-org/matrix-react-sdk/pull/8201)).
+ * Live location sharing - Stop publishing location to beacons with consecutive errors ([\#8194](https://github.com/matrix-org/matrix-react-sdk/pull/8194)).
+ * Live location sharing: allow retry when stop sharing fails ([\#8193](https://github.com/matrix-org/matrix-react-sdk/pull/8193)).
+ * Allow voice messages to be scrubbed in the timeline ([\#8079](https://github.com/matrix-org/matrix-react-sdk/pull/8079)). Fixes vector-im/element-web#18713.
+ * Live location sharing - stop sharing to beacons in rooms you left ([\#8187](https://github.com/matrix-org/matrix-react-sdk/pull/8187)).
+ * Allow sending and thumbnailing AVIF images ([\#8172](https://github.com/matrix-org/matrix-react-sdk/pull/8172)).
+ * Live location sharing - handle geolocation errors ([\#8179](https://github.com/matrix-org/matrix-react-sdk/pull/8179)).
+ * Show voice room participants when not connected ([\#8136](https://github.com/matrix-org/matrix-react-sdk/pull/8136)). Fixes vector-im/element-web#21513.
+ * Add margins between labs sections ([\#8169](https://github.com/matrix-org/matrix-react-sdk/pull/8169)).
+ * Live location sharing - send geolocation beacon events - happy path ([\#8127](https://github.com/matrix-org/matrix-react-sdk/pull/8127)).
+ * Add support for Animated (A)PNG ([\#8158](https://github.com/matrix-org/matrix-react-sdk/pull/8158)). Fixes vector-im/element-web#12967.
+ * Don't form continuations from thread roots ([\#8166](https://github.com/matrix-org/matrix-react-sdk/pull/8166)). Fixes vector-im/element-web#20908.
+ * Improve handling of animated GIF and WEBP images ([\#8153](https://github.com/matrix-org/matrix-react-sdk/pull/8153)). Fixes vector-im/element-web#16193 and vector-im/element-web#6684.
+ * Wire up file preview for video files ([\#8140](https://github.com/matrix-org/matrix-react-sdk/pull/8140)). Fixes vector-im/element-web#21539.
+ * When showing thread, always auto-focus its composer ([\#8115](https://github.com/matrix-org/matrix-react-sdk/pull/8115)). Fixes vector-im/element-web#21438.
+ * Live location sharing - refresh beacon expiry in room ([\#8116](https://github.com/matrix-org/matrix-react-sdk/pull/8116)).
+ * Use styled mxids in member list v2 ([\#8110](https://github.com/matrix-org/matrix-react-sdk/pull/8110)). Fixes vector-im/element-web#14825. Contributed by @SimonBrandner.
+ * Delete groups (legacy communities system) ([\#8027](https://github.com/matrix-org/matrix-react-sdk/pull/8027)). Fixes vector-im/element-web#17532.
+ * Add a prototype of voice rooms in labs ([\#8084](https://github.com/matrix-org/matrix-react-sdk/pull/8084)). Fixes vector-im/element-web#3546.
+
+## 🐛 Bug Fixes
+ * Avoid flashing the Jitsi prejoin screen at the user before skipping it ([\#21665](https://github.com/vector-im/element-web/pull/21665)).
+ * Fix editing `<ol>` tags with a non-1 start attribute ([\#8211](https://github.com/matrix-org/matrix-react-sdk/pull/8211)). Fixes vector-im/element-web#21625.
+ * Fix URL previews being enabled when room first created ([\#8227](https://github.com/matrix-org/matrix-react-sdk/pull/8227)). Fixes vector-im/element-web#21659.
+ * Don't use m.call for Jitsi video rooms ([\#8223](https://github.com/matrix-org/matrix-react-sdk/pull/8223)).
+ * Scale emoji with size of surrounding text ([\#8224](https://github.com/matrix-org/matrix-react-sdk/pull/8224)).
+ * Make "Jump to date" translatable ([\#8218](https://github.com/matrix-org/matrix-react-sdk/pull/8218)).
+ * Normalize call buttons ([\#8129](https://github.com/matrix-org/matrix-react-sdk/pull/8129)). Fixes vector-im/element-web#21493. Contributed by @luixxiul.
+ * Show room preview bar with maximised widgets ([\#8180](https://github.com/matrix-org/matrix-react-sdk/pull/8180)). Fixes vector-im/element-web#21542.
+ * Update more strings to not wrongly mention room when it is/could be a space ([\#7722](https://github.com/matrix-org/matrix-react-sdk/pull/7722)). Fixes vector-im/element-web#20243 and vector-im/element-web#20910.
+ * Fix issue with redacting via edit composer flow causing stuck editStates ([\#8184](https://github.com/matrix-org/matrix-react-sdk/pull/8184)).
+ * Fix some image/video scroll jumps ([\#8182](https://github.com/matrix-org/matrix-react-sdk/pull/8182)).
+ * Fix "react error on share dialog" ([\#8170](https://github.com/matrix-org/matrix-react-sdk/pull/8170)). Contributed by @yaya-usman.
+ * Fix disambiguated profile in threads in bubble layout ([\#8168](https://github.com/matrix-org/matrix-react-sdk/pull/8168)). Fixes vector-im/element-web#21570. Contributed by @SimonBrandner.
+ * Responsive BetaCard on Labs ([\#8154](https://github.com/matrix-org/matrix-react-sdk/pull/8154)). Fixes vector-im/element-web#21554. Contributed by @luixxiul.
+ * Display button as inline in room directory dialog ([\#8164](https://github.com/matrix-org/matrix-react-sdk/pull/8164)). Fixes vector-im/element-web#21567. Contributed by @luixxiul.
+ * Null guard TimelinePanel unmount edge ([\#8171](https://github.com/matrix-org/matrix-react-sdk/pull/8171)).
+ * Fix beta pill label breaking ([\#8162](https://github.com/matrix-org/matrix-react-sdk/pull/8162)). Fixes vector-im/element-web#21566. Contributed by @luixxiul.
+ * Strip relations when forwarding ([\#7929](https://github.com/matrix-org/matrix-react-sdk/pull/7929)). Fixes vector-im/element-web#19769, vector-im/element-web#18067 vector-im/element-web#21015 and vector-im/element-web#10924.
+ * Don't try (and fail) to show replies for redacted events ([\#8141](https://github.com/matrix-org/matrix-react-sdk/pull/8141)). Fixes vector-im/element-web#21435.
+ * Fix 3pid member info for space member list ([\#8128](https://github.com/matrix-org/matrix-react-sdk/pull/8128)). Fixes vector-im/element-web#21534.
+ * Set max-width to user context menu ([\#8089](https://github.com/matrix-org/matrix-react-sdk/pull/8089)). Fixes vector-im/element-web#21486. Contributed by @luixxiul.
+ * Fix issue with falsey hrefs being sent in events ([\#8113](https://github.com/matrix-org/matrix-react-sdk/pull/8113)). Fixes vector-im/element-web#21417.
+ * Make video sizing consistent with images ([\#8102](https://github.com/matrix-org/matrix-react-sdk/pull/8102)). Fixes vector-im/element-web#20072.
+
 Changes in [1.10.7](https://github.com/vector-im/element-desktop/releases/tag/v1.10.7) (2022-03-15)
 ===================================================================================================
 

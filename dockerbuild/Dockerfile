@@ -9,12 +9,11 @@ RUN apt-get -qq update && apt-get -qq dist-upgrade && \
   # git ssh for using as docker image on CircleCI
   # python for node-gyp
   # rpm is required for FPM to build rpm package
+  # tclsh is required for building SQLite as part of SQLCipher
   # libsecret-1-dev and libgnome-keyring-dev are required even for prebuild keytar
-  apt-get -qq install --no-install-recommends qtbase5-dev bsdtar build-essential autoconf libssl-dev gcc-multilib g++-multilib lzip rpm python libcurl4 git git-lfs ssh unzip \
+  apt-get -qq install --no-install-recommends qtbase5-dev bsdtar build-essential autoconf libssl-dev gcc-multilib g++-multilib lzip rpm python libcurl4 git git-lfs ssh unzip tcl \
   libsecret-1-dev libgnome-keyring-dev \
-  libopenjp2-tools \
-  # Used by Seshat
-  libsqlcipher-dev && \
+  libopenjp2-tools && \
   # git-lfs
   git lfs install && \
   apt-get purge -y --auto-remove && rm -rf /var/lib/apt/lists/*
