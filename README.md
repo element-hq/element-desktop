@@ -1,3 +1,10 @@
+![Build](https://github.com/vector-im/element-desktop/actions/workflows/build.yaml/badge.svg)
+![Static Analysis](https://github.com/vector-im/element-desktop/actions/workflows/static_analysis.yaml/badge.svg)
+[![Weblate](https://translate.element.io/widgets/element-desktop/-/element-desktop/svg-badge.svg)](https://translate.element.io/engage/element-desktop/)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=element-desktop&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=element-desktop)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=element-desktop&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=element-desktop)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=element-desktop&metric=bugs)](https://sonarcloud.io/summary/new_code?id=element-desktop)
+
 Element Desktop
 ===============
 
