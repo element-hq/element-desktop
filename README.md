@@ -1,3 +1,10 @@
+![Build](https://github.com/vector-im/element-desktop/actions/workflows/build.yaml/badge.svg)
+![Static Analysis](https://github.com/vector-im/element-desktop/actions/workflows/static_analysis.yaml/badge.svg)
+[![Weblate](https://translate.element.io/widgets/element-desktop/-/element-desktop/svg-badge.svg)](https://translate.element.io/engage/element-desktop/)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=element-desktop&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=element-desktop)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=element-desktop&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=element-desktop)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=element-desktop&metric=bugs)](https://sonarcloud.io/summary/new_code?id=element-desktop)
+
 Element Desktop
 ===============
 
@@ -49,30 +56,17 @@ ln -s ../element-web/webapp ./
 
 [TODO: add support for fetching develop builds, arbitrary URLs and arbitrary paths]
 
-
 Building
 ========
-Now you have a copy of Element, you're ready to build packages. If you'd just like to
-run Element locally, skip to the next section.
 
-If you'd like to build the native modules (for searching in encrypted rooms and
-secure storage), do this first. This will take 10 minutes or so, and will
-require a number of native tools to be installed, depending on your OS (eg.
-rust, tcl, make/nmake).
+## Native Build
 
-You'll also to need to make sure you've built the native modules for the same
-architecture as your package, so for anything more advanced than just building
-the modules and app for the host architecture see 'Other Architectures'.
+TODO: List native pre-requisites
 
-If you don't need these features, you can skip this step.
+Optionally, [build the native modules](https://github.com/vector-im/element-desktop/blob/develop/docs/native-node-modules.md), 
+which include support for searching in encrypted rooms and secure storage. Skipping this step is fine, you just won't have those features.  
 
-To just build these for your native architecture:
-```
-yarn run build:native
-```
-
-Now you can build the package:
-
+Then, run
 ```
 yarn run build
 ```
@@ -82,9 +76,9 @@ This will do a couple of things:
  * Run electron-builder to build a package. The package built will match the operating system
    you're running the build process on.
 
-This build step will not build any native modules.
+## Docker
 
-You can also build using docker, which will always produce the linux package:
+Alternatively, you can also build using docker, which will always produce the linux package:
 ```
 # Run this once to make the docker image
 yarn run docker:setup
@@ -105,70 +99,6 @@ If you'd just like to run the electron app locally for development:
 # by electron-builder when building packages
 yarn add electron
 yarn start
-```
-
-Other Architectures
-===================
-Building the native modules will build for the host architecture (and only the
-host architecture) by default. On Windows, this will automatically determine
-the architecture to build for based on the environment. Make sure that you have
-all the [tools required to perform the native modules build](docs/windows-requirements.md)
-
-
-On macOS, you can build universal native modules too:
-```
-yarn run build:native:universal
-```
-
-...or you can build for a specific architecture:
-```
-yarn run build:native --target x86_64-apple-darwin
-```
-or
-```
-yarn run build:native --target aarch64-apple-darwin
-```
-
-You'll then need to create a built bundle with the same architecture.
-To bundle a universal build for macOS, run:
-
-```
-yarn run build:universal
-```
-
-If you're on Windows, you can choose to build specifically for 32 or 64 bit:
-```
-yarn run build:32
-```
-or
-```
-yarn run build:64
-```
-
-Note that the native module build system keeps the different architectures
-separate, so you can keep native modules for several architectures at the same
-time and switch which are active using a `yarn run hak copy` command, passing
-the appropriate architectures. This will error if you haven't yet built those
-architectures. eg:
-
-```
-yarn run build:native --target x86_64-apple-darwin
-# We've now built & linked into place native modules for Intel
-yarn run build:native --target aarch64-apple-darwin
-# We've now built Apple Silicon modules too, and linked them into place as the active ones
-
-yarn run hak copy --target x86_64-apple-darwin
-# We've now switched back to our Intel modules
-yarn run hak copy --target x86_64-apple-darwin --target aarch64-apple-darwin
-# Now our native modules are universal x86_64+aarch64 binaries
-```
-
-The current set of native modules are stored in `.hak/hakModules`,
-so you can use this to check what architecture is currently in place, eg:
-
-```
-$ lipo -info .hak/hakModules/keytar/build/Release/keytar.node 
-Architectures in the fat file: .hak/hakModules/keytar/build/Release/keytar.node are: x86_64 arm64 
 ```
 
 Config

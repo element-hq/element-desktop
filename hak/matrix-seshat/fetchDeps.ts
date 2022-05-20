@@ -25,9 +25,7 @@ import HakEnv from '../../scripts/hak/hakEnv';
 import { DependencyInfo } from '../../scripts/hak/dep';
 
 export default async function(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
-    if (!hakEnv.isLinux()) {
-        await getSqlCipher(hakEnv, moduleInfo);
-    }
+    await getSqlCipher(hakEnv, moduleInfo);
 
     if (hakEnv.isWin()) {
         await getOpenSsl(hakEnv, moduleInfo);
