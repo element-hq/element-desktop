@@ -347,7 +347,7 @@ process.on('uncaughtException', function(error: Error): void {
 });
 
 let focusHandlerAttached = false;
-ipcMain.on('setBadgeCount', function(ev: IpcMainEvent, count: number): void {
+ipcMain.on('setBadgeCount', function(_ev: IpcMainEvent, count: number): void {
     if (process.platform !== 'win32') {
         // only set badgeCount on Mac/Linux, the docs say that only those platforms support it but turns out Electron
         // has some Windows support too, and in some Windows environments this leads to two badges rendering atop
@@ -371,7 +371,7 @@ ipcMain.on('loudNotification', function(): void {
 });
 
 let powerSaveBlockerId: number = null;
-ipcMain.on('app_onAction', function(ev: IpcMainEvent, payload) {
+ipcMain.on('app_onAction', function(_ev: IpcMainEvent, payload) {
     switch (payload.action) {
         case 'call_state':
             if (powerSaveBlockerId !== null && powerSaveBlocker.isStarted(powerSaveBlockerId)) {
@@ -388,7 +388,7 @@ ipcMain.on('app_onAction', function(ev: IpcMainEvent, payload) {
     }
 });
 
-ipcMain.on('ipcCall', async function(ev: IpcMainEvent, payload) {
+ipcMain.on('ipcCall', async function(_ev: IpcMainEvent, payload) {
     if (!mainWindow) return;
 
     const args = payload.args || [];
@@ -567,7 +567,7 @@ async function getOrCreatePassphrase(key: string): Promise<string> {
     }
 }
 
-ipcMain.on('seshat', async function(ev: IpcMainEvent, payload): Promise<void> {
+ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
     if (!mainWindow) return;
 
     const sendError = (id, e) => {
