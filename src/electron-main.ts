@@ -852,6 +852,7 @@ app.commandLine.appendSwitch('disable-features', 'HardwareMediaKeyHandling,Media
 
 // Disable hardware acceleration if the setting has been set.
 if (store.get('disableHardwareAcceleration') === true) {
+    console.log("Disabling hardware acceleration.");
     app.disableHardwareAcceleration();
 }
 
