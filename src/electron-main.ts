@@ -271,6 +271,7 @@ const store = new Store<{
     spellCheckerEnabled?: boolean;
     autoHideMenuBar?: boolean;
     locale?: string | string[];
+    disableHardwareAcceleration?: boolean;
 }>({ name: "electron-config" });
 
 let eventIndex = null;
@@ -423,6 +424,12 @@ ipcMain.on('ipcCall', async function(ev, payload) {
             store.set('autoHideMenuBar', args[0]);
             global.mainWindow.autoHideMenuBar = Boolean(args[0]);
             global.mainWindow.setMenuBarVisibility(!args[0]);
+            break;
+        case 'getDisableHardwareAcceleration':
+            ret = store.get('disableHardwareAcceleration') === true;
+            break;
+        case 'setDisableHardwareAcceleration':
+            store.set('disableHardwareAcceleration', args[0]);
             break;
         case 'getAppVersion':
             ret = app.getVersion();
@@ -842,6 +849,12 @@ app.enableSandbox();
 
 // We disable media controls here. We do this because calls use audio and video elements and they sometimes capture the media keys. See https://github.com/vector-im/element-web/issues/15704
 app.commandLine.appendSwitch('disable-features', 'HardwareMediaKeyHandling,MediaSessionService');
+
+// Disable hardware acceleration if the setting has been set.
+if (store.get('disableHardwareAcceleration') === true) {
+    console.log("Disabling hardware acceleration.");
+    app.disableHardwareAcceleration();
+}
 
 app.on('ready', async () => {
     try {
