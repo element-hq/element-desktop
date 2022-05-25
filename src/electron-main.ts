@@ -39,18 +39,26 @@ import crypto from "crypto";
 import { URL } from "url";
 import minimist from "minimist";
 
+import type * as Keytar from "keytar"; // Hak dependency type
+import type {
+    Seshat as SeshatType,
+    SeshatRecovery as SeshatRecoveryType,
+    ReindexError as ReindexErrorType,
+} from "matrix-seshat"; // Hak dependency type
 import * as tray from "./tray";
 import { buildMenuTemplate } from './vectormenu';
 import webContentsHandler from './webcontents-handler';
 import * as updater from './updater';
 import { getProfileFromDeeplink, protocolInit, recordSSOSession } from './protocol';
 import { _t, AppLocalization } from './language-helper';
+import Input = Electron.Input;
+import IpcMainEvent = Electron.IpcMainEvent;
 
 const argv = minimist(process.argv, {
     alias: { help: "h" },
 });
 
-let keytar;
+let keytar: typeof Keytar;
 try {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     keytar = require('keytar');
@@ -63,9 +71,9 @@ try {
 }
 
 let seshatSupported = false;
-let Seshat;
-let SeshatRecovery;
-let ReindexError;
+let Seshat: typeof SeshatType;
+let SeshatRecovery: typeof SeshatRecoveryType;
+let ReindexError: typeof ReindexErrorType;
 
 try {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -84,13 +92,18 @@ try {
 
 // Things we need throughout the file but need to be created
 // async to are initialised in setupGlobals()
-let asarPath;
-let resPath;
-let vectorConfig;
-let iconPath;
-let trayConfig;
-let launcher;
-let appLocalization;
+let asarPath: string;
+let resPath: string;
+let iconPath: string;
+
+let vectorConfig: Record<string, any>;
+let trayConfig: {
+    // eslint-disable-next-line camelcase
+    icon_path: string;
+    brand: string;
+};
+let launcher: AutoLaunch;
+let appLocalization: AppLocalization;
 
 if (argv["help"]) {
     console.log("Options:");
@@ -108,12 +121,12 @@ if (argv["help"]) {
 // Electron creates the user data directory (with just an empty 'Dictionaries' directory...)
 // as soon as the app path is set, so pick a random path in it that must exist if it's a
 // real user data directory.
-function isRealUserDataDir(d) {
+function isRealUserDataDir(d: string): boolean {
     return fs.existsSync(path.join(d, 'IndexedDB'));
 }
 
 // check if we are passed a profile in the SSO callback url
-let userDataPath;
+let userDataPath: string;
 
 const userDataPathInProtocol = getProfileFromDeeplink(argv["_"]);
 if (userDataPathInProtocol) {
@@ -143,7 +156,7 @@ if (userDataPathInProtocol) {
 }
 app.setPath('userData', userDataPath);
 
-async function tryPaths(name, root, rawPaths) {
+async function tryPaths(name: string, root: string, rawPaths: string[]): Promise<string> {
     // Make everything relative to root
     const paths = rawPaths.map(p => path.join(root, p));
 
@@ -162,7 +175,7 @@ async function tryPaths(name, root, rawPaths) {
 }
 
 // Find the webapp resources and set up things that require them
-async function setupGlobals() {
+async function setupGlobals(): Promise<void> {
     // find the webapp asar.
     asarPath = await tryPaths("webapp", __dirname, [
         // If run from the source checkout, this will be in the directory above
@@ -245,9 +258,9 @@ async function setupGlobals() {
     });
 }
 
-async function moveAutoLauncher() {
+async function moveAutoLauncher(): Promise<void> {
     // Look for an auto-launcher under 'Riot' and if we find one, port it's
-    // enabled/disbaledp-ness over to the new 'Element' launcher
+    // enabled/disabled-ness over to the new 'Element' launcher
     if (!vectorConfig.brand || vectorConfig.brand === 'Element') {
         const oldLauncher = new AutoLaunch({
             name: 'Riot',
@@ -271,20 +284,21 @@ const store = new Store<{
     spellCheckerEnabled?: boolean;
     autoHideMenuBar?: boolean;
     locale?: string | string[];
+    disableHardwareAcceleration?: boolean;
 }>({ name: "electron-config" });
 
-let eventIndex = null;
+let eventIndex: SeshatType = null;
 
-let mainWindow = null;
+let mainWindow: BrowserWindow = null;
 global.appQuitting = false;
 
-const exitShortcuts = [
+const exitShortcuts: Array<(input: Input, platform: string) => boolean> = [
     (input, platform) => platform !== 'darwin' && input.alt && input.key.toUpperCase() === 'F4',
     (input, platform) => platform !== 'darwin' && input.control && input.key.toUpperCase() === 'Q',
     (input, platform) => platform === 'darwin' && input.meta && input.key.toUpperCase() === 'Q',
 ];
 
-const warnBeforeExit = (event, input) => {
+const warnBeforeExit = (event: Event, input: Input): void => {
     const shouldWarnBeforeExit = store.get('warnBeforeExit', true);
     const exitShortcutPressed =
         input.type === 'keyDown' && exitShortcuts.some(shortcutFn => shortcutFn(input, process.platform));
@@ -304,14 +318,14 @@ const warnBeforeExit = (event, input) => {
     }
 };
 
-const deleteContents = async (p) => {
+const deleteContents = async (p: string): Promise<void> => {
     for (const entry of await afs.readdir(p)) {
         const curPath = path.join(p, entry);
         await afs.unlink(curPath);
     }
 };
 
-async function randomArray(size) {
+async function randomArray(size: number): Promise<string> {
     return new Promise((resolve, reject) => {
         crypto.randomBytes(size, (err, buf) => {
             if (err) {
@@ -329,12 +343,12 @@ async function randomArray(size) {
 // no other way to catch this error).
 // Assuming we generally run from the console when developing,
 // this is far preferable.
-process.on('uncaughtException', function(error) {
+process.on('uncaughtException', function(error: Error): void {
     console.log('Unhandled exception', error);
 });
 
 let focusHandlerAttached = false;
-ipcMain.on('setBadgeCount', function(ev, count) {
+ipcMain.on('setBadgeCount', function(_ev: IpcMainEvent, count: number): void {
     if (process.platform !== 'win32') {
         // only set badgeCount on Mac/Linux, the docs say that only those platforms support it but turns out Electron
         // has some Windows support too, and in some Windows environments this leads to two badges rendering atop
@@ -346,7 +360,7 @@ ipcMain.on('setBadgeCount', function(ev, count) {
     }
 });
 
-ipcMain.on('loudNotification', function() {
+ipcMain.on('loudNotification', function(): void {
     if (process.platform === 'win32' && mainWindow && !mainWindow.isFocused() && !focusHandlerAttached) {
         mainWindow.flashFrame(true);
         mainWindow.once('focus', () => {
@@ -357,8 +371,8 @@ ipcMain.on('loudNotification', function() {
     }
 });
 
-let powerSaveBlockerId = null;
-ipcMain.on('app_onAction', function(ev, payload) {
+let powerSaveBlockerId: number = null;
+ipcMain.on('app_onAction', function(_ev: IpcMainEvent, payload) {
     switch (payload.action) {
         case 'call_state':
             if (powerSaveBlockerId !== null && powerSaveBlocker.isStarted(powerSaveBlockerId)) {
@@ -375,11 +389,11 @@ ipcMain.on('app_onAction', function(ev, payload) {
     }
 });
 
-ipcMain.on('ipcCall', async function(ev, payload) {
+ipcMain.on('ipcCall', async function(_ev: IpcMainEvent, payload) {
     if (!mainWindow) return;
 
     const args = payload.args || [];
-    let ret;
+    let ret: any;
 
     switch (payload.name) {
         case 'getUpdateFeedUrl':
@@ -423,6 +437,12 @@ ipcMain.on('ipcCall', async function(ev, payload) {
             store.set('autoHideMenuBar', args[0]);
             global.mainWindow.autoHideMenuBar = Boolean(args[0]);
             global.mainWindow.setMenuBarVisibility(!args[0]);
+            break;
+        case 'getDisableHardwareAcceleration':
+            ret = store.get('disableHardwareAcceleration') === true;
+            break;
+        case 'setDisableHardwareAcceleration':
+            store.set('disableHardwareAcceleration', args[0]);
             break;
         case 'getAppVersion':
             ret = app.getVersion();
@@ -535,7 +555,7 @@ ipcMain.on('ipcCall', async function(ev, payload) {
 });
 
 const seshatDefaultPassphrase = "DEFAULT_PASSPHRASE";
-async function getOrCreatePassphrase(key) {
+async function getOrCreatePassphrase(key: string): Promise<string> {
     if (keytar) {
         try {
             const storedPassphrase = await keytar.getPassword("element.io", key);
@@ -554,7 +574,7 @@ async function getOrCreatePassphrase(key) {
     }
 }
 
-ipcMain.on('seshat', async function(ev, payload) {
+ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
     if (!mainWindow) return;
 
     const sendError = (id, e) => {
@@ -569,7 +589,7 @@ ipcMain.on('seshat', async function(ev, payload) {
     };
 
     const args = payload.args || [];
-    let ret;
+    let ret: any;
 
     switch (payload.name) {
         case 'supportsEventIndexing':
@@ -843,6 +863,12 @@ app.enableSandbox();
 // We disable media controls here. We do this because calls use audio and video elements and they sometimes capture the media keys. See https://github.com/vector-im/element-web/issues/15704
 app.commandLine.appendSwitch('disable-features', 'HardwareMediaKeyHandling,MediaSessionService');
 
+// Disable hardware acceleration if the setting has been set.
+if (store.get('disableHardwareAcceleration') === true) {
+    console.log("Disabling hardware acceleration.");
+    app.disableHardwareAcceleration();
+}
+
 app.on('ready', async () => {
     try {
         await setupGlobals();
@@ -900,7 +926,7 @@ app.on('ready', async () => {
             target[target.length - 1] = 'index.html';
         }
 
-        let baseDir;
+        let baseDir: string;
         if (target[1] === 'webapp') {
             baseDir = asarPath;
         } else {
@@ -1035,7 +1061,7 @@ app.on('activate', () => {
     mainWindow.show();
 });
 
-function beforeQuit() {
+function beforeQuit(): void {
     global.appQuitting = true;
     if (mainWindow) {
         mainWindow.webContents.send('before-quit');
