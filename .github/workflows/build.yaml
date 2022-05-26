@@ -5,10 +5,18 @@ on:
     branches: [ develop, master ]
 jobs:
   windows:
-    name: Windows
+    strategy:
+      matrix:
+        include:
+          - target: x86_64-pc-windows-msvc
+            arch: x64
+          - target: i686-pc-windows-msvc
+            arch: x86
+            build-args: --ia32
+    name: Windows (${{ matrix.arch }})
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Cache .hak
         uses: actions/cache@v3
@@ -17,11 +25,10 @@ jobs:
           path: |
             ./.hak
 
-      - name: Install nmake
+      - name: Set up build tools
         uses: ilammy/msvc-dev-cmd@v1
-
-      - name: Install Microsoft Build Tools
-        uses: microsoft/setup-msbuild@v1.1
+        with:
+          arch: ${{ matrix.arch }}
 
       # ActiveTCL package on choco is from 2015,
       # this one is newer but includes more than we need
@@ -41,6 +48,7 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
+          target: ${{ matrix.target }}
 
       - uses: actions/setup-node@v3
         with:
@@ -51,19 +59,18 @@ jobs:
         run: "yarn install --pure-lockfile"
 
       - name: Build Natives
-        shell: pwsh
         run: |
           refreshenv
-          yarn build:native
+          yarn build:native --target ${{ matrix.target }}
 
       - name: Build App
-        run: "yarn build --publish never"
+        run: "yarn build --publish never -w ${{ matrix.build-args }}"
 
   linux:
     name: Linux
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Cache .hak
         uses: actions/cache@v3
@@ -92,10 +99,10 @@ jobs:
         run: "yarn build --publish never"
 
   macos:
-    name: macOS
+    name: macOS (universal)
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Cache .hak
         uses: actions/cache@v3

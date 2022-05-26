@@ -94,21 +94,16 @@ const x8664UnknownLinuxGnu: Target = {
 };
 
 export const TARGETS: Record<TargetId, Target> = {
+    // macOS
     'aarch64-apple-darwin': aarch64AppleDarwin,
     'x86_64-apple-darwin': x8664AppleDarwin,
     'universal-apple-darwin': universalAppleDarwin,
+    // Windows
     'i686-pc-windows-msvc': i686PcWindowsMsvc,
     'x86_64-pc-windows-msvc': x8664PcWindowsMsvc,
+    // Linux
     'x86_64-unknown-linux-gnu': x8664UnknownLinuxGnu,
 };
-
-// The set of targets we build by default, sorted by increasing complexity so
-// that we fail fast when the native host target fails.
-export const ENABLED_TARGETS: Target[] = [
-    TARGETS['universal-apple-darwin'],
-    TARGETS['x86_64-unknown-linux-gnu'],
-    TARGETS['x86_64-pc-windows-msvc'],
-];
 
 export function getHost(): Target {
     return Object.values(TARGETS).find(target => (
