@@ -5,10 +5,16 @@ on:
     branches: [ develop, master ]
 jobs:
   windows:
-    name: Windows
+    strategy:
+      matrix:
+        include:
+          - target: x86_64-pc-windows-msvc
+          - target: i686-pc-windows-msvc
+            build-args: --ia32
+    name: Windows (${{ matrix.target }})
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Cache .hak
         uses: actions/cache@v3
@@ -41,6 +47,7 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
+          target: ${{ matrix.target }}
 
       - uses: actions/setup-node@v3
         with:
@@ -54,16 +61,16 @@ jobs:
         shell: pwsh
         run: |
           refreshenv
-          yarn build:native
+          yarn build:native --target ${{ matrix.target }}
 
       - name: Build App
-        run: "yarn build --publish never"
+        run: "yarn build --publish never -w ${{ matrix.build-args }}"
 
   linux:
     name: Linux
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Cache .hak
         uses: actions/cache@v3
@@ -95,7 +102,7 @@ jobs:
     name: macOS
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Cache .hak
         uses: actions/cache@v3
