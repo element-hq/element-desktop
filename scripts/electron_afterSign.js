@@ -11,12 +11,14 @@ exports.default = async function(context) {
         // user IDs too, but apparently altool can't get the user ID
         // from the keychain, so we need to get it from the environment.
         const userId = process.env.NOTARIZE_APPLE_ID;
-        if (userId === undefined && !warned) {
-            console.log("*************************************");
-            console.log("*   NOTARIZE_APPLE_ID is not set.   *");
-            console.log("* This build will NOT be notarised. *");
-            console.log("*************************************");
-            warned = true;
+        if (userId === undefined) {
+            if (!warned) {
+                console.log("*************************************");
+                console.log("*   NOTARIZE_APPLE_ID is not set.   *");
+                console.log("* This build will NOT be notarised. *");
+                console.log("*************************************");
+                warned = true;
+            }
             return;
         }
 
