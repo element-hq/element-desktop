@@ -57,10 +57,9 @@ jobs:
         run: "yarn install --pure-lockfile"
 
       - name: Build Natives
-        shell: pwsh
         run: |
           refreshenv
-          "C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Auxiliary\Build\vcvarsall.bat" ${{ matrix.arch }}
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Auxiliary\Build\vcvarsall.bat" ${{ matrix.arch }}
           yarn build:native --target ${{ matrix.target }}
 
       - name: Build App
