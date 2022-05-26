@@ -46,15 +46,17 @@ function computeSignToolArgs(options, keyContainer) {
     return args;
 }
 
+let warned = false;
 exports.default = async function(options) {
     const keyContainer = process.env.SIGNING_KEY_CONTAINER;
-    if (keyContainer === undefined) {
+    if (keyContainer === undefined && !warned) {
         console.warn(
             "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n" +
             "! Skipping Windows signing.          !\n" +
             "! SIGNING_KEY_CONTAINER not defined. !\n" +
             "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
         );
+        warned = true;
         return;
     }
 

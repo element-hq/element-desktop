@@ -1,5 +1,6 @@
 const { notarize } = require('electron-notarize');
 
+let warned = false;
 exports.default = async function(context) {
     const { electronPlatformName, appOutDir } = context;
     const appId = context.packager.info.appInfo.id;
@@ -10,11 +11,12 @@ exports.default = async function(context) {
         // user IDs too, but apparently altool can't get the user ID
         // from the keychain, so we need to get it from the environment.
         const userId = process.env.NOTARIZE_APPLE_ID;
-        if (userId === undefined) {
+        if (userId === undefined && !warned) {
             console.log("*************************************");
             console.log("*   NOTARIZE_APPLE_ID is not set.   *");
             console.log("* This build will NOT be notarised. *");
             console.log("*************************************");
+            warned = true;
             return;
         }
 
