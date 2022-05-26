@@ -9,11 +9,11 @@ jobs:
       matrix:
         include:
           - target: x86_64-pc-windows-msvc
-            arch: x64
+            arch: amd64
           - target: i686-pc-windows-msvc
             arch: x86
             build-args: --ia32
-    name: Windows (${{ matrix.target }})
+    name: Windows (${{ matrix.arch }})
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
@@ -56,15 +56,11 @@ jobs:
       - name: Install Deps
         run: "yarn install --pure-lockfile"
 
-      - name: Set up Visual Studio shell
-        uses: egor-tensin/vs-shell@v2
-        with:
-          arch: ${{ matrix.arch }}
-
       - name: Build Natives
         shell: pwsh
         run: |
           refreshenv
+          "C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Auxiliary\Build\vcvarsall.bat" ${{ matrix.arch }}
           yarn build:native --target ${{ matrix.target }}
 
       - name: Build App
