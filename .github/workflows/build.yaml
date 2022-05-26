@@ -60,7 +60,14 @@ jobs:
         run: "yarn build --publish never"
 
   linux:
-    name: Linux
+    strategy:
+      matrix:
+        include:
+          - sqlcipher: system
+          - sqlcipher: static
+            env: |
+              SQLCIPHER_STATIC=1
+    name: 'Linux (sqlcipher: ${{ matrix.sqlcipher }})'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -77,6 +84,10 @@ jobs:
         with:
           toolchain: stable
 
+      - name: Install libsqlcipher-dev
+        if: matrix.sqlcipher == 'system'
+        run: sudo apt-get install -y libsqlcipher-dev
+
       - uses: actions/setup-node@v3
         with:
           cache: "yarn"
@@ -87,6 +98,7 @@ jobs:
 
       - name: Build Natives
         run: "yarn build:native"
+        env: ${{ matrix.env }}
 
       - name: Build App
         run: "yarn build --publish never"
