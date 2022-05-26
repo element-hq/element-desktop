@@ -4,10 +4,11 @@
 
 If you want to build native modules, make sure that the following tools are installed on your system.
 
+- [Git for Windows](https://git-scm.com/download/win)
 - [Node 14](https://nodejs.org)
-- [Python 3](https://www.python.org/downloads/)
+- [Python 3](https://www.python.org/downloads/) (if you type 'python' into command prompt it will offer to install it from the windows store)
 - [Strawberry Perl](https://strawberryperl.com/)
-- [Rust](https://rustup.rs/)
+- [Rustup](https://rustup.rs/)
 - [NASM](https://www.nasm.us/)
 - [Build Tools for Visual Studio 2019](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2019) with the following configuration:
   - On the Workloads tab:
@@ -18,6 +19,13 @@ If you want to build native modules, make sure that the following tools are inst
     - C++ CMake tools for Windows
 
 Once installed make sure all those utilities are accessible in your `PATH`.
+
+If you want to be able to build x86 targets from an x64 host install the right toolchain:
+```cmd
+rustup toolchain install stable-i686-pc-windows-msvc
+rustup target add i686-pc-windows-msvc
+```
+
 In order to load all the C++ utilities installed by Visual Studio you can run the following in a terminal window.
 
 ```
