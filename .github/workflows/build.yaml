@@ -9,7 +9,9 @@ jobs:
       matrix:
         include:
           - target: x86_64-pc-windows-msvc
+            arch: x64
           - target: i686-pc-windows-msvc
+            arch: x86
             build-args: --ia32
     name: Windows (${{ matrix.target }})
     runs-on: windows-latest
@@ -25,9 +27,6 @@ jobs:
 
       - name: Install nmake
         uses: ilammy/msvc-dev-cmd@v1
-
-      - name: Install Microsoft Build Tools
-        uses: microsoft/setup-msbuild@v1.1
 
       # ActiveTCL package on choco is from 2015,
       # this one is newer but includes more than we need
@@ -56,6 +55,11 @@ jobs:
       # Does not need branch matching as only analyses this layer
       - name: Install Deps
         run: "yarn install --pure-lockfile"
+
+      - name: Set up Visual Studio shell
+        uses: egor-tensin/vs-shell@v2
+        with:
+          arch: ${{ matrix.arch }}
 
       - name: Build Natives
         shell: pwsh

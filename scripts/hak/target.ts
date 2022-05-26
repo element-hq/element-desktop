@@ -104,7 +104,7 @@ export const TARGETS: Record<TargetId, Target> = {
 
 // The set of targets we build by default, sorted by increasing complexity so
 // that we fail fast when the native host target fails.
-export const ENABLED_TARGETS: Target[] = [
+export const DEFAULT_TARGETS: Target[] = [
     TARGETS['universal-apple-darwin'],
     TARGETS['x86_64-unknown-linux-gnu'],
     TARGETS['x86_64-pc-windows-msvc'],
