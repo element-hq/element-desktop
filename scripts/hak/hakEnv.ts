@@ -114,4 +114,12 @@ export default class HakEnv {
     getNodeModuleBin(name: string): string {
         return path.join(this.projectRoot, 'node_modules', '.bin', name);
     }
+
+    wantsStaticSqlCipherUnix(): boolean {
+        return this.isMac() || process.env.SQLCIPHER_STATIC == '1';
+    }
+
+    wantsStaticSqlCipher(): boolean {
+        return this.isWin() || this.wantsStaticSqlCipherUnix();
+    }
 }

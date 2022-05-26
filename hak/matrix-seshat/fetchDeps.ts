@@ -25,7 +25,9 @@ import HakEnv from '../../scripts/hak/hakEnv';
 import { DependencyInfo } from '../../scripts/hak/dep';
 
 export default async function(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
-    await getSqlCipher(hakEnv, moduleInfo);
+    if (hakEnv.wantsStaticSqlCipher()) {
+        await getSqlCipher(hakEnv, moduleInfo);
+    }
 
     if (hakEnv.isWin()) {
         await getOpenSsl(hakEnv, moduleInfo);
@@ -36,7 +38,7 @@ async function getSqlCipher(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise
     const version = moduleInfo.cfg.dependencies.sqlcipher;
     const sqlCipherDir = path.join(moduleInfo.moduleTargetDotHakDir, `sqlcipher-${version}`);
 
-    let haveSqlcipher;
+    let haveSqlcipher: boolean;
     try {
         await fsProm.stat(sqlCipherDir);
         haveSqlcipher = true;
@@ -47,7 +49,7 @@ async function getSqlCipher(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise
     if (haveSqlcipher) return;
 
     const sqlCipherTarball = path.join(moduleInfo.moduleDotHakDir, `sqlcipher-${version}.tar.gz`);
-    let haveSqlcipherTar;
+    let haveSqlcipherTar: boolean;
     try {
         await fsProm.stat(sqlCipherTarball);
         haveSqlcipherTar = true;
@@ -97,7 +99,7 @@ async function getOpenSsl(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<v
     const version = moduleInfo.cfg.dependencies.openssl;
     const openSslDir = path.join(moduleInfo.moduleTargetDotHakDir, `openssl-${version}`);
 
-    let haveOpenSsl;
+    let haveOpenSsl: boolean;
     try {
         await fsProm.stat(openSslDir);
         haveOpenSsl = true;
@@ -108,7 +110,7 @@ async function getOpenSsl(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<v
     if (haveOpenSsl) return;
 
     const openSslTarball = path.join(moduleInfo.moduleDotHakDir, `openssl-${version}.tar.gz`);
-    let haveOpenSslTar;
+    let haveOpenSslTar: boolean;
     try {
         await fsProm.stat(openSslTarball);
         haveOpenSslTar = true;
