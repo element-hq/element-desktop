@@ -9,7 +9,7 @@ jobs:
       matrix:
         include:
           - target: x86_64-pc-windows-msvc
-            arch: amd64
+            arch: x64
           - target: i686-pc-windows-msvc
             arch: x86
             build-args: --ia32
@@ -25,8 +25,10 @@ jobs:
           path: |
             ./.hak
 
-      - name: Install nmake
+      - name: Set up build tools
         uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: ${{ matrix.arch }}
 
       # ActiveTCL package on choco is from 2015,
       # this one is newer but includes more than we need
@@ -57,10 +59,8 @@ jobs:
         run: "yarn install --pure-lockfile"
 
       - name: Build Natives
-        shell: cmd
         run: |
           refreshenv
-          call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat" ${{ matrix.arch }}
           yarn build:native --target ${{ matrix.target }}
 
       - name: Build App
