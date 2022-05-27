@@ -54,12 +54,12 @@ export default class HakEnv {
         this.dotHakDir = path.join(this.projectRoot, '.hak');
     }
 
-    async init() {
+    public async init() {
         this.runtime = await getRuntime(this.projectRoot);
         this.runtimeVersion = await getRuntimeVersion(this.projectRoot);
     }
 
-    getRuntimeAbi(): string {
+    public getRuntimeAbi(): string {
         return nodePreGypVersioning.get_runtime_abi(
             this.runtime,
             this.runtimeVersion,
@@ -67,35 +67,35 @@ export default class HakEnv {
     }
 
     // {node_abi}-{platform}-{arch}
-    getNodeTriple(): string {
+    public getNodeTriple(): string {
         return this.getRuntimeAbi() + '-' + this.target.platform + '-' + this.target.arch;
     }
 
-    getTargetId(): TargetId {
+    public getTargetId(): TargetId {
         return this.target.id;
     }
 
-    isWin(): boolean {
+    public isWin(): boolean {
         return this.target.platform === 'win32';
     }
 
-    isMac(): boolean {
+    public isMac(): boolean {
         return this.target.platform === 'darwin';
     }
 
-    isLinux(): boolean {
+    public isLinux(): boolean {
         return this.target.platform === 'linux';
     }
 
-    getTargetArch(): Arch {
+    public getTargetArch(): Arch {
         return this.target.arch;
     }
 
-    isHost(): boolean {
+    public isHost(): boolean {
         return isHostId(this.target.id);
     }
 
-    makeGypEnv(): Record<string, string> {
+    public makeGypEnv(): Record<string, string> {
         return Object.assign({}, process.env, {
             npm_config_arch: this.target.arch,
             npm_config_target_arch: this.target.arch,
@@ -107,7 +107,15 @@ export default class HakEnv {
         });
     }
 
-    getNodeModuleBin(name: string): string {
+    public getNodeModuleBin(name: string): string {
         return path.join(this.projectRoot, 'node_modules', '.bin', name);
+    }
+
+    public wantsStaticSqlCipherUnix(): boolean {
+        return this.isMac() || process.env.SQLCIPHER_STATIC == '1';
+    }
+
+    public wantsStaticSqlCipher(): boolean {
+        return this.isWin() || this.wantsStaticSqlCipherUnix();
     }
 }
