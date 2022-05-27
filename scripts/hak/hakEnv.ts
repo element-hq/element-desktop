@@ -36,25 +36,21 @@ async function getRuntimeVersion(projectRoot: string): Promise<string> {
 }
 
 export default class HakEnv {
-    public target: Target;
-    public projectRoot: string;
+    public readonly target: Target;
     public runtime: string;
     public runtimeVersion: string;
     public dotHakDir: string;
 
-    constructor(prefix: string, targetId: TargetId) {
-        let target;
+    constructor(public readonly projectRoot: string, targetId: TargetId | null) {
         if (targetId) {
-            target = TARGETS[targetId];
+            this.target = TARGETS[targetId];
         } else {
-            target = getHost();
+            this.target = getHost();
         }
 
-        if (!target) {
+        if (!this.target) {
             throw new Error(`Unknown target ${targetId}!`);
         }
-        this.target = target;
-        this.projectRoot = prefix;
         this.dotHakDir = path.join(this.projectRoot, '.hak');
     }
 

@@ -61,7 +61,7 @@ async function main() {
         process.exit(1);
     }
 
-    const targetIds = [] as TargetId[];
+    const targetIds: TargetId[] = [];
     // Apply `--target <target>` option if specified
     // Can be specified multiple times for the copy command to bundle
     // multiple archs into a single universal output module)
@@ -84,13 +84,13 @@ async function main() {
     }
     const hakEnv = hakEnvs[0];
 
-    const deps = {} as Record<string, DependencyInfo>;
+    const deps: Record<string, DependencyInfo> = {};
 
     const hakDepsCfg = packageJson.hakDependencies || {};
 
     for (const dep of Object.keys(hakDepsCfg)) {
         const hakJsonPath = path.join(prefix, 'hak', dep, 'hak.json');
-        let hakJson;
+        let hakJson: Record<string, any>;
         try {
             hakJson = await require(hakJsonPath);
         } catch (e) {
@@ -125,7 +125,7 @@ async function main() {
         }
     }
 
-    let cmds;
+    let cmds: string[];
     if (process.argv.length < 3) {
         cmds = ['check', 'fetch', 'fetchDeps', 'build', 'copy', 'link'];
     } else if (METACOMMANDS[process.argv[2]]) {

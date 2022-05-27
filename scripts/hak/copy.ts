@@ -31,6 +31,7 @@ export default async function copy(hakEnv: HakEnv, moduleInfo: DependencyInfo): 
         // (and if you set glob.cwd it just breaks because it can't find the files)
         const oldCwd = process.cwd();
         try {
+            await mkdirp(moduleInfo.moduleOutDir);
             process.chdir(moduleInfo.moduleOutDir);
             await new Promise<void>((resolve, reject) => {
                 rimraf(moduleInfo.cfg.prune, {}, err => {
