@@ -1,5 +1,5 @@
-Changes in [1.10.14-rc.1](https://github.com/vector-im/element-desktop/releases/tag/v1.10.14-rc.1) (2022-05-31)
-===============================================================================================================
+Changes in [1.10.14](https://github.com/vector-im/element-desktop/releases/tag/v1.10.14) (2022-06-07)
+=====================================================================================================
 
 ## ✨ Features
  * Builds Windows 32-bit builds once more! ([\#369](https://github.com/vector-im/element-desktop/pull/369)). Fixes vector-im/element-web#13175.
