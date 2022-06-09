@@ -1,8 +1,10 @@
 #!/bin/bash
 
-docker inspect element-desktop-dockerbuild 2> /dev/null > /dev/null
+IMAGE=${DOCKER_IMAGE_NAME:-"element-desktop-dockerbuild"}
+
+docker inspect "$IMAGE" 2> /dev/null > /dev/null
 if [ $? != 0 ]; then
-    echo "Docker image element-desktop-dockerbuild not found. Have you run yarn run docker:setup?"
+    echo "Docker image $IMAGE not found. Have you run yarn run docker:setup?"
     exit 1
 fi
 
@@ -18,4 +20,4 @@ docker run --rm -ti \
  -v ${PWD}/docker/.gnupg:/root/.gnupg \
  -v ~/.cache/electron:/root/.cache/electron \
  -v ~/.cache/electron-builder:/root/.cache/electron-builder \
- element-desktop-dockerbuild "$@"
+ "$IMAGE" "$@"

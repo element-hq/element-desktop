@@ -47,7 +47,7 @@ using yarn at the root of this project:
 
     yarn add matrix-seshat
 
-You will have to rebuild the native libraries against electron's version of
+You will have to rebuild the native libraries against electron's version
 of node rather than your system node, using the `electron-build-env` tool.
 This is also needed to when pulling in changes to Seshat using `yarn link`.
 
@@ -65,6 +65,17 @@ After this is done the Electron version of Element can be run from the main fold
 as usual using:
 
     yarn start
+
+### Statically linking libsqlcipher
+
+On Windows & macOS we always statically link libsqlcipher for it is not generally available.
+On Linux by default we will use a system package, on debian & ubuntu this is `libsqlcipher0`,
+but this is problematic for some other packages. 
+By including `SQLCIPHER_STATIC=1` in the build environment, the build scripts will statically link sqlcipher,
+note that this will want a `libcrypto1.1` shared library available in the system.
+
+More info can be found at https://github.com/matrix-org/seshat/issues/102
+and https://github.com/vector-im/element-web/issues/20926.
 
 ## Compiling for specific architectures
 

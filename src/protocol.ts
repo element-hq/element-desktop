@@ -80,7 +80,7 @@ export function recordSSOSession(sessionID: string): void {
     writeStore(store);
 }
 
-export function getProfileFromDeeplink(args): string | undefined {
+export function getProfileFromDeeplink(args: string[]): string | undefined {
     // check if we are passed a profile in the SSO callback url
     const deeplinkUrl = args.find(arg => arg.startsWith(PROTOCOL + '//'));
     if (deeplinkUrl && deeplinkUrl.includes(SEARCH_PARAM)) {
