@@ -21,8 +21,8 @@ import HakEnv from '../../scripts/hak/hakEnv';
 import { DependencyInfo } from '../../scripts/hak/dep';
 
 export default async function(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
-    // of course tcl doesn't have a --version
-    if (!hakEnv.isLinux()) {
+    if (hakEnv.wantsStaticSqlCipher()) {
+        // of course tcl doesn't have a --version
         await new Promise<void>((resolve, reject) => {
             const proc = childProcess.spawn('tclsh', [], {
                 stdio: ['pipe', 'ignore', 'ignore'],
@@ -44,6 +44,7 @@ export default async function(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promi
     ];
     if (hakEnv.isWin()) {
         tools.push(['perl', '--version']); // for openssl configure
+        tools.push(['nasm', '-v']); // for openssl building
         tools.push(['patch', '--version']); // to patch sqlcipher Makefile.msc
         tools.push(['nmake', '/?']);
     } else {

@@ -17,7 +17,6 @@ limitations under the License.
 import path from "path";
 import { spawn } from "child_process";
 import { app } from "electron";
-import { promises as fsProm } from "fs";
 
 function runUpdateExe(args: string[]): Promise<void> {
     // Invokes Squirrel's Update.exe which will do things for us like create shortcuts
@@ -35,44 +34,16 @@ function runUpdateExe(args: string[]): Promise<void> {
 
 function checkSquirrelHooks(): boolean {
     if (process.platform !== 'win32') return false;
-
     const cmd = process.argv[1];
     const target = path.basename(process.execPath);
-    if (cmd === '--squirrel-install' || cmd === '--squirrel-updated') {
-        runUpdateExe(['--createShortcut=' + target]).then(() => {
-            // remove the old 'Riot' shortcuts, if they exist (update.exe --removeShortcut doesn't work
-            // because it always uses the name of the product as the name of the shortcut: the only variable
-            // is what executable you're linking to)
-            const appDataDir = process.env.APPDATA;
-            if (!appDataDir) return;
-            const startMenuDir = path.join(
-                appDataDir, 'Microsoft', 'Windows', 'Start Menu', 'Programs', 'New Vector Ltd',
-            );
-            return fsProm.rmdir(startMenuDir, { recursive: true });
-        }).then(() => {
-            // same for 'Element (Riot) which is old now too (we have to try to delete both because
-            // we don't know what version we're updating from, but of course we do know this version
-            // is 'Element' so the two old ones are all safe to delete).
-            const appDataDir = process.env.APPDATA;
-            if (!appDataDir) return;
-            const oldStartMenuLink = path.join(
-                appDataDir, 'Microsoft', 'Windows', 'Start Menu', 'Programs', 'Element', 'Element (Riot).lnk',
-            );
-            return fsProm.unlink(oldStartMenuLink).catch(() => {});
-        }).then(() => {
-            const oldDesktopShortcut = path.join(app.getPath('desktop'), 'Element (Riot).lnk');
-            return fsProm.unlink(oldDesktopShortcut).catch(() => {});
-        }).then(() => {
-            const oldDesktopShortcut = path.join(app.getPath('desktop'), 'Riot.lnk');
-            return fsProm.unlink(oldDesktopShortcut).catch(() => {});
-        }).then(() => {
-            app.quit();
-        });
+    if (cmd === '--squirrel-install') {
+        runUpdateExe(['--createShortcut=' + target]).then(() => app.quit());
+        return true;
+    } else if (cmd === '--squirrel-updated') {
+        app.quit();
         return true;
     } else if (cmd === '--squirrel-uninstall') {
-        runUpdateExe(['--removeShortcut=' + target]).then(() => {
-            app.quit();
-        });
+        runUpdateExe(['--removeShortcut=' + target]).then(() => app.quit());
         return true;
     } else if (cmd === '--squirrel-obsolete') {
         app.quit();

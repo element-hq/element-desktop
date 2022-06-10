@@ -92,10 +92,22 @@ export class AppLocalization {
         this.resetLocalizedUI();
     }
 
+    // Format language strings from normalized form to non-normalized form (e.g. en-gb to en_GB)
+    private denormalize(locale: string): string {
+        if (locale === "en") {
+            locale = "en_EN";
+        }
+        const parts = locale.split("-");
+        if (parts.length > 1) {
+            parts[1] = parts[1].toUpperCase();
+        }
+        return parts.join("_");
+    }
+
     public fetchTranslationJson(locale: string): Record<string, string> {
         try {
             console.log("Fetching translation json for locale: " + locale);
-            return require(`./i18n/strings/${locale}.json`);
+            return require(`./i18n/strings/${this.denormalize(locale)}.json`);
         } catch (e) {
             console.log(`Could not fetch translation json for locale: '${locale}'`, e);
             return null;
