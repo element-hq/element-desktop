@@ -389,6 +389,66 @@ ipcMain.on('app_onAction', function(_ev: IpcMainEvent, payload) {
     }
 });
 
+interface Setting {
+    read(): Promise<any>;
+    write(value: any): Promise<void>;
+}
+
+const settings: Record<string, Setting> = {
+    "Electron.autoLaunch": {
+        async read(): Promise<any> {
+            return launcher.isEnabled();
+        },
+        async write(value: any): Promise<void> {
+            if (value) {
+                return launcher.enable();
+            } else {
+                return launcher.disable();
+            }
+        },
+    },
+    "Electron.warnBeforeExit": {
+        async read(): Promise<any> {
+            return store.get("warnBeforeExit", true);
+        },
+        async write(value: any): Promise<void> {
+            store.set("warnBeforeExit", value);
+        },
+    },
+    "Electron.alwaysShowMenuBar": { // not supported on macOS
+        async read(): Promise<any> {
+            return !global.mainWindow.autoHideMenuBar;
+        },
+        async write(value: any): Promise<void> {
+            store.set('autoHideMenuBar', !value);
+            global.mainWindow.autoHideMenuBar = !value;
+            global.mainWindow.setMenuBarVisibility(value);
+        },
+    },
+    "Electron.showTrayIcon": { // not supported on macOS
+        async read(): Promise<any> {
+            return tray.hasTray();
+        },
+        async write(value: any): Promise<void> {
+            if (value) {
+                // Create trayIcon icon
+                tray.create(trayConfig);
+            } else {
+                tray.destroy();
+            }
+            store.set('minimizeToTray', value);
+        },
+    },
+    "Electron.enableHardwareAcceleration": {
+        async read(): Promise<any> {
+            return !store.get('disableHardwareAcceleration', false);
+        },
+        async write(value: any): Promise<void> {
+            store.set('disableHardwareAcceleration', !value);
+        },
+    },
+};
+
 ipcMain.on('ipcCall', async function(_ev: IpcMainEvent, payload) {
     if (!mainWindow) return;
 
@@ -399,50 +459,20 @@ ipcMain.on('ipcCall', async function(_ev: IpcMainEvent, payload) {
         case 'getUpdateFeedUrl':
             ret = autoUpdater.getFeedURL();
             break;
-        case 'getAutoLaunchEnabled':
-            ret = await launcher.isEnabled();
+        case 'getSettingValue': {
+            const [settingName] = args;
+            const setting = settings[settingName];
+            ret = await setting.read();
             break;
-        case 'setAutoLaunchEnabled':
-            if (args[0]) {
-                launcher.enable();
-            } else {
-                launcher.disable();
-            }
+        }
+        case 'setSettingValue': {
+            const [settingName, value] = args;
+            const setting = settings[settingName];
+            await setting.write(value);
             break;
+        }
         case 'setLanguage':
             appLocalization.setAppLocale(args[0]);
-            break;
-        case 'shouldWarnBeforeExit':
-            ret = store.get('warnBeforeExit', true);
-            break;
-        case 'setWarnBeforeExit':
-            store.set('warnBeforeExit', args[0]);
-            break;
-        case 'getMinimizeToTrayEnabled':
-            ret = tray.hasTray();
-            break;
-        case 'setMinimizeToTrayEnabled':
-            if (args[0]) {
-                // Create trayIcon icon
-                tray.create(trayConfig);
-            } else {
-                tray.destroy();
-            }
-            store.set('minimizeToTray', args[0]);
-            break;
-        case 'getAutoHideMenuBarEnabled':
-            ret = global.mainWindow.autoHideMenuBar;
-            break;
-        case 'setAutoHideMenuBarEnabled':
-            store.set('autoHideMenuBar', args[0]);
-            global.mainWindow.autoHideMenuBar = Boolean(args[0]);
-            global.mainWindow.setMenuBarVisibility(!args[0]);
-            break;
-        case 'getDisableHardwareAcceleration':
-            ret = store.get('disableHardwareAcceleration') === true;
-            break;
-        case 'setDisableHardwareAcceleration':
-            store.set('disableHardwareAcceleration', args[0]);
             break;
         case 'getAppVersion':
             ret = app.getVersion();
@@ -864,7 +894,7 @@ app.enableSandbox();
 app.commandLine.appendSwitch('disable-features', 'HardwareMediaKeyHandling,MediaSessionService');
 
 // Disable hardware acceleration if the setting has been set.
-if (store.get('disableHardwareAcceleration') === true) {
+if (store.get('disableHardwareAcceleration', false) === true) {
     console.log("Disabling hardware acceleration.");
     app.disableHardwareAcceleration();
 }
