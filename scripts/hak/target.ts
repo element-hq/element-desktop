@@ -61,7 +61,7 @@ export type WindowsTarget = Target & {
 export type LinuxTarget = Target & {
     platform: 'linux';
     libC: LibC;
-}
+};
 
 export type UniversalTarget = Target & {
     arch: 'universal';
