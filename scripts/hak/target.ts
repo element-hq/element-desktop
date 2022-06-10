@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import { GLIBC, MUSL, family as processLibC } from "detect-libc";
+
 // We borrow Rust's target naming scheme as a way of expressing all target
 // details in a single string.
 // See https://doc.rust-lang.org/rustc/platform-support.html.
@@ -23,17 +25,27 @@ export type TargetId =
     'universal-apple-darwin' |
     'i686-pc-windows-msvc' |
     'x86_64-pc-windows-msvc' |
-    'x86_64-unknown-linux-gnu';
+    'i686-unknown-linux-musl' |
+    'i686-unknown-linux-gnu' |
+    'x86_64-unknown-linux-musl' |
+    'x86_64-unknown-linux-gnu' |
+    'aarch64-unknown-linux-musl' |
+    'aarch64-unknown-linux-gnu' |
+    'powerpc64le-unknown-linux-musl' |
+    'powerpc64le-unknown-linux-gnu';
 
 // Values are expected to match those used in `process.platform`.
 export type Platform = 'darwin' | 'linux' | 'win32';
 
 // Values are expected to match those used in `process.arch`.
-export type Arch = 'arm64' | 'ia32' | 'x64' | 'universal';
+export type Arch = 'arm64' | 'ia32' | 'x64' | 'ppc64' | 'universal';
 
 // Values are expected to match those used by Visual Studio's `vcvarsall.bat`.
 // See https://docs.microsoft.com/cpp/build/building-on-the-command-line?view=msvc-160#vcvarsall-syntax
 export type VcVarsArch = 'amd64' | 'arm64' | 'x86';
+
+// Values are expected to match those used in `detect-libc`.
+export type LibC = GLIBC | MUSL;
 
 export type Target = {
     id: TargetId;
@@ -44,6 +56,11 @@ export type Target = {
 export type WindowsTarget = Target & {
     platform: 'win32';
     vcVarsArch: VcVarsArch;
+};
+
+export type LinuxTarget = Target & {
+    platform: 'linux';
+    libC: LibC;
 };
 
 export type UniversalTarget = Target & {
@@ -87,10 +104,60 @@ const x8664PcWindowsMsvc: WindowsTarget = {
     vcVarsArch: 'amd64',
 };
 
-const x8664UnknownLinuxGnu: Target = {
+const x8664UnknownLinuxGnu: LinuxTarget = {
     id: 'x86_64-unknown-linux-gnu',
     platform: 'linux',
     arch: 'x64',
+    libC: 'glibc',
+};
+
+const x8664UnknownLinuxMusl: LinuxTarget = {
+    id: 'x86_64-unknown-linux-musl',
+    platform: 'linux',
+    arch: 'x64',
+    libC: 'musl',
+};
+
+const i686UnknownLinuxGnu: LinuxTarget = {
+    id: 'i686-unknown-linux-gnu',
+    platform: 'linux',
+    arch: 'ia32',
+    libC: 'glibc',
+};
+
+const i686UnknownLinuxMusl: LinuxTarget = {
+    id: 'i686-unknown-linux-musl',
+    platform: 'linux',
+    arch: 'ia32',
+    libC: 'musl',
+};
+
+const aarch64UnknownLinuxGnu: LinuxTarget = {
+    id: 'aarch64-unknown-linux-gnu',
+    platform: 'linux',
+    arch: 'arm64',
+    libC: 'glibc',
+};
+
+const aarch64UnknownLinuxMusl: LinuxTarget = {
+    id: 'aarch64-unknown-linux-musl',
+    platform: 'linux',
+    arch: 'arm64',
+    libC: 'musl',
+};
+
+const powerpc64leUnknownLinuxGnu: LinuxTarget = {
+    id: 'powerpc64le-unknown-linux-gnu',
+    platform: 'linux',
+    arch: 'ppc64',
+    libC: 'glibc',
+};
+
+const powerpc64leUnknownLinuxMusl: LinuxTarget = {
+    id: 'powerpc64le-unknown-linux-musl',
+    platform: 'linux',
+    arch: 'ppc64',
+    libC: 'musl',
 };
 
 export const TARGETS: Record<TargetId, Target> = {
@@ -102,13 +169,24 @@ export const TARGETS: Record<TargetId, Target> = {
     'i686-pc-windows-msvc': i686PcWindowsMsvc,
     'x86_64-pc-windows-msvc': x8664PcWindowsMsvc,
     // Linux
+    'i686-unknown-linux-musl': i686UnknownLinuxMusl,
+    'i686-unknown-linux-gnu': i686UnknownLinuxGnu,
+    'x86_64-unknown-linux-musl': x8664UnknownLinuxMusl,
     'x86_64-unknown-linux-gnu': x8664UnknownLinuxGnu,
+    'aarch64-unknown-linux-musl': aarch64UnknownLinuxMusl,
+    'aarch64-unknown-linux-gnu': aarch64UnknownLinuxGnu,
+    'powerpc64le-unknown-linux-musl': powerpc64leUnknownLinuxMusl,
+    'powerpc64le-unknown-linux-gnu': powerpc64leUnknownLinuxGnu,
 };
 
 export function getHost(): Target {
     return Object.values(TARGETS).find(target => (
         target.platform === process.platform &&
-        target.arch === process.arch
+        target.arch === process.arch &&
+        (
+            process.platform !== 'linux' ||
+            (target as LinuxTarget).libC === processLibC
+        )
     ));
 }
 
