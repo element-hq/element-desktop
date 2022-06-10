@@ -36,34 +36,30 @@ async function getRuntimeVersion(projectRoot: string): Promise<string> {
 }
 
 export default class HakEnv {
-    public target: Target;
-    public projectRoot: string;
+    public readonly target: Target;
     public runtime: string;
     public runtimeVersion: string;
     public dotHakDir: string;
 
-    constructor(prefix: string, targetId: TargetId) {
-        let target;
+    constructor(public readonly projectRoot: string, targetId: TargetId | null) {
         if (targetId) {
-            target = TARGETS[targetId];
+            this.target = TARGETS[targetId];
         } else {
-            target = getHost();
+            this.target = getHost();
         }
 
-        if (!target) {
+        if (!this.target) {
             throw new Error(`Unknown target ${targetId}!`);
         }
-        this.target = target;
-        this.projectRoot = prefix;
         this.dotHakDir = path.join(this.projectRoot, '.hak');
     }
 
-    async init() {
+    public async init() {
         this.runtime = await getRuntime(this.projectRoot);
         this.runtimeVersion = await getRuntimeVersion(this.projectRoot);
     }
 
-    getRuntimeAbi(): string {
+    public getRuntimeAbi(): string {
         return nodePreGypVersioning.get_runtime_abi(
             this.runtime,
             this.runtimeVersion,
@@ -71,39 +67,39 @@ export default class HakEnv {
     }
 
     // {node_abi}-{platform}-{arch}
-    getNodeTriple(): string {
+    public getNodeTriple(): string {
         return this.getRuntimeAbi() + '-' + this.target.platform + '-' + this.target.arch;
     }
 
-    getTargetId(): TargetId {
+    public getTargetId(): TargetId {
         return this.target.id;
     }
 
-    isWin(): boolean {
+    public isWin(): boolean {
         return this.target.platform === 'win32';
     }
 
-    isMac(): boolean {
+    public isMac(): boolean {
         return this.target.platform === 'darwin';
     }
 
-    isLinux(): boolean {
+    public isLinux(): boolean {
         return this.target.platform === 'linux';
     }
 
-    getTargetArch(): Arch {
+    public getTargetArch(): Arch {
         return this.target.arch;
     }
 
-    isHost(): boolean {
+    public isHost(): boolean {
         return isHostId(this.target.id);
     }
 
-    makeGypEnv(): Record<string, string> {
+    public makeGypEnv(): Record<string, string> {
         return Object.assign({}, process.env, {
             npm_config_arch: this.target.arch,
             npm_config_target_arch: this.target.arch,
-            npm_config_disturl: 'https://atom.io/download/electron',
+            npm_config_disturl: 'https://electronjs.org/headers',
             npm_config_runtime: this.runtime,
             npm_config_target: this.runtimeVersion,
             npm_config_build_from_source: true,
@@ -111,7 +107,15 @@ export default class HakEnv {
         });
     }
 
-    getNodeModuleBin(name: string): string {
+    public getNodeModuleBin(name: string): string {
         return path.join(this.projectRoot, 'node_modules', '.bin', name);
+    }
+
+    public wantsStaticSqlCipherUnix(): boolean {
+        return this.isMac() || process.env.SQLCIPHER_STATIC == '1';
+    }
+
+    public wantsStaticSqlCipher(): boolean {
+        return this.isWin() || this.wantsStaticSqlCipherUnix();
     }
 }

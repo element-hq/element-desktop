@@ -26,7 +26,7 @@ export default async function(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promi
     if (hakEnv.isWin()) {
         await buildOpenSslWin(hakEnv, moduleInfo);
         await buildSqlCipherWin(hakEnv, moduleInfo);
-    } else {
+    } else if (hakEnv.wantsStaticSqlCipherUnix()) {
         await buildSqlCipherUnix(hakEnv, moduleInfo);
     }
     await buildMatrixSeshat(hakEnv, moduleInfo);
@@ -186,8 +186,12 @@ async function buildSqlCipherUnix(hakEnv: HakEnv, moduleInfo: DependencyInfo) {
         args.push('--with-crypto-lib=commoncrypto');
     }
 
-    if (hakEnv.isLinux()) {
-        args.push('--with-pic=yes');
+    if (hakEnv.wantsStaticSqlCipherUnix()) {
+        args.push('--enable-tcl=no');
+
+        if (hakEnv.isLinux()) {
+            args.push('--with-pic=yes');
+        }
     }
 
     if (!hakEnv.isHost()) {
@@ -210,7 +214,7 @@ async function buildSqlCipherUnix(hakEnv: HakEnv, moduleInfo: DependencyInfo) {
         args.push(`CFLAGS=${cflags.join(' ')}`);
     }
 
-    const ldflags = [];
+    const ldflags: string[] = [];
 
     if (hakEnv.isMac()) {
         ldflags.push('-framework Security');
@@ -270,13 +274,15 @@ async function buildMatrixSeshat(hakEnv: HakEnv, moduleInfo: DependencyInfo) {
     // it for now: we should confirm how much of this it still actually needs.
     const env = hakEnv.makeGypEnv();
 
-    Object.assign(env, {
-        SQLCIPHER_STATIC: 1,
-        SQLCIPHER_LIB_DIR: path.join(moduleInfo.depPrefix, 'lib'),
-        SQLCIPHER_INCLUDE_DIR: path.join(moduleInfo.depPrefix, 'include'),
-    });
+    if (!hakEnv.isLinux() || hakEnv.wantsStaticSqlCipherUnix()) {
+        Object.assign(env, {
+            SQLCIPHER_STATIC: 1,
+            SQLCIPHER_LIB_DIR: path.join(moduleInfo.depPrefix, 'lib'),
+            SQLCIPHER_INCLUDE_DIR: path.join(moduleInfo.depPrefix, 'include'),
+        });
+    }
 
-    if (hakEnv.isLinux()) {
+    if (hakEnv.isLinux() && hakEnv.wantsStaticSqlCipherUnix()) {
         // Ensure Element uses the statically-linked seshat build, and prevent other applications
         // from attempting to use this one. Detailed explanation:
         //
