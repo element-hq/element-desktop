@@ -49,7 +49,7 @@ ipcMain.on('loudNotification', function(): void {
 let powerSaveBlockerId: number = null;
 ipcMain.on('app_onAction', function(_ev: IpcMainEvent, payload) {
     switch (payload.action) {
-        case 'call_state':
+        case 'call_state': {
             if (powerSaveBlockerId !== null && powerSaveBlocker.isStarted(powerSaveBlockerId)) {
                 if (payload.state === 'ended') {
                     powerSaveBlocker.stop(powerSaveBlockerId);
@@ -61,6 +61,7 @@ ipcMain.on('app_onAction', function(_ev: IpcMainEvent, payload) {
                 }
             }
             break;
+        }
     }
 });
 
