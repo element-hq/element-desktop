@@ -1,3 +1,10 @@
+![Build](https://github.com/vector-im/element-desktop/actions/workflows/build.yaml/badge.svg)
+![Static Analysis](https://github.com/vector-im/element-desktop/actions/workflows/static_analysis.yaml/badge.svg)
+[![Weblate](https://translate.element.io/widgets/element-desktop/-/element-desktop/svg-badge.svg)](https://translate.element.io/engage/element-desktop/)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=element-desktop&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=element-desktop)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=element-desktop&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=element-desktop)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=element-desktop&metric=bugs)](https://sonarcloud.io/summary/new_code?id=element-desktop)
+
 Element Desktop
 ===============
 
@@ -20,7 +27,7 @@ so the first step is to get a working copy of Element Web. There are a few ways 
 # Fetch the prebuilt release Element package from the element-web GitHub releases page. The version
 # fetched will be the same as the local element-desktop package.
 # We're explicitly asking for no config, so the packaged Element will have no config.json.
-yarn run fetch --noverify --cfgdir ''
+yarn run fetch --noverify --cfgdir ""
 ```
 
 ...or if you'd like to use GPG to verify the downloaded package:
@@ -30,14 +37,14 @@ yarn run fetch --noverify --cfgdir ''
 # once.
 yarn run fetch --importkey
 # Fetch the package and verify the signature
-yarn run fetch --cfgdir ''
+yarn run fetch --cfgdir ""
 ```
 
 ...or either of the above, but fetching a specific version of Element:
 ```
 # Fetch the prebuilt release Element package from the element-web GitHub releases page. The version
 # fetched will be the same as the local element-desktop package.
-yarn run fetch --noverify --cfgdir '' v1.5.6
+yarn run fetch --noverify --cfgdir "" v1.5.6
 ```
 
 If you only want to run the app locally and don't need to build packages, you can
@@ -49,26 +56,17 @@ ln -s ../element-web/webapp ./
 
 [TODO: add support for fetching develop builds, arbitrary URLs and arbitrary paths]
 
-
 Building
 ========
-Now you have a copy of Element, you're ready to build packages. If you'd just like to
-run Element locally, skip to the next section.
 
-If you'd like to build the native modules (for searching in encrypted rooms and
-secure storage), do this first. This will take 10 minutes or so, and will
-require a number of native tools to be installed, depending on your OS (eg.
-rust, tcl, make/nmake). If you don't need these features, you can skip this
-step.
-```
-yarn run build:native
-```
+## Native Build
 
-On Windows, this will automatically determine the architecture to build for based
-on the environment (ie. set up by vcvarsall.bat).
+TODO: List native pre-requisites
 
-Now you can build the package:
+Optionally, [build the native modules](https://github.com/vector-im/element-desktop/blob/develop/docs/native-node-modules.md), 
+which include support for searching in encrypted rooms and secure storage. Skipping this step is fine, you just won't have those features.  
 
+Then, run
 ```
 yarn run build
 ```
@@ -78,25 +76,16 @@ This will do a couple of things:
  * Run electron-builder to build a package. The package built will match the operating system
    you're running the build process on.
 
-If you're on Windows, you can choose to build specifically for 32 or 64 bit:
-```
-yarn run build32
-```
-or
-```
-yarn run build64
-```
+## Docker
 
-This build step will not build any native modules.
-
-You can also build using docker, which will always produce the linux package:
+Alternatively, you can also build using docker, which will always produce the linux package:
 ```
 # Run this once to make the docker image
 yarn run docker:setup
 
 yarn run docker:install
 # if you want to build the native modules (this will take a while)
-yarn run docker:buildnative
+yarn run docker:build:native
 yarn run docker:build
 ```
 
@@ -147,6 +136,15 @@ In the paths above, `$NAME` is typically `Element`, unless you use `--profile
 $PROFILE` in which case it becomes `Element-$PROFILE`, or it is using one of
 the above created by a pre-1.7 install, in which case it will be `Riot` or
 `Riot-$PROFILE`.
+
+Translations
+==========================
+
+To add a new translation, head to the [translating doc](https://github.com/vector-im/element-web/blob/develop/docs/translating.md).
+
+For a developer guide, see the [translating dev doc](https://github.com/vector-im/element-web/blob/develop/docs/translating-dev.md).
+
+[<img src="https://translate.element.io/widgets/element-desktop/-/multi-auto.svg" alt="translationsstatus" width="340">](https://translate.element.io/engage/element-desktop/?utm_source=widget)
 
 Report bugs & give feedback
 ==========================

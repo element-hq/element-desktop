@@ -1,5 +1,5 @@
 {
-    "update_base_url": "https://packages.riot.im/desktop/update/",
+    "update_base_url": "https://packages.element.io/desktop/update/",
     "default_server_name": "matrix.org",
     "brand": "Element",
     "integrations_ui_url": "https://scalar.vector.im/",
@@ -13,18 +13,15 @@
     ],
     "hosting_signup_link": "https://element.io/matrix-services?utm_source=element-web&utm_medium=web",
     "bug_report_endpoint_url": "https://element.io/bugreports/submit",
+    "uisi_autorageshake_app": "element-auto-uisi",
     "roomDirectory": {
         "servers": [
             "matrix.org",
-            "gitter.im"
+            "gitter.im",
+            "libera.chat"
         ]
     },
     "showLabsSettings": false,
-    "piwik": {
-        "url": "https://piwik.riot.im/",
-        "siteId": 1,
-        "policyUrl": "https://element.io/cookie-policy"
-    },
     "enable_presence_by_hs_url": {
         "https://matrix.org": false,
         "https://matrix-client.matrix.org": false
@@ -38,5 +35,11 @@
             "url": "https://element.io/cookie-policy",
             "text": "Cookie Policy"
         }
-    ]
+    ],
+    "posthog": {
+        "projectApiKey": "phc_Jzsm6DTm6V2705zeU5dcNvQDlonOR68XvX2sh1sEOHO",
+        "apiHost": "https://posthog.element.io"
+    },
+    "privacy_policy_url": "https://element.io/cookie-policy",
+    "map_style_url": "https://api.maptiler.com/maps/streets/style.json?key=fU3vlMsMn4Jb6dnEIFsx"
 }

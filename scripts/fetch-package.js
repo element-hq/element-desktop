@@ -10,12 +10,11 @@ const asar = require('asar');
 const needle = require('needle');
 
 const riotDesktopPackageJson = require('../package.json');
+const { setPackageVersion } = require('./set-version.js');
 
 const PUB_KEY_URL = "https://packages.riot.im/element-release-key.asc";
 const PACKAGE_URL_PREFIX = "https://github.com/vector-im/element-web/releases/download/";
 const ASAR_PATH = 'webapp.asar';
-
-const {setPackageVersion, setDebVersion} = require('./set-version.js');
 
 async function getLatestDevelopUrl(bkToken) {
     const buildsResult = await needle('get',
@@ -283,7 +282,6 @@ async function main() {
         const semVer = targetVersion.slice(1);
         console.log("Updating version to " + semVer);
         await setPackageVersion(semVer);
-        await setDebVersion(semVer);
     }
 
     console.log("Done!");

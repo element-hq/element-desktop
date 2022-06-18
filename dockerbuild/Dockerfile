@@ -1,4 +1,4 @@
-FROM buildpack-deps:xenial-curl
+FROM buildpack-deps:bionic-curl
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -9,11 +9,12 @@ RUN apt-get -qq update && apt-get -qq dist-upgrade && \
   # git ssh for using as docker image on CircleCI
   # python for node-gyp
   # rpm is required for FPM to build rpm package
+  # tclsh is required for building SQLite as part of SQLCipher
   # libsecret-1-dev and libgnome-keyring-dev are required even for prebuild keytar
-  apt-get -qq install --no-install-recommends qtbase5-dev bsdtar build-essential autoconf libssl-dev gcc-multilib g++-multilib lzip rpm python libcurl3 git git-lfs ssh unzip \
+  apt-get -qq install --no-install-recommends qtbase5-dev bsdtar build-essential autoconf libssl-dev gcc-multilib g++-multilib lzip rpm python libcurl4 git git-lfs ssh unzip tcl \
   libsecret-1-dev libgnome-keyring-dev \
   libopenjp2-tools \
-  # Used by Seshat
+  # Used by seshat (when not SQLCIPHER_STATIC) \
   libsqlcipher-dev && \
   # git-lfs
   git lfs install && \
@@ -30,7 +31,7 @@ ENV LC_ALL C.UTF-8
 
 ENV DEBUG_COLORS true
 ENV FORCE_COLOR true
-ENV NODE_VERSION 12.16.1
+ENV NODE_VERSION 14.17.0
 
 # this package is used for snapcraft and we should not clear apt list - to avoid apt-get update during snap build
 RUN curl -L https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.gz | tar xz -C /usr/local --strip-components=1 && \

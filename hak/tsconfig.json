@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "target": "es2016",
+    "sourceMap": false,
+    "lib": [
+      "es2019",
+    ]
+  },
+  "include": [
+    "./**/*.ts"
+  ],
+  "ts-node": {
+    "transpileOnly": true
+  }
+}
