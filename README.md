@@ -153,9 +153,8 @@ If you run into any bugs or have feedback you'd like to share, please let us kno
 
 To help avoid duplicate issues, please [view existing issues](https://github.com/vector-im/element-web/issues?q=is%3Aopen+is%3Aissue+sort%3Areactions-%2B1-desc) first (and add a +1) or [create a new issue](https://github.com/vector-im/element-web/issues/new/choose) if you can't find it.  Please note that this issue tracker is associated with the [element-web](https://github.com/vector-im/element-web) repo, but is also applied to the code in this repo as well.
 
-
-Trouble Shooting
-==========================
+Troubleshooting
+===============
 
 Sometimes there is Cache from an old Riot folder or an old Element folder:
 
@@ -172,7 +171,7 @@ Don't forget to replace YOUR_USERNAME with the your computers username!
 On Windows you will usually find them here:
 `Users\YOUR_USERNAME\Library\Application Support\Roaming\`
 
-On mac you should find them here:
+On macOS you should find them here:
 `Users/YOUR_USERNAME/Library/Application Support/`
 
 if you do not find the folder Application Support, try looking for it from the terminal, you will need to escape the white space, just search for termianl on mac then paste this command:
