@@ -499,28 +499,30 @@ ipcMain.on('ipcCall', async function(_ev: IpcMainEvent, payload) {
                 mainWindow.webContents.goForward();
             }
             break;
-        case 'setSpellCheckLanguages':
-            if (args[0] && args[0].length > 0) {
-                mainWindow.webContents.session.setSpellCheckerEnabled(true);
-                store.set("spellCheckerEnabled", true);
+        case 'setSpellCheckEnabled':
+            if (typeof args[0] !== 'boolean') return;
 
-                try {
-                    mainWindow.webContents.session.setSpellCheckerLanguages(args[0]);
-                } catch (er) {
-                    console.log("There were problems setting the spellcheck languages", er);
-                }
-            } else {
-                mainWindow.webContents.session.setSpellCheckerEnabled(false);
-                store.set("spellCheckerEnabled", false);
+            mainWindow.webContents.session.setSpellCheckerEnabled(args[0]);
+            store.set("spellCheckerEnabled", args[0]);
+
+            break;
+
+        case 'getSpellCheckEnabled':
+            ret = store.get("spellCheckerEnabled", true);
+            break;
+
+        case 'setSpellCheckLanguages':
+            try {
+                mainWindow.webContents.session.setSpellCheckerLanguages(args[0]);
+            } catch (er) {
+                console.log("There were problems setting the spellcheck languages", er);
             }
             break;
+
         case 'getSpellCheckLanguages':
-            if (store.get("spellCheckerEnabled", true)) {
-                ret = mainWindow.webContents.session.getSpellCheckerLanguages();
-            } else {
-                ret = [];
-            }
+            ret = mainWindow.webContents.session.getSpellCheckerLanguages();
             break;
+
         case 'getAvailableSpellCheckLanguages':
             ret = mainWindow.webContents.session.availableSpellCheckerLanguages;
             break;
