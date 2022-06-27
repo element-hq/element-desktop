@@ -122,7 +122,8 @@
       "target": {
         "target": "squirrel"
       },
-      "sign": "scripts/electron_winSign"
+      "sign": "scripts/electron_winSign",
+      "executableName": "element_desktop"
     },
     "squirrelWindows": {
       "msi": true
