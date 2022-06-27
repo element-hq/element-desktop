@@ -124,6 +124,9 @@
       },
       "sign": "scripts/electron_winSign"
     },
+    "squirrelWindows": {
+      "msi": true
+    },
     "directories": {
       "output": "dist"
     },
