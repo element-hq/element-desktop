@@ -119,13 +119,12 @@
       "darkModeSupport": true
     },
     "win": {
-      "target": {
-        "target": "squirrel"
-      },
-      "sign": "scripts/electron_winSign",
-      "executableName": "element_desktop"
+      "executableName": "test",
+      "target": "squirrel",
+      "sign": "scripts/electron_winSign"
     },
     "squirrelWindows": {
+      "executableName": "foo",
       "msi": true
     },
     "directories": {
