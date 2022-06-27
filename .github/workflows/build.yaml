@@ -68,6 +68,13 @@ jobs:
 
       - name: Build App
         run: "yarn build --publish never -w ${{ matrix.build-args }}"
+        
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: win-${{ matrix.arch }}
+          path: dist
+          retention-days: 1
 
   linux:
     strategy:
@@ -112,6 +119,13 @@ jobs:
 
       - name: Build App
         run: "yarn build --publish never"
+        
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: linux-sqlcipher-${{ matrix.sqlcipher }}
+          path: dist
+          retention-days: 1
 
   macos:
     name: macOS (universal)
@@ -145,3 +159,10 @@ jobs:
 
       - name: Build App
         run: "yarn build:universal --publish never"
+        
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: macos
+          path: dist
+          retention-days: 1
