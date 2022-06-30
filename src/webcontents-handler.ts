@@ -143,7 +143,7 @@ function onLinkContextMenu(ev: Event, params: ContextMenuParams, webContents: We
             label: _t('Save image as...'),
             accelerator: 's',
             async click() {
-                const targetFileName = params.titleText || "image.png";
+                const targetFileName = params.suggestedFilename || params.altText || "image.png";
                 const { filePath } = await dialog.showSaveDialog({
                     defaultPath: targetFileName,
                 });
