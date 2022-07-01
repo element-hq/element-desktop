@@ -35,6 +35,10 @@ import fs, { promises as afs } from "fs";
 import { URL } from "url";
 import minimist from "minimist";
 
+import "./ipc";
+import "./keytar";
+import "./seshat";
+import "./settings";
 import * as tray from "./tray";
 import { buildMenuTemplate } from './vectormenu';
 import webContentsHandler from './webcontents-handler';
