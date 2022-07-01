@@ -227,7 +227,6 @@ async function moveAutoLauncher(): Promise<void> {
 
 global.store = new Store({ name: "electron-config" });
 
-let mainWindow: BrowserWindow = null;
 global.appQuitting = false;
 
 const exitShortcuts: Array<(input: Input, platform: string) => boolean> = [
@@ -242,7 +241,7 @@ const warnBeforeExit = (event: Event, input: Input): void => {
         input.type === 'keyDown' && exitShortcuts.some(shortcutFn => shortcutFn(input, process.platform));
 
     if (shouldWarnBeforeExit && exitShortcutPressed) {
-        const shouldCancelCloseRequest = dialog.showMessageBoxSync(mainWindow, {
+        const shouldCancelCloseRequest = dialog.showMessageBoxSync(global.mainWindow, {
             type: "question",
             buttons: [_t("Cancel"), _t("Close Element")],
             message: _t("Are you sure you want to quit?"),
@@ -411,7 +410,7 @@ app.on('ready', async () => {
     });
 
     const preloadScript = path.normalize(`${__dirname}/preload.js`);
-    mainWindow = global.mainWindow = new BrowserWindow({
+    global.mainWindow = new BrowserWindow({
         // https://www.electronjs.org/docs/faq#the-font-looks-blurry-what-is-this-and-what-can-i-do
         backgroundColor: '#fff',
 
@@ -431,32 +430,32 @@ app.on('ready', async () => {
             webgl: true,
         },
     });
-    mainWindow.loadURL('vector://vector/webapp/');
+    global.mainWindow.loadURL('vector://vector/webapp/');
 
     // Handle spellchecker
     // For some reason spellCheckerEnabled isn't persisted, so we have to use the store here
-    mainWindow.webContents.session.setSpellCheckerEnabled(global.store.get("spellCheckerEnabled", true));
+    global.mainWindow.webContents.session.setSpellCheckerEnabled(global.store.get("spellCheckerEnabled", true));
 
     // Create trayIcon icon
     if (global.store.get('minimizeToTray', true)) tray.create(global.trayConfig);
 
-    mainWindow.once('ready-to-show', () => {
-        mainWindowState.manage(mainWindow);
+    global.mainWindow.once('ready-to-show', () => {
+        mainWindowState.manage(global.mainWindow);
 
         if (!argv['hidden']) {
-            mainWindow.show();
+            global.mainWindow.show();
         } else {
             // hide here explicitly because window manage above sometimes shows it
-            mainWindow.hide();
+            global.mainWindow.hide();
         }
     });
 
-    mainWindow.webContents.on('before-input-event', warnBeforeExit);
+    global.mainWindow.webContents.on('before-input-event', warnBeforeExit);
 
-    mainWindow.on('closed', () => {
-        mainWindow = global.mainWindow = null;
+    global.mainWindow.on('closed', () => {
+        global.mainWindow = null;
     });
-    mainWindow.on('close', async (e) => {
+    global.mainWindow.on('close', async (e) => {
         // If we are not quitting and have a tray icon then minimize to tray
         if (!global.appQuitting && (tray.hasTray() || process.platform === 'darwin')) {
             // On Mac, closing the window just hides it
@@ -464,12 +463,12 @@ app.on('ready', async () => {
             // behave, eg. Mail.app)
             e.preventDefault();
 
-            if (mainWindow.isFullScreen()) {
-                mainWindow.once('leave-full-screen', () => mainWindow.hide());
+            if (global.mainWindow.isFullScreen()) {
+                global.mainWindow.once('leave-full-screen', () => global.mainWindow.hide());
 
-                mainWindow.setFullScreen(false);
+                global.mainWindow.setFullScreen(false);
             } else {
-                mainWindow.hide();
+                global.mainWindow.hide();
             }
 
             return false;
@@ -478,16 +477,16 @@ app.on('ready', async () => {
 
     if (process.platform === 'win32') {
         // Handle forward/backward mouse buttons in Windows
-        mainWindow.on('app-command', (e, cmd) => {
-            if (cmd === 'browser-backward' && mainWindow.webContents.canGoBack()) {
-                mainWindow.webContents.goBack();
-            } else if (cmd === 'browser-forward' && mainWindow.webContents.canGoForward()) {
-                mainWindow.webContents.goForward();
+        global.mainWindow.on('app-command', (e, cmd) => {
+            if (cmd === 'browser-backward' && global.mainWindow.webContents.canGoBack()) {
+                global.mainWindow.webContents.goBack();
+            } else if (cmd === 'browser-forward' && global.mainWindow.webContents.canGoForward()) {
+                global.mainWindow.webContents.goForward();
             }
         });
     }
 
-    webContentsHandler(mainWindow.webContents);
+    webContentsHandler(global.mainWindow.webContents);
 
     global.appLocalization = new AppLocalization({
         store: global.store,
@@ -503,14 +502,12 @@ app.on('window-all-closed', () => {
 });
 
 app.on('activate', () => {
-    mainWindow.show();
+    global.mainWindow.show();
 });
 
 function beforeQuit(): void {
     global.appQuitting = true;
-    if (mainWindow) {
-        mainWindow.webContents.send('before-quit');
-    }
+    global.mainWindow?.webContents.send('before-quit');
 }
 
 app.on('before-quit', beforeQuit);
@@ -521,10 +518,10 @@ app.on('second-instance', (ev, commandLine, workingDirectory) => {
     if (commandLine.includes('--hidden')) return;
 
     // Someone tried to run a second instance, we should focus our window.
-    if (mainWindow) {
-        if (!mainWindow.isVisible()) mainWindow.show();
-        if (mainWindow.isMinimized()) mainWindow.restore();
-        mainWindow.focus();
+    if (global.mainWindow) {
+        if (!global.mainWindow.isVisible()) global.mainWindow.show();
+        if (global.mainWindow.isMinimized()) global.mainWindow.restore();
+        global.mainWindow.focus();
     }
 });
 
