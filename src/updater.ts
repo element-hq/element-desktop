@@ -38,8 +38,7 @@ function pollForUpdates(): void {
         // somehow
         if (!latestUpdateDownloaded) {
             autoUpdater.checkForUpdates();
-        }
-        else {
+        } else {
             console.log("Skipping update check as download already present");
         }
     } catch (e) {
