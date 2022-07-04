@@ -28,7 +28,19 @@ function installUpdate(): void {
 
 function pollForUpdates(): void {
     try {
-        autoUpdater.checkForUpdates();
+        // If we've already got a new update downloaded, then stop
+        // trying to check for new ones, as according to the doc
+        // at https://github.com/electron/electron/blob/main/docs/api/auto-updater.md#autoupdatercheckforupdates
+        // we'll just keep re-downloading the same update.
+        // As a hunch, this might also be causing
+        // https://github.com/vector-im/element-web/issues/12433
+        // due to the update checks colliding with the pending install
+        // somehow
+        if (!latestUpdateDownloaded) {
+            autoUpdater.checkForUpdates();
+        } else {
+            console.log("Skipping update check as download already present");
+        }
     } catch (e) {
         console.log('Couldn\'t check for update', e);
     }
