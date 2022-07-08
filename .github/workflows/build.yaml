@@ -7,6 +7,29 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 jobs:
+  fetch:
+    name: Prepare
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          cache: "yarn"
+
+      - name: Install Deps
+        run: "yarn install --pure-lockfile"
+
+      - name: Fetch Element Web
+        run: yarn run fetch --noverify --cfgdir element.io/nightly
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: webapp
+          path: |
+            webapp.asar
+            package.json
+
   windows:
     strategy:
       matrix:
@@ -20,6 +43,10 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: webapp
 
       - name: Cache .hak
         uses: actions/cache@v3
@@ -68,7 +95,7 @@ jobs:
 
       - name: Build App
         run: "yarn build --publish never -w ${{ matrix.build-args }}"
-        
+
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -87,6 +114,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: webapp
 
       - name: Cache .hak
         uses: actions/cache@v3
@@ -119,7 +150,7 @@ jobs:
 
       - name: Build App
         run: "yarn build --publish never"
-        
+
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -132,6 +163,10 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: webapp
 
       - name: Cache .hak
         uses: actions/cache@v3
@@ -159,7 +194,7 @@ jobs:
 
       - name: Build App
         run: "yarn build:universal --publish never"
-        
+
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
