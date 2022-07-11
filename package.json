@@ -122,10 +122,11 @@
       "darkModeSupport": true
     },
     "win": {
-      "target": {
-        "target": "squirrel"
-      },
+      "target": ["squirrel", "msi"],
       "sign": "scripts/electron_winSign"
+    },
+    "msi": {
+      "perMachine": true
     },
     "directories": {
       "output": "dist"
