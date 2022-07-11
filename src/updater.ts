@@ -28,18 +28,16 @@ function installUpdate(): void {
 
 function pollForUpdates(): void {
     try {
-        // If we've already got a new update downloaded, then stop
-        // trying to check for new ones, as according to the doc
+        // If we've already got a new update downloaded, then stop trying to check for new ones, as according to the doc
         // at https://github.com/electron/electron/blob/main/docs/api/auto-updater.md#autoupdatercheckforupdates
         // we'll just keep re-downloading the same update.
-        // As a hunch, this might also be causing
-        // https://github.com/vector-im/element-web/issues/12433
-        // due to the update checks colliding with the pending install
-        // somehow
+        // As a hunch, this might also be causing https://github.com/vector-im/element-web/issues/12433
+        // due to the update checks colliding with the pending install somehow
         if (!latestUpdateDownloaded) {
             autoUpdater.checkForUpdates();
         } else {
             console.log("Skipping update check as download already present");
+            global.mainWindow?.webContents.send('update-downloaded', latestUpdateDownloaded);
         }
     } catch (e) {
         console.log('Couldn\'t check for update', e);
@@ -51,7 +49,7 @@ export function start(updateBaseUrl: string): void {
         updateBaseUrl = updateBaseUrl + '/';
     }
     try {
-        let url;
+        let url: string;
         // For reasons best known to Squirrel, the way it checks for updates
         // is completely different between macOS and windows. On macOS, it
         // hits a URL that either gives it a 200 with some json or
@@ -76,7 +74,7 @@ export function start(updateBaseUrl: string): void {
 
         if (url) {
             console.log(`Update URL: ${url}`);
-            autoUpdater.setFeedURL(url);
+            autoUpdater.setFeedURL({ url });
             // We check for updates ourselves rather than using 'updater' because we need to
             // do it in the main process (and we don't really need to check every 10 minutes:
             // every hour should be just fine for a desktop app)
@@ -97,8 +95,7 @@ ipcMain.on('install_update', installUpdate);
 ipcMain.on('check_updates', pollForUpdates);
 
 function ipcChannelSendUpdateStatus(status: boolean | string): void {
-    if (!global.mainWindow) return;
-    global.mainWindow.webContents.send('check_updates', status);
+    global.mainWindow?.webContents.send('check_updates', status);
 }
 
 interface ICachedUpdate {
@@ -117,8 +114,7 @@ autoUpdater.on('update-available', function() {
         // the only time we will get `update-not-available` if `latestUpdateDownloaded` is already set
         // is if the user used the Manual Update check and there is no update newer than the one we
         // have downloaded, so show it to them as the latest again.
-        if (!global.mainWindow) return;
-        global.mainWindow.webContents.send('update-downloaded', latestUpdateDownloaded);
+        global.mainWindow?.webContents.send('update-downloaded', latestUpdateDownloaded);
     } else {
         ipcChannelSendUpdateStatus(false);
     }
@@ -127,8 +123,7 @@ autoUpdater.on('update-available', function() {
 });
 
 autoUpdater.on('update-downloaded', (ev, releaseNotes, releaseName, releaseDate, updateURL) => {
-    if (!global.mainWindow) return;
     // forward to renderer
     latestUpdateDownloaded = { releaseNotes, releaseName, releaseDate, updateURL };
-    global.mainWindow.webContents.send('update-downloaded', latestUpdateDownloaded);
+    global.mainWindow?.webContents.send('update-downloaded', latestUpdateDownloaded);
 });
