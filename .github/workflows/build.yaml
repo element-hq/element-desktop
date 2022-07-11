@@ -26,6 +26,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: webapp
+          retention-days: 1
           path: |
             webapp.asar
             package.json
