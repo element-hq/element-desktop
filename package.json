@@ -2,7 +2,7 @@
   "name": "element-desktop",
   "productName": "Element",
   "main": "lib/electron-main.js",
-  "version": "1.11.0",
+  "version": "1.11.1-rc.1",
   "description": "A feature-rich client for Matrix.org",
   "author": "Element",
   "repository": {
@@ -122,7 +122,10 @@
       "darkModeSupport": true
     },
     "win": {
-      "target": ["squirrel", "msi"],
+      "target": [
+        "squirrel",
+        "msi"
+      ],
       "sign": "scripts/electron_winSign"
     },
     "msi": {
