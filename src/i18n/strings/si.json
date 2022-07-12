@@ -27,5 +27,21 @@
     "Redo": "පසුසේ",
     "Undo": "පෙරසේ",
     "Edit": "සංස්කරණය",
-    "Quit": "ඉවත් වන්න"
+    "Quit": "ඉවත් වන්න",
+    "Paste and Match Style": "අලවා ශෛලිය ගැළපුම",
+    "Delete": "මකන්න",
+    "The image failed to save": "රූපය සුරැකීමට අසමත්",
+    "Failed to save image": "රූපය සුරැකීමට අසමත්",
+    "Save image as...": "...ලෙස රූපය සුරකින්න",
+    "Copy image address": "රූපයේ ලිපිනයේ පිටපතක්",
+    "Copy image": "රූපයෙහි පිටපතක්",
+    "Bring All to Front": "සියල්ල ඉදිරිපසට",
+    "Stop Speaking": "කථාව නිමාව",
+    "Start Speaking": "කථාව ආරම්භය",
+    "Speech": "කථාව",
+    "Unhide": "නොසඟවන්න",
+    "Toggle Developer Tools": "සංවර්ධක මෙවලම්",
+    "Toggle Full Screen": "පූර්ණ තිරයට",
+    "Preferences": "පෙනුම",
+    "View": "දකින්න"
 }
