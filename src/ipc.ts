@@ -120,7 +120,6 @@ ipcMain.on('ipcCall', async function(_ev: IpcMainEvent, payload) {
 
             global.mainWindow.webContents.session.setSpellCheckerEnabled(args[0]);
             global.store.set("spellCheckerEnabled", args[0]);
-
             break;
 
         case 'getSpellCheckEnabled':
