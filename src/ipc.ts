@@ -115,27 +115,27 @@ ipcMain.on('ipcCall', async function(_ev: IpcMainEvent, payload) {
                 global.mainWindow.webContents.goForward();
             }
             break;
-        case 'setSpellCheckLanguages':
-            if (args[0] && args[0].length > 0) {
-                global.mainWindow.webContents.session.setSpellCheckerEnabled(true);
-                global.store.set("spellCheckerEnabled", true);
+        case 'setSpellCheckEnabled':
+            if (typeof args[0] !== 'boolean') return;
 
-                try {
-                    global.mainWindow.webContents.session.setSpellCheckerLanguages(args[0]);
-                } catch (er) {
-                    console.log("There were problems setting the spellcheck languages", er);
-                }
-            } else {
-                global.mainWindow.webContents.session.setSpellCheckerEnabled(false);
-                global.store.set("spellCheckerEnabled", false);
+            global.mainWindow.webContents.session.setSpellCheckerEnabled(args[0]);
+            global.store.set("spellCheckerEnabled", args[0]);
+            break;
+
+        case 'getSpellCheckEnabled':
+            ret = global.store.get("spellCheckerEnabled", true);
+            break;
+
+        case 'setSpellCheckLanguages':
+            try {
+                global.mainWindow.webContents.session.setSpellCheckerLanguages(args[0]);
+            } catch (er) {
+                console.log("There were problems setting the spellcheck languages", er);
             }
             break;
+
         case 'getSpellCheckLanguages':
-            if (global.store.get("spellCheckerEnabled", true)) {
-                ret = global.mainWindow.webContents.session.getSpellCheckerLanguages();
-            } else {
-                ret = [];
-            }
+            ret = global.mainWindow.webContents.session.getSpellCheckerLanguages();
             break;
         case 'getAvailableSpellCheckLanguages':
             ret = global.mainWindow.webContents.session.availableSpellCheckerLanguages;
