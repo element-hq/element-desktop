@@ -41,5 +41,6 @@
         "apiHost": "https://posthog.element.io"
     },
     "privacy_policy_url": "https://element.io/cookie-policy",
-    "map_style_url": "https://api.maptiler.com/maps/streets/style.json?key=fU3vlMsMn4Jb6dnEIFsx"
+    "map_style_url": "https://api.maptiler.com/maps/streets/style.json?key=fU3vlMsMn4Jb6dnEIFsx",
+    "tray_icons": {}
 }

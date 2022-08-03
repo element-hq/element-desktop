@@ -55,7 +55,6 @@ const argv = minimist(process.argv, {
 // async to are initialised in setupGlobals()
 let asarPath: string;
 let resPath: string;
-let iconPath: string;
 
 if (argv["help"]) {
     console.log("Options:");
@@ -192,17 +191,19 @@ async function setupGlobals(): Promise<void> {
     }
 
     // The tray icon
-    // It's important to call `path.join` so we don't end up with the packaged asar in the final path.
-    const iconFile = `element.${process.platform === 'win32' ? 'ico' : 'png'}`;
-    iconPath = path.join(resPath, "img", iconFile);
+    // It's important to call `path.join` for the bundled assets so we don't end up with the packaged asar in the final path.
+    const icon_path = process.platform === 'win32'
+      ? (global.vectorConfig?.tray_icons?.ico || path.join(resPath, 'img', 'element.ico'))
+      : (global.vectorConfig?.tray_icons?.png || path.join(resPath, 'img', 'element.png'));
+
     global.trayConfig = {
-        icon_path: iconPath,
+        icon_path,
         brand: global.vectorConfig.brand || 'Element',
     };
 
     // launcher
     global.launcher = new AutoLaunch({
-        name: global.vectorConfig.brand || 'Element',
+        name: global.trayConfig.brand,
         isHidden: true,
         mac: {
             useLaunchAgent: true,
@@ -418,7 +419,7 @@ app.on('ready', async () => {
         // https://www.electronjs.org/docs/faq#the-font-looks-blurry-what-is-this-and-what-can-i-do
         backgroundColor: '#fff',
 
-        icon: iconPath,
+        icon: global.trayConfig.icon_path,
         show: false,
         autoHideMenuBar: global.store.get('autoHideMenuBar', true),
 
