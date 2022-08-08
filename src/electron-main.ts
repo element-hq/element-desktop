@@ -192,12 +192,12 @@ async function setupGlobals(): Promise<void> {
 
     // The tray icon
     // It's important to call `path.join` for the bundled assets so we don't end up with the packaged asar in the final path.
-    const icon_path = process.platform === 'win32'
+    const iconPath = process.platform === 'win32'
       ? (global.vectorConfig?.tray_icons?.ico || path.join(resPath, 'img', 'element.ico'))
       : (global.vectorConfig?.tray_icons?.png || path.join(resPath, 'img', 'element.png'));
 
     global.trayConfig = {
-        icon_path,
+        iconPath,
         brand: global.vectorConfig.brand || 'Element',
     };
 
@@ -419,7 +419,7 @@ app.on('ready', async () => {
         // https://www.electronjs.org/docs/faq#the-font-looks-blurry-what-is-this-and-what-can-i-do
         backgroundColor: '#fff',
 
-        icon: global.trayConfig.icon_path,
+        icon: global.trayConfig.iconPath,
         show: false,
         autoHideMenuBar: global.store.get('autoHideMenuBar', true),
 

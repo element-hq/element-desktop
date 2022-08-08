@@ -46,14 +46,14 @@ function toggleWin(): void {
 }
 
 interface IConfig {
-    icon_path: string; // eslint-disable-line camelcase
+    iconPath: string;
     brand: string;
 }
 
 export function create(config: IConfig): void {
     // no trays on darwin
     if (process.platform === 'darwin' || trayIcon) return;
-    const defaultIcon = nativeImage.createFromPath(config.icon_path);
+    const defaultIcon = nativeImage.createFromPath(config.iconPath);
 
     trayIcon = new Tray(defaultIcon);
     trayIcon.setToolTip(config.brand);

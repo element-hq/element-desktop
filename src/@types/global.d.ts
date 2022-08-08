@@ -29,8 +29,7 @@ declare global {
             launcher: AutoLaunch;
             vectorConfig: Record<string, any>;
             trayConfig: {
-                // eslint-disable-next-line camelcase
-                icon_path: string;
+                iconPath: string;
                 brand: string;
             };
             store: Store<{
