@@ -29,8 +29,8 @@ declare global {
             launcher: AutoLaunch;
             vectorConfig: Record<string, any>;
             trayConfig: {
-                iconPath: string;
                 brand: string;
+                iconPath: string;
             };
             store: Store<{
                 warnBeforeExit?: boolean;

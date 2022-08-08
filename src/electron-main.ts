@@ -197,9 +197,12 @@ async function setupGlobals(): Promise<void> {
       : (global.vectorConfig?.tray_icons?.png || path.join(resPath, 'img', 'element.png'));
 
     global.trayConfig = {
-        iconPath,
         brand: global.vectorConfig.brand || 'Element',
-    };
+        iconPath,
+        allowWebIconOverride: !!(
+          process.platform === 'win32' && global.vectorConfig?.tray_icons?.ico || global.vectorConfig?.tray_icons?.png
+        ),
+    } as tray.IConfig;
 
     // launcher
     global.launcher = new AutoLaunch({

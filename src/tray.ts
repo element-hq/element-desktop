@@ -45,7 +45,8 @@ function toggleWin(): void {
     }
 }
 
-interface IConfig {
+export interface IConfig {
+    allowWebIconOverride: boolean;
     iconPath: string;
     brand: string;
 }
@@ -61,7 +62,15 @@ export function create(config: IConfig): void {
     trayIcon.on('click', toggleWin);
 
     let lastFavicon = null;
-    global.mainWindow.webContents.on('page-favicon-updated', async function(ev, favicons) {
+    global.mainWindow.webContents.on('page-title-updated', (_ev: Event, title: string) => {
+        trayIcon.setToolTip(title);
+    });
+
+    if (!config.allowWebIconOverride) {
+        return;
+    }
+
+    global.mainWindow.webContents.on('page-favicon-updated', async (_ev: Event, favicons: string[]) => {
         if (!favicons || favicons.length <= 0 || !favicons[0].startsWith('data:')) {
             if (lastFavicon !== null) {
                 global.mainWindow.setIcon(defaultIcon);
@@ -90,10 +99,6 @@ export function create(config: IConfig): void {
 
         trayIcon.setImage(newFavicon);
         global.mainWindow.setIcon(newFavicon);
-    });
-
-    global.mainWindow.webContents.on('page-title-updated', function(ev, title) {
-        trayIcon.setToolTip(title);
     });
 }
 
