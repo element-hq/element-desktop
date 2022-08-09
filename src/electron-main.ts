@@ -193,14 +193,15 @@ async function setupGlobals(): Promise<void> {
     // The tray icon
     // It's important to call `path.join` for the bundled assets so we don't end up with the packaged asar in the final path.
     const iconPath = process.platform === 'win32'
-      ? (global.vectorConfig?.tray_icons?.ico || path.join(resPath, 'img', 'element.ico'))
-      : (global.vectorConfig?.tray_icons?.png || path.join(resPath, 'img', 'element.png'));
+        ? (global.vectorConfig?.tray_icons?.ico || path.join(resPath, 'img', 'element.ico'))
+        : (global.vectorConfig?.tray_icons?.png || path.join(resPath, 'img', 'element.png'));
 
     global.trayConfig = {
         brand: global.vectorConfig.brand || 'Element',
         iconPath,
         allowWebIconOverride: !!(
-          process.platform === 'win32' && global.vectorConfig?.tray_icons?.ico || global.vectorConfig?.tray_icons?.png
+            (process.platform === 'win32' && global.vectorConfig?.tray_icons?.ico)
+                || global.vectorConfig?.tray_icons?.png
         ),
     } as tray.IConfig;
 
