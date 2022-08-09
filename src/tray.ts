@@ -46,6 +46,7 @@ function toggleWin(): void {
 }
 
 export interface IConfig {
+    // if this is true, favicon updates from the main window will replace the application tray icon
     allowWebIconOverride: boolean;
     iconPath: string;
     brand: string;
