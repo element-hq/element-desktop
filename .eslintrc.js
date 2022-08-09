@@ -12,6 +12,8 @@ module.exports = {
         // we also have some browser code (ie. the preload script)
         browser: true,
     },
+    // NOTE: These rules are frozen and new rules should not be added here.
+    // New changes belong in https://github.com/matrix-org/eslint-plugin-matrix-org/
     rules: {
         "quotes": "off",
         "indent": "off",
