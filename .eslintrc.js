@@ -13,6 +13,7 @@ module.exports = {
         browser: true,
     },
     rules: {
+        "no-mixed-operators": 2,
         "quotes": "off",
         "indent": "off",
         "prefer-promise-reject-errors": "off",
