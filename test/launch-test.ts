@@ -22,6 +22,9 @@ import { _electron as electron } from "playwright";
 import { ElectronApplication, Page } from "playwright-core";
 
 describe("App launch", () => {
+    const artifactsPath = path.join(process.cwd(), "test_artifacts");
+    fs.mkdirSync(artifactsPath);
+
     const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "element-desktop-tests"));
     console.log("Using temp profile directory: ", tmpDir);
 
@@ -37,7 +40,13 @@ describe("App launch", () => {
             args.unshift("./lib/electron-main.js");
         }
 
-        app = await electron.launch({ executablePath, args });
+        app = await electron.launch({
+            executablePath,
+            args,
+            recordVideo: {
+                dir: artifactsPath,
+            }
+        });
         window = await app.firstWindow();
     });
 
@@ -50,6 +59,6 @@ describe("App launch", () => {
         await window.locator("#matrixchat").waitFor();
         await window.locator(".mx_Welcome").waitFor();
         await expect(window).toMatchURL("vector://vector/webapp/#/welcome");
-        await window.screenshot({ path: "screenshot_welcome.png" });
+        await window.screenshot({ path: path.join(artifactsPath, "welcome.png") });
     });
 });
