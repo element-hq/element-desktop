@@ -60,5 +60,5 @@ describe("App launch", () => {
         await window.locator(".mx_Welcome").waitFor();
         await expect(window).toMatchURL("vector://vector/webapp/#/welcome");
         await window.screenshot({ path: path.join(artifactsPath, "welcome.png") });
-    });
+    }, 30000);
 });
