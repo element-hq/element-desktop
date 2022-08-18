@@ -167,7 +167,9 @@ jobs:
         run: "sudo apt install ./dist/*.deb"
 
       - name: Run tests
-        run: "yarn test"
+        uses: GabrielBB/xvfb-action@v1
+        with:
+          run: "yarn test"
         env:
           ELEMENT_DESKTOP_EXECUTABLE: "element-desktop"
 
