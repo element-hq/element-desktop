@@ -13,3 +13,5 @@
 /.npmrc
 .vscode
 .vscode/
+/screenshot_*
+/coverage/

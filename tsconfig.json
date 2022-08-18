@@ -14,9 +14,11 @@
     "lib": [
       "es2019",
       "dom"
-    ]
+    ],
+    "types": ["jest", "node"],
   },
   "include": [
-    "./src/**/*.ts"
+    "./src/**/*.ts",
+    "./tests/**/*.ts"
   ]
 }

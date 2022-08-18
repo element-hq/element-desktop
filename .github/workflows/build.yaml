@@ -1,4 +1,4 @@
-name: Build
+name: Build and Test
 on:
   pull_request: { }
   push:
@@ -98,11 +98,20 @@ jobs:
       - name: Build App
         run: "yarn build --publish never -w ${{ matrix.build-args }}"
 
+      # TODO test installer
+      - name: Run tests
+        run: "yarn test"
+        env:
+          ELEMENT_DESKTOP_EXECUTABLE: "./dist/win-unpacked/Element.exe"
+
       - name: Upload Artifacts
+        if: always()
         uses: actions/upload-artifact@v3
         with:
           name: win-${{ matrix.arch }}
-          path: dist
+          path: |
+            dist/
+            screenshot_*.png
           retention-days: 1
 
   linux:
@@ -154,11 +163,22 @@ jobs:
       - name: Build App
         run: "yarn build --publish never"
 
+      - name: Install .deb
+        run: "dpkg -i ./dist/*.deb"
+
+      - name: Run tests
+        run: "yarn test"
+        env:
+          ELEMENT_DESKTOP_EXECUTABLE: "element-desktop"
+
       - name: Upload Artifacts
+        if: always()
         uses: actions/upload-artifact@v3
         with:
           name: linux-sqlcipher-${{ matrix.sqlcipher }}
-          path: dist
+          path: |
+            dist/
+            screenshot_*.png
           retention-days: 1
 
   macos:
@@ -199,9 +219,18 @@ jobs:
       - name: Build App
         run: "yarn build:universal --publish never"
 
+      # TODO test installer
+      - name: Run tests
+        run: "yarn test"
+        env:
+          ELEMENT_DESKTOP_EXECUTABLE: "./dist/mac/Element.app/Contents/MacOS/Element"
+
       - name: Upload Artifacts
+        if: always()
         uses: actions/upload-artifact@v3
         with:
           name: macos
-          path: dist
+          path: |
+            dist/
+            screenshot_*.png
           retention-days: 1
