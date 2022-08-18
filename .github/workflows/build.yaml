@@ -103,6 +103,7 @@ jobs:
       # TODO test installer
       - name: Run tests
         run: "yarn test"
+        timeout-minutes: 5
         env:
           ELEMENT_DESKTOP_EXECUTABLE: ${{ matrix.executable_path }}
 
@@ -170,6 +171,7 @@ jobs:
 
       - name: Run tests
         uses: GabrielBB/xvfb-action@v1
+        timeout-minutes: 5
         with:
           run: "yarn test"
         env:
@@ -225,9 +227,9 @@ jobs:
       - name: Build App
         run: "yarn build:universal --publish never"
 
-      # TODO test installer
       - name: Run tests
         run: "yarn test"
+        timeout-minutes: 5
         env:
           ELEMENT_DESKTOP_EXECUTABLE: "./dist/mac-universal/Element.app/Contents/MacOS/Element"
 
