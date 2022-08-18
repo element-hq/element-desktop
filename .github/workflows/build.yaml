@@ -38,8 +38,10 @@ jobs:
         include:
           - target: x86_64-pc-windows-msvc
             arch: x64
+            executable_path: "./dist/win-unpacked/Element.exe"
           - target: i686-pc-windows-msvc
             arch: x86
+            executable_path: "./dist/win-ia32-unpacked/Element.exe"
             build-args: --ia32
     name: Windows (${{ matrix.arch }})
     runs-on: windows-latest
@@ -102,7 +104,7 @@ jobs:
       - name: Run tests
         run: "yarn test"
         env:
-          ELEMENT_DESKTOP_EXECUTABLE: "./dist/win-unpacked/Element.exe"
+          ELEMENT_DESKTOP_EXECUTABLE: ${{ matrix.executable_path }}
 
       - name: Upload Artifacts
         if: always()
@@ -110,7 +112,7 @@ jobs:
         with:
           name: win-${{ matrix.arch }}
           path: |
-            dist/
+            dist
             screenshot_*.png
           retention-days: 1
 
@@ -179,7 +181,7 @@ jobs:
         with:
           name: linux-sqlcipher-${{ matrix.sqlcipher }}
           path: |
-            dist/
+            dist
             screenshot_*.png
           retention-days: 1
 
@@ -225,7 +227,7 @@ jobs:
       - name: Run tests
         run: "yarn test"
         env:
-          ELEMENT_DESKTOP_EXECUTABLE: "./dist/mac/Element.app/Contents/MacOS/Element"
+          ELEMENT_DESKTOP_EXECUTABLE: "./dist/mac-universal/Element.app/Contents/MacOS/Element"
 
       - name: Upload Artifacts
         if: always()
@@ -233,6 +235,6 @@ jobs:
         with:
           name: macos
           path: |
-            dist/
+            dist
             screenshot_*.png
           retention-days: 1
