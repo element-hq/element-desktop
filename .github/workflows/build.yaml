@@ -164,7 +164,9 @@ jobs:
         run: "yarn build --publish never"
 
       - name: Install .deb
-        run: "dpkg -i ./dist/*.deb"
+        run: |
+          sudo dpkg -i ./dist/*.deb
+          sudo apt-get -f install
 
       - name: Run tests
         run: "yarn test"
