@@ -31,17 +31,15 @@ jobs:
             webapp.asar
             package.json
 
-  windows:
+  build_windows:
     needs: fetch
     strategy:
       matrix:
         include:
           - target: x86_64-pc-windows-msvc
             arch: x64
-            executable_path: "./dist/win-unpacked/Element.exe"
           - target: i686-pc-windows-msvc
             arch: x86
-            executable_path: "./dist/win-ia32-unpacked/Element.exe"
             build-args: --ia32
     name: Windows (${{ matrix.arch }})
     runs-on: windows-latest
@@ -100,6 +98,29 @@ jobs:
       - name: Build App
         run: "yarn build --publish never -w ${{ matrix.build-args }}"
 
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: win-${{ matrix.arch }}
+          path: dist
+          retention-days: 1
+
+  test_windows:
+    needs: build_windows
+    strategy:
+      matrix:
+        include:
+          - arch: x64
+            executable_path: "./dist/win-unpacked/Element.exe"
+          - arch: x86
+            executable_path: "./dist/win-ia32-unpacked/Element.exe"
+    name: Windows (${{ matrix.arch }}) Test
+    runs-on: windows-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: win-${{ matrix.arch }}
+
       # TODO test installer
       - name: Run tests
         run: "yarn test"
@@ -108,16 +129,13 @@ jobs:
           ELEMENT_DESKTOP_EXECUTABLE: ${{ matrix.executable_path }}
 
       - name: Upload Artifacts
-        if: always()
         uses: actions/upload-artifact@v3
         with:
           name: win-${{ matrix.arch }}
-          path: |
-            dist
-            test_artifacts
+          path: test_artifacts
           retention-days: 1
 
-  linux:
+  build_linux:
     needs: fetch
     strategy:
       matrix:
@@ -169,6 +187,30 @@ jobs:
       - name: Install .deb
         run: "sudo apt install ./dist/*.deb"
 
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: linux-sqlcipher-${{ matrix.sqlcipher }}
+          path: dist
+          retention-days: 1
+
+  test_linux:
+    needs: build_linux
+    strategy:
+      matrix:
+        include:
+          - sqlcipher: system
+          - sqlcipher: static
+    name: 'Linux (sqlcipher: ${{ matrix.sqlcipher }}) Test'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: linux-sqlcipher-${{ matrix.sqlcipher }}
+
+      - name: Install .deb
+        run: "sudo apt install ./dist/*.deb"
+
       - name: Run tests
         uses: GabrielBB/xvfb-action@v1
         timeout-minutes: 5
@@ -178,22 +220,17 @@ jobs:
           ELEMENT_DESKTOP_EXECUTABLE: "element-desktop"
 
       - name: Upload Artifacts
-        if: always()
         uses: actions/upload-artifact@v3
         with:
           name: linux-sqlcipher-${{ matrix.sqlcipher }}
-          path: |
-            dist
-            test_artifacts
+          path: test_artifacts
           retention-days: 1
 
-  macos:
+  build_macos:
     needs: fetch
     name: macOS (universal)
     runs-on: macos-latest
     steps:
-      - uses: paulz/prepare-macos@main
-
       - uses: actions/checkout@v3
 
       - uses: actions/download-artifact@v3
@@ -227,6 +264,24 @@ jobs:
       - name: Build App
         run: "yarn build:universal --publish never"
 
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: macos
+          path: dist
+          retention-days: 1
+
+  test_macos:
+    needs: build_macos
+    name: macOS (universal) Test
+    runs-on: macos-latest
+    steps:
+      - uses: paulz/prepare-macos@main
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: macos
+
       - name: Run tests
         run: "yarn test"
         timeout-minutes: 5
@@ -234,11 +289,8 @@ jobs:
           ELEMENT_DESKTOP_EXECUTABLE: "./dist/mac-universal/Element.app/Contents/MacOS/Element"
 
       - name: Upload Artifacts
-        if: always()
         uses: actions/upload-artifact@v3
         with:
           name: macos
-          path: |
-            dist
-            test_artifacts
+          path: test_artifacts
           retention-days: 1
