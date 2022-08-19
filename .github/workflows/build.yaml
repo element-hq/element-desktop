@@ -249,6 +249,9 @@ jobs:
         with:
           cache: "yarn"
 
+      - name: Install Deps
+        run: "yarn install --pure-lockfile"
+
       - uses: actions/download-artifact@v3
         with:
           name: ${{ matrix.artifact }}
