@@ -237,18 +237,18 @@ jobs:
             os: windows
             artifact: win-x64
             executable: "./dist/win-unpacked/Element.exe"
-    name: ${{ matrix.name }} Test
+    name: Test ${{ matrix.name }}
     runs-on: ${{ matrix.os }}-latest
     steps:
       - uses: paulz/prepare-macos@main
         if: matrix.os == 'macos'
 
+      - uses: actions/checkout@v3
+
       - uses: actions/download-artifact@v3
         with:
           name: ${{ matrix.artifact }}
-
-      - name: Display structure of downloaded files
-        run: ls -R
+          path: dist
 
       - name: Install .deb package
         run: "sudo apt install ./dist/*.deb"
