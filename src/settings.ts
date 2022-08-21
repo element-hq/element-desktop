@@ -48,8 +48,8 @@ export const Settings: Record<string, Setting> = {
         },
         async write(value: any): Promise<void> {
             global.store.set('autoHideMenuBar', !value);
-            global.mainWindow.autoHideMenuBar = !value;
-            global.mainWindow.setMenuBarVisibility(value);
+            // global.mainWindow.autoHideMenuBar = !value;
+            // global.mainWindow.setMenuBarVisibility(value);
         },
     },
     "Electron.showTrayIcon": { // not supported on macOS

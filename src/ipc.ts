@@ -27,6 +27,9 @@ ipcMain.on('setBadgeCount', function(_ev: IpcMainEvent, count: number): void {
         // only set badgeCount on Mac/Linux, the docs say that only those platforms support it but turns out Electron
         // has some Windows support too, and in some Windows environments this leads to two badges rendering atop
         // each other. See https://github.com/vector-im/element-web/issues/16942
+
+        // TODO: sum badge counts
+        // TODO: update instance selector badge
         app.badgeCount = count;
     }
     if (count === 0) {
@@ -65,7 +68,7 @@ ipcMain.on('app_onAction', function(_ev: IpcMainEvent, payload) {
     }
 });
 
-ipcMain.on('ipcCall', async function(_ev: IpcMainEvent, payload) {
+ipcMain.on('ipcCall', async function(ev: IpcMainEvent, payload) {
     if (!global.mainWindow) return;
 
     const args = payload.args || [];
@@ -106,19 +109,19 @@ ipcMain.on('ipcCall', async function(_ev: IpcMainEvent, payload) {
             ret = global.vectorConfig;
             break;
         case 'navigateBack':
-            if (global.mainWindow.webContents.canGoBack()) {
-                global.mainWindow.webContents.goBack();
+            if (ev.sender.canGoBack()) {
+                ev.sender.goBack();
             }
             break;
         case 'navigateForward':
-            if (global.mainWindow.webContents.canGoForward()) {
-                global.mainWindow.webContents.goForward();
+            if (ev.sender.canGoForward()) {
+                ev.sender.goForward();
             }
             break;
         case 'setSpellCheckEnabled':
             if (typeof args[0] !== 'boolean') return;
 
-            global.mainWindow.webContents.session.setSpellCheckerEnabled(args[0]);
+            ev.sender.session.setSpellCheckerEnabled(args[0]);
             global.store.set("spellCheckerEnabled", args[0]);
             break;
 
@@ -128,17 +131,17 @@ ipcMain.on('ipcCall', async function(_ev: IpcMainEvent, payload) {
 
         case 'setSpellCheckLanguages':
             try {
-                global.mainWindow.webContents.session.setSpellCheckerLanguages(args[0]);
+                ev.sender.session.setSpellCheckerLanguages(args[0]);
             } catch (er) {
                 console.log("There were problems setting the spellcheck languages", er);
             }
             break;
 
         case 'getSpellCheckLanguages':
-            ret = global.mainWindow.webContents.session.getSpellCheckerLanguages();
+            ret = ev.sender.session.getSpellCheckerLanguages();
             break;
         case 'getAvailableSpellCheckLanguages':
-            ret = global.mainWindow.webContents.session.availableSpellCheckerLanguages;
+            ret = ev.sender.session.availableSpellCheckerLanguages;
             break;
 
         case 'startSSOFlow':
@@ -187,14 +190,14 @@ ipcMain.on('ipcCall', async function(_ev: IpcMainEvent, payload) {
             break;
 
         default:
-            global.mainWindow.webContents.send('ipcReply', {
+            ev.sender.send('ipcReply', {
                 id: payload.id,
                 error: "Unknown IPC Call: " + payload.name,
             });
             return;
     }
 
-    global.mainWindow.webContents.send('ipcReply', {
+    ev.sender.send('ipcReply', {
         id: payload.id,
         reply: ret,
     });

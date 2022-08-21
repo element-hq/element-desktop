@@ -32,7 +32,6 @@ import path from "path";
 import windowStateKeeper from 'electron-window-state';
 import Store from 'electron-store';
 import fs, { promises as afs } from "fs";
-import { URL } from "url";
 import minimist from "minimist";
 
 import "./ipc";
@@ -41,11 +40,12 @@ import "./seshat";
 import "./settings";
 import * as tray from "./tray";
 import { buildMenuTemplate } from './vectormenu';
-import webContentsHandler from './webcontents-handler';
 import * as updater from './updater';
 import { getProfileFromDeeplink, protocolInit } from './protocol';
-import { _t, AppLocalization } from './language-helper';
-import Input = Electron.Input;
+import { AppLocalization } from './language-helper';
+import { loadInstances } from "./instances";
+import { resize } from "./resizer";
+import { createMenuView } from "./menu-view";
 
 const argv = minimist(process.argv, {
     alias: { help: "h" },
@@ -233,32 +233,6 @@ global.store = new Store({ name: "electron-config" });
 
 global.appQuitting = false;
 
-const exitShortcuts: Array<(input: Input, platform: string) => boolean> = [
-    (input, platform) => platform !== 'darwin' && input.alt && input.key.toUpperCase() === 'F4',
-    (input, platform) => platform !== 'darwin' && input.control && input.key.toUpperCase() === 'Q',
-    (input, platform) => platform === 'darwin' && input.meta && input.key.toUpperCase() === 'Q',
-];
-
-const warnBeforeExit = (event: Event, input: Input): void => {
-    const shouldWarnBeforeExit = global.store.get('warnBeforeExit', true);
-    const exitShortcutPressed =
-        input.type === 'keyDown' && exitShortcuts.some(shortcutFn => shortcutFn(input, process.platform));
-
-    if (shouldWarnBeforeExit && exitShortcutPressed) {
-        const shouldCancelCloseRequest = dialog.showMessageBoxSync(global.mainWindow, {
-            type: "question",
-            buttons: [_t("Cancel"), _t("Close Element")],
-            message: _t("Are you sure you want to quit?"),
-            defaultId: 1,
-            cancelId: 0,
-        }) === 0;
-
-        if (shouldCancelCloseRequest) {
-            event.preventDefault();
-        }
-    }
-};
-
 // handle uncaught errors otherwise it displays
 // stack traces in popup dialogs, which is terrible (which
 // it will do any time the auto update poke fails, and there's
@@ -345,59 +319,6 @@ app.on('ready', async () => {
             console.log(e);
         }
     }
-
-    protocol.registerFileProtocol('vector', (request, callback) => {
-        if (request.method !== 'GET') {
-            callback({ error: -322 }); // METHOD_NOT_SUPPORTED from chromium/src/net/base/net_error_list.h
-            return null;
-        }
-
-        const parsedUrl = new URL(request.url);
-        if (parsedUrl.protocol !== 'vector:') {
-            callback({ error: -302 }); // UNKNOWN_URL_SCHEME
-            return;
-        }
-        if (parsedUrl.host !== 'vector') {
-            callback({ error: -105 }); // NAME_NOT_RESOLVED
-            return;
-        }
-
-        const target = parsedUrl.pathname.split('/');
-
-        // path starts with a '/'
-        if (target[0] !== '') {
-            callback({ error: -6 }); // FILE_NOT_FOUND
-            return;
-        }
-
-        if (target[target.length - 1] == '') {
-            target[target.length - 1] = 'index.html';
-        }
-
-        let baseDir: string;
-        if (target[1] === 'webapp') {
-            baseDir = asarPath;
-        } else {
-            callback({ error: -6 }); // FILE_NOT_FOUND
-            return;
-        }
-
-        // Normalise the base dir and the target path separately, then make sure
-        // the target path isn't trying to back out beyond its root
-        baseDir = path.normalize(baseDir);
-
-        const relTarget = path.normalize(path.join(...target.slice(2)));
-        if (relTarget.startsWith('..')) {
-            callback({ error: -6 }); // FILE_NOT_FOUND
-            return;
-        }
-        const absTarget = path.join(baseDir, relTarget);
-
-        callback({
-            path: absTarget,
-        });
-    });
-
     if (argv['no-update']) {
         console.log('Auto update disabled via command line flag "--no-update"');
     } else if (global.vectorConfig['update_base_url']) {
@@ -420,7 +341,6 @@ app.on('ready', async () => {
 
         icon: iconPath,
         show: false,
-        autoHideMenuBar: global.store.get('autoHideMenuBar', true),
 
         x: mainWindowState.x,
         y: mainWindowState.y,
@@ -434,16 +354,23 @@ app.on('ready', async () => {
             webgl: true,
         },
     });
-    global.mainWindow.loadURL('vector://vector/webapp/');
+    global.mainWindow.setMenuBarVisibility(false);
 
-    // Handle spellchecker
-    // For some reason spellCheckerEnabled isn't persisted, so we have to use the store here
-    global.mainWindow.webContents.session.setSpellCheckerEnabled(global.store.get("spellCheckerEnabled", true));
+    // load all instances stored in the store
+    loadInstances(global.store, asarPath, global.mainWindow);
+
+    // create instance menu view
+    global.menuView = createMenuView(global.mainWindow);
+
+    // manually resize tiles on window resize
+    global.mainWindow.on('resize', resize);
+    global.mainWindow.on('show', resize);
+    global.mainWindow.on('restore', resize);
 
     // Create trayIcon icon
     if (global.store.get('minimizeToTray', true)) tray.create(global.trayConfig);
 
-    global.mainWindow.once('ready-to-show', () => {
+    global.currentView.webContents.once('did-finish-load', () => {
         mainWindowState.manage(global.mainWindow);
 
         if (!argv['hidden']) {
@@ -453,8 +380,6 @@ app.on('ready', async () => {
             global.mainWindow.hide();
         }
     });
-
-    global.mainWindow.webContents.on('before-input-event', warnBeforeExit);
 
     global.mainWindow.on('closed', () => {
         global.mainWindow = null;
@@ -482,15 +407,13 @@ app.on('ready', async () => {
     if (process.platform === 'win32') {
         // Handle forward/backward mouse buttons in Windows
         global.mainWindow.on('app-command', (e, cmd) => {
-            if (cmd === 'browser-backward' && global.mainWindow.webContents.canGoBack()) {
-                global.mainWindow.webContents.goBack();
-            } else if (cmd === 'browser-forward' && global.mainWindow.webContents.canGoForward()) {
-                global.mainWindow.webContents.goForward();
+            if (cmd === 'browser-backward' && global.currentView.webContents.canGoBack()) {
+                global.currentView.webContents.goBack();
+            } else if (cmd === 'browser-forward' && global.currentView.webContents.canGoForward()) {
+                global.currentView.webContents.goForward();
             }
         });
     }
-
-    webContentsHandler(global.mainWindow.webContents);
 
     global.appLocalization = new AppLocalization({
         store: global.store,

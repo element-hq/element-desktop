@@ -61,40 +61,40 @@ export function create(config: IConfig): void {
     trayIcon.on('click', toggleWin);
 
     let lastFavicon = null;
-    global.mainWindow.webContents.on('page-favicon-updated', async function(ev, favicons) {
-        if (!favicons || favicons.length <= 0 || !favicons[0].startsWith('data:')) {
-            if (lastFavicon !== null) {
-                global.mainWindow.setIcon(defaultIcon);
-                trayIcon.setImage(defaultIcon);
-                lastFavicon = null;
-            }
-            return;
-        }
+    // global.mainWindow.webContents.on('page-favicon-updated', async function(ev, favicons) {
+    //     if (!favicons || favicons.length <= 0 || !favicons[0].startsWith('data:')) {
+    //         if (lastFavicon !== null) {
+    //             global.mainWindow.setIcon(defaultIcon);
+    //             trayIcon.setImage(defaultIcon);
+    //             lastFavicon = null;
+    //         }
+    //         return;
+    //     }
 
-        // No need to change, shortcut
-        if (favicons[0] === lastFavicon) return;
-        lastFavicon = favicons[0];
+    //     // No need to change, shortcut
+    //     if (favicons[0] === lastFavicon) return;
+    //     lastFavicon = favicons[0];
 
-        let newFavicon = nativeImage.createFromDataURL(favicons[0]);
+    //     let newFavicon = nativeImage.createFromDataURL(favicons[0]);
 
-        // Windows likes ico's too much.
-        if (process.platform === 'win32') {
-            try {
-                const icoPath = path.join(app.getPath('temp'), 'win32_element_icon.ico');
-                fs.writeFileSync(icoPath, await pngToIco(newFavicon.toPNG()));
-                newFavicon = nativeImage.createFromPath(icoPath);
-            } catch (e) {
-                console.error("Failed to make win32 ico", e);
-            }
-        }
+    //     // Windows likes ico's too much.
+    //     if (process.platform === 'win32') {
+    //         try {
+    //             const icoPath = path.join(app.getPath('temp'), 'win32_element_icon.ico');
+    //             fs.writeFileSync(icoPath, await pngToIco(newFavicon.toPNG()));
+    //             newFavicon = nativeImage.createFromPath(icoPath);
+    //         } catch (e) {
+    //             console.error("Failed to make win32 ico", e);
+    //         }
+    //     }
 
-        trayIcon.setImage(newFavicon);
-        global.mainWindow.setIcon(newFavicon);
-    });
+    //     trayIcon.setImage(newFavicon);
+    //     global.mainWindow.setIcon(newFavicon);
+    // });
 
-    global.mainWindow.webContents.on('page-title-updated', function(ev, title) {
-        trayIcon.setToolTip(title);
-    });
+    // global.mainWindow.webContents.on('page-title-updated', function(ev, title) {
+    //     trayIcon.setToolTip(title);
+    // });
 }
 
 export function initApplicationMenu(): void {

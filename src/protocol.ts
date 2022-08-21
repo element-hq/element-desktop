@@ -49,7 +49,8 @@ function processUrl(url: string): void {
     urlToLoad.hash = parsed.hash;
 
     console.log("Opening URL: ", urlToLoad.href);
-    global.mainWindow.loadURL(urlToLoad.href);
+    // TODO: ask for instance to open with
+    global.currentView.loadURL(urlToLoad.href);
 }
 
 function readStore(): object {

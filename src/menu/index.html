@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <style>
+    html {
+        background-color: #d5d5d5;
+    }
+    .instance-button {
+        border-radius: 8px;
+        display: block;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        padding: 4px;
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        margin-left: 2px;
+        border: 2px solid #aaa;
+        text-align: center;
+        margin-bottom: 2px;
+        background-position: center;
+        background-size: cover;
+    }
+    .instance-button.add {
+        border-color: rgba(13,100,100, 0.1);
+    }
+    .instance-button img {
+        width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.0.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.0.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+
+  <!-- 
+    rather a quick POC than a real, properly coded component
+   -->
+  <script type="text/jsx">
+    class MenuItem extends React.Component {
+        onClick = () => {
+            electronAPI.selectInstance(this.props.id)
+        }
+        render() {
+            console.log(this.props)
+            return (<a onClick={this.onClick} class="instance-button" title={this.props.matrixId} style={{backgroundImage: `url(${this.props.avatar})`}}>
+                {this.props.avatar ? null : this.props.matrixId.slice(1,2).toUpperCase() }
+            </a>)
+        }
+    }
+    class MenuItemAdd extends React.Component {
+        onClick = () => {
+            if(this.props.id) {
+                electronAPI.selectInstance(this.props.id)
+            } else {
+                electronAPI.createInstance()
+            }
+        }
+        render() {
+            return (<a onClick={this.onClick} class="instance-button add" title="Add another account">
+                +
+            </a>)
+        }
+    }
+    class Menu extends React.Component {
+      constructor(props) {
+        super(props);
+
+        this.state = {
+            instances: []
+        }
+      }
+      componentDidMount() {
+        electronAPI.onInstanceUpdate( () => {
+            console.log('onInstanceUpdate')
+            this.loadInstances();
+        })
+        this.loadInstances()
+      }
+      async loadInstances() {
+        const instances = await electronAPI.getInstances()
+        console.log('got instances', instances)
+        this.setState({
+            instances
+        })
+      }
+      render() {
+        const instances = this.state.instances.filter(i => i.matrixId)
+        const newInstance = this.state.instances.find(i => !i.matrixId)
+        return (<div>
+            {instances.map(i => (
+                <MenuItem key={i.key} id={i.key} matrixId={i.matrixId} avatar={i.avatar} />
+            ))}
+            <MenuItemAdd id={newInstance ? newInstance.key : null} />
+        </div>);
+      }
+    }
+    ReactDOM.render(<Menu />, document.getElementById('app'));
+  </script>
+</body>
+
+</html>
