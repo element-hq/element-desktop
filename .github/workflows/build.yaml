@@ -221,14 +221,17 @@ jobs:
             os: macos
             artifact: macos
             executable: "./dist/mac-universal/Element.app/Contents/MacOS/Element"
+            prepare_cmd: "chmod +x ./dist/mac-universal/Element.app/Contents/MacOS/Element"
           - name: 'Linux (sqlcipher: system)'
             os: linux
             artifact: linux-sqlcipher-system
             executable: "element-desktop"
+            prepare_cmd: "sudo apt install ./dist/*.deb"
           - name: 'Linux (sqlcipher: static)'
             os: linux
             artifact: linux-sqlcipher-static
             executable: "element-desktop"
+            prepare_cmd: "sudo apt install ./dist/*.deb"
           - name: Windows (x86)
             os: windows
             artifact: win-x86
@@ -257,9 +260,9 @@ jobs:
           name: ${{ matrix.artifact }}
           path: dist
 
-      - name: Install .deb package
-        run: "sudo apt install ./dist/*.deb"
-        if: matrix.os == 'linux'
+      - name: Prepare for tests
+        run: ${{ matrix.prepare_cmd }}
+        if: matrix.prepare_cmd
 
       - name: Run tests
         uses: GabrielBB/xvfb-action@v1
