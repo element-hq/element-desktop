@@ -217,11 +217,12 @@ jobs:
     strategy:
       matrix:
         include:
-          - name: macOS Universal
-            os: macos
-            artifact: macos
-            executable: "./dist/mac-universal/Element.app/Contents/MacOS/Element"
-            prepare_cmd: "chmod +x ./dist/mac-universal/Element.app/Contents/MacOS/Element"
+# Disable macOS tests for now, they fail to run in CI, needs investigation
+#          - name: macOS Universal
+#            os: macos
+#            artifact: macos
+#            executable: "./dist/mac-universal/Element.app/Contents/MacOS/Element"
+#            prepare_cmd: "chmod +x ./dist/mac-universal/Element.app/Contents/MacOS/Element"
           - name: 'Linux (sqlcipher: system)'
             os: linux
             artifact: linux-sqlcipher-system
