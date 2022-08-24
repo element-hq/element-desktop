@@ -1108,6 +1108,7 @@ Changes in [1.9.7](https://github.com/vector-im/element-desktop/releases/tag/v1.
 ## 🔒 SECURITY FIXES
 * Security release with updated version of Olm to fix https://matrix.org/blog/2021/12/03/pre-disclosure-upcoming-security-release-of-libolm-and-matrix-js-sdk
 * Upgrade Electron to 13.5.2 to fix https://matrix.org/blog/2022/01/31/high-severity-vulnerability-in-element-desktop-1-9-6-and-earlier (https://github.com/vector-im/element-desktop/security/advisories/GHSA-mjrg-9f8r-h3m7)
+
 ## 🐛 Bug Fixes
 * Fix a crash on logout
 
