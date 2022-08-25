@@ -217,7 +217,7 @@ jobs:
     strategy:
       matrix:
         include:
-# Disable macOS tests for now, they fail to run in CI, needs investigation
+# Disable macOS tests for now, they fail to run in CI, needs investigation.
 #          - name: macOS Universal
 #            os: macos
 #            artifact: macos
