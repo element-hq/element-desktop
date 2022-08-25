@@ -13,3 +13,5 @@
 /.npmrc
 .vscode
 .vscode/
+/test_artifacts/
+/coverage/

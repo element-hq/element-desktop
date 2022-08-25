@@ -1,4 +1,4 @@
-name: Build
+name: Build and Test
 on:
   pull_request: { }
   push:
@@ -154,6 +154,9 @@ jobs:
       - name: Build App
         run: "yarn build --publish never"
 
+      - name: Install .deb
+        run: "sudo apt install ./dist/*.deb"
+
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -204,4 +207,72 @@ jobs:
         with:
           name: macos
           path: dist
+          retention-days: 1
+
+  test:
+    needs:
+      - macos
+      - linux
+      - windows
+    strategy:
+      matrix:
+        include:
+# Disable macOS tests for now, they fail to run in CI, needs investigation.
+#          - name: macOS Universal
+#            os: macos
+#            artifact: macos
+#            executable: "./dist/mac-universal/Element.app/Contents/MacOS/Element"
+#            prepare_cmd: "chmod +x ./dist/mac-universal/Element.app/Contents/MacOS/Element"
+          - name: 'Linux (sqlcipher: system)'
+            os: ubuntu
+            artifact: linux-sqlcipher-system
+            executable: "element-desktop"
+            prepare_cmd: "sudo apt install ./dist/*.deb"
+          - name: 'Linux (sqlcipher: static)'
+            os: ubuntu
+            artifact: linux-sqlcipher-static
+            executable: "element-desktop"
+            prepare_cmd: "sudo apt install ./dist/*.deb"
+          - name: Windows (x86)
+            os: windows
+            artifact: win-x86
+            executable: "./dist/win-ia32-unpacked/Element.exe"
+          - name: Windows (x64)
+            os: windows
+            artifact: win-x64
+            executable: "./dist/win-unpacked/Element.exe"
+    name: Test ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          cache: "yarn"
+
+      - name: Install Deps
+        run: "yarn install --pure-lockfile"
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: ${{ matrix.artifact }}
+          path: dist
+
+      - name: Prepare for tests
+        run: ${{ matrix.prepare_cmd }}
+        if: matrix.prepare_cmd
+
+      - name: Run tests
+        uses: GabrielBB/xvfb-action@v1
+        timeout-minutes: 5
+        with:
+          run: "yarn test"
+        env:
+          ELEMENT_DESKTOP_EXECUTABLE: ${{ matrix.executable }}
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.artifact }}
+          path: test_artifacts
           retention-days: 1
