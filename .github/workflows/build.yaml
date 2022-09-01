@@ -20,8 +20,13 @@ jobs:
       - name: Install Deps
         run: "yarn install --pure-lockfile"
 
+      - name: Fetch Element Web (develop)
+        if: github.event.pull_request.head.ref == 'develop'
+        run: yarn run fetch --noverify develop -d element.io/nightly
+
       - name: Fetch Element Web
-        run: yarn run fetch --noverify --cfgdir element.io/nightly
+        if: github.event.pull_request.head.ref != 'develop'
+        run: yarn run fetch --noverify --cfgdir element.io/release
 
       - uses: actions/upload-artifact@v3
         with:
