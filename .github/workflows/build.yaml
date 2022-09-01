@@ -21,11 +21,11 @@ jobs:
         run: "yarn install --pure-lockfile"
 
       - name: Fetch Element Web (develop)
-        if: github.event.pull_request.head.ref == 'develop'
+        if: github.event.pull_request.base.ref == 'develop'
         run: yarn run fetch --noverify develop -d element.io/nightly
 
       - name: Fetch Element Web
-        if: github.event.pull_request.head.ref != 'develop'
+        if: github.event.pull_request.base.ref != 'develop'
         run: yarn run fetch --noverify --cfgdir element.io/release
 
       - uses: actions/upload-artifact@v3
