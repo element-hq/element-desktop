@@ -14,69 +14,8 @@ const { setPackageVersion } = require('./set-version.js');
 
 const PUB_KEY_URL = "https://packages.riot.im/element-release-key.asc";
 const PACKAGE_URL_PREFIX = "https://github.com/vector-im/element-web/releases/download/";
+const DEVELOP_TGZ_URL = "https://vector-im.github.io/element-web/develop.tar.gz";
 const ASAR_PATH = 'webapp.asar';
-
-async function getLatestDevelopUrl(bkToken) {
-    const buildsResult = await needle('get',
-        "https://api.buildkite.com/v2/organizations/matrix-dot-org/pipelines/element-web/builds",
-        {
-            branch: 'develop',
-            state: 'passed',
-            per_page: 1,
-        },
-        {
-            headers: {
-                authorization: "Bearer " + bkToken,
-            },
-        },
-    );
-    const latestBuild = buildsResult.body[0];
-    console.log("Latest build is " + latestBuild.number);
-    let artifactUrl;
-    for (const job of latestBuild.jobs) {
-        // Strip any colon-form emoji from the build name
-        if (job.name && job.name.replace(/:\w*:\s*/, '') === 'Package') {
-            artifactUrl = job.artifacts_url;
-            break;
-        }
-    }
-    if (artifactUrl === undefined) {
-        throw new Error("Couldn't find artifact URL - has the name of the package job changed?");
-    }
-
-    const artifactsResult = await needle('get', artifactUrl, {},
-        {
-            headers: {
-                authorization: "Bearer " + bkToken,
-            },
-        },
-    );
-    let dlUrl;
-    let dlFilename;
-    for (const artifact of artifactsResult.body) {
-        if (artifact.filename && /^element-.*\.tar.gz$/.test(artifact.filename)) {
-            dlUrl = artifact.download_url;
-            dlFilename = artifact.filename;
-            break;
-        }
-    }
-    if (dlUrl === undefined) {
-        throw new Error("Couldn't find artifact download URL - has the artifact filename changed?");
-    }
-    console.log("Fetching artifact URL...");
-    const dlResult = await needle('get', dlUrl, {},
-        {
-            headers: {
-                authorization: "Bearer " + bkToken,
-            },
-            // This URL will give us a Location header, but will also give us
-            // a JSON object with the direct URL. We'll take the URL and pass it
-            // back, then we can easily support specifying a URL directly.
-            follow_max: 0,
-        },
-    );
-    return [dlFilename, dlResult.body.url];
-}
 
 async function downloadToFile(url, filename) {
     console.log("Downloading " + url + "...");
@@ -148,24 +87,17 @@ async function main() {
 
     if (targetVersion === undefined) {
         targetVersion = 'v' + riotDesktopPackageJson.version;
-        filename = 'element-' + targetVersion + '.tar.gz';
-        url = PACKAGE_URL_PREFIX + targetVersion + '/' + filename;
-    } else if (targetVersion === 'develop') {
-        const buildKiteApiKey = process.env.BUILDKITE_API_KEY;
-        if (buildKiteApiKey === undefined) {
-            console.log("Set BUILDKITE_API_KEY to fetch latest develop version");
-            console.log(
-                "Sorry - Buildkite's API requires authentication to access builds, " +
-                "even if those builds are accessible on the web with no auth.",
-            );
-            process.exit(1);
-        }
-        [filename, url] = await getLatestDevelopUrl(buildKiteApiKey);
+    } else if (targetVersion !== 'develop') {
+        setVersion = true; // version was specified
+    }
+
+    if (targetVersion === 'develop') {
+        filename = 'develop.tar.gz';
+        url = DEVELOP_TGZ_URL;
         verify = false; // develop builds aren't signed
     } else {
         filename = 'element-' + targetVersion + '.tar.gz';
         url = PACKAGE_URL_PREFIX + targetVersion + '/' + filename;
-        setVersion = true;
     }
 
     const haveGpg = await new Promise((resolve) => {
@@ -207,7 +139,7 @@ async function main() {
     }
 
     let haveDeploy = false;
-    const expectedDeployDir = path.join(deployDir, path.basename(filename).replace(/\.tar\.gz/, ''));
+    let expectedDeployDir = path.join(deployDir, path.basename(filename).replace(/\.tar\.gz/, ''));
     try {
         await fs.opendir(expectedDeployDir);
         console.log(expectedDeployDir + "already exists");
@@ -256,6 +188,12 @@ async function main() {
         await tar.x({
             file: outPath,
             cwd: deployDir,
+            onentry: entry => {
+                // Find the appropriate extraction path, only needed for `develop` where the dir name is unknown
+                if (entry.type === "Directory" && !path.join(deployDir, entry.path).startsWith(expectedDeployDir)) {
+                    expectedDeployDir = path.join(deployDir, entry.path);
+                }
+            },
         });
     }
 
@@ -287,4 +225,9 @@ async function main() {
     console.log("Done!");
 }
 
-main().then((ret) => process.exit(ret)).catch(e => process.exit(1));
+main().then((ret) => {
+    process.exit(ret);
+}).catch(e => {
+    console.error(e);
+    process.exit(1);
+});
