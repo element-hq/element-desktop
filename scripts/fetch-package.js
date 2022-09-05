@@ -139,7 +139,7 @@ async function main() {
     }
 
     let haveDeploy = false;
-    const expectedDeployDir = path.join(deployDir, path.basename(filename).replace(/\.tar\.gz/, ''));
+    let expectedDeployDir = path.join(deployDir, path.basename(filename).replace(/\.tar\.gz/, ''));
     try {
         await fs.opendir(expectedDeployDir);
         console.log(expectedDeployDir + "already exists");
@@ -188,6 +188,12 @@ async function main() {
         await tar.x({
             file: outPath,
             cwd: deployDir,
+            onentry: entry => {
+                // Find the appropriate extraction path, only needed for `develop` where the dir name is unknown
+                if (entry.type === "Directory" && !path.join(deployDir, entry.path).startsWith(expectedDeployDir)) {
+                    expectedDeployDir = path.join(deployDir, entry.path);
+                }
+            },
         });
     }
 
@@ -219,4 +225,9 @@ async function main() {
     console.log("Done!");
 }
 
-main().then((ret) => process.exit(ret)).catch(e => process.exit(1));
+main().then((ret) => {
+    process.exit(ret);
+}).catch(e => {
+    console.error(e);
+    process.exit(1);
+});
