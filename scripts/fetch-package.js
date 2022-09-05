@@ -92,15 +92,6 @@ async function main() {
     }
 
     if (targetVersion === 'develop') {
-        const buildKiteApiKey = process.env.BUILDKITE_API_KEY;
-        if (buildKiteApiKey === undefined) {
-            console.log("Set BUILDKITE_API_KEY to fetch latest develop version");
-            console.log(
-                "Sorry - Buildkite's API requires authentication to access builds, " +
-                "even if those builds are accessible on the web with no auth.",
-            );
-            process.exit(1);
-        }
         filename = 'develop.tar.gz';
         url = DEVELOP_TGZ_URL;
         verify = false; // develop builds aren't signed
