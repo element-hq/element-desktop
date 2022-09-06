@@ -2,7 +2,7 @@
   "name": "element-desktop",
   "productName": "Element",
   "main": "lib/electron-main.js",
-  "version": "1.11.4",
+  "version": "1.11.5-rc.1",
   "description": "A feature-rich client for Matrix.org",
   "author": "Element",
   "repository": {
@@ -160,6 +160,8 @@
     "testMatch": [
       "<rootDir>/test/**/*-test.[jt]s?(x)"
     ],
-    "setupFilesAfterEnv": ["expect-playwright"]
+    "setupFilesAfterEnv": [
+      "expect-playwright"
+    ]
   }
 }
