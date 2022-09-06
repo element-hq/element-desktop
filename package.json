@@ -160,6 +160,8 @@
     "testMatch": [
       "<rootDir>/test/**/*-test.[jt]s?(x)"
     ],
-    "setupFilesAfterEnv": ["expect-playwright"]
+    "setupFilesAfterEnv": [
+      "expect-playwright"
+    ]
   }
 }
