@@ -44,9 +44,6 @@ export type Arch = 'arm64' | 'ia32' | 'x64' | 'ppc64' | 'universal';
 // See https://docs.microsoft.com/cpp/build/building-on-the-command-line?view=msvc-160#vcvarsall-syntax
 export type VcVarsArch = 'amd64' | 'arm64' | 'x86';
 
-// Values are expected to match those used in `detect-libc`.
-export type LibC = GLIBC | MUSL;
-
 export type Target = {
     id: TargetId;
     platform: Platform;
@@ -60,7 +57,7 @@ export type WindowsTarget = Target & {
 
 export type LinuxTarget = Target & {
     platform: 'linux';
-    libC: LibC;
+    libC: typeof processLibC;
 };
 
 export type UniversalTarget = Target & {
@@ -108,56 +105,56 @@ const x8664UnknownLinuxGnu: LinuxTarget = {
     id: 'x86_64-unknown-linux-gnu',
     platform: 'linux',
     arch: 'x64',
-    libC: 'glibc',
+    libC: GLIBC,
 };
 
 const x8664UnknownLinuxMusl: LinuxTarget = {
     id: 'x86_64-unknown-linux-musl',
     platform: 'linux',
     arch: 'x64',
-    libC: 'musl',
+    libC: MUSL,
 };
 
 const i686UnknownLinuxGnu: LinuxTarget = {
     id: 'i686-unknown-linux-gnu',
     platform: 'linux',
     arch: 'ia32',
-    libC: 'glibc',
+    libC: GLIBC,
 };
 
 const i686UnknownLinuxMusl: LinuxTarget = {
     id: 'i686-unknown-linux-musl',
     platform: 'linux',
     arch: 'ia32',
-    libC: 'musl',
+    libC: MUSL,
 };
 
 const aarch64UnknownLinuxGnu: LinuxTarget = {
     id: 'aarch64-unknown-linux-gnu',
     platform: 'linux',
     arch: 'arm64',
-    libC: 'glibc',
+    libC: GLIBC,
 };
 
 const aarch64UnknownLinuxMusl: LinuxTarget = {
     id: 'aarch64-unknown-linux-musl',
     platform: 'linux',
     arch: 'arm64',
-    libC: 'musl',
+    libC: MUSL,
 };
 
 const powerpc64leUnknownLinuxGnu: LinuxTarget = {
     id: 'powerpc64le-unknown-linux-gnu',
     platform: 'linux',
     arch: 'ppc64',
-    libC: 'glibc',
+    libC: GLIBC,
 };
 
 const powerpc64leUnknownLinuxMusl: LinuxTarget = {
     id: 'powerpc64le-unknown-linux-musl',
     platform: 'linux',
     arch: 'ppc64',
-    libC: 'musl',
+    libC: MUSL,
 };
 
 export const TARGETS: Record<TargetId, Target> = {
@@ -179,7 +176,7 @@ export const TARGETS: Record<TargetId, Target> = {
     'powerpc64le-unknown-linux-gnu': powerpc64leUnknownLinuxGnu,
 };
 
-export function getHost(): Target {
+export function getHost(): Target | undefined {
     return Object.values(TARGETS).find(target => (
         target.platform === process.platform &&
         target.arch === process.arch &&
