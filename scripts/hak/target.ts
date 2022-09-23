@@ -179,7 +179,7 @@ export const TARGETS: Record<TargetId, Target> = {
     'powerpc64le-unknown-linux-gnu': powerpc64leUnknownLinuxGnu,
 };
 
-export function getHost(): Target {
+export function getHost(): Target | undefined {
     return Object.values(TARGETS).find(target => (
         target.platform === process.platform &&
         target.arch === process.arch &&
