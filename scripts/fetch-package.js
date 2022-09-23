@@ -95,8 +95,12 @@ async function main() {
         filename = 'develop.tar.gz';
         url = DEVELOP_TGZ_URL;
         verify = false; // develop builds aren't signed
+    } else if (targetVersion.includes("://")) {
+        filename = targetVersion.substring(targetVersion.lastIndexOf("/") + 1);
+        url = targetVersion;
+        verify = false; // manually verified
     } else {
-        filename = 'element-' + targetVersion + '.tar.gz';
+        filename = `element-${targetVersion}.tar.gz`;
         url = PACKAGE_URL_PREFIX + targetVersion + '/' + filename;
     }
 
@@ -217,7 +221,7 @@ async function main() {
     await asar.createPackage(expectedDeployDir, ASAR_PATH);
 
     if (setVersion) {
-        const semVer = targetVersion.slice(1);
+        const semVer = fs.readFileSync(path.join(expectedDeployDir, "version"), "utf-8");
         console.log("Updating version to " + semVer);
         await setPackageVersion(semVer);
     }
