@@ -221,7 +221,7 @@ async function main() {
     await asar.createPackage(expectedDeployDir, ASAR_PATH);
 
     if (setVersion) {
-        const semVer = fs.readFileSync(path.join(expectedDeployDir, "version"), "utf-8");
+        const semVer = fs.readFileSync(path.join(expectedDeployDir, "version"), "utf-8").trim();
         console.log("Updating version to " + semVer);
         await setPackageVersion(semVer);
     }
