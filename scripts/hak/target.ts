@@ -25,6 +25,7 @@ export type TargetId =
     'universal-apple-darwin' |
     'i686-pc-windows-msvc' |
     'x86_64-pc-windows-msvc' |
+    'aarch64-pc-windows-msvc' |
     'i686-unknown-linux-musl' |
     'i686-unknown-linux-gnu' |
     'x86_64-unknown-linux-musl' |
