@@ -43,9 +43,13 @@ jobs:
         include:
           - target: x86_64-pc-windows-msvc
             arch: x64
+            build-args: --x64
           - target: i686-pc-windows-msvc
             arch: x86
             build-args: --ia32
+          - target: aarch64-pc-windows-msvc
+            arch: amd64_arm64
+            build-args: --arm64
     name: Windows (${{ matrix.arch }})
     runs-on: windows-latest
     steps:
