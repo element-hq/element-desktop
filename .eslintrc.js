@@ -30,8 +30,9 @@ module.exports = {
             "prefer-promise-reject-errors": "off",
             "quotes": "off",
 
-            // We disable this while we're transitioning
             "@typescript-eslint/no-explicit-any": "off",
+            // We're okay with assertion errors when we ask for them
+            "@typescript-eslint/no-non-null-assertion": "off",
         },
     }],
 };

@@ -27,7 +27,7 @@ export function _td(text: string): string {
 type SubstitutionValue = number | string;
 
 interface IVariables {
-    [key: string]: SubstitutionValue;
+    [key: string]: SubstitutionValue | undefined;
     count?: number;
 }
 
@@ -66,13 +66,13 @@ export function _t(text: string, variables: IVariables = {}): string {
 
 type Component = () => void;
 
-type TypedStore = Store<{ locale?: string | string[] }>;
+type TypedStore = Store<{ locale?: string[] }>;
 
 export class AppLocalization {
     private static readonly STORE_KEY = "locale";
 
     private readonly store: TypedStore;
-    private readonly localizedComponents: Set<Component>;
+    private readonly localizedComponents?: Set<Component>;
 
     constructor({ store, components = [] }: { store: TypedStore, components: Component[] }) {
         counterpart.registerTranslations("en", this.fetchTranslationJson("en_EN"));
@@ -86,7 +86,8 @@ export class AppLocalization {
         this.store = store;
         if (this.store.has(AppLocalization.STORE_KEY)) {
             const locales = this.store.get(AppLocalization.STORE_KEY);
-            this.setAppLocale(locales);
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            this.setAppLocale(locales!);
         }
 
         this.resetLocalizedUI();
@@ -110,7 +111,7 @@ export class AppLocalization {
             return require(`./i18n/strings/${this.denormalize(locale)}.json`);
         } catch (e) {
             console.log(`Could not fetch translation json for locale: '${locale}'`, e);
-            return null;
+            return {};
         }
     }
 
@@ -138,7 +139,7 @@ export class AppLocalization {
 
     public resetLocalizedUI(): void {
         console.log("Resetting the UI components after locale change");
-        this.localizedComponents.forEach(componentSetup => {
+        this.localizedComponents?.forEach(componentSetup => {
             if (typeof componentSetup === "function") {
                 componentSetup();
             }

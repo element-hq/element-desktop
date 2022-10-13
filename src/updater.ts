@@ -70,6 +70,7 @@ export function start(updateBaseUrl: string): void {
             // I'm not even going to try to guess which feed style they'd use if they
             // implemented it on Linux, or if it would be different again.
             console.log('Auto update not supported on this platform');
+            return;
         }
 
         if (url) {
