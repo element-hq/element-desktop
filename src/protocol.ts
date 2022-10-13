@@ -86,7 +86,7 @@ export function getProfileFromDeeplink(args: string[]): string | undefined {
     if (deeplinkUrl && deeplinkUrl.includes(SEARCH_PARAM)) {
         const parsedUrl = new URL(deeplinkUrl);
         if (parsedUrl.protocol === PROTOCOL) {
-            const ssoID = parsedUrl.searchParams.get(SEARCH_PARAM);
+            const ssoID = parsedUrl.searchParams.get(SEARCH_PARAM)!;
             const store = readStore();
             console.log("Forwarding to profile: ", store[ssoID]);
             return store[ssoID];

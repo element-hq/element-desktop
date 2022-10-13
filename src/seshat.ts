@@ -40,7 +40,7 @@ try {
     ReindexError = seshatModule.ReindexError;
     seshatSupported = true;
 } catch (e) {
-    if (e.code === "MODULE_NOT_FOUND") {
+    if ((<NodeJS.ErrnoException>e).code === "MODULE_NOT_FOUND") {
         console.log("Seshat isn't installed, event indexing is disabled.");
     } else {
         console.warn("Seshat unexpected error:", e);
@@ -49,7 +49,7 @@ try {
 
 const eventStorePath = path.join(app.getPath('userData'), 'EventStore');
 
-let eventIndex: SeshatType = null;
+let eventIndex: SeshatType | null = null;
 
 const seshatDefaultPassphrase = "DEFAULT_PASSPHRASE";
 async function getOrCreatePassphrase(key: string): Promise<string> {
@@ -66,9 +66,8 @@ async function getOrCreatePassphrase(key: string): Promise<string> {
         } catch (e) {
             console.log("Error getting the event index passphrase out of the secret store", e);
         }
-    } else {
-        return seshatDefaultPassphrase;
     }
+    return seshatDefaultPassphrase;
 }
 
 const deleteContents = async (p: string): Promise<void> => {
@@ -180,7 +179,7 @@ ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
 
         case 'addEventToIndex':
             try {
-                eventIndex.addEvent(args[0], args[1]);
+                eventIndex?.addEvent(args[0], args[1]);
             } catch (e) {
                 sendError(payload.id, e);
                 return;
@@ -189,7 +188,7 @@ ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
 
         case 'deleteEvent':
             try {
-                ret = await eventIndex.deleteEvent(args[0]);
+                ret = await eventIndex?.deleteEvent(args[0]);
             } catch (e) {
                 sendError(payload.id, e);
                 return;
@@ -198,7 +197,7 @@ ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
 
         case 'commitLiveEvents':
             try {
-                ret = await eventIndex.commit();
+                ret = await eventIndex?.commit();
             } catch (e) {
                 sendError(payload.id, e);
                 return;
@@ -207,7 +206,7 @@ ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
 
         case 'searchEventIndex':
             try {
-                ret = await eventIndex.search(args[0]);
+                ret = await eventIndex?.search(args[0]);
             } catch (e) {
                 sendError(payload.id, e);
                 return;

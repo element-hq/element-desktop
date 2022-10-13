@@ -50,7 +50,7 @@ function safeOpenURL(target: string): void {
     // (for instance, open /bin/sh does indeed open a terminal
     // with a shell, albeit with no arguments)
     const parsedUrl = url.parse(target);
-    if (PERMITTED_URL_SCHEMES.indexOf(parsedUrl.protocol) > -1) {
+    if (PERMITTED_URL_SCHEMES.includes(parsedUrl.protocol!)) {
         // explicitly use the URL re-assembled by the url library,
         // so we know the url parser has understood all the parts
         // of the input string
@@ -69,7 +69,7 @@ function onWindowOrNavigate(ev: Event, target: string): void {
 }
 
 function writeNativeImage(filePath: string, img: NativeImage): Promise<void> {
-    switch (filePath.split('.').pop().toLowerCase()) {
+    switch (filePath.split('.').pop()?.toLowerCase()) {
         case "jpg":
         case "jpeg":
             return fs.promises.writeFile(filePath, img.toJPEG(100));
@@ -181,7 +181,7 @@ function cutCopyPasteSelectContextMenus(params: ContextMenuParams): MenuItemCons
             options.push({
                 label: word,
                 click: (menuItem, browserWindow) => {
-                    browserWindow.webContents.replaceMisspelling(word);
+                    browserWindow?.webContents.replaceMisspelling(word);
                 },
             });
         });
@@ -190,7 +190,7 @@ function cutCopyPasteSelectContextMenus(params: ContextMenuParams): MenuItemCons
         }, {
             label: _t('Add to dictionary'),
             click: (menuItem, browserWindow) => {
-                browserWindow.webContents.session.addWordToSpellCheckerDictionary(params.misspelledWord);
+                browserWindow?.webContents.session.addWordToSpellCheckerDictionary(params.misspelledWord);
             },
         }, {
             type: 'separator',
@@ -251,8 +251,9 @@ function onEditableContextMenu(ev: Event, params: ContextMenuParams) {
 let userDownloadIndex = 0;
 const userDownloadMap = new Map<number, string>(); // Map from id to path
 ipcMain.on('userDownloadAction', function(ev: IpcMainEvent, { id, open = false }) {
-    if (open) {
-        shell.openPath(userDownloadMap.get(id));
+    const path = userDownloadMap.get(id);
+    if (open && path) {
+        shell.openPath(path);
     }
     userDownloadMap.delete(id);
 });

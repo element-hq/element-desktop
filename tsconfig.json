@@ -16,6 +16,7 @@
       "dom"
     ],
     "types": ["jest", "node"],
+    "strict": true
   },
   "include": [
     "./src/**/*.ts",
