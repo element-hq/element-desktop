@@ -43,5 +43,6 @@
     "Cancel": "Cancelar",
     "Bring All to Front": "Trazer Todas Para Frente",
     "Hide Others": "Esconder Outras(os)",
-    "Copy image address": "Copiar endereço de imagem"
+    "Copy image address": "Copiar endereço de imagem",
+    "Close %(brand)s": "Fechar %(brand)s"
 }
