@@ -247,7 +247,9 @@ const warnBeforeExit = (event: Event, input: Input): void => {
     if (shouldWarnBeforeExit && exitShortcutPressed) {
         const shouldCancelCloseRequest = dialog.showMessageBoxSync(global.mainWindow, {
             type: "question",
-            buttons: [_t("Cancel"), _t("Close Element")],
+            buttons: [_t("Cancel"), _t("Close %(brand)s", {
+                brand: global.vectorConfig.brand || 'Element',
+            })],
             message: _t("Are you sure you want to quit?"),
             defaultId: 1,
             cancelId: 0,
