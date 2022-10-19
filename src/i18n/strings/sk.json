@@ -43,5 +43,6 @@
     "Show/Hide": "Zobraziť/Skryť",
     "Are you sure you want to quit?": "Naozaj chcete zavrieť aplikáciu?",
     "Cancel": "Zrušiť",
-    "Copy image address": "Kopírovať adresu obrázka"
+    "Copy image address": "Kopírovať adresu obrázka",
+    "Close %(brand)s": "Zatvoriť %(brand)s"
 }

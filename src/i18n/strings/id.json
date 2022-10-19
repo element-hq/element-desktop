@@ -43,5 +43,6 @@
     "Are you sure you want to quit?": "Apakah Anda yakin ingin keluar?",
     "Close Element": "Tutup Element",
     "Cancel": "Batal",
-    "Copy image address": "Salin alamat gambar"
+    "Copy image address": "Salin alamat gambar",
+    "Close %(brand)s": "Tutuo %(brand)s"
 }

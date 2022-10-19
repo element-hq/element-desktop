@@ -43,5 +43,6 @@
     "Are you sure you want to quit?": "Kas sa kindlasti soovid rakendusest väljuda?",
     "Close Element": "Sulge Element",
     "Cancel": "Tühista",
-    "Copy image address": "Kopeeri pildi aadress"
+    "Copy image address": "Kopeeri pildi aadress",
+    "Close %(brand)s": "Sulge %(brand)s"
 }

@@ -43,5 +43,6 @@
     "Show/Hide": "Anzeigen/Ausblenden",
     "Close Element": "Element schließen",
     "Cancel": "Abbrechen",
-    "Copy image address": "Bild-Adresse kopieren"
+    "Copy image address": "Bild-Adresse kopieren",
+    "Close %(brand)s": "%(brand)s schließen"
 }
