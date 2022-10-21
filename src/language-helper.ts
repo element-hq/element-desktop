@@ -18,7 +18,7 @@ import counterpart from "counterpart";
 
 import type Store from 'electron-store';
 
-const DEFAULT_LOCALE = "en";
+const FALLBACK_LOCALE = 'en';
 
 export function _td(text: string): string {
     return text;
@@ -32,9 +32,7 @@ interface IVariables {
 }
 
 export function _t(text: string, variables: IVariables = {}): string {
-    const args = Object.assign({ interpolate: false }, variables);
-
-    const { count } = args;
+    const { count } = variables;
 
     // Horrible hack to avoid https://github.com/vector-im/element-web/issues/4191
     // The interpolation library that counterpart uses does not support undefined/null
@@ -43,21 +41,20 @@ export function _t(text: string, variables: IVariables = {}): string {
     // valid ES6 template strings to i18n strings it's extremely easy to pass undefined/null
     // if there are no existing null guards. To avoid this making the app completely inoperable,
     // we'll check all the values for undefined/null and stringify them here.
-    Object.keys(args).forEach((key) => {
-        if (args[key] === undefined) {
+    Object.keys(variables).forEach((key) => {
+        if (variables[key] === undefined) {
             console.warn("safeCounterpartTranslate called with undefined interpolation name: " + key);
-            args[key] = 'undefined';
+            variables[key] = 'undefined';
         }
-        if (args[key] === null) {
+        if (variables[key] === null) {
             console.warn("safeCounterpartTranslate called with null interpolation name: " + key);
-            args[key] = 'null';
+            variables[key] = 'null';
         }
     });
-    let translated = counterpart.translate(text, args);
-    if (translated === undefined && count !== undefined) {
-        // counterpart does not do fallback if no pluralisation exists
-        // in the preferred language, so do it here
-        translated = counterpart.translate(text, Object.assign({}, args, { locale: DEFAULT_LOCALE }));
+    let translated = counterpart.translate(text, variables);
+    if (!translated && count !== undefined) {
+        // counterpart does not do fallback if no pluralisation exists in the preferred language, so do it here
+        translated = counterpart.translate(text, { ...variables, locale: FALLBACK_LOCALE });
     }
 
     // The translation returns text so there's no XSS vector here (no unsafe HTML, no code execution)
@@ -75,8 +72,8 @@ export class AppLocalization {
     private readonly localizedComponents?: Set<Component>;
 
     constructor({ store, components = [] }: { store: TypedStore, components: Component[] }) {
-        counterpart.registerTranslations("en", this.fetchTranslationJson("en_EN"));
-        counterpart.setFallbackLocale('en');
+        counterpart.registerTranslations(FALLBACK_LOCALE, this.fetchTranslationJson("en_EN"));
+        counterpart.setFallbackLocale(FALLBACK_LOCALE);
         counterpart.setSeparator('|');
 
         if (Array.isArray(components)) {
@@ -122,16 +119,15 @@ export class AppLocalization {
             locales = [locales];
         }
 
-        locales.forEach(locale => {
+        const loadedLocales = locales.filter(locale => {
             const translations = this.fetchTranslationJson(locale);
             if (translations !== null) {
                 counterpart.registerTranslations(locale, translations);
             }
+            return !!translations;
         });
 
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore - this looks like a bug but is out of scope for this conversion
-        counterpart.setLocale(locales);
+        counterpart.setLocale(loadedLocales[0]);
         this.store.set(AppLocalization.STORE_KEY, locales);
 
         this.resetLocalizedUI();
