@@ -47,8 +47,6 @@ try {
     }
 }
 
-const eventStorePath = path.join(app.getPath('userData'), 'EventStore');
-
 let eventIndex: SeshatType | null = null;
 
 const seshatDefaultPassphrase = "DEFAULT_PASSPHRASE";
@@ -79,6 +77,9 @@ const deleteContents = async (p: string): Promise<void> => {
 
 ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
     if (!global.mainWindow) return;
+
+    // We do this here to ensure we get the path after --profile has been resolved
+    const eventStorePath = path.join(app.getPath('userData'), 'EventStore');
 
     const sendError = (id, e) => {
         const error = {
