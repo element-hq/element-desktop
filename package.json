@@ -78,6 +78,7 @@
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-matrix-org": "^0.4.0",
+    "eslint-plugin-unicorn": "^44.0.2",
     "expect-playwright": "^0.8.0",
     "find-npm-prefix": "^1.0.2",
     "fs-extra": "^8.1.0",
