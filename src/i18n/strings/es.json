@@ -43,5 +43,6 @@
     "Are you sure you want to quit?": "¿Quieres salir?",
     "Close Element": "Cerrar Element",
     "Cancel": "Cancelar",
-    "Copy image address": "Copiar dirección de la imagen"
+    "Copy image address": "Copiar dirección de la imagen",
+    "Close %(brand)s": "Cerrar %(brand)s"
 }
