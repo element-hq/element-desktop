@@ -3567,10 +3567,10 @@ eslint-plugin-import@^2.25.4:
     resolve "^1.22.0"
     tsconfig-paths "^3.14.1"
 
-eslint-plugin-matrix-org@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-matrix-org/-/eslint-plugin-matrix-org-0.4.0.tgz#de2d2db1cd471d637728133ce9a2b921690e5cd1"
-  integrity sha512-yVkNwtc33qtrQB4PPzpU+PUdFzdkENPan3JF4zhtAQJRUYXyvKEXnYSrXLUWYRXoYFxs9LbyI2CnhJL/RnHJaQ==
+eslint-plugin-matrix-org@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-matrix-org/-/eslint-plugin-matrix-org-0.7.0.tgz#4b7456b31e30e7575b62c2aada91915478829f88"
+  integrity sha512-FLmwE4/cRalB7J+J1BBuTccaXvKtRgAoHlbqSCbdsRqhh27xpxEWXe08KlNiET7drEnnz+xMHXdmvW469gch7g==
 
 eslint-plugin-unicorn@^44.0.2:
   version "44.0.2"
