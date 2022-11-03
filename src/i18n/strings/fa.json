@@ -43,5 +43,6 @@
     "Show/Hide": "نمایش/پنهان",
     "Are you sure you want to quit?": "آیا مطمئنید که می‌خواهید خارج شوید؟",
     "Close Element": "بستن المنت",
-    "Cancel": "لغو"
+    "Cancel": "لغو",
+    "Close %(brand)s": "بستن %(brand)s"
 }
