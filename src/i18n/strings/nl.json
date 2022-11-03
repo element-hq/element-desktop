@@ -43,5 +43,6 @@
     "Are you sure you want to quit?": "Weet u zeker dat u wilt stoppen?",
     "Close Element": "Element sluiten",
     "Cancel": "Annuleren",
-    "Copy image address": "Kopieer afbeeldingsadres"
+    "Copy image address": "Kopieer afbeeldingsadres",
+    "Close %(brand)s": "Sluit %(brand)s"
 }

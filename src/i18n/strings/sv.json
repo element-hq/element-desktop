@@ -43,5 +43,6 @@
     "The image failed to save": "Bilden sparades inte",
     "Failed to save image": "Misslyckades med att spara bilden",
     "Are you sure you want to quit?": "Är du säker att du vill avsluta?",
-    "Copy image address": "Kopiera bildadress"
+    "Copy image address": "Kopiera bildadress",
+    "Close %(brand)s": "Stäng %(brand)s"
 }
