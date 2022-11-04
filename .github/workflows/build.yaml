@@ -195,6 +195,8 @@ jobs:
 
       # Workaround for https://github.com/actions/runner-images/issues/6507
       - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
 
       - uses: actions/setup-node@v3
         with:
