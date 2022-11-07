@@ -31,7 +31,7 @@ ENV LC_ALL C.UTF-8
 
 ENV DEBUG_COLORS true
 ENV FORCE_COLOR true
-ENV NODE_VERSION 14.17.0
+ENV NODE_VERSION 16.18.1
 
 # this package is used for snapcraft and we should not clear apt list - to avoid apt-get update during snap build
 RUN curl -L https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.gz | tar xz -C /usr/local --strip-components=1 && \
