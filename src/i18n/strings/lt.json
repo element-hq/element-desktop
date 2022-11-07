@@ -43,5 +43,6 @@
     "Show/Hide": "Rodyti/Slėpti",
     "Are you sure you want to quit?": "Ar tikrai norite išeiti?",
     "Close Element": "Uždaryti Element",
-    "Cancel": "Atšaukti"
+    "Cancel": "Atšaukti",
+    "Close %(brand)s": "Uždaryti %(brand)s"
 }
