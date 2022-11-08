@@ -1,14 +1,8 @@
-Changes in [1.11.14-rc.2](https://github.com/vector-im/element-desktop/releases/tag/v1.11.14-rc.2) (2022-11-08)
-===============================================================================================================
-
-## 🐛 Bug Fixes
- * Fix regressions around media uploads failing and causing soft crashes ([\#9549](https://github.com/matrix-org/matrix-react-sdk/pull/9549)). Fixes matrix-org/element-web-rageshakes#16831, matrix-org/element-web-rageshakes#16824 matrix-org/element-web-rageshakes#16810 and vector-im/element-web#23641.
- * Fix /myroomavatar slash command ([\#9536](https://github.com/matrix-org/matrix-react-sdk/pull/9536)). Fixes matrix-org/synapse#14321.
-
-Changes in [1.11.14-rc.1](https://github.com/vector-im/element-desktop/releases/tag/v1.11.14-rc.1) (2022-11-01)
-===============================================================================================================
+Changes in [1.11.14](https://github.com/vector-im/element-desktop/releases/tag/v1.11.14) (2022-11-08)
+=====================================================================================================
 
 ## ✨ Features
+ * Switch to notarytool ([\#440](https://github.com/vector-im/element-desktop/pull/440)).
  * Loading threads with server-side assistance ([\#9356](https://github.com/matrix-org/matrix-react-sdk/pull/9356)). Fixes vector-im/element-web#21807, vector-im/element-web#21799, vector-im/element-web#21911, vector-im/element-web#22141, vector-im/element-web#22157, vector-im/element-web#22641, vector-im/element-web#22501 vector-im/element-web#22438 and vector-im/element-web#21678. Contributed by @justjanne.
  * Make thread replies trigger a room list re-ordering ([\#9510](https://github.com/matrix-org/matrix-react-sdk/pull/9510)). Fixes vector-im/element-web#21700.
  * Device manager - add extra details to device security and renaming ([\#9501](https://github.com/matrix-org/matrix-react-sdk/pull/9501)). Contributed by @kerryarchibald.
@@ -24,6 +18,8 @@ Changes in [1.11.14-rc.1](https://github.com/vector-im/element-desktop/releases/
  * Allow pressing Enter to send messages in new composer ([\#9451](https://github.com/matrix-org/matrix-react-sdk/pull/9451)). Contributed by @andybalaam.
 
 ## 🐛 Bug Fixes
+ * Fix regressions around media uploads failing and causing soft crashes ([\#9549](https://github.com/matrix-org/matrix-react-sdk/pull/9549)). Fixes matrix-org/element-web-rageshakes#16831, matrix-org/element-web-rageshakes#16824 matrix-org/element-web-rageshakes#16810 and vector-im/element-web#23641.
+ * Fix /myroomavatar slash command ([\#9536](https://github.com/matrix-org/matrix-react-sdk/pull/9536)). Fixes matrix-org/synapse#14321.
  * Fix i18n interpolation ([\#432](https://github.com/vector-im/element-desktop/pull/432)). Fixes vector-im/element-web#23568.
  * Fix config.json failing to load for Jitsi wrapper in non-root deployment ([\#23577](https://github.com/vector-im/element-web/pull/23577)).
  * Fix NotificationBadge unsent color ([\#9522](https://github.com/matrix-org/matrix-react-sdk/pull/9522)). Fixes vector-im/element-web#23646.
