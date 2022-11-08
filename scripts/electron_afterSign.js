@@ -7,16 +7,14 @@ exports.default = async function(context) {
 
     if (electronPlatformName === 'darwin') {
         const appName = context.packager.appInfo.productFilename;
-        // We get the password from keychain. The keychain stores
-        // user IDs too, but apparently altool can't get the user ID
-        // from the keychain, so we need to get it from the environment.
-        const userId = process.env.NOTARIZE_APPLE_ID;
-        if (userId === undefined) {
+
+        const keychainProfile = process.env.NOTARIZE_KEYCHAIN_PROFILE;
+        if (keychainProfile === undefined) {
             if (!warned) {
-                console.log("*************************************");
-                console.log("*   NOTARIZE_APPLE_ID is not set.   *");
-                console.log("* This build will NOT be notarised. *");
-                console.log("*************************************");
+                console.log("*****************************************");
+                console.log("* NOTARIZE_KEYCHAIN_PROFILE is not set. *");
+                console.log("*   This build will NOT be notarised.   *");
+                console.log("*****************************************");
                 warned = true;
             }
             return;
@@ -24,10 +22,11 @@ exports.default = async function(context) {
 
         console.log("Notarising macOS app. This may be some time.");
         return await notarize({
+            tool: "notarytool",
             appBundleId: appId,
             appPath: `${appOutDir}/${appName}.app`,
-            appleId: userId,
-            appleIdPassword: '@keychain:NOTARIZE_CREDS',
+            keychainProfile,
+            keychain: process.env.NOTARIZE_KEYCHAIN,
         });
     }
 };
