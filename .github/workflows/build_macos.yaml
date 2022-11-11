@@ -1,0 +1,47 @@
+name:
+on:
+  workflow_call:
+jobs:
+  build:
+    name: macOS (universal)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: webapp
+
+      - name: Cache .hak
+        uses: actions/cache@v3
+        with:
+          key: ${{ hashFiles('./yarn.lock') }}
+          path: |
+            ./.hak
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: aarch64-apple-darwin
+
+      - uses: actions/setup-node@v3
+        with:
+          cache: "yarn"
+
+      # Does not need branch matching as only analyses this layer
+      - name: Install Deps
+        run: "yarn install --pure-lockfile"
+
+      - name: Build Natives
+        run: "yarn build:native:universal"
+
+      - name: Build App
+        run: "yarn build:universal --publish never"
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: macos
+          path: dist
+          retention-days: 1
