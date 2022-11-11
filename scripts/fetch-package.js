@@ -14,7 +14,7 @@ const { setPackageVersion } = require('./set-version.js');
 
 const PUB_KEY_URL = "https://packages.riot.im/element-release-key.asc";
 const PACKAGE_URL_PREFIX = "https://github.com/vector-im/element-web/releases/download/";
-const DEVELOP_TGZ_URL = "https://vector-im.github.io/element-web/develop.tar.gz";
+const DEVELOP_TGZ_URL = "https://develop.element.io/develop.tar.gz";
 const ASAR_PATH = 'webapp.asar';
 
 async function downloadToFile(url, filename) {
