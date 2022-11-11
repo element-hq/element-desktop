@@ -1,0 +1,60 @@
+on:
+  workflow_call:
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - sqlcipher: system
+          - sqlcipher: static
+            static: 1
+    name: '${{ matrix.sqlcipher }} sqlcipher'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: webapp
+
+      - name: Cache .hak
+        uses: actions/cache@v3
+        with:
+          key: ${{ hashFiles('./yarn.lock') }}
+          path: |
+            ./.hak
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: Install libsqlcipher-dev
+        if: matrix.sqlcipher == 'system'
+        run: sudo apt-get install -y libsqlcipher-dev
+
+      - uses: actions/setup-node@v3
+        with:
+          cache: "yarn"
+
+      # Does not need branch matching as only analyses this layer
+      - name: Install Deps
+        run: "yarn install --pure-lockfile"
+
+      - name: Build Natives
+        run: "yarn build:native"
+        env:
+          SQLCIPHER_STATIC: ${{ matrix.static }}
+
+      - name: Build App
+        run: "yarn build --publish never"
+
+      - name: Install .deb
+        run: "sudo apt install ./dist/*.deb"
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: linux-sqlcipher-${{ matrix.sqlcipher }}
+          path: dist
+          retention-days: 1

@@ -1,0 +1,31 @@
+on:
+  workflow_call:
+jobs:
+  prepare:
+    name: Prepare
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          cache: "yarn"
+
+      - name: Install Deps
+        run: "yarn install --pure-lockfile"
+
+      - name: Fetch Element Web (develop)
+        if: github.event.pull_request.base.ref == 'develop'
+        run: yarn run fetch --noverify develop -d element.io/nightly
+
+      - name: Fetch Element Web
+        if: github.event.pull_request.base.ref != 'develop'
+        run: yarn run fetch --noverify --cfgdir element.io/release
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: webapp
+          retention-days: 1
+          path: |
+            webapp.asar
+            package.json

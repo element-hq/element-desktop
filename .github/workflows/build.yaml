@@ -8,211 +8,22 @@ concurrency:
   cancel-in-progress: true
 jobs:
   fetch:
-    name: Prepare
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: actions/setup-node@v3
-        with:
-          cache: "yarn"
-
-      - name: Install Deps
-        run: "yarn install --pure-lockfile"
-
-      - name: Fetch Element Web (develop)
-        if: github.event.pull_request.base.ref == 'develop'
-        run: yarn run fetch --noverify develop -d element.io/nightly
-
-      - name: Fetch Element Web
-        if: github.event.pull_request.base.ref != 'develop'
-        run: yarn run fetch --noverify --cfgdir element.io/release
-
-      - uses: actions/upload-artifact@v3
-        with:
-          name: webapp
-          retention-days: 1
-          path: |
-            webapp.asar
-            package.json
+    uses: ./.github/workflows/build_prepare.yaml
 
   windows:
     needs: fetch
-    strategy:
-      matrix:
-        include:
-          - target: x86_64-pc-windows-msvc
-            arch: x64
-          - target: i686-pc-windows-msvc
-            arch: x86
-            build-args: --ia32
-    name: Windows (${{ matrix.arch }})
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: actions/download-artifact@v3
-        with:
-          name: webapp
-
-      - name: Cache .hak
-        uses: actions/cache@v3
-        with:
-          key: ${{ runner.os }}-${{ hashFiles('./yarn.lock') }}
-          path: |
-            ./.hak
-
-      - name: Set up build tools
-        uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: ${{ matrix.arch }}
-
-      # ActiveTCL package on choco is from 2015,
-      # this one is newer but includes more than we need
-      - name: Choco install tclsh
-        shell: pwsh
-        run: |
-          choco install -y magicsplat-tcl-tk --no-progress
-          echo "${HOME}/AppData/Local/Apps/Tcl86/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-
-      - name: Choco install NetWide Assembler
-        shell: pwsh
-        run: |
-          choco install -y nasm --no-progress
-          echo "C:/Program Files/NASM" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-
-      - name: Install Rust
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          target: ${{ matrix.target }}
-
-      - uses: actions/setup-node@v3
-        with:
-          cache: "yarn"
-
-      # Does not need branch matching as only analyses this layer
-      - name: Install Deps
-        run: "yarn install --pure-lockfile"
-
-      - name: Build Natives
-        run: |
-          refreshenv
-          yarn build:native --target ${{ matrix.target }}
-
-      - name: Build App
-        run: "yarn build --publish never -w ${{ matrix.build-args }}"
-
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: win-${{ matrix.arch }}
-          path: dist
-          retention-days: 1
+    name: Windows
+    uses: ./.github/workflows/build_windows.yaml
 
   linux:
     needs: fetch
-    strategy:
-      matrix:
-        include:
-          - sqlcipher: system
-          - sqlcipher: static
-            static: 1
-    name: 'Linux (sqlcipher: ${{ matrix.sqlcipher }})'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: actions/download-artifact@v3
-        with:
-          name: webapp
-
-      - name: Cache .hak
-        uses: actions/cache@v3
-        with:
-          key: ${{ hashFiles('./yarn.lock') }}
-          path: |
-            ./.hak
-
-      - name: Install Rust
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-
-      - name: Install libsqlcipher-dev
-        if: matrix.sqlcipher == 'system'
-        run: sudo apt-get install -y libsqlcipher-dev
-
-      - uses: actions/setup-node@v3
-        with:
-          cache: "yarn"
-
-      # Does not need branch matching as only analyses this layer
-      - name: Install Deps
-        run: "yarn install --pure-lockfile"
-
-      - name: Build Natives
-        run: "yarn build:native"
-        env:
-          SQLCIPHER_STATIC: ${{ matrix.static }}
-
-      - name: Build App
-        run: "yarn build --publish never"
-
-      - name: Install .deb
-        run: "sudo apt install ./dist/*.deb"
-
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: linux-sqlcipher-${{ matrix.sqlcipher }}
-          path: dist
-          retention-days: 1
+    name: Linux
+    uses: ./.github/workflows/build_linux.yaml
 
   macos:
     needs: fetch
-    name: macOS (universal)
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: actions/download-artifact@v3
-        with:
-          name: webapp
-
-      - name: Cache .hak
-        uses: actions/cache@v3
-        with:
-          key: ${{ hashFiles('./yarn.lock') }}
-          path: |
-            ./.hak
-
-      - name: Install Rust
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          target: aarch64-apple-darwin
-
-      - uses: actions/setup-node@v3
-        with:
-          cache: "yarn"
-
-      # Does not need branch matching as only analyses this layer
-      - name: Install Deps
-        run: "yarn install --pure-lockfile"
-
-      - name: Build Natives
-        run: "yarn build:native:universal"
-
-      - name: Build App
-        run: "yarn build:universal --publish never"
-
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: macos
-          path: dist
-          retention-days: 1
+    name: macOS
+    uses: ./.github/workflows/build_macos.yaml
 
   test:
     needs:
