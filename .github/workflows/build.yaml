@@ -12,14 +12,17 @@ jobs:
 
   windows:
     needs: fetch
+    name: Windows
     uses: ./.github/workflows/build_windows.yaml
 
   linux:
     needs: fetch
+    name: Linux
     uses: ./.github/workflows/build_linux.yaml
 
   macos:
     needs: fetch
+    name: macOS
     uses: ./.github/workflows/build_macos.yaml
 
   test:

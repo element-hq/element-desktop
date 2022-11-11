@@ -1,4 +1,3 @@
-name:
 on:
   workflow_call:
 jobs:

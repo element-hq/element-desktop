@@ -1,9 +1,8 @@
-name:
 on:
   workflow_call:
 jobs:
   build:
-    name: macOS (universal)
+    name: Universal
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3

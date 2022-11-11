@@ -1,4 +1,3 @@
-name:
 on:
   workflow_call:
 jobs:
@@ -11,7 +10,7 @@ jobs:
           - target: i686-pc-windows-msvc
             arch: x86
             build-args: --ia32
-    name: Windows (${{ matrix.arch }})
+    name: ${{ matrix.arch }}
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
