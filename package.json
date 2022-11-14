@@ -122,7 +122,10 @@
       "webapp.asar"
     ],
     "linux": {
-      "target": "deb",
+      "target": [
+        "tar.gz",
+        "deb"
+      ],
       "category": "Network;InstantMessaging;Chat",
       "maintainer": "support@element.io",
       "desktop": {
