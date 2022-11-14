@@ -1,14 +1,13 @@
 on:
   workflow_call:
+    inputs:
+      sqlcipher:
+        type: string
+        required: true
+        description: "How to link sqlcipher, one of 'system' | 'static'"
 jobs:
   build:
-    strategy:
-      matrix:
-        include:
-          - sqlcipher: system
-          - sqlcipher: static
-            static: 1
-    name: '${{ matrix.sqlcipher }} sqlcipher'
+    name: '${{ inputs.sqlcipher }} sqlcipher'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -30,7 +29,7 @@ jobs:
           toolchain: stable
 
       - name: Install libsqlcipher-dev
-        if: matrix.sqlcipher == 'system'
+        if: inputs.sqlcipher == 'system'
         run: sudo apt-get install -y libsqlcipher-dev
 
       - uses: actions/setup-node@v3
@@ -44,7 +43,7 @@ jobs:
       - name: Build Natives
         run: "yarn build:native"
         env:
-          SQLCIPHER_STATIC: ${{ matrix.static }}
+          SQLCIPHER_STATIC: ${{ inputs.sqlcipher == 'static' && '1' || '' }}
 
       - name: Build App
         run: "yarn build --publish never"
@@ -55,6 +54,6 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: linux-sqlcipher-${{ matrix.sqlcipher }}
+          name: linux-sqlcipher-${{ inputs.sqlcipher }}
           path: dist
           retention-days: 1

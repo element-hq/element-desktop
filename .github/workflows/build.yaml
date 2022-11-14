@@ -9,16 +9,29 @@ concurrency:
 jobs:
   fetch:
     uses: ./.github/workflows/build_prepare.yaml
+    with:
+      config: github.event.pull_request.base.ref == 'develop' && 'element.io/nightly' || 'element.io/release'
+      version: github.event.pull_request.base.ref == 'develop' && 'develop' || ''
 
   windows:
     needs: fetch
     name: Windows
     uses: ./.github/workflows/build_windows.yaml
+    strategy:
+      matrix:
+        arch: [ x64, x86 ]
+    with:
+      arch: ${{ matrix.arch }}
 
   linux:
     needs: fetch
     name: Linux
     uses: ./.github/workflows/build_linux.yaml
+    strategy:
+      matrix:
+        sqlcipher: [ system, static ]
+    with:
+      sqlcipher: ${{ matrix.sqlcipher }}
 
   macos:
     needs: fetch
