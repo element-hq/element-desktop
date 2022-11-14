@@ -1,18 +1,30 @@
 on:
   workflow_call:
+    inputs:
+      arch:
+        type: string
+        required: true
+        description: "The architecture to build for, one of 'x64' | 'x86'"
 jobs:
   build:
-    strategy:
-      matrix:
-        include:
-          - target: x86_64-pc-windows-msvc
-            arch: x64
-          - target: i686-pc-windows-msvc
-            arch: x86
-            build-args: --ia32
-    name: ${{ matrix.arch }}
     runs-on: windows-latest
     steps:
+      - uses: kanga333/variable-mapper@master
+        id: config
+        with:
+          key: "${{ inputs.arch }}"
+          export_to: output
+          map: |
+            {
+              "x64": {
+                "target": "x86_64-pc-windows-msvc"
+              },
+              "x86": {
+                "target": "i686-pc-windows-msvc",
+                "build-args": "--ia32"
+              }
+            }
+
       - uses: actions/checkout@v3
 
       - uses: actions/download-artifact@v3
@@ -29,7 +41,7 @@ jobs:
       - name: Set up build tools
         uses: ilammy/msvc-dev-cmd@v1
         with:
-          arch: ${{ matrix.arch }}
+          arch: ${{ inputs.arch }}
 
       # ActiveTCL package on choco is from 2015,
       # this one is newer but includes more than we need
@@ -49,7 +61,7 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-          target: ${{ matrix.target }}
+          target: ${{ steps.config.outputs.target }}
 
       - uses: actions/setup-node@v3
         with:
@@ -62,14 +74,14 @@ jobs:
       - name: Build Natives
         run: |
           refreshenv
-          yarn build:native --target ${{ matrix.target }}
+          yarn build:native --target ${{ steps.config.outputs.target }}
 
       - name: Build App
-        run: "yarn build --publish never -w ${{ matrix.build-args }}"
+        run: "yarn build --publish never -w ${{ steps.config.outputs.build-args }}"
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: win-${{ matrix.arch }}
+          name: win-${{ inputs.arch }}
           path: dist
           retention-days: 1

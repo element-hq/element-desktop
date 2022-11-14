@@ -1,5 +1,14 @@
 on:
   workflow_call:
+    inputs:
+      config:
+        type: string
+        required: true
+        description: "The config directory to use"
+      version:
+        type: string
+        required: false
+        description: "The version tag to fetch, or 'develop', will pick automatically if not passed"
 jobs:
   prepare:
     name: Prepare
@@ -14,13 +23,8 @@ jobs:
       - name: Install Deps
         run: "yarn install --pure-lockfile"
 
-      - name: Fetch Element Web (develop)
-        if: github.event.pull_request.base.ref == 'develop'
-        run: yarn run fetch --noverify develop -d element.io/nightly
-
       - name: Fetch Element Web
-        if: github.event.pull_request.base.ref != 'develop'
-        run: yarn run fetch --noverify --cfgdir element.io/release
+        run: yarn run fetch --noverify -d ${{ inputs.config }} ${{ inputs.version }}
 
       - uses: actions/upload-artifact@v3
         with:
