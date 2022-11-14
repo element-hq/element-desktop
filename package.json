@@ -124,7 +124,7 @@
     "linux": {
       "target": [
         "tar.gz",
-        "deb",
+        "deb"
       ],
       "category": "Network;InstantMessaging;Chat",
       "maintainer": "support@element.io",
