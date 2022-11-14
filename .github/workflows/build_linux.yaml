@@ -45,7 +45,7 @@ jobs:
           SQLCIPHER_STATIC: ${{ inputs.sqlcipher == 'static' && '1' || '' }}
 
       - name: Build App
-        run: "yarn build --publish never"
+        run: "yarn build --publish never -l"
 
       - name: Install .deb
         run: "sudo apt install ./dist/*.deb"
