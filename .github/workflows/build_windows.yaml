@@ -7,7 +7,6 @@ on:
         description: "The architecture to build for, one of 'x64' | 'x86'"
 jobs:
   build:
-    name: ${{ inputs.arch }}
     runs-on: windows-latest
     steps:
       - uses: kanga333/variable-mapper@master

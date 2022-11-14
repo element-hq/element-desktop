@@ -7,7 +7,6 @@ on:
         description: "How to link sqlcipher, one of 'system' | 'static'"
 jobs:
   build:
-    name: '${{ inputs.sqlcipher }} sqlcipher'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
