@@ -41,7 +41,7 @@
     "Quit": "வெளியேறு",
     "Show/Hide": "காட்டு/மறை",
     "Are you sure you want to quit?": "நீங்கள் நிச்சயம் வெளியேற விரும்புகிறீர்களா?",
-    "Close Element": "எலிமெண்ட் ஐ மூடு",
     "Cancel": "விலக்கிக்கொள்",
-    "Copy image address": "பட முகவரியை நகலெடு"
+    "Copy image address": "பட முகவரியை நகலெடு",
+    "Close %(brand)s": "%(brand)s ஐ மூடு"
 }
