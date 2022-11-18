@@ -224,7 +224,7 @@ function cutCopyPasteSelectContextMenus(params: ContextMenuParams): MenuItemCons
     return options;
 }
 
-function onSelectedContextMenu(ev, params) {
+function onSelectedContextMenu(ev: Event, params: ContextMenuParams) {
     const items = cutCopyPasteSelectContextMenus(params);
     const popupMenu = Menu.buildFromTemplate(items);
 

@@ -63,7 +63,7 @@ export function _t(text: string, variables: IVariables = {}): string {
 
 type Component = () => void;
 
-type TypedStore = Store<{ locale?: string[] }>;
+type TypedStore = Store<{ locale?: string | string[] }>;
 
 export class AppLocalization {
     private static readonly STORE_KEY = "locale";
