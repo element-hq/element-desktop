@@ -4,10 +4,10 @@ import { S3Client, ListObjectsV2Command, PutObjectCommand } from "@aws-sdk/clien
 import { _Object } from "@aws-sdk/client-s3/dist-types/models/models_0";
 
 const HIDDEN_FILES = [
-    "/README.md",
     "/styles.css",
     "/logo.svg",
     ".DS_Store",
+    "index.html",
     "/fonts/",
     "/nginx-theme/",
     ".~tmp~/",
