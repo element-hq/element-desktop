@@ -41,12 +41,6 @@ const templateLayout = (content: string) => `
         <link rel="stylesheet" href="/styles.css">
     </head>
     <body>
-        <!--
-        header.html
-        © 2015-18, Lilian Besson (Naereen) and contributors,
-        open-sourced under the MIT License, https://lbesson.mit-license.org/
-        hosted on GitHub, https://GitHub.com/Naereen/Nginx-Fancyindex-Theme
-        -->
         <nav class="nav">
             <a href="https://element.io/" class="logo">
                 <img src="/logo.svg" height="30" />
@@ -74,12 +68,6 @@ const templateLayout = (content: string) => `
         </footer>
     </body>
 </html>
-<!--
-Based on: footer.html
-© 2015-18, Lilian Besson (Naereen) and contributors,
-open-sourced under the MIT License, https://lbesson.mit-license.org/
-hosted on GitHub, https://GitHub.com/Naereen/Nginx-Fancyindex-Theme
--->
 `;
 
 /**
