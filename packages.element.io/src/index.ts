@@ -124,7 +124,7 @@ function indexLayout(prefix: string, files: R2Object[], dirs: string[]): HTML {
 	}
 
 	for (const dir of dirs) {
-		rows.push([dir, dir]);
+		rows.push([`${dir}/`, dir]);
 	}
 
 	for (const file of files) {
