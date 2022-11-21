@@ -156,6 +156,12 @@ function indexLayout(prefix: string, files: R2Object[], dirs: string[]): HTML {
 const PUBLIC_PREFIX = "/public";
 const PUBLIC_R2_BUCKET = "https://packages-r2.element.io";
 
+const NUMBER_REGEX = /\d+/g;
+
+function parseVersion(name: string): number[] {
+	return Array.from(name.matchAll(NUMBER_REGEX)).map(match => parseInt(match[0], 10));
+}
+
 export default {
 	async fetch(
 		request: Request,
@@ -164,8 +170,50 @@ export default {
 	): Promise<Response> {
 		const url = new URL(request.url);
 
-		if (request.url === "/foobar") {
+		if (["/desktop/update/macos/", "/nightly/update/macos/"].includes(url.pathname)) {
+			const headers = {
+				"Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+				"Pragma": "no-cache",
+			};
 
+			const version = url.searchParams.get("localVersion");
+			if (!version?.match(/([a-z\d\-.]+)/)) {
+				return new Response('Unable to detect current version', { status: 400, headers });
+			}
+
+			const latestObject = await env.PACKAGES_BUCKET.get(url.pathname.slice(1) + "latest");
+			if (!latestObject) {
+				return new Response('Unable to detect latest version', { status: 400, headers });
+			}
+
+			const latest = await latestObject.text();
+			const latestParts = parseVersion(latest.trim());
+			const versionParts = parseVersion(version);
+
+			if (latestParts.length !== versionParts.length) {
+				return new Response('Version format not expected', { status: 400, headers });
+			}
+
+			if (versionParts.some((_, i) => latestParts[i] > versionParts[i])) {
+				const updateUrl = new URL(request.url);
+				if (url.pathname.startsWith("/nightly/")) {
+					updateUrl.pathname += `Element%20Nightly-${latest}-universal-mac.zip`;
+				} else {
+					updateUrl.pathname += `Element-${latest}-universal-mac.zip`;
+				}
+				updateUrl.search = "";
+				updateUrl.hash = "";
+				return new Response(JSON.stringify({
+					url: updateUrl,
+				}, null, 2), {
+					headers: {
+						...headers,
+						"Content-Type": "application/json",
+					}
+				});
+			}
+
+			return new Response('No update found', { status: 204, headers });
 		}
 
 		if (url.pathname.startsWith(PUBLIC_PREFIX)) {
@@ -196,7 +244,7 @@ export default {
 			}
 		}
 
-		const prefix = url.pathname.slice(1);
+		const prefix = decodeURI(url.pathname.slice(1));
 		const result = await env.PACKAGES_BUCKET.list({
 			prefix,
 			delimiter: "/",
@@ -204,7 +252,7 @@ export default {
 
 		const files = result.objects;
 		const dirs = result.delimitedPrefixes.map(p => p.slice(prefix.length).split("/", 2)[0]);
-		console.log({ prefix, files, delimitedPrefixes: result.delimitedPrefixes, dirs });
+		console.log(JSON.stringify({ prefix, files, delimitedPrefixes: result.delimitedPrefixes, dirs }, null, 2));
 
 		if (files.length === 1 && dirs.length === 0) {
 			// Redirect to R2
