@@ -14,17 +14,16 @@ const HIDDEN_FILES = [
     "msi/",
 ];
 
-const ENDPOINT = "https://38d82bbf04933a69b6fa014cf747f8dd.r2.cloudflarestorage.com/";
 const Bucket = "packages-element-io";
 
-if (!process.env.CF_R2_ACCESS_KEY_ID || !process.env.CF_R2_TOKEN) {
-    console.error("Missing environment variables `CF_R2_ACCESS_KEY_ID`, `CF_R2_TOKEN`");
+if (!process.env.CF_R2_ACCESS_KEY_ID || !process.env.CF_R2_TOKEN || !process.env.CF_R2_S3_API) {
+    console.error("Missing environment variables `CF_R2_ACCESS_KEY_ID`, `CF_R2_TOKEN`, `CF_R2_S3_API`");
     process.exit(1);
 }
 
 const client = new S3Client({
     region: "auto",
-    endpoint: ENDPOINT,
+    endpoint: process.env.CF_R2_S3_API,
     credentials: {
         accessKeyId: process.env.CF_R2_ACCESS_KEY_ID,
         secretAccessKey: process.env.CF_R2_TOKEN,
