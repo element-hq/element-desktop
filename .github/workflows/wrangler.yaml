@@ -11,6 +11,7 @@ jobs:
   wrangler:
     name: "Deploy"
     runs-on: ubuntu-latest
+    environment: develop
     steps:
       - uses: actions/checkout@v2
 
