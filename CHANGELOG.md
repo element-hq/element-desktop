@@ -1,5 +1,5 @@
-Changes in [1.11.15-rc.1](https://github.com/vector-im/element-desktop/releases/tag/v1.11.15-rc.1) (2022-11-15)
-===============================================================================================================
+Changes in [1.11.15](https://github.com/vector-im/element-desktop/releases/tag/v1.11.15) (2022-11-22)
+=====================================================================================================
 
 ## ✨ Features
  * Switch to notarytool ([\#440](https://github.com/vector-im/element-desktop/pull/440)).
