@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { app, autoUpdater, ipcMain } from "electron";
+import { autoUpdater, ipcMain } from "electron";
 
 const UPDATE_POLL_INTERVAL_MS = 60 * 60 * 1000;
 const INITIAL_UPDATE_DELAY_MS = 30 * 1000;
@@ -50,7 +50,7 @@ export function start(updateBaseUrl: string): void {
     }
     try {
         let url: string;
-        let serverType: string | undefined;
+        let serverType: "json" | undefined;
 
         if (process.platform === 'darwin') {
             // On macOS it takes a JSON file with a map between versions and their URLs
