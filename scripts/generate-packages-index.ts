@@ -1,7 +1,6 @@
 #!/usr/bin/env ts-node
 
-import { S3Client, ListObjectsV2Command, PutObjectCommand } from "@aws-sdk/client-s3";
-import { _Object } from "@aws-sdk/client-s3/dist-types/models/models_0";
+import { S3Client, ListObjectsV2Command, PutObjectCommand, _Object } from "@aws-sdk/client-s3";
 
 const HIDDEN_FILES = [
     "/styles.css",
