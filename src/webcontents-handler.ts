@@ -157,7 +157,8 @@ function onLinkContextMenu(ev: Event, params: ContextMenuParams, webContents: We
                     } else {
                         const resp = await fetch(url);
                         if (!resp.ok) throw new Error(`unexpected response ${resp.statusText}`);
-                        pipeline(resp.body!, fs.createWriteStream(filePath));
+                        if (!resp.body) throw new Error(`unexpected response has no body ${resp.statusText}`);
+                        pipeline(resp.body, fs.createWriteStream(filePath));
                     }
                 } catch (err) {
                     console.error(err);
