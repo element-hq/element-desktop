@@ -1,0 +1,10 @@
+diff --git a/node_modules/node-fetch/@types/index.d.ts b/node_modules/node-fetch/@types/index.d.ts
+index f68dd28..d267309 100644
+--- a/node_modules/node-fetch/@types/index.d.ts
++++ b/node_modules/node-fetch/@types/index.d.ts
+@@ -1,4 +1,5 @@
+ /// <reference types="node" />
++/// <reference lib="dom" />
+ 
+ import {RequestOptions} from 'http';
+ import {FormData} from 'formdata-polyfill/esm.min.js';

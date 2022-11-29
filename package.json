@@ -38,7 +38,8 @@
     "debrepo": "scripts/mkrepo.sh",
     "clean": "rimraf webapp.asar dist packages deploys lib",
     "hak": "ts-node scripts/hak/index.ts",
-    "test": "jest"
+    "test": "jest",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "auto-launch": "^5.0.5",
@@ -90,7 +91,9 @@
     "needle": "^2.5.0",
     "node-pre-gyp": "^0.15.0",
     "pacote": "^11.3.5",
+    "patch-package": "^6.5.0",
     "playwright": "^1.25.0",
+    "postinstall-postinstall": "^2.1.0",
     "rimraf": "^3.0.2",
     "tar": "^6.1.2",
     "ts-jest": "^28.0.8",
