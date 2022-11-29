@@ -138,7 +138,13 @@ function indexLayout(prefix: string, files: _Object[], dirs: string[]): string {
         ${rows.map(([link, name, size, date]) => `<tr>
             <td class="link"><a href="${link}">${name}</a></td>
             <td class="size">${size ? humanFileSize(size) : "-"}</td>
-            <td class="date">${date?.toLocaleString() ?? "-"}</td>
+            <td class="date">${date?.toLocaleString("en-GB", {
+                year: "numeric",
+                month: "short",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "numeric",
+            }) ?? "-"}</td>
         </tr>`).join("")}
     </tbody>
 </table>
