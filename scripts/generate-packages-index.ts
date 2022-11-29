@@ -101,6 +101,14 @@ function humanFileSize(bytes: number, si = false, dp = 1) {
     return bytes.toFixed(dp) + ' ' + units[u];
 }
 
+const dateTimeOptions = {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "numeric",
+};
+
 function indexLayout(prefix: string, files: _Object[], dirs: string[]): string {
     const rows: [link: string, name: string, size?: number, date?: Date][] = [];
 
@@ -138,13 +146,7 @@ function indexLayout(prefix: string, files: _Object[], dirs: string[]): string {
         ${rows.map(([link, name, size, date]) => `<tr>
             <td class="link"><a href="${link}">${name}</a></td>
             <td class="size">${size ? humanFileSize(size) : "-"}</td>
-            <td class="date">${date?.toLocaleString("en-GB", {
-                year: "numeric",
-                month: "short",
-                day: "2-digit",
-                hour: "2-digit",
-                minute: "numeric",
-            }) ?? "-"}</td>
+            <td class="date">${date?.toLocaleString("en-GB", dateTimeOptions) ?? "-"}</td>
         </tr>`).join("")}
     </tbody>
 </table>
