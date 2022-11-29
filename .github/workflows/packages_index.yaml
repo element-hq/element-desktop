@@ -36,7 +36,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
 
       - name: Generate directory indexes
-        run: scripts/generate-package-index.ts
+        run: ./scripts/generate-package-index.ts
         env:
           CF_R2_S3_API: ${{ secrets.CF_R2_S3_API }}
           CF_R2_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
