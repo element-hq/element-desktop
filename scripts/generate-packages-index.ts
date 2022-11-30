@@ -101,7 +101,7 @@ function humanFileSize(bytes: number, si = false, dp = 1) {
     return bytes.toFixed(dp) + ' ' + units[u];
 }
 
-const dateTimeOptions = {
+const dateTimeOptions: DateTimeFormatOptions = {
     year: "numeric",
     month: "short",
     day: "2-digit",
