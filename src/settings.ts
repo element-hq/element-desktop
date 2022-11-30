@@ -44,12 +44,12 @@ export const Settings: Record<string, Setting> = {
     },
     "Electron.alwaysShowMenuBar": { // not supported on macOS
         async read(): Promise<any> {
-            return !global.mainWindow.autoHideMenuBar;
+            return !global.mainWindow!.autoHideMenuBar;
         },
         async write(value: any): Promise<void> {
             global.store.set('autoHideMenuBar', !value);
-            global.mainWindow.autoHideMenuBar = !value;
-            global.mainWindow.setMenuBarVisibility(value);
+            global.mainWindow!.autoHideMenuBar = !value;
+            global.mainWindow!.setMenuBarVisibility(value);
         },
     },
     "Electron.showTrayIcon": { // not supported on macOS

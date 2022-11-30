@@ -81,15 +81,12 @@ ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
     // We do this here to ensure we get the path after --profile has been resolved
     const eventStorePath = path.join(app.getPath('userData'), 'EventStore');
 
-    const sendError = (id, e) => {
+    const sendError = (id: string, e: Error) => {
         const error = {
             message: e.message,
         };
 
-        global.mainWindow.webContents.send('seshatReply', {
-            id: id,
-            error: error,
-        });
+        global.mainWindow?.webContents.send('seshatReply', { id, error });
     };
 
     const args = payload.args || [];
@@ -138,7 +135,7 @@ ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
 
                         eventIndex = new Seshat(eventStorePath, { passphrase });
                     } else {
-                        sendError(payload.id, e);
+                        sendError(payload.id, <Error>e);
                         return;
                     }
                 }
@@ -153,7 +150,7 @@ ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
                 try {
                     await index.shutdown();
                 } catch (e) {
-                    sendError(payload.id, e);
+                    sendError(payload.id, <Error>e);
                     return;
                 }
             }
@@ -182,7 +179,7 @@ ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
             try {
                 eventIndex?.addEvent(args[0], args[1]);
             } catch (e) {
-                sendError(payload.id, e);
+                sendError(payload.id, <Error>e);
                 return;
             }
             break;
@@ -191,7 +188,7 @@ ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
             try {
                 ret = await eventIndex?.deleteEvent(args[0]);
             } catch (e) {
-                sendError(payload.id, e);
+                sendError(payload.id, <Error>e);
                 return;
             }
             break;
@@ -200,7 +197,7 @@ ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
             try {
                 ret = await eventIndex?.commit();
             } catch (e) {
-                sendError(payload.id, e);
+                sendError(payload.id, <Error>e);
                 return;
             }
             break;
@@ -209,7 +206,7 @@ ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
             try {
                 ret = await eventIndex?.search(args[0]);
             } catch (e) {
-                sendError(payload.id, e);
+                sendError(payload.id, <Error>e);
                 return;
             }
             break;
@@ -221,7 +218,7 @@ ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
                     ret = await eventIndex.addHistoricEvents(
                         args[0], args[1], args[2]);
                 } catch (e) {
-                    sendError(payload.id, e);
+                    sendError(payload.id, <Error>e);
                     return;
                 }
             }
@@ -233,7 +230,7 @@ ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
                 try {
                     ret = await eventIndex.getStats();
                 } catch (e) {
-                    sendError(payload.id, e);
+                    sendError(payload.id, <Error>e);
                     return;
                 }
             }
@@ -245,7 +242,7 @@ ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
                 try {
                     ret = await eventIndex.removeCrawlerCheckpoint(args[0]);
                 } catch (e) {
-                    sendError(payload.id, e);
+                    sendError(payload.id, <Error>e);
                     return;
                 }
             }
@@ -257,7 +254,7 @@ ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
                 try {
                     ret = await eventIndex.addCrawlerCheckpoint(args[0]);
                 } catch (e) {
-                    sendError(payload.id, e);
+                    sendError(payload.id, <Error>e);
                     return;
                 }
             }
@@ -269,7 +266,7 @@ ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
                 try {
                     ret = await eventIndex.loadFileEvents(args[0]);
                 } catch (e) {
-                    sendError(payload.id, e);
+                    sendError(payload.id, <Error>e);
                     return;
                 }
             }
@@ -292,7 +289,7 @@ ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
                 try {
                     await eventIndex.setUserVersion(args[0]);
                 } catch (e) {
-                    sendError(payload.id, e);
+                    sendError(payload.id, <Error>e);
                     return;
                 }
             }
@@ -304,7 +301,7 @@ ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
                 try {
                     ret = await eventIndex.getUserVersion();
                 } catch (e) {
-                    sendError(payload.id, e);
+                    sendError(payload.id, <Error>e);
                     return;
                 }
             }

@@ -36,12 +36,12 @@ export function destroy(): void {
 }
 
 function toggleWin(): void {
-    if (global.mainWindow.isVisible() && !global.mainWindow.isMinimized() && global.mainWindow.isFocused()) {
+    if (global.mainWindow?.isVisible() && !global.mainWindow.isMinimized() && global.mainWindow.isFocused()) {
         global.mainWindow.hide();
     } else {
-        if (global.mainWindow.isMinimized()) global.mainWindow.restore();
-        if (!global.mainWindow.isVisible()) global.mainWindow.show();
-        global.mainWindow.focus();
+        if (global.mainWindow?.isMinimized()) global.mainWindow.restore();
+        if (!global.mainWindow?.isVisible()) global.mainWindow?.show();
+        global.mainWindow?.focus();
     }
 }
 
@@ -60,11 +60,11 @@ export function create(config: IConfig): void {
     initApplicationMenu();
     trayIcon.on('click', toggleWin);
 
-    let lastFavicon = null;
-    global.mainWindow.webContents.on('page-favicon-updated', async function(ev, favicons) {
+    let lastFavicon: string | null = null;
+    global.mainWindow?.webContents.on('page-favicon-updated', async function(ev, favicons) {
         if (!favicons || favicons.length <= 0 || !favicons[0].startsWith('data:')) {
             if (lastFavicon !== null) {
-                global.mainWindow.setIcon(defaultIcon);
+                global.mainWindow?.setIcon(defaultIcon);
                 trayIcon?.setImage(defaultIcon);
                 lastFavicon = null;
             }
@@ -89,10 +89,10 @@ export function create(config: IConfig): void {
         }
 
         trayIcon?.setImage(newFavicon);
-        global.mainWindow.setIcon(newFavicon);
+        global.mainWindow?.setIcon(newFavicon);
     });
 
-    global.mainWindow.webContents.on('page-title-updated', function(ev, title) {
+    global.mainWindow?.webContents.on('page-title-updated', function(ev, title) {
         trayIcon?.setToolTip(title);
     });
 }
