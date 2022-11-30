@@ -18,8 +18,9 @@ import path from 'path';
 import childProcess from 'child_process';
 import fs from 'fs';
 import fsProm from 'fs/promises';
-import needle from 'needle';
 import tar from 'tar';
+import fetch from 'node-fetch';
+import { pipeline } from "stream";
 
 import HakEnv from '../../scripts/hak/hakEnv';
 import { DependencyInfo } from '../../scripts/hak/dep';
@@ -57,11 +58,10 @@ async function getSqlCipher(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise
         haveSqlcipherTar = false;
     }
     if (!haveSqlcipherTar) {
-        const bob = needle('get', `https://github.com/sqlcipher/sqlcipher/archive/v${version}.tar.gz`, {
-            follow: 10,
-            output: sqlCipherTarball,
-        });
-        await bob;
+        const resp = await fetch(`https://github.com/sqlcipher/sqlcipher/archive/v${version}.tar.gz`);
+        if (!resp.ok) throw new Error(`unexpected response ${resp.statusText}`);
+        if (!resp.body) throw new Error(`unexpected response has no body ${resp.statusText}`);
+        await pipeline(resp.body, fs.createWriteStream(sqlCipherTarball));
     }
 
     // Extract the tarball to per-target directories, then we avoid cross-contaiminating archs
@@ -118,10 +118,10 @@ async function getOpenSsl(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<v
         haveOpenSslTar = false;
     }
     if (!haveOpenSslTar) {
-        await needle('get', `https://www.openssl.org/source/openssl-${version}.tar.gz`, {
-            follow: 10,
-            output: openSslTarball,
-        });
+        const resp = await fetch(`https://www.openssl.org/source/openssl-${version}.tar.gz`);
+        if (!resp.ok) throw new Error(`unexpected response ${resp.statusText}`);
+        if (!resp.body) throw new Error(`unexpected response has no body ${resp.statusText}`);
+        await pipeline(resp.body, fs.createWriteStream(openSslTarball));
     }
 
     console.log("extracting " + openSslTarball + " in " + moduleInfo.moduleTargetDotHakDir);

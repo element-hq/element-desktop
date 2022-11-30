@@ -7,7 +7,8 @@ const fsPromises = require('fs').promises;
 const childProcess = require('child_process');
 const tar = require('tar');
 const asar = require('asar');
-const needle = require('needle');
+const fetch = require('node-fetch');
+const { pipeline } = require("stream");
 
 const riotDesktopPackageJson = require('../package.json');
 const { setPackageVersion } = require('./set-version.js');
@@ -21,16 +22,12 @@ async function downloadToFile(url, filename) {
     console.log("Downloading " + url + "...");
 
     try {
-        await needle('get', url, null,
-            {
-                follow_max: 5,
-                output: filename,
-            },
-        );
+        const resp = await fetch(url);
+        if (!resp.ok) throw new Error(`unexpected response ${resp.statusText}`);
+        if (!resp.body) throw new Error(`unexpected response has no body ${resp.statusText}`);
+        await pipeline(resp.body, fs.createWriteStream(filename));
     } catch (e) {
-        try {
-            await fsPromises.unlink(filename);
-        } catch (_) {}
+        await fsPromises.unlink(filename).catch();
         throw e;
     }
 }
@@ -116,7 +113,7 @@ async function main() {
             return 1;
         }
 
-        await new Promise((resolve) => {
+        await new Promise(async (resolve) => {
             const gpgProc = childProcess.execFile('gpg', ['--import'], (error) => {
                 if (error) {
                     console.log("Failed to import key", error);
@@ -125,7 +122,7 @@ async function main() {
                 }
                 resolve(!error);
             });
-            needle.get(PUB_KEY_URL).pipe(gpgProc.stdin);
+            pipeline((await fetch(PUB_KEY_URL)).body, gpgProc.stdin);
         });
         return 0;
     }
