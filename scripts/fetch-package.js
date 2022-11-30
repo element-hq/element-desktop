@@ -27,7 +27,10 @@ async function downloadToFile(url, filename) {
         if (!resp.body) throw new Error(`unexpected response has no body ${resp.statusText}`);
         await pipeline(resp.body, fs.createWriteStream(filename));
     } catch (e) {
-        await fsPromises.unlink(filename).catch();
+        console.error(e);
+        try {
+            await fsPromises.unlink(filename);
+        } catch (_) {}
         throw e;
     }
 }
