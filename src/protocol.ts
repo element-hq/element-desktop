@@ -52,7 +52,7 @@ function processUrl(url: string): void {
     global.mainWindow.loadURL(urlToLoad.href);
 }
 
-function readStore(): object {
+function readStore(): Record<string, string> {
     try {
         const s = fs.readFileSync(storePath, { encoding: "utf8" });
         const o = JSON.parse(s);
@@ -62,7 +62,7 @@ function readStore(): object {
     }
 }
 
-function writeStore(data: object): void {
+function writeStore(data: Record<string, string>): void {
     fs.writeFileSync(storePath, JSON.stringify(data));
 }
 
@@ -83,7 +83,7 @@ export function recordSSOSession(sessionID: string): void {
 export function getProfileFromDeeplink(args: string[]): string | undefined {
     // check if we are passed a profile in the SSO callback url
     const deeplinkUrl = args.find(arg => arg.startsWith(PROTOCOL + '//'));
-    if (deeplinkUrl && deeplinkUrl.includes(SEARCH_PARAM)) {
+    if (deeplinkUrl?.includes(SEARCH_PARAM)) {
         const parsedUrl = new URL(deeplinkUrl);
         if (parsedUrl.protocol === PROTOCOL) {
             const ssoID = parsedUrl.searchParams.get(SEARCH_PARAM)!;

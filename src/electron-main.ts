@@ -126,6 +126,8 @@ async function tryPaths(name: string, root: string, rawPaths: string[]): Promise
     throw new Error(`Failed to find ${name} files`);
 }
 
+const homeserverProps = ['default_is_url', 'default_hs_url', 'default_server_name', 'default_server_config'] as const;
+
 // Find the webapp resources and set up things that require them
 async function setupGlobals(): Promise<void> {
     // find the webapp asar.
@@ -168,12 +170,14 @@ async function setupGlobals(): Promise<void> {
         // If the local config has a homeserver defined, don't use the homeserver from the build
         // config. This is to avoid a problem where Riot thinks there are multiple homeservers
         // defined, and panics as a result.
-        const homeserverProps = ['default_is_url', 'default_hs_url', 'default_server_name', 'default_server_config'];
-        if (Object.keys(localConfig).find(k => homeserverProps.includes(k))) {
+        if (Object.keys(localConfig).find(k => homeserverProps.includes(<any>k))) {
             // Rip out all the homeserver options from the vector config
             global.vectorConfig = Object.keys(global.vectorConfig)
-                .filter(k => !homeserverProps.includes(k))
-                .reduce((obj, key) => {obj[key] = global.vectorConfig[key]; return obj;}, {});
+                .filter(k => !homeserverProps.includes(<any>k))
+                .reduce((obj, key) => {
+                    obj[key] = global.vectorConfig[key];
+                    return obj;
+                }, {} as Omit<Partial<typeof global["vectorConfig"]>, keyof typeof homeserverProps>);
         }
 
         global.vectorConfig = Object.assign(global.vectorConfig, localConfig);
@@ -244,7 +248,7 @@ const warnBeforeExit = (event: Event, input: Input): void => {
     const exitShortcutPressed =
         input.type === 'keyDown' && exitShortcuts.some(shortcutFn => shortcutFn(input, process.platform));
 
-    if (shouldWarnBeforeExit && exitShortcutPressed) {
+    if (shouldWarnBeforeExit && exitShortcutPressed && global.mainWindow) {
         const shouldCancelCloseRequest = dialog.showMessageBoxSync(global.mainWindow, {
             type: "question",
             buttons: [_t("Cancel"), _t("Close %(brand)s", {
@@ -338,11 +342,11 @@ app.on('ready', async () => {
             // eslint-disable-next-line @typescript-eslint/no-var-requires
             const { default: installExt, REACT_DEVELOPER_TOOLS, REACT_PERF } = require('electron-devtools-installer');
             installExt(REACT_DEVELOPER_TOOLS)
-                .then((name) => console.log(`Added Extension: ${name}`))
-                .catch((err) => console.log('An error occurred: ', err));
+                .then((name: string) => console.log(`Added Extension: ${name}`))
+                .catch((err: unknown) => console.log('An error occurred: ', err));
             installExt(REACT_PERF)
-                .then((name) => console.log(`Added Extension: ${name}`))
-                .catch((err) => console.log('An error occurred: ', err));
+                .then((name: string) => console.log(`Added Extension: ${name}`))
+                .catch((err: unknown) => console.log('An error occurred: ', err));
         } catch (e) {
             console.log(e);
         }
@@ -446,6 +450,7 @@ app.on('ready', async () => {
     if (global.store.get('minimizeToTray', true)) tray.create(global.trayConfig);
 
     global.mainWindow.once('ready-to-show', () => {
+        if (!global.mainWindow) return;
         mainWindowState.manage(global.mainWindow);
 
         if (!argv['hidden']) {
@@ -469,12 +474,12 @@ app.on('ready', async () => {
             // behave, eg. Mail.app)
             e.preventDefault();
 
-            if (global.mainWindow.isFullScreen()) {
-                global.mainWindow.once('leave-full-screen', () => global.mainWindow.hide());
+            if (global.mainWindow?.isFullScreen()) {
+                global.mainWindow.once('leave-full-screen', () => global.mainWindow?.hide());
 
                 global.mainWindow.setFullScreen(false);
             } else {
-                global.mainWindow.hide();
+                global.mainWindow?.hide();
             }
 
             return false;
@@ -484,9 +489,9 @@ app.on('ready', async () => {
     if (process.platform === 'win32') {
         // Handle forward/backward mouse buttons in Windows
         global.mainWindow.on('app-command', (e, cmd) => {
-            if (cmd === 'browser-backward' && global.mainWindow.webContents.canGoBack()) {
+            if (cmd === 'browser-backward' && global.mainWindow?.webContents.canGoBack()) {
                 global.mainWindow.webContents.goBack();
-            } else if (cmd === 'browser-forward' && global.mainWindow.webContents.canGoForward()) {
+            } else if (cmd === 'browser-forward' && global.mainWindow?.webContents.canGoForward()) {
                 global.mainWindow.webContents.goForward();
             }
         });
@@ -508,7 +513,7 @@ app.on('window-all-closed', () => {
 });
 
 app.on('activate', () => {
-    global.mainWindow.show();
+    global.mainWindow?.show();
 });
 
 function beforeQuit(): void {

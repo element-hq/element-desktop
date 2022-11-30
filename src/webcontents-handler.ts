@@ -31,7 +31,8 @@ import {
 } from 'electron';
 import url from 'url';
 import fs from 'fs';
-import request from 'request';
+import fetch from 'node-fetch';
+import { pipeline } from 'stream';
 import path from 'path';
 
 import { _t } from './language-helper';
@@ -154,7 +155,10 @@ function onLinkContextMenu(ev: Event, params: ContextMenuParams, webContents: We
                     if (url.startsWith("data:")) {
                         await writeNativeImage(filePath, nativeImage.createFromDataURL(url));
                     } else {
-                        request.get(url).pipe(fs.createWriteStream(filePath));
+                        const resp = await fetch(url);
+                        if (!resp.ok) throw new Error(`unexpected response ${resp.statusText}`);
+                        if (!resp.body) throw new Error(`unexpected response has no body ${resp.statusText}`);
+                        pipeline(resp.body, fs.createWriteStream(filePath));
                     }
                 } catch (err) {
                     console.error(err);
@@ -224,7 +228,7 @@ function cutCopyPasteSelectContextMenus(params: ContextMenuParams): MenuItemCons
     return options;
 }
 
-function onSelectedContextMenu(ev, params) {
+function onSelectedContextMenu(ev: Event, params: ContextMenuParams) {
     const items = cutCopyPasteSelectContextMenus(params);
     const popupMenu = Menu.buildFromTemplate(items);
 

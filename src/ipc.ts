@@ -39,7 +39,7 @@ ipcMain.on('loudNotification', function(): void {
     if (process.platform === 'win32' && global.mainWindow && !global.mainWindow.isFocused() && !focusHandlerAttached) {
         global.mainWindow.flashFrame(true);
         global.mainWindow.once('focus', () => {
-            global.mainWindow.flashFrame(false);
+            global.mainWindow?.flashFrame(false);
             focusHandlerAttached = false;
         });
         focusHandlerAttached = true;
