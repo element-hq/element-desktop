@@ -2,6 +2,8 @@ The Desktop app is capable of self-updating on macOS and Windows.
 The update server base url is configurable as `update_base_url` in config.json and can be served by a static file host,
 CDN or object storage.
 
+Currently all packaging & deployment is handled by https://github.com/vector-im/element-builder/
+
 # Windows
 
 On Windows the update mechanism used is [Squirrel.Windows](https://github.com/Squirrel/Squirrel.Windows)
