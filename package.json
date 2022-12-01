@@ -90,7 +90,7 @@
     "mkdirp": "^1.0.3",
     "needle": "^2.5.0",
     "node-pre-gyp": "^0.17.0",
-    "pacote": "^11.3.5",
+    "pacote": "^15.0.0",
     "playwright": "^1.25.0",
     "rimraf": "^3.0.2",
     "tar": "^6.1.2",
