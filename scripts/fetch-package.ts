@@ -1,23 +1,21 @@
-#!/usr/bin/env node
+#!/usr/bin/env -S npx ts-node --resolveJsonModule
 
-const process = require('process');
-const path = require('path');
-const fs = require('fs');
-const fsPromises = require('fs').promises;
-const childProcess = require('child_process');
-const tar = require('tar');
-const asar = require('asar');
-const needle = require('needle');
+import * as path from "path";
+import { promises as fs } from "fs";
+import * as childProcess from "child_process";
+import tar from "tar";
+import * as asar from "asar";
+import needle from "needle";
 
-const riotDesktopPackageJson = require('../package.json');
-const { setPackageVersion } = require('./set-version.js');
+import riotDesktopPackageJson from "../package.json";
+import { setPackageVersion } from "./set-version";
 
 const PUB_KEY_URL = "https://packages.riot.im/element-release-key.asc";
 const PACKAGE_URL_PREFIX = "https://github.com/vector-im/element-web/releases/download/";
 const DEVELOP_TGZ_URL = "https://develop.element.io/develop.tar.gz";
 const ASAR_PATH = 'webapp.asar';
 
-async function downloadToFile(url, filename) {
+async function downloadToFile(url: string, filename: string): Promise<void> {
     console.log("Downloading " + url + "...");
 
     try {
@@ -29,14 +27,14 @@ async function downloadToFile(url, filename) {
         );
     } catch (e) {
         try {
-            await fsPromises.unlink(filename);
+            await fs.unlink(filename);
         } catch (_) {}
         throw e;
     }
 }
 
-async function verifyFile(filename) {
-    return new Promise((resolve, reject) => {
+async function verifyFile(filename: string): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
         childProcess.execFile('gpg', ['--verify', filename + '.asc', filename], (error) => {
             if (error) {
                 reject(error);
@@ -47,15 +45,15 @@ async function verifyFile(filename) {
     });
 }
 
-async function main() {
+async function main(): Promise<number | undefined> {
     let verify = true;
     let importkey = false;
     let pkgDir = 'packages';
     let deployDir = 'deploys';
-    let cfgDir;
-    let targetVersion;
-    let filename;
-    let url;
+    let cfgDir: string | undefined;
+    let targetVersion: string | undefined;
+    let filename: string | undefined;
+    let url: string | undefined;
     let setVersion = false;
 
     while (process.argv.length > 2) {
@@ -104,7 +102,7 @@ async function main() {
         url = PACKAGE_URL_PREFIX + targetVersion + '/' + filename;
     }
 
-    const haveGpg = await new Promise((resolve) => {
+    const haveGpg = await new Promise<boolean>((resolve) => {
         childProcess.execFile('gpg', ['--version'], (error) => {
             resolve(!error);
         });
@@ -116,7 +114,7 @@ async function main() {
             return 1;
         }
 
-        await new Promise((resolve) => {
+        await new Promise<boolean>((resolve) => {
             const gpgProc = childProcess.execFile('gpg', ['--import'], (error) => {
                 if (error) {
                     console.log("Failed to import key", error);
@@ -154,7 +152,7 @@ async function main() {
     if (!haveDeploy) {
         const outPath = path.join(pkgDir, filename);
         try {
-            await fsPromises.stat(outPath);
+            await fs.stat(outPath);
             console.log("Already have " + filename + ": not redownloading");
         } catch (e) {
             try {
@@ -167,7 +165,7 @@ async function main() {
 
         if (verify) {
             try {
-                await fsPromises.stat(outPath+'.asc');
+                await fs.stat(outPath+'.asc');
                 console.log("Already have " + filename + ".asc: not redownloading");
             } catch (e) {
                 try {
@@ -202,9 +200,9 @@ async function main() {
     }
 
     try {
-        await fsPromises.stat(ASAR_PATH);
+        await fs.stat(ASAR_PATH);
         console.log(ASAR_PATH + " already present: removing");
-        await fsPromises.unlink(ASAR_PATH);
+        await fs.unlink(ASAR_PATH);
     } catch (e) {
     }
 
@@ -212,7 +210,7 @@ async function main() {
         const configJsonSource = path.join(cfgDir, 'config.json');
         const configJsonDest = path.join(expectedDeployDir, 'config.json');
         console.log(configJsonSource + ' -> ' + configJsonDest);
-        await fsPromises.copyFile(configJsonSource, configJsonDest);
+        await fs.copyFile(configJsonSource, configJsonDest);
     } else {
         console.log("Skipping config file");
     }
@@ -221,7 +219,7 @@ async function main() {
     await asar.createPackage(expectedDeployDir, ASAR_PATH);
 
     if (setVersion) {
-        const semVer = fs.readFileSync(path.join(expectedDeployDir, "version"), "utf-8").trim();
+        const semVer = (await fs.readFile(path.join(expectedDeployDir, "version"), "utf-8")).trim();
         console.log("Updating version to " + semVer);
         await setPackageVersion(semVer);
     }

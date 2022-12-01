@@ -37,20 +37,17 @@ async function getRuntimeVersion(projectRoot: string): Promise<string> {
 
 export default class HakEnv {
     public readonly target: Target;
-    public runtime: string;
-    public runtimeVersion: string;
+    public runtime?: string;
+    public runtimeVersion?: string;
     public dotHakDir: string;
 
-    constructor(public readonly projectRoot: string, targetId: TargetId | null) {
-        if (targetId) {
-            this.target = TARGETS[targetId];
-        } else {
-            this.target = getHost();
-        }
+    public constructor(public readonly projectRoot: string, targetId: TargetId | null) {
+        const target = targetId ? TARGETS[targetId] : getHost();
 
-        if (!this.target) {
+        if (!target) {
             throw new Error(`Unknown target ${targetId}!`);
         }
+        this.target = target;
         this.dotHakDir = path.join(this.projectRoot, '.hak');
     }
 
@@ -60,10 +57,7 @@ export default class HakEnv {
     }
 
     public getRuntimeAbi(): string {
-        return nodePreGypVersioning.get_runtime_abi(
-            this.runtime,
-            this.runtimeVersion,
-        );
+        return nodePreGypVersioning.get_runtime_abi(this.runtime!, this.runtimeVersion!);
     }
 
     // {node_abi}-{platform}-{arch}
@@ -95,7 +89,7 @@ export default class HakEnv {
         return isHostId(this.target.id);
     }
 
-    public makeGypEnv(): Record<string, string> {
+    public makeGypEnv(): Record<string, string | undefined> {
         return Object.assign({}, process.env, {
             npm_config_arch: this.target.arch,
             npm_config_target_arch: this.target.arch,
@@ -105,10 +99,6 @@ export default class HakEnv {
             npm_config_build_from_source: true,
             npm_config_devdir: path.join(os.homedir(), ".electron-gyp"),
         });
-    }
-
-    public getNodeModuleBin(name: string): string {
-        return path.join(this.projectRoot, 'node_modules', '.bin', name);
     }
 
     public wantsStaticSqlCipherUnix(): boolean {

@@ -38,7 +38,7 @@ const MODULECOMMANDS = [
 
 // Shortcuts for multiple commands at once (useful for building universal binaries
 // because you can run the fetch/fetchDeps/build for each arch and then copy/link once)
-const METACOMMANDS = {
+const METACOMMANDS: Record<string, string[]> = {
     'fetchandbuild': ['check', 'fetch', 'fetchDeps', 'build'],
     'copyandlink': ['copy', 'link'],
 };
