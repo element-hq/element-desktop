@@ -51,7 +51,7 @@ const HAKSCRIPTS = [
     'build',
 ];
 
-async function main() {
+async function main(): Promise<void> {
     const prefix = await findNpmPrefix(process.cwd());
     let packageJson;
     try {

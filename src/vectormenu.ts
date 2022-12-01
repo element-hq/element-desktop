@@ -98,7 +98,7 @@ export function buildMenuTemplate(): Menu {
                 // in macOS the Preferences menu item goes in the first menu
                 ...(!isMac ? [{
                     label: _t('Preferences'),
-                    click() { global.mainWindow?.webContents.send('preferences'); },
+                    click(): void { global.mainWindow?.webContents.send('preferences'); },
                 }] : []),
                 {
                     role: 'togglefullscreen',
@@ -132,7 +132,7 @@ export function buildMenuTemplate(): Menu {
             submenu: [
                 {
                     label: _t('Element Help'),
-                    click() { shell.openExternal('https://element.io/help'); },
+                    click(): void { shell.openExternal('https://element.io/help'); },
                 },
             ],
         },
@@ -153,7 +153,7 @@ export function buildMenuTemplate(): Menu {
                 {
                     label: _t('Preferences') + '…',
                     accelerator: 'Command+,', // Mac-only accelerator
-                    click() { global.mainWindow?.webContents.send('preferences'); },
+                    click(): void { global.mainWindow?.webContents.send('preferences'); },
                 },
                 { type: 'separator' },
                 {

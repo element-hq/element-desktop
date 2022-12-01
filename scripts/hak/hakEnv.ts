@@ -41,7 +41,7 @@ export default class HakEnv {
     public runtimeVersion: string;
     public dotHakDir: string;
 
-    constructor(public readonly projectRoot: string, targetId: TargetId | null) {
+    public constructor(public readonly projectRoot: string, targetId: TargetId | null) {
         if (targetId) {
             this.target = TARGETS[targetId];
         } else {
@@ -54,7 +54,7 @@ export default class HakEnv {
         this.dotHakDir = path.join(this.projectRoot, '.hak');
     }
 
-    public async init() {
+    public async init(): Promise<void> {
         this.runtime = await getRuntime(this.projectRoot);
         this.runtimeVersion = await getRuntimeVersion(this.projectRoot);
     }
