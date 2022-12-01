@@ -1,7 +1,7 @@
 #!/usr/bin/env -S npx ts-node --resolveJsonModule
 
 import * as path from "path";
-import { promises as fs } from "fs";
+import { createWriteStream, promises as fs } from "fs";
 import * as childProcess from "child_process";
 import tar from "tar";
 import * as asar from "asar";
@@ -23,7 +23,7 @@ async function downloadToFile(url: string, filename: string): Promise<void> {
         const resp = await fetch(url);
         if (!resp.ok) throw new Error(`unexpected response ${resp.statusText}`);
         if (!resp.body) throw new Error(`unexpected response has no body ${resp.statusText}`);
-        await pipeline(resp.body, fs.createWriteStream(filename));
+        await pipeline(resp.body, createWriteStream(filename));
     } catch (e) {
         console.error(e);
         try {
@@ -114,7 +114,7 @@ async function main(): Promise<number | undefined> {
             return 1;
         }
 
-        await new Promise<boolean>(async (resolve) => {
+        await new Promise<boolean>((resolve) => {
             const gpgProc = childProcess.execFile('gpg', ['--import'], (error) => {
                 if (error) {
                     console.log("Failed to import key", error);
@@ -123,7 +123,9 @@ async function main(): Promise<number | undefined> {
                 }
                 resolve(!error);
             });
-            pipeline((await fetch(PUB_KEY_URL)).body, gpgProc.stdin);
+            fetch(PUB_KEY_URL).then(resp => {
+                pipeline(resp.body, gpgProc.stdin!);
+            });
         });
         return 0;
     }

@@ -25,6 +25,13 @@ import { pipeline } from "stream";
 import HakEnv from '../../scripts/hak/hakEnv';
 import { DependencyInfo } from '../../scripts/hak/dep';
 
+async function download(url: string, filename: string): Promise<void> {
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error(`unexpected response ${resp.statusText}`);
+    if (!resp.body) throw new Error(`unexpected response has no body ${resp.statusText}`);
+    await pipeline(resp.body, fs.createWriteStream(filename));
+}
+
 export default async function(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
     if (hakEnv.wantsStaticSqlCipher()) {
         await getSqlCipher(hakEnv, moduleInfo);
@@ -58,10 +65,7 @@ async function getSqlCipher(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise
         haveSqlcipherTar = false;
     }
     if (!haveSqlcipherTar) {
-        const resp = await fetch(`https://github.com/sqlcipher/sqlcipher/archive/v${version}.tar.gz`);
-        if (!resp.ok) throw new Error(`unexpected response ${resp.statusText}`);
-        if (!resp.body) throw new Error(`unexpected response has no body ${resp.statusText}`);
-        await pipeline(resp.body, fs.createWriteStream(sqlCipherTarball));
+        await download(`https://github.com/sqlcipher/sqlcipher/archive/v${version}.tar.gz`, sqlCipherTarball);
     }
 
     // Extract the tarball to per-target directories, then we avoid cross-contaiminating archs
@@ -118,10 +122,7 @@ async function getOpenSsl(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<v
         haveOpenSslTar = false;
     }
     if (!haveOpenSslTar) {
-        const resp = await fetch(`https://www.openssl.org/source/openssl-${version}.tar.gz`);
-        if (!resp.ok) throw new Error(`unexpected response ${resp.statusText}`);
-        if (!resp.body) throw new Error(`unexpected response has no body ${resp.statusText}`);
-        await pipeline(resp.body, fs.createWriteStream(openSslTarball));
+        await download(`https://www.openssl.org/source/openssl-${version}.tar.gz`, openSslTarball);
     }
 
     console.log("extracting " + openSslTarball + " in " + moduleInfo.moduleTargetDotHakDir);
