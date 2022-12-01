@@ -61,6 +61,7 @@
     "@types/jest": "^28",
     "@types/minimist": "^1.2.1",
     "@types/mkdirp": "^1.0.2",
+    "@types/node": "^16",
     "@types/pacote": "^11.1.1",
     "@types/rimraf": "^3.0.2",
     "@typescript-eslint/eslint-plugin": "^5.42.0",
@@ -100,9 +101,6 @@
   "hakDependencies": {
     "matrix-seshat": "^2.3.3",
     "keytar": "^7.9.0"
-  },
-  "resolutions": {
-    "@types/node": "16.11.38"
   },
   "build": {
     "appId": "im.riot.app",
