@@ -20,7 +20,7 @@ import fs from 'fs';
 import fsProm from 'fs/promises';
 import tar from 'tar';
 import fetch from 'node-fetch';
-import { pipeline } from "stream";
+import { promises as stream } from "stream";
 
 import HakEnv from '../../scripts/hak/hakEnv';
 import { DependencyInfo } from '../../scripts/hak/dep';
@@ -29,7 +29,7 @@ async function download(url: string, filename: string): Promise<void> {
     const resp = await fetch(url);
     if (!resp.ok) throw new Error(`unexpected response ${resp.statusText}`);
     if (!resp.body) throw new Error(`unexpected response has no body ${resp.statusText}`);
-    await pipeline(resp.body, fs.createWriteStream(filename));
+    await stream.pipeline(resp.body, fs.createWriteStream(filename));
 }
 
 export default async function(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {

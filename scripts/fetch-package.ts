@@ -6,7 +6,7 @@ import * as childProcess from "child_process";
 import tar from "tar";
 import * as asar from "asar";
 import fetch from "node-fetch";
-import { pipeline } from "stream";
+import { promises as stream } from "stream";
 
 import riotDesktopPackageJson from "../package.json";
 import { setPackageVersion } from "./set-version";
@@ -23,7 +23,7 @@ async function downloadToFile(url: string, filename: string): Promise<void> {
         const resp = await fetch(url);
         if (!resp.ok) throw new Error(`unexpected response ${resp.statusText}`);
         if (!resp.body) throw new Error(`unexpected response has no body ${resp.statusText}`);
-        await pipeline(resp.body, createWriteStream(filename));
+        await stream.pipeline(resp.body, createWriteStream(filename));
     } catch (e) {
         console.error(e);
         try {
@@ -124,7 +124,7 @@ async function main(): Promise<number | undefined> {
                 resolve(!error);
             });
             fetch(PUB_KEY_URL).then(resp => {
-                pipeline(resp.body, gpgProc.stdin!);
+                stream.pipeline(resp.body, gpgProc.stdin!);
             });
         });
         return 0;
