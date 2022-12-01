@@ -32,7 +32,7 @@ export default async function(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promi
     await buildMatrixSeshat(hakEnv, moduleInfo);
 }
 
-async function buildOpenSslWin(hakEnv: HakEnv, moduleInfo: DependencyInfo) {
+async function buildOpenSslWin(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
     const version = moduleInfo.cfg.dependencies.openssl;
     const openSslDir = path.join(moduleInfo.moduleTargetDotHakDir, `openssl-${version}`);
 
@@ -134,7 +134,7 @@ async function buildOpenSslWin(hakEnv: HakEnv, moduleInfo: DependencyInfo) {
     });
 }
 
-async function buildSqlCipherWin(hakEnv: HakEnv, moduleInfo: DependencyInfo) {
+async function buildSqlCipherWin(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
     const version = moduleInfo.cfg.dependencies.sqlcipher;
     const sqlCipherDir = path.join(moduleInfo.moduleTargetDotHakDir, `sqlcipher-${version}`);
     const buildDir = path.join(sqlCipherDir, 'bld');
@@ -171,7 +171,7 @@ async function buildSqlCipherWin(hakEnv: HakEnv, moduleInfo: DependencyInfo) {
     );
 }
 
-async function buildSqlCipherUnix(hakEnv: HakEnv, moduleInfo: DependencyInfo) {
+async function buildSqlCipherUnix(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
     const version = moduleInfo.cfg.dependencies.sqlcipher;
     const sqlCipherDir = path.join(moduleInfo.moduleTargetDotHakDir, `sqlcipher-${version}`);
 
@@ -268,7 +268,7 @@ async function buildSqlCipherUnix(hakEnv: HakEnv, moduleInfo: DependencyInfo) {
     });
 }
 
-async function buildMatrixSeshat(hakEnv: HakEnv, moduleInfo: DependencyInfo) {
+async function buildMatrixSeshat(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
     // seshat now uses n-api so we shouldn't need to specify a node version to
     // build against, but it does seems to still need something in here, so leaving
     // it for now: we should confirm how much of this it still actually needs.

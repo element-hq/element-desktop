@@ -238,9 +238,9 @@ global.store = new Store({ name: "electron-config" });
 global.appQuitting = false;
 
 const exitShortcuts: Array<(input: Input, platform: string) => boolean> = [
-    (input, platform) => platform !== 'darwin' && input.alt && input.key.toUpperCase() === 'F4',
-    (input, platform) => platform !== 'darwin' && input.control && input.key.toUpperCase() === 'Q',
-    (input, platform) => platform === 'darwin' && input.meta && input.key.toUpperCase() === 'Q',
+    (input, platform): boolean => platform !== 'darwin' && input.alt && input.key.toUpperCase() === 'F4',
+    (input, platform): boolean => platform !== 'darwin' && input.control && input.key.toUpperCase() === 'Q',
+    (input, platform): boolean => platform === 'darwin' && input.meta && input.key.toUpperCase() === 'Q',
 ];
 
 const warnBeforeExit = (event: Event, input: Input): void => {
@@ -502,8 +502,8 @@ app.on('ready', async () => {
     global.appLocalization = new AppLocalization({
         store: global.store,
         components: [
-            () => tray.initApplicationMenu(),
-            () => Menu.setApplicationMenu(buildMenuTemplate()),
+            (): void => tray.initApplicationMenu(),
+            (): void => Menu.setApplicationMenu(buildMenuTemplate()),
         ],
     });
 });

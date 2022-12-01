@@ -97,7 +97,7 @@ function onLinkContextMenu(ev: Event, params: ContextMenuParams, webContents: We
     if (!url.startsWith('blob:')) {
         popupMenu.append(new MenuItem({
             label: url,
-            click() {
+            click(): void {
                 safeOpenURL(url);
             },
         }));
@@ -107,7 +107,7 @@ function onLinkContextMenu(ev: Event, params: ContextMenuParams, webContents: We
         popupMenu.append(new MenuItem({
             label: _t('Copy image'),
             accelerator: 'c',
-            click() {
+            click(): void {
                 webContents.copyImageAt(params.x, params.y);
             },
         }));
@@ -120,7 +120,7 @@ function onLinkContextMenu(ev: Event, params: ContextMenuParams, webContents: We
             popupMenu.append(new MenuItem({
                 label: _t('Copy email address'),
                 accelerator: 'a',
-                click() {
+                click(): void {
                     clipboard.writeText(url.substr(MAILTO_PREFIX.length));
                 },
             }));
@@ -130,7 +130,7 @@ function onLinkContextMenu(ev: Event, params: ContextMenuParams, webContents: We
                     ? _t('Copy image address')
                     : _t('Copy link address'),
                 accelerator: 'a',
-                click() {
+                click(): void {
                     clipboard.writeText(url);
                 },
             }));
@@ -143,7 +143,7 @@ function onLinkContextMenu(ev: Event, params: ContextMenuParams, webContents: We
         popupMenu.append(new MenuItem({
             label: _t('Save image as...'),
             accelerator: 's',
-            async click() {
+            async click(): Promise<void> {
                 const targetFileName = params.suggestedFilename || params.altText || "image.png";
                 const { filePath } = await dialog.showSaveDialog({
                     defaultPath: targetFileName,
@@ -228,7 +228,7 @@ function cutCopyPasteSelectContextMenus(params: ContextMenuParams): MenuItemCons
     return options;
 }
 
-function onSelectedContextMenu(ev: Event, params: ContextMenuParams) {
+function onSelectedContextMenu(ev: Event, params: ContextMenuParams): void {
     const items = cutCopyPasteSelectContextMenus(params);
     const popupMenu = Menu.buildFromTemplate(items);
 
@@ -237,7 +237,7 @@ function onSelectedContextMenu(ev: Event, params: ContextMenuParams) {
     ev.preventDefault();
 }
 
-function onEditableContextMenu(ev: Event, params: ContextMenuParams) {
+function onEditableContextMenu(ev: Event, params: ContextMenuParams): void {
     const items: MenuItemConstructorOptions[] = [
         { role: 'undo' },
         { role: 'redo', enabled: params.editFlags.canRedo },

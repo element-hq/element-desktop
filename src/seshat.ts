@@ -81,7 +81,7 @@ ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
     // We do this here to ensure we get the path after --profile has been resolved
     const eventStorePath = path.join(app.getPath('userData'), 'EventStore');
 
-    const sendError = (id: string, e: Error) => {
+    const sendError = (id: string, e: Error): void => {
         const error = {
             message: e.message,
         };
