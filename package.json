@@ -70,7 +70,7 @@
     "asar": "^2.0.1",
     "babel-jest": "^29.0.0",
     "chokidar": "^3.5.2",
-    "detect-libc": "^1.0.3",
+    "detect-libc": "^2.0.0",
     "electron": "^21",
     "electron-builder": "^23.6.0",
     "electron-builder-squirrel-windows": "^23.6.0",
