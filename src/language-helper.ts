@@ -71,7 +71,7 @@ export class AppLocalization {
     private readonly store: TypedStore;
     private readonly localizedComponents?: Set<Component>;
 
-    constructor({ store, components = [] }: { store: TypedStore, components: Component[] }) {
+    public constructor({ store, components = [] }: { store: TypedStore, components: Component[] }) {
         counterpart.registerTranslations(FALLBACK_LOCALE, this.fetchTranslationJson("en_EN"));
         counterpart.setFallbackLocale(FALLBACK_LOCALE);
         counterpart.setSeparator('|');

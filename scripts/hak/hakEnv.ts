@@ -51,7 +51,7 @@ export default class HakEnv {
         this.dotHakDir = path.join(this.projectRoot, '.hak');
     }
 
-    public async init() {
+    public async init(): Promise<void> {
         this.runtime = await getRuntime(this.projectRoot);
         this.runtimeVersion = await getRuntimeVersion(this.projectRoot);
     }

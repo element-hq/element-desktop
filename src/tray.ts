@@ -110,7 +110,7 @@ export function initApplicationMenu(): void {
         { type: 'separator' },
         {
             label: _t('Quit'),
-            click: function() {
+            click: function(): void {
                 app.quit();
             },
         },
