@@ -1,18 +1,18 @@
-#!/usr/bin/env node
+#!/usr/bin/env -S npx ts-node
 
 // copies resources into the lib directory.
 
-const parseArgs = require('minimist');
-const chokidar = require('chokidar');
-const path = require('path');
-const fs = require('fs');
+import parseArgs from "minimist";
+import * as chokidar from "chokidar";
+import * as path from "path";
+import * as fs from "fs";
 
 const argv = parseArgs(process.argv.slice(2), {});
 
 const watch = argv.w;
 const verbose = argv.v;
 
-function errCheck(err) {
+function errCheck(err?: Error): void {
     if (err) {
         console.error(err.message);
         process.exit(1);
@@ -25,15 +25,14 @@ const INCLUDE_LANGS = fs.readdirSync(I18N_BASE_PATH).filter(fn => fn.endsWith(".
 // Ensure lib, lib/i18n and lib/i18n/strings all exist
 fs.mkdirSync('lib/i18n/strings', { recursive: true });
 
-function genLangFile(file, dest) {
-    let translations = {};
+type Translations = Record<string, Record<string, string> | string>;
+
+function genLangFile(file: string, dest: string): void {
+    const inTrs: Record<string, string> = {};
     [file].forEach(function(f) {
         if (fs.existsSync(f)) {
             try {
-                Object.assign(
-                    translations,
-                    JSON.parse(fs.readFileSync(f).toString()),
-                );
+                Object.assign(inTrs, JSON.parse(fs.readFileSync(f).toString()));
             } catch (e) {
                 console.error("Failed: " + f, e);
                 throw e;
@@ -41,8 +40,7 @@ function genLangFile(file, dest) {
         }
     });
 
-    translations = weblateToCounterpart(translations);
-
+    const translations = weblateToCounterpart(inTrs);
     const json = JSON.stringify(translations, null, 4);
     const filename = path.basename(file);
 
@@ -66,8 +64,8 @@ function genLangFile(file, dest) {
  *         "other": "%(count)s badgers"
  *     }
  */
-function weblateToCounterpart(inTrs) {
-    const outTrs = {};
+function weblateToCounterpart(inTrs: Record<string, string>): Translations {
+    const outTrs: Translations = {};
 
     for (const key of Object.keys(inTrs)) {
         const keyParts = key.split('|', 2);
@@ -96,12 +94,12 @@ function weblateToCounterpart(inTrs) {
  watch the input files for a given language,
  regenerate the file, and regenerating languages.json with the new filename
  */
-function watchLanguage(file, dest) {
+function watchLanguage(file: string, dest: string): void {
     // XXX: Use a debounce because for some reason if we read the language
     // file immediately after the FS event is received, the file contents
     // appears empty. Possibly https://github.com/nodejs/node/issues/6112
-    let makeLangDebouncer;
-    const makeLang = () => {
+    let makeLangDebouncer: NodeJS.Timeout | undefined;
+    const makeLang = (): void => {
         if (makeLangDebouncer) {
             clearTimeout(makeLangDebouncer);
         }
@@ -118,7 +116,7 @@ function watchLanguage(file, dest) {
 
 // language resources
 const I18N_DEST = "lib/i18n/strings/";
-INCLUDE_LANGS.forEach((file) => {
+INCLUDE_LANGS.forEach((file): void => {
     genLangFile(I18N_BASE_PATH + file, I18N_DEST);
 }, {});
 
