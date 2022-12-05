@@ -14,3 +14,4 @@ node_modules/
 .vscode/
 /test_artifacts/
 /coverage/
+yarn-error.log
