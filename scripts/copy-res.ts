@@ -99,7 +99,7 @@ function watchLanguage(file: string, dest: string): void {
     // file immediately after the FS event is received, the file contents
     // appears empty. Possibly https://github.com/nodejs/node/issues/6112
     let makeLangDebouncer: NodeJS.Timeout | undefined;
-    const makeLang = () => {
+    const makeLang = (): void => {
         if (makeLangDebouncer) {
             clearTimeout(makeLangDebouncer);
         }
