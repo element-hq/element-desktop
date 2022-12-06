@@ -1,29 +1,28 @@
-#!/usr/bin/env node
+#!/usr/bin/env -S npx ts-node
 
 /*
  * Checks for the presence of a webapp, inspects its version and sets the
  * version metadata of the package to match.
  */
 
-const fs = require('fs').promises;
-const asar = require('asar');
-const childProcess = require('child_process');
+import { promises as fs } from "fs";
+import * as asar from "asar";
+import * as childProcess from "child_process";
 
-async function versionFromAsar() {
+export async function versionFromAsar(): Promise<string> {
     try {
         await fs.stat('webapp.asar');
     } catch (e) {
-        console.log("No 'webapp.asar' found. Run 'yarn run fetch'");
-        return 1;
+        throw new Error("No 'webapp.asar' found. Run 'yarn run fetch'");
     }
 
     return asar.extractFile('webapp.asar', 'version').toString().trim();
 }
 
-async function setPackageVersion(ver) {
+export async function setPackageVersion(ver: string): Promise<void> {
     // set version in package.json: electron-builder will use this to populate
     // all the various version fields
-    await new Promise((resolve, reject) => {
+    await new Promise<void>((resolve, reject) => {
         childProcess.execFile(process.platform === 'win32' ? 'yarn.cmd' : 'yarn', [
             'version',
             '-s',
@@ -40,16 +39,20 @@ async function setPackageVersion(ver) {
     });
 }
 
-async function main(args) {
+async function main(args: string[]): Promise<number> {
     let version = args[0];
 
     if (version === undefined) version = await versionFromAsar();
 
     await setPackageVersion(version);
+    return 0;
 }
 
 if (require.main === module) {
-    main(process.argv.slice(2)).then((ret) => process.exit(ret));
+    main(process.argv.slice(2)).then((ret) => {
+        process.exit(ret);
+    }).catch(e => {
+        console.error(e);
+        process.exit(1);
+    });
 }
-
-module.exports = { versionFromAsar, setPackageVersion };
