@@ -26,10 +26,10 @@ jobs:
       - name: Fetch Element Web
         run: yarn run fetch --noverify -d ${{ inputs.config }} ${{ inputs.version }}
 
-      # We include an extra file for the build scripts to not need to generate the hak cache key themselves
-      - name: Generate cache keys
+      # We split this out to save the build_* scripts having to do it to make use of `hashFiles` in the cache action
+      - name: Split out hakDependencies.json from package.json
         run: |
-          cat package.json | jq -c .hakDependencies | md5sum | awk '{ print $1 }' > .hakCacheKey
+          cat package.json | jq -c .hakDependencies > hakDependencies.json
 
       - uses: actions/upload-artifact@v3
         with:
@@ -38,4 +38,4 @@ jobs:
           path: |
             webapp.asar
             package.json
-            .hakCacheKey
+            hakDependencies.json

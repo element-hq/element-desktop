@@ -13,7 +13,7 @@ jobs:
       - name: Cache .hak
         uses: actions/cache@v3
         with:
-          key: ${{ runner.os }}-${{ hashFiles('.hakCacheKey') }}
+          key: ${{ runner.os }}-${{ hashFiles('hakDependencies.json') }}
           path: |
             ./.hak
 
