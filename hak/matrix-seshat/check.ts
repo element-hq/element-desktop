@@ -80,7 +80,7 @@ export default async function(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promi
             }
             fsProm.unlink('tmp').then(resolve);
         });
-        rustc.stdin.write('fn main() {}');
-        rustc.stdin.end();
+        rustc.stdin!.write('fn main() {}');
+        rustc.stdin!.end();
     });
 }
