@@ -27,8 +27,9 @@ jobs:
         run: yarn run fetch --noverify -d ${{ inputs.config }} ${{ inputs.version }}
 
       # We split this out to save the build_* scripts having to do it to make use of `hashFiles` in the cache action
-      - name: Split out hakDependencies.json from package.json
+      - name: Generate cache hash files
         run: |
+          yarn run --silent electron --version > electronVersion
           cat package.json | jq -c .hakDependencies > hakDependencies.json
 
       - uses: actions/upload-artifact@v3
@@ -38,4 +39,5 @@ jobs:
           path: |
             webapp.asar
             package.json
+            electronVersion
             hakDependencies.json

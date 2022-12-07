@@ -34,7 +34,7 @@ jobs:
       - name: Cache .hak
         uses: actions/cache@v3
         with:
-          key: ${{ runner.os }}-${{ hashFiles('hakDependencies.json') }}
+          key: ${{ runner.os }}-${{ hashFiles('hakDependencies.json', 'electronVersion') }}
           path: |
             ./.hak
 
