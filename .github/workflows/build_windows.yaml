@@ -32,6 +32,7 @@ jobs:
           name: webapp
 
       - name: Cache .hak
+        id: cache
         uses: actions/cache@v3
         with:
           key: ${{ runner.os }}-${{ hashFiles('hakDependencies.json', 'electronVersion') }}
