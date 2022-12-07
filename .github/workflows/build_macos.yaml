@@ -18,6 +18,7 @@ jobs:
             ./.hak
 
       - name: Install Rust
+        if: steps.cache.outputs.cache-hit != 'true'
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
@@ -32,6 +33,7 @@ jobs:
         run: "yarn install --pure-lockfile"
 
       - name: Build Natives
+        if: steps.cache.outputs.cache-hit != 'true'
         run: "yarn build:native:universal"
 
       - name: Build App

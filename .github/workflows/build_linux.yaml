@@ -16,6 +16,7 @@ jobs:
           name: webapp
 
       - name: Cache .hak
+        id: cache
         uses: actions/cache@v3
         with:
           key: ${{ runner.os }}-${{ hashFiles('hakDependencies.json') }}
@@ -23,12 +24,13 @@ jobs:
             ./.hak
 
       - name: Install Rust
+        if: steps.cache.outputs.cache-hit != 'true'
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
 
       - name: Install libsqlcipher-dev
-        if: inputs.sqlcipher == 'system'
+        if: steps.cache.outputs.cache-hit != 'true' && inputs.sqlcipher == 'system'
         run: sudo apt-get install -y libsqlcipher-dev
 
       - uses: actions/setup-node@v3
@@ -40,6 +42,7 @@ jobs:
         run: "yarn install --pure-lockfile"
 
       - name: Build Natives
+        if: steps.cache.outputs.cache-hit != 'true'
         run: "yarn build:native"
         env:
           SQLCIPHER_STATIC: ${{ inputs.sqlcipher == 'static' && '1' || '' }}
