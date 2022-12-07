@@ -26,6 +26,11 @@ jobs:
       - name: Fetch Element Web
         run: yarn run fetch --noverify -d ${{ inputs.config }} ${{ inputs.version }}
 
+      # We include an extra file for the build scripts to not need to generate the hak cache key themselves
+      - name: Generate cache keys
+        run: |
+          cat package.json | jq -c .hakDependencies | md5sum | awk '{ print $1 }' > .hakCacheKey
+
       - uses: actions/upload-artifact@v3
         with:
           name: webapp
@@ -33,3 +38,4 @@ jobs:
           path: |
             webapp.asar
             package.json
+            .hakCacheKey
