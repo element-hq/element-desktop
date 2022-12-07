@@ -263,7 +263,11 @@ ipcMain.on('userDownloadAction', function(ev: IpcMainEvent, { id, open = false }
 });
 
 export default (webContents: WebContents): void => {
-    webContents.on('new-window', onWindowOrNavigate);
+    webContents.setWindowOpenHandler((details) => {
+        safeOpenURL(details.url);
+        return { action: "deny" };
+    });
+
     webContents.on('will-navigate', (ev: Event, target: string): void => {
         if (target.startsWith("vector://")) return;
         return onWindowOrNavigate(ev, target);
