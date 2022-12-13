@@ -31,7 +31,7 @@ on:
 jobs:
   build:
     runs-on: macos-latest
-    environment: ${{ inputs.sign && "develop" }}
+    environment: ${{ inputs.sign && 'develop' || '' }}
     steps:
       - uses: actions/checkout@v3
 
