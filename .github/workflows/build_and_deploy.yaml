@@ -29,7 +29,7 @@ jobs:
   fetch:
     uses: ./.github/workflows/build_prepare.yaml
     with:
-      config: 'element.io/${{ inputs.mode || 'nightly' }}'
+      config: element.io/${{ inputs.mode || 'nightly' }}
       version: ${{ inputs.mode == 'release' && '' || 'develop' }}
 
 #  windows:
