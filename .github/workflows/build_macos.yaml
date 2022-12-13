@@ -1,8 +1,37 @@
 on:
   workflow_call:
+    secrets:
+      APPLE_ID:
+        required: false
+      APPLE_ID_PASSWORD:
+        required: false
+      APPLE_TEAM_ID:
+        required: false
+      APPLE_CSC_KEY_PASSWORD:
+        required: false
+      APPLE_CSC_LINK:
+        required: false
+    inputs:
+      version:
+        type: string
+        required: false
+        description: "Version string to override the one in package.json, used for non-release builds"
+      sign:
+        type: string
+        required: false
+        description: "Whether to sign & notarise the build, requires 'develop' environment"
+      deploy-mode:
+        type: string
+        required: false
+        description: "Whether to arrange artifacts in the arrangement needed for deployment, skipping unrelated ones"
+      base-url:
+        type: string
+        required: false
+        description: "The URL to which the output will be deployed, required if deploy-mode is enabled."
 jobs:
   build:
     runs-on: macos-latest
+    environment: ${{ inputs.sign && "develop" }}
     steps:
       - uses: actions/checkout@v3
 
@@ -34,12 +63,56 @@ jobs:
       - name: Build Natives
         run: "yarn build:native:universal"
 
+      - name: Generate Nightly build config
+        if: inputs.version
+        run: scripts/generate-builder-config.ts --nightly "${{ inputs.version }}"
+
       - name: Build App
         run: "yarn build:universal --publish never"
+        env:
+          NOTARIZE_APPLE_ID: ${{ secrets.APPLE_ID }}
+          NOTARIZE_APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+          NOTARIZE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          CSC_KEY_PASSWORD: ${{ secrets.APPLE_CSC_KEY_PASSWORD }}
+          CSC_LINK: ${{ secrets.APPLE_CSC_LINK }}
+
+      - name: Prepare artifacts for deployment
+        if: inputs.deploy-mode
+        run: |
+          mv dist _dist
+          mkdir -p dist/install/macos dist/update/macos
+          mv _dist/*.dmg _dist/*-mac.zip dist/
+
+          PKG_JSON_VERSION=$(cat package.json | jq -r .version)
+          VERSION="${{ inputs.version }}"
+          LATEST=$(find dist -type f -iname "*-mac.zip" | xargs -0 -n1 -- basename)
+          URL="${{ inputs.base-url }}/update/macos/$LATEST"
+
+          jq -n --arg version "${VERSION:-$PKG_JSON_VERSION}" --arg url "$URL" '
+            {
+              currentRelease: $version,
+              releases: [{
+                version: $version,
+                updateTo: {
+                  version: $version,
+                  url: $url,
+                },
+              }],
+            }
+          ' > dist/update/macos/releases.json
+          jq -n --arg version "${VERSION:-$PKG_JSON_VERSION}" --arg url "$URL" '
+            { url: $url }
+          ' > dist/update/macos/releases-legacy.json
+
+      - name: Prepare release latest symlink
+        if: inputs.deploy-mode && inputs.version == ''
+        run: |
+          LATEST=$(find dist -type f -iname "*.dmg" | xargs -0 -n1 -- basename)
+          ln -s "dist/install/macos/$LATEST" dist/install/macos/Element.dmg
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: macos
+          name: ${{ inputs.deploy-mode && 'packages.element.io' || 'macos' }}
           path: dist
           retention-days: 1
