@@ -1,3 +1,6 @@
+# This workflow relies on actions/cache to store the hak dependency artifacts as they take a long time to build
+# Due to this extra care must be taken to only ever run all build_* scripts against the same branch to ensure
+# the correct cache scoping, and additional care must be taken to not run untrusted actions on the develop branch.
 on:
   workflow_call:
     inputs:
@@ -16,19 +19,21 @@ jobs:
           name: webapp
 
       - name: Cache .hak
+        id: cache
         uses: actions/cache@v3
         with:
-          key: ${{ hashFiles('./yarn.lock') }}
+          key: ${{ runner.os }}-${{ hashFiles('hakDependencies.json', 'electronVersion') }}
           path: |
             ./.hak
 
       - name: Install Rust
+        if: steps.cache.outputs.cache-hit != 'true'
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
 
       - name: Install libsqlcipher-dev
-        if: inputs.sqlcipher == 'system'
+        if: steps.cache.outputs.cache-hit != 'true' && inputs.sqlcipher == 'system'
         run: sudo apt-get install -y libsqlcipher-dev
 
       - uses: actions/setup-node@v3
@@ -40,6 +45,7 @@ jobs:
         run: "yarn install --pure-lockfile"
 
       - name: Build Natives
+        if: steps.cache.outputs.cache-hit != 'true'
         run: "yarn build:native"
         env:
           SQLCIPHER_STATIC: ${{ inputs.sqlcipher == 'static' && '1' || '' }}
