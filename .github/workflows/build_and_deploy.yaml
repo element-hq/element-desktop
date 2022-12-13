@@ -73,7 +73,7 @@ jobs:
       - macos
     runs-on: ubuntu-latest
     name: Deploy
-    if: inputs.deploy
+    if: inputs.deploy != false
     environment: develop
     steps:
       - name: Download artifacts
