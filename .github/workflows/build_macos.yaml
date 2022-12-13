@@ -87,7 +87,8 @@ jobs:
         run: |
           mv dist _dist
           mkdir -p dist/install/macos dist/update/macos
-          mv _dist/*.dmg _dist/*-mac.zip dist/
+          mv _dist/*-mac.zip dist/update/macos/
+          mv _dist/*.dmg dist/install/macos/
 
           PKG_JSON_VERSION=$(cat package.json | jq -r .version)
           VERSION="${{ inputs.version }}"
