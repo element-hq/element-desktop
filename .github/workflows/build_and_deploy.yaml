@@ -29,8 +29,8 @@ jobs:
   fetch:
     uses: ./.github/workflows/build_prepare.yaml
     with:
-      config: 'element.io/${{ inputs.mode }}'
-      version: ${{ inputs.mode == 'nightly' && 'develop' || '' }}
+      config: 'element.io/${{ inputs.mode || 'nightly' }}'
+      version: ${{ inputs.mode == 'release' && '' || 'develop' }}
 
 #  windows:
 #    needs: fetch
@@ -62,7 +62,7 @@ jobs:
     with:
       sign: true
       deploy-mode: true
-      base-url: https://packages.element.io/${{ inputs.mode == 'nightly' && 'nightly' || 'desktop' }}
+      base-url: https://packages.element.io/${{ inputs.mode == 'release' && 'desktop' || 'nightly' }}
       # TODO this needs to be dynamic
       version: 2022121309
 
