@@ -71,6 +71,7 @@ jobs:
 #      - windows
 #      - linux
       - macos
+    runs-on: ubuntu-latest
     name: Deploy
     if: inputs.deploy
     environment: develop
