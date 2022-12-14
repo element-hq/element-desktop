@@ -21,6 +21,9 @@ on:
       # Required if `calculate-nightly-versions` is set
       CF_R2_TOKEN:
         required: false
+      # Required if `calculate-nightly-versions` is set
+      CF_R2_S3_API:
+        required: false
     outputs:
       macos-version:
         description: "The version string the next macOS Nightly should use, only output for calculate-nightly-versions"
@@ -65,9 +68,9 @@ jobs:
         id: macos
         if: inputs.calculate-nightly-versions
         run: |
-          aws s3 cp s3://$R2_BUCKET/nightly/update/macos/releases.json releases.json --endpoint-url $R2_URL --region auto
-          LATEST=$(cat releases.json | jq -r .currentRelease)
+          LATEST=$(aws s3 cp s3://$R2_BUCKET/nightly/update/macos/releases.json - --endpoint-url $R2_URL --region auto | jq -r .currentRelease)
           echo "version=$(scripts/generate-nightly-version.ts --latest $LATEST)" >> $GITHUB_OUTPUT
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
+          R2_URL: ${{ secrets.CF_R2_S3_API }}
