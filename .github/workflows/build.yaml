@@ -50,7 +50,7 @@ jobs:
             os: macos
             artifact: macos
             executable: "./dist/mac-universal/Element.app/Contents/MacOS/Element"
-            prepare_cmd: "chmod +x ./dist/mac-universal/Element.app/Contents/MacOS/Element"
+            prepare_cmd: "mv ./dist/mac-universal/Element.app /Applications/ && xattr -d com.apple.quarantine /Applications/Element.app"
           - name: 'Linux (sqlcipher: system)'
             os: ubuntu
             artifact: linux-sqlcipher-system
