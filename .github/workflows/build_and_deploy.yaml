@@ -5,7 +5,7 @@ on:
     branches: [ t3chguy/notarize1 ]
   # Nightly build
   schedule:
-    - cron: '0 11 * * *'
+    - cron: '0 9 * * *'
   # Manual nightly & release
   workflow_dispatch:
     inputs:
@@ -31,7 +31,7 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 env:
-  # XXX: UPDATE THIS BEFORE LANDING THE PR
+  # XXX: UPDATE THIS BEFORE WHEN GOING LIVE
   R2_BUCKET: 'packages-element-io-test'
 jobs:
   prepare:
