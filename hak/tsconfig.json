@@ -4,11 +4,13 @@
     "esModuleInterop": true,
     "target": "es2016",
     "sourceMap": false,
+    "strict": true,
     "lib": [
       "es2019",
     ]
   },
   "include": [
+    "../scripts/@types/*.d.ts",
     "./**/*.ts"
   ],
   "ts-node": {
