@@ -32,28 +32,6 @@ jobs:
       config: element.io/${{ inputs.mode || 'nightly' }}
       version: ${{ inputs.mode == 'release' && '' || 'develop' }}
 
-#  windows:
-#    needs: fetch
-#    name: Windows
-#    uses: ./.github/workflows/build_windows.yaml
-#    secrets: inherit
-#    strategy:
-#      matrix:
-#        arch: [ x64, x86 ]
-#    with:
-#      arch: ${{ matrix.arch }}
-
-#  linux:
-#    needs: fetch
-#    name: Linux
-#    uses: ./.github/workflows/build_linux.yaml
-#    secrets: inherit
-#    strategy:
-#      matrix:
-#        sqlcipher: [ system, static ]
-#    with:
-#      sqlcipher: ${{ matrix.sqlcipher }}
-
   macos:
     needs: fetch
     name: macOS
@@ -68,8 +46,6 @@ jobs:
 
   deploy:
     needs:
-#      - windows
-#      - linux
       - macos
     runs-on: ubuntu-latest
     name: Deploy
@@ -80,6 +56,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: packages.element.io
+          path: packages.element.io
 
       - name: Deploy artifacts
         run: aws s3 cp --recursive packages.element.io/ s3://$R2_BUCKET/ --endpoint-url $R2_URL --region auto
