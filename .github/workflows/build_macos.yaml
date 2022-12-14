@@ -111,7 +111,12 @@ jobs:
             { url: $url }
           ' > dist/update/macos/releases-legacy.json
 
-      - name: Prepare release latest symlink
+      - name: [Nightly] Strip version from installer file
+        if: inputs.deploy-mode && inputs.version
+        run: |
+          mv dist/install/macos/*.dmg "dist/install/macos/Element Nightly.dmg"
+
+      - name: [Release] Prepare release latest symlink
         if: inputs.deploy-mode && inputs.version == ''
         run: |
           LATEST=$(find dist -type f -iname "*.dmg" | xargs -0 -n1 -- basename)
