@@ -17,6 +17,11 @@ on:
         options:
           - nightly
           - release
+      macos:
+        description: Whether to build macOS
+        required: true
+        type: boolean
+        default: true
       deploy:
         description: Whether to deploy artifacts
         required: true
@@ -25,15 +30,23 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+env:
+  # XXX: UPDATE THIS BEFORE LANDING THE PR
+  R2_BUCKET: 'packages-element-io-test'
+  R2_URL: ${{ secrets.CF_R2_S3_API }}
 jobs:
-  fetch:
+  prepare:
     uses: ./.github/workflows/build_prepare.yaml
     with:
       config: element.io/${{ inputs.mode || 'nightly' }}
       version: ${{ inputs.mode == 'release' && '' || 'develop' }}
+      calculate-nightly-versions: ${{ inputs.mode != 'release' }}
+    secrets:
+      CF_R2_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
+      CF_R2_TOKEN: ${{ secrets.CF_R2_TOKEN }}
 
   macos:
-    needs: fetch
+    needs: prepare
     name: macOS
     uses: ./.github/workflows/build_macos.yaml
     secrets: inherit
@@ -41,8 +54,7 @@ jobs:
       sign: true
       deploy-mode: true
       base-url: https://packages.element.io/${{ inputs.mode == 'release' && 'desktop' || 'nightly' }}
-      # TODO this needs to be dynamic
-      version: 2022121309
+      version: ${{ needs.prepare.outputs.macos-version }}
 
   deploy:
     needs:
@@ -61,9 +73,6 @@ jobs:
       - name: Deploy artifacts
         run: aws s3 cp --recursive packages.element.io/ s3://$R2_BUCKET/$DEPLOYMENT_DIR --endpoint-url $R2_URL --region auto
         env:
-          # XXX: UPDATE THIS BEFORE LANDING THE PR
-          R2_BUCKET: 'packages-element-io-test'
-          R2_URL: ${{ secrets.CF_R2_S3_API }}
           AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
           DEPLOYMENT_DIR: ${{ inputs.mode == 'release' && 'desktop' || 'nightly' }}

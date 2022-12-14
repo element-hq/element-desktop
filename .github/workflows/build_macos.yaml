@@ -34,7 +34,7 @@ on:
 jobs:
   build:
     runs-on: macos-latest
-    environment: ${{ inputs.sign && 'develop' || '' }}
+    environment: ${{ inputs.sign && 'packages.element.io' || '' }}
     steps:
       - uses: actions/checkout@v3
 
@@ -111,6 +111,7 @@ jobs:
             { url: $url }
           ' > dist/update/macos/releases-legacy.json
 
+      # We don't wish to store the installer for every nightly ever, so we only keep the latest
       - name: '[Nightly] Strip version from installer file'
         if: inputs.deploy-mode && inputs.version
         run: |
