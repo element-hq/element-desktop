@@ -50,7 +50,7 @@ jobs:
             os: macos
             artifact: macos
             executable: "/Applications/Element.app/Contents/MacOS/Element"
-            prepare_cmd: "mv ./dist/mac-universal/Element.app /Applications/"
+            prepare_cmd: "mv ./dist/mac-universal/Element.app /Applications/ && find /Applications/Element.app/ -type f -perm +111 -exec chmod +x {} \\;"
           - name: 'Linux (sqlcipher: system)'
             os: ubuntu
             artifact: linux-sqlcipher-system
