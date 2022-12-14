@@ -91,6 +91,7 @@ jobs:
         if: matrix.prepare_cmd
         
       - run: ${{ matrix.executable }}
+        if: matrix.os == 'macos'
 
       - name: Run tests
         uses: GabrielBB/xvfb-action@v1
