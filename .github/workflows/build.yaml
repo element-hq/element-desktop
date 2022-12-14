@@ -46,12 +46,11 @@ jobs:
     strategy:
       matrix:
         include:
-# Disable macOS tests for now, they fail to run in CI, needs investigation.
-#          - name: macOS Universal
-#            os: macos
-#            artifact: macos
-#            executable: "./dist/mac-universal/Element.app/Contents/MacOS/Element"
-#            prepare_cmd: "chmod +x ./dist/mac-universal/Element.app/Contents/MacOS/Element"
+          - name: macOS Universal
+            os: macos
+            artifact: macos
+            executable: "./dist/mac-universal/Element.app/Contents/MacOS/Element"
+            prepare_cmd: "chmod +x ./dist/mac-universal/Element.app/Contents/MacOS/Element"
           - name: 'Linux (sqlcipher: system)'
             os: ubuntu
             artifact: linux-sqlcipher-system
@@ -98,10 +97,18 @@ jobs:
           run: "yarn test"
         env:
           ELEMENT_DESKTOP_EXECUTABLE: ${{ matrix.executable }}
+          
+      - uses: OrbitalOwen/desktop-screenshot-action@0.1
+        if: always()
+        with:
+          file-name: '${{ matrix.name }}.jpg'
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
+        if: always()
         with:
           name: ${{ matrix.artifact }}
-          path: test_artifacts
+          path: |
+            test_artifacts
+            *.jpg
           retention-days: 1
