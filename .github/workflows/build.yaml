@@ -101,7 +101,7 @@ jobs:
       - uses: OrbitalOwen/desktop-screenshot-action@0.1
         if: always()
         with:
-          file-name: '${{ matrix.name }}.jpg'
+          file-name: '${{ matrix.artifact }}.jpg'
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
