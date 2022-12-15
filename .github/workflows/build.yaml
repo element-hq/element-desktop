@@ -97,18 +97,11 @@ jobs:
           run: "yarn test"
         env:
           ELEMENT_DESKTOP_EXECUTABLE: ${{ matrix.executable }}
-          
-      - uses: OrbitalOwen/desktop-screenshot-action@0.1
-        if: always()
-        with:
-          file-name: '${{ matrix.artifact }}.jpg'
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         if: always()
         with:
           name: ${{ matrix.artifact }}
-          path: |
-            test_artifacts
-            *.jpg
+          path: test_artifacts
           retention-days: 1
