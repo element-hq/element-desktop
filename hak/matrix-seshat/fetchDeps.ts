@@ -14,16 +14,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import path from 'path';
-import childProcess from 'child_process';
-import fs from 'fs';
-import fsProm from 'fs/promises';
-import tar from 'tar';
-import fetch from 'node-fetch';
+import path from "path";
+import childProcess from "child_process";
+import fs from "fs";
+import fsProm from "fs/promises";
+import tar from "tar";
+import fetch from "node-fetch";
 import { promises as stream } from "stream";
 
-import HakEnv from '../../scripts/hak/hakEnv';
-import { DependencyInfo } from '../../scripts/hak/dep';
+import HakEnv from "../../scripts/hak/hakEnv";
+import { DependencyInfo } from "../../scripts/hak/dep";
 
 async function download(url: string, filename: string): Promise<void> {
     const resp = await fetch(url);
@@ -32,7 +32,7 @@ async function download(url: string, filename: string): Promise<void> {
     await stream.pipeline(resp.body, fs.createWriteStream(filename));
 }
 
-export default async function(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
+export default async function (hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
     if (hakEnv.wantsStaticSqlCipher()) {
         await getSqlCipher(hakEnv, moduleInfo);
     }
@@ -83,15 +83,11 @@ async function getSqlCipher(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise
         await new Promise<void>((resolve, reject) => {
             const readStream = fs.createReadStream(patchFile);
 
-            const proc = childProcess.spawn(
-                'patch',
-                ['-p1'],
-                {
-                    cwd: sqlCipherDir,
-                    stdio: ['pipe', 'inherit', 'inherit'],
-                },
-            );
-            proc.on('exit', (code) => {
+            const proc = childProcess.spawn("patch", ["-p1"], {
+                cwd: sqlCipherDir,
+                stdio: ["pipe", "inherit", "inherit"],
+            });
+            proc.on("exit", (code) => {
                 code ? reject(code) : resolve();
             });
             readStream.pipe(proc.stdin);

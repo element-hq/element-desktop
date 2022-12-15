@@ -20,16 +20,16 @@ function errCheck(err?: Error): void {
 }
 
 const I18N_BASE_PATH = "src/i18n/strings/";
-const INCLUDE_LANGS = fs.readdirSync(I18N_BASE_PATH).filter(fn => fn.endsWith(".json"));
+const INCLUDE_LANGS = fs.readdirSync(I18N_BASE_PATH).filter((fn) => fn.endsWith(".json"));
 
 // Ensure lib, lib/i18n and lib/i18n/strings all exist
-fs.mkdirSync('lib/i18n/strings', { recursive: true });
+fs.mkdirSync("lib/i18n/strings", { recursive: true });
 
 type Translations = Record<string, Record<string, string> | string>;
 
 function genLangFile(file: string, dest: string): void {
     const inTrs: Record<string, string> = {};
-    [file].forEach(function(f) {
+    [file].forEach(function (f) {
         if (fs.existsSync(f)) {
             try {
                 Object.assign(inTrs, JSON.parse(fs.readFileSync(f).toString()));
@@ -68,7 +68,7 @@ function weblateToCounterpart(inTrs: Record<string, string>): Translations {
     const outTrs: Translations = {};
 
     for (const key of Object.keys(inTrs)) {
-        const keyParts = key.split('|', 2);
+        const keyParts = key.split("|", 2);
         if (keyParts.length === 2) {
             let obj = outTrs[keyParts[0]];
             if (obj === undefined) {
@@ -77,7 +77,7 @@ function weblateToCounterpart(inTrs: Record<string, string>): Translations {
                 // This is a transitional edge case if a string went from singular to pluralised and both still remain
                 // in the translation json file. Use the singular translation as `other` and merge pluralisation atop.
                 obj = outTrs[keyParts[0]] = {
-                    "other": inTrs[key],
+                    other: inTrs[key],
                 };
                 console.warn("Found entry in i18n file in both singular and pluralised form", keyParts[0]);
             }
@@ -108,10 +108,7 @@ function watchLanguage(file: string, dest: string): void {
         }, 500);
     };
 
-    chokidar.watch(file)
-        .on('add', makeLang)
-        .on('change', makeLang)
-        .on('error', errCheck);
+    chokidar.watch(file).on("add", makeLang).on("change", makeLang).on("error", errCheck);
 }
 
 // language resources
@@ -121,5 +118,5 @@ INCLUDE_LANGS.forEach((file): void => {
 }, {});
 
 if (watch) {
-    INCLUDE_LANGS.forEach(file => watchLanguage(I18N_BASE_PATH + file, I18N_DEST));
+    INCLUDE_LANGS.forEach((file) => watchLanguage(I18N_BASE_PATH + file, I18N_DEST));
 }

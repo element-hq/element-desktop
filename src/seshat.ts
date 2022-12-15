@@ -34,7 +34,7 @@ let ReindexError: typeof ReindexErrorType;
 
 try {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const seshatModule = require('matrix-seshat');
+    const seshatModule = require("matrix-seshat");
     Seshat = seshatModule.Seshat;
     SeshatRecovery = seshatModule.SeshatRecovery;
     ReindexError = seshatModule.ReindexError;
@@ -75,29 +75,29 @@ const deleteContents = async (p: string): Promise<void> => {
     }
 };
 
-ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
+ipcMain.on("seshat", async function (_ev: IpcMainEvent, payload): Promise<void> {
     if (!global.mainWindow) return;
 
     // We do this here to ensure we get the path after --profile has been resolved
-    const eventStorePath = path.join(app.getPath('userData'), 'EventStore');
+    const eventStorePath = path.join(app.getPath("userData"), "EventStore");
 
     const sendError = (id: string, e: Error): void => {
         const error = {
             message: e.message,
         };
 
-        global.mainWindow?.webContents.send('seshatReply', { id, error });
+        global.mainWindow?.webContents.send("seshatReply", { id, error });
     };
 
     const args = payload.args || [];
     let ret: any;
 
     switch (payload.name) {
-        case 'supportsEventIndexing':
+        case "supportsEventIndexing":
             ret = seshatSupported;
             break;
 
-        case 'initEventIndex':
+        case "initEventIndex":
             if (eventIndex === null) {
                 const userId = args[0];
                 const deviceId = args[1];
@@ -127,8 +127,7 @@ ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
 
                             try {
                                 await deleteContents(eventStorePath);
-                            } catch (e) {
-                            }
+                            } catch (e) {}
                         } else {
                             await recoveryIndex.reindex();
                         }
@@ -142,7 +141,7 @@ ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
             }
             break;
 
-        case 'closeEventIndex':
+        case "closeEventIndex":
             if (eventIndex !== null) {
                 const index = eventIndex;
                 eventIndex = null;
@@ -156,26 +155,24 @@ ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
             }
             break;
 
-        case 'deleteEventIndex': {
+        case "deleteEventIndex": {
             try {
                 await deleteContents(eventStorePath);
-            } catch (e) {
-
-            }
+            } catch (e) {}
             break;
         }
 
-        case 'isEventIndexEmpty':
+        case "isEventIndexEmpty":
             if (eventIndex === null) ret = true;
             else ret = await eventIndex.isEmpty();
             break;
 
-        case 'isRoomIndexed':
+        case "isRoomIndexed":
             if (eventIndex === null) ret = false;
             else ret = await eventIndex.isRoomIndexed(args[0]);
             break;
 
-        case 'addEventToIndex':
+        case "addEventToIndex":
             try {
                 eventIndex?.addEvent(args[0], args[1]);
             } catch (e) {
@@ -184,7 +181,7 @@ ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
             }
             break;
 
-        case 'deleteEvent':
+        case "deleteEvent":
             try {
                 ret = await eventIndex?.deleteEvent(args[0]);
             } catch (e) {
@@ -193,7 +190,7 @@ ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
             }
             break;
 
-        case 'commitLiveEvents':
+        case "commitLiveEvents":
             try {
                 ret = await eventIndex?.commit();
             } catch (e) {
@@ -202,7 +199,7 @@ ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
             }
             break;
 
-        case 'searchEventIndex':
+        case "searchEventIndex":
             try {
                 ret = await eventIndex?.search(args[0]);
             } catch (e) {
@@ -211,12 +208,11 @@ ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
             }
             break;
 
-        case 'addHistoricEvents':
+        case "addHistoricEvents":
             if (eventIndex === null) ret = false;
             else {
                 try {
-                    ret = await eventIndex.addHistoricEvents(
-                        args[0], args[1], args[2]);
+                    ret = await eventIndex.addHistoricEvents(args[0], args[1], args[2]);
                 } catch (e) {
                     sendError(payload.id, <Error>e);
                     return;
@@ -224,7 +220,7 @@ ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
             }
             break;
 
-        case 'getStats':
+        case "getStats":
             if (eventIndex === null) ret = 0;
             else {
                 try {
@@ -236,7 +232,7 @@ ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
             }
             break;
 
-        case 'removeCrawlerCheckpoint':
+        case "removeCrawlerCheckpoint":
             if (eventIndex === null) ret = false;
             else {
                 try {
@@ -248,7 +244,7 @@ ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
             }
             break;
 
-        case 'addCrawlerCheckpoint':
+        case "addCrawlerCheckpoint":
             if (eventIndex === null) ret = false;
             else {
                 try {
@@ -260,7 +256,7 @@ ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
             }
             break;
 
-        case 'loadFileEvents':
+        case "loadFileEvents":
             if (eventIndex === null) ret = [];
             else {
                 try {
@@ -272,7 +268,7 @@ ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
             }
             break;
 
-        case 'loadCheckpoints':
+        case "loadCheckpoints":
             if (eventIndex === null) ret = [];
             else {
                 try {
@@ -283,7 +279,7 @@ ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
             }
             break;
 
-        case 'setUserVersion':
+        case "setUserVersion":
             if (eventIndex === null) break;
             else {
                 try {
@@ -295,7 +291,7 @@ ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
             }
             break;
 
-        case 'getUserVersion':
+        case "getUserVersion":
             if (eventIndex === null) ret = 0;
             else {
                 try {
@@ -308,14 +304,14 @@ ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
             break;
 
         default:
-            global.mainWindow.webContents.send('seshatReply', {
+            global.mainWindow.webContents.send("seshatReply", {
                 id: payload.id,
                 error: "Unknown IPC Call: " + payload.name,
             });
             return;
     }
 
-    global.mainWindow.webContents.send('seshatReply', {
+    global.mainWindow.webContents.send("seshatReply", {
         id: payload.id,
         reply: ret,
     });

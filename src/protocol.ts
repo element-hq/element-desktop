@@ -67,7 +67,7 @@ function writeStore(data: Record<string, string>): void {
 }
 
 export function recordSSOSession(sessionID: string): void {
-    const userDataPath = app.getPath('userData');
+    const userDataPath = app.getPath("userData");
     const store = readStore();
     for (const key in store) {
         // ensure each instance only has one (the latest) session ID to prevent the file growing unbounded
@@ -82,7 +82,7 @@ export function recordSSOSession(sessionID: string): void {
 
 export function getProfileFromDeeplink(args: string[]): string | undefined {
     // check if we are passed a profile in the SSO callback url
-    const deeplinkUrl = args.find(arg => arg.startsWith(PROTOCOL + '//'));
+    const deeplinkUrl = args.find((arg) => arg.startsWith(PROTOCOL + "//"));
     if (deeplinkUrl?.includes(SEARCH_PARAM)) {
         const parsedUrl = new URL(deeplinkUrl);
         if (parsedUrl.protocol === PROTOCOL) {
@@ -98,25 +98,26 @@ export function protocolInit(): void {
     // get all args except `hidden` as it'd mean the app would not get focused
     // XXX: passing args to protocol handlers only works on Windows, so unpackaged deep-linking
     // --profile/--profile-dir are passed via the SEARCH_PARAM var in the callback url
-    const args = process.argv.slice(1).filter(arg => arg !== "--hidden" && arg !== "-hidden");
+    const args = process.argv.slice(1).filter((arg) => arg !== "--hidden" && arg !== "-hidden");
     if (app.isPackaged) {
-        app.setAsDefaultProtocolClient('element', process.execPath, args);
-    } else if (process.platform === 'win32') { // on Mac/Linux this would just cause the electron binary to open
+        app.setAsDefaultProtocolClient("element", process.execPath, args);
+    } else if (process.platform === "win32") {
+        // on Mac/Linux this would just cause the electron binary to open
         // special handler for running without being packaged, e.g `electron .` by passing our app path to electron
-        app.setAsDefaultProtocolClient('element', process.execPath, [app.getAppPath(), ...args]);
+        app.setAsDefaultProtocolClient("element", process.execPath, [app.getAppPath(), ...args]);
     }
 
-    if (process.platform === 'darwin') {
+    if (process.platform === "darwin") {
         // Protocol handler for macos
-        app.on('open-url', function(ev, url) {
+        app.on("open-url", function (ev, url) {
             ev.preventDefault();
             processUrl(url);
         });
     } else {
         // Protocol handler for win32/Linux
-        app.on('second-instance', (ev, commandLine) => {
+        app.on("second-instance", (ev, commandLine) => {
             const url = commandLine[commandLine.length - 1];
-            if (!url.startsWith(PROTOCOL + '//')) return;
+            if (!url.startsWith(PROTOCOL + "//")) return;
             processUrl(url);
         });
     }

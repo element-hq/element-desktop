@@ -19,18 +19,11 @@ limitations under the License.
 
 // Squirrel on windows starts the app with various flags as hooks to tell us when we've been installed/uninstalled etc.
 import "./squirrelhooks";
-import {
-    app,
-    BrowserWindow,
-    Menu,
-    autoUpdater,
-    protocol,
-    dialog,
-} from "electron";
+import { app, BrowserWindow, Menu, autoUpdater, protocol, dialog } from "electron";
 import AutoLaunch from "auto-launch";
 import path from "path";
-import windowStateKeeper from 'electron-window-state';
-import Store from 'electron-store';
+import windowStateKeeper from "electron-window-state";
+import Store from "electron-store";
 import fs, { promises as afs } from "fs";
 import { URL } from "url";
 import minimist from "minimist";
@@ -40,11 +33,11 @@ import "./keytar";
 import "./seshat";
 import "./settings";
 import * as tray from "./tray";
-import { buildMenuTemplate } from './vectormenu';
-import webContentsHandler from './webcontents-handler';
-import * as updater from './updater';
-import { getProfileFromDeeplink, protocolInit } from './protocol';
-import { _t, AppLocalization } from './language-helper';
+import { buildMenuTemplate } from "./vectormenu";
+import webContentsHandler from "./webcontents-handler";
+import * as updater from "./updater";
+import { getProfileFromDeeplink, protocolInit } from "./protocol";
+import { _t, AppLocalization } from "./language-helper";
 import Input = Electron.Input;
 
 const argv = minimist(process.argv, {
@@ -65,8 +58,7 @@ if (argv["help"]) {
     console.log("  --no-update:          Disable automatic updating.");
     console.log("  --hidden:             Start the application hidden in the system tray.");
     console.log("  --help:               Displays this help message.");
-    console.log("And more such as --proxy, see:" +
-        "https://electronjs.org/docs/api/command-line-switches");
+    console.log("And more such as --proxy, see:" + "https://electronjs.org/docs/api/command-line-switches");
     app.exit();
 }
 
@@ -74,7 +66,7 @@ if (argv["help"]) {
 // as soon as the app path is set, so pick a random path in it that must exist if it's a
 // real user data directory.
 function isRealUserDataDir(d: string): boolean {
-    return fs.existsSync(path.join(d, 'IndexedDB'));
+    return fs.existsSync(path.join(d, "IndexedDB"));
 }
 
 // check if we are passed a profile in the SSO callback url
@@ -83,22 +75,22 @@ let userDataPath: string;
 const userDataPathInProtocol = getProfileFromDeeplink(argv["_"]);
 if (userDataPathInProtocol) {
     userDataPath = userDataPathInProtocol;
-} else if (argv['profile-dir']) {
-    userDataPath = argv['profile-dir'];
+} else if (argv["profile-dir"]) {
+    userDataPath = argv["profile-dir"];
 } else {
-    let newUserDataPath = app.getPath('userData');
-    if (argv['profile']) {
-        newUserDataPath += '-' + argv['profile'];
+    let newUserDataPath = app.getPath("userData");
+    if (argv["profile"]) {
+        newUserDataPath += "-" + argv["profile"];
     }
     const newUserDataPathExists = isRealUserDataDir(newUserDataPath);
-    let oldUserDataPath = path.join(app.getPath('appData'), app.getName().replace('Element', 'Riot'));
-    if (argv['profile']) {
-        oldUserDataPath += '-' + argv['profile'];
+    let oldUserDataPath = path.join(app.getPath("appData"), app.getName().replace("Element", "Riot"));
+    if (argv["profile"]) {
+        oldUserDataPath += "-" + argv["profile"];
     }
 
     const oldUserDataPathExists = isRealUserDataDir(oldUserDataPath);
-    console.log(newUserDataPath + " exists: " + (newUserDataPathExists ? 'yes' : 'no'));
-    console.log(oldUserDataPath + " exists: " + (oldUserDataPathExists ? 'yes' : 'no'));
+    console.log(newUserDataPath + " exists: " + (newUserDataPathExists ? "yes" : "no"));
+    console.log(oldUserDataPath + " exists: " + (oldUserDataPathExists ? "yes" : "no"));
     if (!newUserDataPathExists && oldUserDataPathExists) {
         console.log("Using legacy user data path: " + oldUserDataPath);
         userDataPath = oldUserDataPath;
@@ -106,54 +98,53 @@ if (userDataPathInProtocol) {
         userDataPath = newUserDataPath;
     }
 }
-app.setPath('userData', userDataPath);
+app.setPath("userData", userDataPath);
 
 async function tryPaths(name: string, root: string, rawPaths: string[]): Promise<string> {
     // Make everything relative to root
-    const paths = rawPaths.map(p => path.join(root, p));
+    const paths = rawPaths.map((p) => path.join(root, p));
 
     for (const p of paths) {
         try {
             await afs.stat(p);
-            return p + '/';
-        } catch (e) {
-        }
+            return p + "/";
+        } catch (e) {}
     }
     console.log(`Couldn't find ${name} files in any of: `);
     for (const p of paths) {
-        console.log("\t"+path.resolve(p));
+        console.log("\t" + path.resolve(p));
     }
     throw new Error(`Failed to find ${name} files`);
 }
 
-const homeserverProps = ['default_is_url', 'default_hs_url', 'default_server_name', 'default_server_config'] as const;
+const homeserverProps = ["default_is_url", "default_hs_url", "default_server_name", "default_server_config"] as const;
 
 // Find the webapp resources and set up things that require them
 async function setupGlobals(): Promise<void> {
     // find the webapp asar.
     asarPath = await tryPaths("webapp", __dirname, [
         // If run from the source checkout, this will be in the directory above
-        '../webapp.asar',
+        "../webapp.asar",
         // but if run from a packaged application, electron-main.js will be in
         // a different asar file so it will be two levels above
-        '../../webapp.asar',
+        "../../webapp.asar",
         // also try without the 'asar' suffix to allow symlinking in a directory
-        '../webapp',
+        "../webapp",
         // from a packaged application
-        '../../webapp',
+        "../../webapp",
     ]);
 
     // we assume the resources path is in the same place as the asar
     resPath = await tryPaths("res", path.dirname(asarPath), [
         // If run from the source checkout
-        'res',
+        "res",
         // if run from packaged application
-        '',
+        "",
     ]);
 
     try {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
-        global.vectorConfig = require(asarPath + 'config.json');
+        global.vectorConfig = require(asarPath + "config.json");
     } catch (e) {
         // it would be nice to check the error code here and bail if the config
         // is unparsable, but we get MODULE_NOT_FOUND in the case of a missing
@@ -165,15 +156,15 @@ async function setupGlobals(): Promise<void> {
     try {
         // Load local config and use it to override values from the one baked with the build
         // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const localConfig = require(path.join(app.getPath('userData'), 'config.json'));
+        const localConfig = require(path.join(app.getPath("userData"), "config.json"));
 
         // If the local config has a homeserver defined, don't use the homeserver from the build
         // config. This is to avoid a problem where Riot thinks there are multiple homeservers
         // defined, and panics as a result.
-        if (Object.keys(localConfig).find(k => homeserverProps.includes(<any>k))) {
+        if (Object.keys(localConfig).find((k) => homeserverProps.includes(<any>k))) {
             // Rip out all the homeserver options from the vector config
             global.vectorConfig = Object.keys(global.vectorConfig)
-                .filter(k => !homeserverProps.includes(<any>k))
+                .filter((k) => !homeserverProps.includes(<any>k))
                 .reduce((obj, key) => {
                     obj[key] = global.vectorConfig[key];
                     return obj;
@@ -185,9 +176,10 @@ async function setupGlobals(): Promise<void> {
         if (e instanceof SyntaxError) {
             dialog.showMessageBox({
                 type: "error",
-                title: `Your ${global.vectorConfig.brand || 'Element'} is misconfigured`,
-                message: `Your custom ${global.vectorConfig.brand || 'Element'} configuration contains invalid JSON. ` +
-                         `Please correct the problem and reopen ${global.vectorConfig.brand || 'Element'}.`,
+                title: `Your ${global.vectorConfig.brand || "Element"} is misconfigured`,
+                message:
+                    `Your custom ${global.vectorConfig.brand || "Element"} configuration contains invalid JSON. ` +
+                    `Please correct the problem and reopen ${global.vectorConfig.brand || "Element"}.`,
                 detail: e.message || "",
             });
         }
@@ -197,16 +189,16 @@ async function setupGlobals(): Promise<void> {
 
     // The tray icon
     // It's important to call `path.join` so we don't end up with the packaged asar in the final path.
-    const iconFile = `element.${process.platform === 'win32' ? 'ico' : 'png'}`;
+    const iconFile = `element.${process.platform === "win32" ? "ico" : "png"}`;
     iconPath = path.join(resPath, "img", iconFile);
     global.trayConfig = {
         icon_path: iconPath,
-        brand: global.vectorConfig.brand || 'Element',
+        brand: global.vectorConfig.brand || "Element",
     };
 
     // launcher
     global.launcher = new AutoLaunch({
-        name: global.vectorConfig.brand || 'Element',
+        name: global.vectorConfig.brand || "Element",
         isHidden: true,
         mac: {
             useLaunchAgent: true,
@@ -217,9 +209,9 @@ async function setupGlobals(): Promise<void> {
 async function moveAutoLauncher(): Promise<void> {
     // Look for an auto-launcher under 'Riot' and if we find one, port it's
     // enabled/disabled-ness over to the new 'Element' launcher
-    if (!global.vectorConfig.brand || global.vectorConfig.brand === 'Element') {
+    if (!global.vectorConfig.brand || global.vectorConfig.brand === "Element") {
         const oldLauncher = new AutoLaunch({
-            name: 'Riot',
+            name: "Riot",
             isHidden: true,
             mac: {
                 useLaunchAgent: true,
@@ -238,26 +230,30 @@ global.store = new Store({ name: "electron-config" });
 global.appQuitting = false;
 
 const exitShortcuts: Array<(input: Input, platform: string) => boolean> = [
-    (input, platform): boolean => platform !== 'darwin' && input.alt && input.key.toUpperCase() === 'F4',
-    (input, platform): boolean => platform !== 'darwin' && input.control && input.key.toUpperCase() === 'Q',
-    (input, platform): boolean => platform === 'darwin' && input.meta && input.key.toUpperCase() === 'Q',
+    (input, platform): boolean => platform !== "darwin" && input.alt && input.key.toUpperCase() === "F4",
+    (input, platform): boolean => platform !== "darwin" && input.control && input.key.toUpperCase() === "Q",
+    (input, platform): boolean => platform === "darwin" && input.meta && input.key.toUpperCase() === "Q",
 ];
 
 const warnBeforeExit = (event: Event, input: Input): void => {
-    const shouldWarnBeforeExit = global.store.get('warnBeforeExit', true);
+    const shouldWarnBeforeExit = global.store.get("warnBeforeExit", true);
     const exitShortcutPressed =
-        input.type === 'keyDown' && exitShortcuts.some(shortcutFn => shortcutFn(input, process.platform));
+        input.type === "keyDown" && exitShortcuts.some((shortcutFn) => shortcutFn(input, process.platform));
 
     if (shouldWarnBeforeExit && exitShortcutPressed && global.mainWindow) {
-        const shouldCancelCloseRequest = dialog.showMessageBoxSync(global.mainWindow, {
-            type: "question",
-            buttons: [_t("Cancel"), _t("Close %(brand)s", {
-                brand: global.vectorConfig.brand || 'Element',
-            })],
-            message: _t("Are you sure you want to quit?"),
-            defaultId: 1,
-            cancelId: 0,
-        }) === 0;
+        const shouldCancelCloseRequest =
+            dialog.showMessageBoxSync(global.mainWindow, {
+                type: "question",
+                buttons: [
+                    _t("Cancel"),
+                    _t("Close %(brand)s", {
+                        brand: global.vectorConfig.brand || "Element",
+                    }),
+                ],
+                message: _t("Are you sure you want to quit?"),
+                defaultId: 1,
+                cancelId: 0,
+            }) === 0;
 
         if (shouldCancelCloseRequest) {
             event.preventDefault();
@@ -271,18 +267,18 @@ const warnBeforeExit = (event: Event, input: Input): void => {
 // no other way to catch this error).
 // Assuming we generally run from the console when developing,
 // this is far preferable.
-process.on('uncaughtException', function(error: Error): void {
-    console.log('Unhandled exception', error);
+process.on("uncaughtException", function (error: Error): void {
+    console.log("Unhandled exception", error);
 });
 
-app.commandLine.appendSwitch('--enable-usermedia-screen-capturing');
-if (!app.commandLine.hasSwitch('enable-features')) {
-    app.commandLine.appendSwitch('enable-features', 'WebRTCPipeWireCapturer');
+app.commandLine.appendSwitch("--enable-usermedia-screen-capturing");
+if (!app.commandLine.hasSwitch("enable-features")) {
+    app.commandLine.appendSwitch("enable-features", "WebRTCPipeWireCapturer");
 }
 
 const gotLock = app.requestSingleInstanceLock();
 if (!gotLock) {
-    console.log('Other instance detected: exiting');
+    console.log("Other instance detected: exiting");
     app.exit();
 }
 
@@ -294,14 +290,16 @@ protocolInit();
 // work.
 // Also mark it as secure (ie. accessing resources from this
 // protocol and HTTPS won't trigger mixed content warnings).
-protocol.registerSchemesAsPrivileged([{
-    scheme: 'vector',
-    privileges: {
-        standard: true,
-        secure: true,
-        supportFetchAPI: true,
+protocol.registerSchemesAsPrivileged([
+    {
+        scheme: "vector",
+        privileges: {
+            standard: true,
+            secure: true,
+            supportFetchAPI: true,
+        },
     },
-}]);
+]);
 
 // Turn the sandbox on for *all* windows we might generate. Doing this means we don't
 // have to specify a `sandbox: true` to each BrowserWindow.
@@ -315,15 +313,15 @@ protocol.registerSchemesAsPrivileged([{
 app.enableSandbox();
 
 // We disable media controls here. We do this because calls use audio and video elements and they sometimes capture the media keys. See https://github.com/vector-im/element-web/issues/15704
-app.commandLine.appendSwitch('disable-features', 'HardwareMediaKeyHandling,MediaSessionService');
+app.commandLine.appendSwitch("disable-features", "HardwareMediaKeyHandling,MediaSessionService");
 
 // Disable hardware acceleration if the setting has been set.
-if (global.store.get('disableHardwareAcceleration', false) === true) {
+if (global.store.get("disableHardwareAcceleration", false) === true) {
     console.log("Disabling hardware acceleration.");
     app.disableHardwareAcceleration();
 }
 
-app.on('ready', async () => {
+app.on("ready", async () => {
     try {
         await setupGlobals();
         await moveAutoLauncher();
@@ -337,51 +335,51 @@ app.on('ready', async () => {
         return;
     }
 
-    if (argv['devtools']) {
+    if (argv["devtools"]) {
         try {
             // eslint-disable-next-line @typescript-eslint/no-var-requires
-            const { default: installExt, REACT_DEVELOPER_TOOLS, REACT_PERF } = require('electron-devtools-installer');
+            const { default: installExt, REACT_DEVELOPER_TOOLS, REACT_PERF } = require("electron-devtools-installer");
             installExt(REACT_DEVELOPER_TOOLS)
                 .then((name: string) => console.log(`Added Extension: ${name}`))
-                .catch((err: unknown) => console.log('An error occurred: ', err));
+                .catch((err: unknown) => console.log("An error occurred: ", err));
             installExt(REACT_PERF)
                 .then((name: string) => console.log(`Added Extension: ${name}`))
-                .catch((err: unknown) => console.log('An error occurred: ', err));
+                .catch((err: unknown) => console.log("An error occurred: ", err));
         } catch (e) {
             console.log(e);
         }
     }
 
-    protocol.registerFileProtocol('vector', (request, callback) => {
-        if (request.method !== 'GET') {
+    protocol.registerFileProtocol("vector", (request, callback) => {
+        if (request.method !== "GET") {
             callback({ error: -322 }); // METHOD_NOT_SUPPORTED from chromium/src/net/base/net_error_list.h
             return null;
         }
 
         const parsedUrl = new URL(request.url);
-        if (parsedUrl.protocol !== 'vector:') {
+        if (parsedUrl.protocol !== "vector:") {
             callback({ error: -302 }); // UNKNOWN_URL_SCHEME
             return;
         }
-        if (parsedUrl.host !== 'vector') {
+        if (parsedUrl.host !== "vector") {
             callback({ error: -105 }); // NAME_NOT_RESOLVED
             return;
         }
 
-        const target = parsedUrl.pathname.split('/');
+        const target = parsedUrl.pathname.split("/");
 
         // path starts with a '/'
-        if (target[0] !== '') {
+        if (target[0] !== "") {
             callback({ error: -6 }); // FILE_NOT_FOUND
             return;
         }
 
-        if (target[target.length - 1] == '') {
-            target[target.length - 1] = 'index.html';
+        if (target[target.length - 1] == "") {
+            target[target.length - 1] = "index.html";
         }
 
         let baseDir: string;
-        if (target[1] === 'webapp') {
+        if (target[1] === "webapp") {
             baseDir = asarPath;
         } else {
             callback({ error: -6 }); // FILE_NOT_FOUND
@@ -393,7 +391,7 @@ app.on('ready', async () => {
         baseDir = path.normalize(baseDir);
 
         const relTarget = path.normalize(path.join(...target.slice(2)));
-        if (relTarget.startsWith('..')) {
+        if (relTarget.startsWith("..")) {
             callback({ error: -6 }); // FILE_NOT_FOUND
             return;
         }
@@ -404,13 +402,13 @@ app.on('ready', async () => {
         });
     });
 
-    if (argv['no-update']) {
+    if (argv["no-update"]) {
         console.log('Auto update disabled via command line flag "--no-update"');
-    } else if (global.vectorConfig['update_base_url']) {
-        console.log(`Starting auto update with base URL: ${global.vectorConfig['update_base_url']}`);
-        updater.start(global.vectorConfig['update_base_url']);
+    } else if (global.vectorConfig["update_base_url"]) {
+        console.log(`Starting auto update with base URL: ${global.vectorConfig["update_base_url"]}`);
+        updater.start(global.vectorConfig["update_base_url"]);
     } else {
-        console.log('No update_base_url is defined: auto update is disabled');
+        console.log("No update_base_url is defined: auto update is disabled");
     }
 
     // Load the previous window state with fallback to defaults
@@ -422,11 +420,11 @@ app.on('ready', async () => {
     const preloadScript = path.normalize(`${__dirname}/preload.js`);
     global.mainWindow = new BrowserWindow({
         // https://www.electronjs.org/docs/faq#the-font-looks-blurry-what-is-this-and-what-can-i-do
-        backgroundColor: '#fff',
+        backgroundColor: "#fff",
 
         icon: iconPath,
         show: false,
-        autoHideMenuBar: global.store.get('autoHideMenuBar', true),
+        autoHideMenuBar: global.store.get("autoHideMenuBar", true),
 
         x: mainWindowState.x,
         y: mainWindowState.y,
@@ -440,20 +438,20 @@ app.on('ready', async () => {
             webgl: true,
         },
     });
-    global.mainWindow.loadURL('vector://vector/webapp/');
+    global.mainWindow.loadURL("vector://vector/webapp/");
 
     // Handle spellchecker
     // For some reason spellCheckerEnabled isn't persisted, so we have to use the store here
     global.mainWindow.webContents.session.setSpellCheckerEnabled(global.store.get("spellCheckerEnabled", true));
 
     // Create trayIcon icon
-    if (global.store.get('minimizeToTray', true)) tray.create(global.trayConfig);
+    if (global.store.get("minimizeToTray", true)) tray.create(global.trayConfig);
 
-    global.mainWindow.once('ready-to-show', () => {
+    global.mainWindow.once("ready-to-show", () => {
         if (!global.mainWindow) return;
         mainWindowState.manage(global.mainWindow);
 
-        if (!argv['hidden']) {
+        if (!argv["hidden"]) {
             global.mainWindow.show();
         } else {
             // hide here explicitly because window manage above sometimes shows it
@@ -461,21 +459,21 @@ app.on('ready', async () => {
         }
     });
 
-    global.mainWindow.webContents.on('before-input-event', warnBeforeExit);
+    global.mainWindow.webContents.on("before-input-event", warnBeforeExit);
 
-    global.mainWindow.on('closed', () => {
+    global.mainWindow.on("closed", () => {
         global.mainWindow = null;
     });
-    global.mainWindow.on('close', async (e) => {
+    global.mainWindow.on("close", async (e) => {
         // If we are not quitting and have a tray icon then minimize to tray
-        if (!global.appQuitting && (tray.hasTray() || process.platform === 'darwin')) {
+        if (!global.appQuitting && (tray.hasTray() || process.platform === "darwin")) {
             // On Mac, closing the window just hides it
             // (this is generally how single-window Mac apps
             // behave, eg. Mail.app)
             e.preventDefault();
 
             if (global.mainWindow?.isFullScreen()) {
-                global.mainWindow.once('leave-full-screen', () => global.mainWindow?.hide());
+                global.mainWindow.once("leave-full-screen", () => global.mainWindow?.hide());
 
                 global.mainWindow.setFullScreen(false);
             } else {
@@ -486,12 +484,12 @@ app.on('ready', async () => {
         }
     });
 
-    if (process.platform === 'win32') {
+    if (process.platform === "win32") {
         // Handle forward/backward mouse buttons in Windows
-        global.mainWindow.on('app-command', (e, cmd) => {
-            if (cmd === 'browser-backward' && global.mainWindow?.webContents.canGoBack()) {
+        global.mainWindow.on("app-command", (e, cmd) => {
+            if (cmd === "browser-backward" && global.mainWindow?.webContents.canGoBack()) {
                 global.mainWindow.webContents.goBack();
-            } else if (cmd === 'browser-forward' && global.mainWindow?.webContents.canGoForward()) {
+            } else if (cmd === "browser-forward" && global.mainWindow?.webContents.canGoForward()) {
                 global.mainWindow.webContents.goForward();
             }
         });
@@ -501,32 +499,29 @@ app.on('ready', async () => {
 
     global.appLocalization = new AppLocalization({
         store: global.store,
-        components: [
-            (): void => tray.initApplicationMenu(),
-            (): void => Menu.setApplicationMenu(buildMenuTemplate()),
-        ],
+        components: [(): void => tray.initApplicationMenu(), (): void => Menu.setApplicationMenu(buildMenuTemplate())],
     });
 });
 
-app.on('window-all-closed', () => {
+app.on("window-all-closed", () => {
     app.quit();
 });
 
-app.on('activate', () => {
+app.on("activate", () => {
     global.mainWindow?.show();
 });
 
 function beforeQuit(): void {
     global.appQuitting = true;
-    global.mainWindow?.webContents.send('before-quit');
+    global.mainWindow?.webContents.send("before-quit");
 }
 
-app.on('before-quit', beforeQuit);
-autoUpdater.on('before-quit-for-update', beforeQuit);
+app.on("before-quit", beforeQuit);
+autoUpdater.on("before-quit-for-update", beforeQuit);
 
-app.on('second-instance', (ev, commandLine, workingDirectory) => {
+app.on("second-instance", (ev, commandLine, workingDirectory) => {
     // If other instance launched with --hidden then skip showing window
-    if (commandLine.includes('--hidden')) return;
+    if (commandLine.includes("--hidden")) return;
 
     // Someone tried to run a second instance, we should focus our window.
     if (global.mainWindow) {
@@ -540,4 +535,4 @@ app.on('second-instance', (ev, commandLine, workingDirectory) => {
 // installer uses for the shortcut icon.
 // This makes notifications work on windows 8.1 (and is
 // a noop on other platforms).
-app.setAppUserModelId('com.squirrel.element-desktop.Element');
+app.setAppUserModelId("com.squirrel.element-desktop.Element");

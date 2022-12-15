@@ -14,7 +14,7 @@ import { setPackageVersion } from "./set-version";
 const PUB_KEY_URL = "https://packages.riot.im/element-release-key.asc";
 const PACKAGE_URL_PREFIX = "https://github.com/vector-im/element-web/releases/download/";
 const DEVELOP_TGZ_URL = "https://develop.element.io/develop.tar.gz";
-const ASAR_PATH = 'webapp.asar';
+const ASAR_PATH = "webapp.asar";
 
 async function downloadToFile(url: string, filename: string): Promise<void> {
     console.log("Downloading " + url + "...");
@@ -35,7 +35,7 @@ async function downloadToFile(url: string, filename: string): Promise<void> {
 
 async function verifyFile(filename: string): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-        childProcess.execFile('gpg', ['--verify', filename + '.asc', filename], (error) => {
+        childProcess.execFile("gpg", ["--verify", filename + ".asc", filename], (error) => {
             if (error) {
                 reject(error);
             } else {
@@ -48,8 +48,8 @@ async function verifyFile(filename: string): Promise<void> {
 async function main(): Promise<number | undefined> {
     let verify = true;
     let importkey = false;
-    let pkgDir = 'packages';
-    let deployDir = 'deploys';
+    let pkgDir = "packages";
+    let deployDir = "deploys";
     let cfgDir: string | undefined;
     let targetVersion: string | undefined;
     let filename: string | undefined;
@@ -58,22 +58,22 @@ async function main(): Promise<number | undefined> {
 
     while (process.argv.length > 2) {
         switch (process.argv[2]) {
-            case '--noverify':
+            case "--noverify":
                 verify = false;
                 break;
-            case '--importkey':
+            case "--importkey":
                 importkey = true;
                 break;
-            case '--packages':
+            case "--packages":
                 process.argv.shift();
                 pkgDir = process.argv[2];
                 break;
-            case '--deploys':
+            case "--deploys":
                 process.argv.shift();
                 deployDir = process.argv[2];
                 break;
-            case '--cfgdir':
-            case '-d':
+            case "--cfgdir":
+            case "-d":
                 process.argv.shift();
                 cfgDir = process.argv[2];
                 break;
@@ -84,13 +84,13 @@ async function main(): Promise<number | undefined> {
     }
 
     if (targetVersion === undefined) {
-        targetVersion = 'v' + riotDesktopPackageJson.version;
-    } else if (targetVersion !== 'develop') {
+        targetVersion = "v" + riotDesktopPackageJson.version;
+    } else if (targetVersion !== "develop") {
         setVersion = true; // version was specified
     }
 
-    if (targetVersion === 'develop') {
-        filename = 'develop.tar.gz';
+    if (targetVersion === "develop") {
+        filename = "develop.tar.gz";
         url = DEVELOP_TGZ_URL;
         verify = false; // develop builds aren't signed
     } else if (targetVersion.includes("://")) {
@@ -99,11 +99,11 @@ async function main(): Promise<number | undefined> {
         verify = false; // manually verified
     } else {
         filename = `element-${targetVersion}.tar.gz`;
-        url = PACKAGE_URL_PREFIX + targetVersion + '/' + filename;
+        url = PACKAGE_URL_PREFIX + targetVersion + "/" + filename;
     }
 
     const haveGpg = await new Promise<boolean>((resolve) => {
-        childProcess.execFile('gpg', ['--version'], (error) => {
+        childProcess.execFile("gpg", ["--version"], (error) => {
             resolve(!error);
         });
     });
@@ -115,7 +115,7 @@ async function main(): Promise<number | undefined> {
         }
 
         await new Promise<boolean>((resolve) => {
-            const gpgProc = childProcess.execFile('gpg', ['--import'], (error) => {
+            const gpgProc = childProcess.execFile("gpg", ["--import"], (error) => {
                 if (error) {
                     console.log("Failed to import key", error);
                 } else {
@@ -123,7 +123,7 @@ async function main(): Promise<number | undefined> {
                 }
                 resolve(!error);
             });
-            fetch(PUB_KEY_URL).then(resp => {
+            fetch(PUB_KEY_URL).then((resp) => {
                 stream.pipeline(resp.body, gpgProc.stdin!);
             });
         });
@@ -143,13 +143,12 @@ async function main(): Promise<number | undefined> {
     }
 
     let haveDeploy = false;
-    let expectedDeployDir = path.join(deployDir, path.basename(filename).replace(/\.tar\.gz/, ''));
+    let expectedDeployDir = path.join(deployDir, path.basename(filename).replace(/\.tar\.gz/, ""));
     try {
         await fs.opendir(expectedDeployDir);
         console.log(expectedDeployDir + "already exists");
         haveDeploy = true;
-    } catch (e) {
-    }
+    } catch (e) {}
 
     if (!haveDeploy) {
         const outPath = path.join(pkgDir, filename);
@@ -167,11 +166,11 @@ async function main(): Promise<number | undefined> {
 
         if (verify) {
             try {
-                await fs.stat(outPath+'.asc');
+                await fs.stat(outPath + ".asc");
                 console.log("Already have " + filename + ".asc: not redownloading");
             } catch (e) {
                 try {
-                    await downloadToFile(url + '.asc', outPath + '.asc');
+                    await downloadToFile(url + ".asc", outPath + ".asc");
                 } catch (e) {
                     console.log("Failed to download " + url, e);
                     return 1;
@@ -192,7 +191,7 @@ async function main(): Promise<number | undefined> {
         await tar.x({
             file: outPath,
             cwd: deployDir,
-            onentry: entry => {
+            onentry: (entry) => {
                 // Find the appropriate extraction path, only needed for `develop` where the dir name is unknown
                 if (entry.type === "Directory" && !path.join(deployDir, entry.path).startsWith(expectedDeployDir)) {
                     expectedDeployDir = path.join(deployDir, entry.path);
@@ -205,13 +204,12 @@ async function main(): Promise<number | undefined> {
         await fs.stat(ASAR_PATH);
         console.log(ASAR_PATH + " already present: removing");
         await fs.unlink(ASAR_PATH);
-    } catch (e) {
-    }
+    } catch (e) {}
 
     if (cfgDir.length) {
-        const configJsonSource = path.join(cfgDir, 'config.json');
-        const configJsonDest = path.join(expectedDeployDir, 'config.json');
-        console.log(configJsonSource + ' -> ' + configJsonDest);
+        const configJsonSource = path.join(cfgDir, "config.json");
+        const configJsonDest = path.join(expectedDeployDir, "config.json");
+        console.log(configJsonSource + " -> " + configJsonDest);
         await fs.copyFile(configJsonSource, configJsonDest);
     } else {
         console.log("Skipping config file");
@@ -229,9 +227,11 @@ async function main(): Promise<number | undefined> {
     console.log("Done!");
 }
 
-main().then((ret) => {
-    process.exit(ret);
-}).catch(e => {
-    console.error(e);
-    process.exit(1);
-});
+main()
+    .then((ret) => {
+        process.exit(ret);
+    })
+    .catch((e) => {
+        console.error(e);
+        process.exit(1);
+    });

@@ -45,13 +45,13 @@ describe("App launch", () => {
             args,
             recordVideo: {
                 dir: artifactsPath,
-            }
+            },
         });
         window = await app.firstWindow();
     }, 30000);
 
     afterAll(async () => {
-        await app?.close().catch(e => {
+        await app?.close().catch((e) => {
             console.error(e);
         });
         fs.rmSync(tmpDir, { recursive: true });
