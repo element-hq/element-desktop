@@ -2,50 +2,50 @@
 # Due to this extra care must be taken to only ever run all build_* scripts against the same branch to ensure
 # the correct cache scoping, and additional care must be taken to not run untrusted actions on the develop branch.
 on:
-  workflow_call:
+    workflow_call:
 jobs:
-  build:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v3
+    build:
+        runs-on: macos-latest
+        steps:
+            - uses: actions/checkout@v3
 
-      - uses: actions/download-artifact@v3
-        with:
-          name: webapp
+            - uses: actions/download-artifact@v3
+              with:
+                  name: webapp
 
-      - name: Cache .hak
-        id: cache
-        uses: actions/cache@v3
-        with:
-          key: ${{ runner.os }}-${{ hashFiles('hakDependencies.json', 'electronVersion') }}
-          path: |
-            ./.hak
+            - name: Cache .hak
+              id: cache
+              uses: actions/cache@v3
+              with:
+                  key: ${{ runner.os }}-${{ hashFiles('hakDependencies.json', 'electronVersion') }}
+                  path: |
+                      ./.hak
 
-      - name: Install Rust
-        if: steps.cache.outputs.cache-hit != 'true'
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          target: aarch64-apple-darwin
+            - name: Install Rust
+              if: steps.cache.outputs.cache-hit != 'true'
+              uses: actions-rs/toolchain@v1
+              with:
+                  toolchain: stable
+                  target: aarch64-apple-darwin
 
-      - uses: actions/setup-node@v3
-        with:
-          cache: "yarn"
+            - uses: actions/setup-node@v3
+              with:
+                  cache: "yarn"
 
-      # Does not need branch matching as only analyses this layer
-      - name: Install Deps
-        run: "yarn install --pure-lockfile"
+            # Does not need branch matching as only analyses this layer
+            - name: Install Deps
+              run: "yarn install --pure-lockfile"
 
-      - name: Build Natives
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: "yarn build:native:universal"
+            - name: Build Natives
+              if: steps.cache.outputs.cache-hit != 'true'
+              run: "yarn build:native:universal"
 
-      - name: Build App
-        run: "yarn build:universal --publish never"
+            - name: Build App
+              run: "yarn build:universal --publish never"
 
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: macos
-          path: dist
-          retention-days: 1
+            - name: Upload Artifacts
+              uses: actions/upload-artifact@v3
+              with:
+                  name: macos
+                  path: dist
+                  retention-days: 1

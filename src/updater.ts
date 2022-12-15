@@ -37,33 +37,33 @@ function pollForUpdates(): void {
             autoUpdater.checkForUpdates();
         } else {
             console.log("Skipping update check as download already present");
-            global.mainWindow?.webContents.send('update-downloaded', latestUpdateDownloaded);
+            global.mainWindow?.webContents.send("update-downloaded", latestUpdateDownloaded);
         }
     } catch (e) {
-        console.log('Couldn\'t check for update', e);
+        console.log("Couldn't check for update", e);
     }
 }
 
 export function start(updateBaseUrl: string): void {
-    if (updateBaseUrl.slice(-1) !== '/') {
-        updateBaseUrl = updateBaseUrl + '/';
+    if (updateBaseUrl.slice(-1) !== "/") {
+        updateBaseUrl = updateBaseUrl + "/";
     }
     try {
         let url: string;
         let serverType: "json" | undefined;
 
-        if (process.platform === 'darwin') {
+        if (process.platform === "darwin") {
             // On macOS it takes a JSON file with a map between versions and their URLs
             url = `${updateBaseUrl}macos/releases.json`;
             serverType = "json";
-        } else if (process.platform === 'win32') {
+        } else if (process.platform === "win32") {
             // On windows it takes a base path and looks for files under that path.
             url = `${updateBaseUrl}win32/${process.arch}/`;
         } else {
             // Squirrel / electron only supports auto-update on these two platforms.
             // I'm not even going to try to guess which feed style they'd use if they
             // implemented it on Linux, or if it would be different again.
-            console.log('Auto update not supported on this platform');
+            console.log("Auto update not supported on this platform");
             return;
         }
 
@@ -82,15 +82,15 @@ export function start(updateBaseUrl: string): void {
         }
     } catch (err) {
         // will fail if running in debug mode
-        console.log('Couldn\'t enable update checking', err);
+        console.log("Couldn't enable update checking", err);
     }
 }
 
-ipcMain.on('install_update', installUpdate);
-ipcMain.on('check_updates', pollForUpdates);
+ipcMain.on("install_update", installUpdate);
+ipcMain.on("check_updates", pollForUpdates);
 
 function ipcChannelSendUpdateStatus(status: boolean | string): void {
-    global.mainWindow?.webContents.send('check_updates', status);
+    global.mainWindow?.webContents.send("check_updates", status);
 }
 
 interface ICachedUpdate {
@@ -102,23 +102,26 @@ interface ICachedUpdate {
 
 // cache the latest update which has been downloaded as electron offers no api to read it
 let latestUpdateDownloaded: ICachedUpdate;
-autoUpdater.on('update-available', function() {
-    ipcChannelSendUpdateStatus(true);
-}).on('update-not-available', function() {
-    if (latestUpdateDownloaded) {
-        // the only time we will get `update-not-available` if `latestUpdateDownloaded` is already set
-        // is if the user used the Manual Update check and there is no update newer than the one we
-        // have downloaded, so show it to them as the latest again.
-        global.mainWindow?.webContents.send('update-downloaded', latestUpdateDownloaded);
-    } else {
-        ipcChannelSendUpdateStatus(false);
-    }
-}).on('error', function(error) {
-    ipcChannelSendUpdateStatus(error.message);
-});
+autoUpdater
+    .on("update-available", function () {
+        ipcChannelSendUpdateStatus(true);
+    })
+    .on("update-not-available", function () {
+        if (latestUpdateDownloaded) {
+            // the only time we will get `update-not-available` if `latestUpdateDownloaded` is already set
+            // is if the user used the Manual Update check and there is no update newer than the one we
+            // have downloaded, so show it to them as the latest again.
+            global.mainWindow?.webContents.send("update-downloaded", latestUpdateDownloaded);
+        } else {
+            ipcChannelSendUpdateStatus(false);
+        }
+    })
+    .on("error", function (error) {
+        ipcChannelSendUpdateStatus(error.message);
+    });
 
-autoUpdater.on('update-downloaded', (ev, releaseNotes, releaseName, releaseDate, updateURL) => {
+autoUpdater.on("update-downloaded", (ev, releaseNotes, releaseName, releaseDate, updateURL) => {
     // forward to renderer
     latestUpdateDownloaded = { releaseNotes, releaseName, releaseDate, updateURL };
-    global.mainWindow?.webContents.send('update-downloaded', latestUpdateDownloaded);
+    global.mainWindow?.webContents.send("update-downloaded", latestUpdateDownloaded);
 });

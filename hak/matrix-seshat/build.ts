@@ -14,15 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import path from 'path';
-import childProcess from 'child_process';
-import mkdirp from 'mkdirp';
-import fsExtra from 'fs-extra';
+import path from "path";
+import childProcess from "child_process";
+import mkdirp from "mkdirp";
+import fsExtra from "fs-extra";
 
-import HakEnv from '../../scripts/hak/hakEnv';
-import { DependencyInfo } from '../../scripts/hak/dep';
+import HakEnv from "../../scripts/hak/hakEnv";
+import { DependencyInfo } from "../../scripts/hak/dep";
 
-export default async function(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
+export default async function (hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
     if (hakEnv.isWin()) {
         await buildOpenSslWin(hakEnv, moduleInfo);
         await buildSqlCipherWin(hakEnv, moduleInfo);
@@ -36,99 +36,91 @@ async function buildOpenSslWin(hakEnv: HakEnv, moduleInfo: DependencyInfo): Prom
     const version = moduleInfo.cfg.dependencies.openssl;
     const openSslDir = path.join(moduleInfo.moduleTargetDotHakDir, `openssl-${version}`);
 
-    const openSslArch = hakEnv.getTargetArch() === 'x64' ? 'VC-WIN64A' : 'VC-WIN32';
+    const openSslArch = hakEnv.getTargetArch() === "x64" ? "VC-WIN64A" : "VC-WIN32";
 
     console.log("Building openssl in " + openSslDir);
     await new Promise<void>((resolve, reject) => {
         const proc = childProcess.spawn(
-            'perl',
+            "perl",
             [
-                'Configure',
-                '--prefix=' + moduleInfo.depPrefix,
+                "Configure",
+                "--prefix=" + moduleInfo.depPrefix,
                 // sqlcipher only uses about a tiny part of openssl. We link statically
                 // so will only pull in the symbols we use, but we may as well turn off
                 // as much as possible to save on build time.
-                'no-afalgeng',
-                'no-capieng',
-                'no-cms',
-                'no-ct',
-                'no-deprecated',
-                'no-dgram',
-                'no-dso',
-                'no-ec',
-                'no-ec2m',
-                'no-gost',
-                'no-nextprotoneg',
-                'no-ocsp',
-                'no-sock',
-                'no-srp',
-                'no-srtp',
-                'no-tests',
-                'no-ssl',
-                'no-tls',
-                'no-dtls',
-                'no-shared',
-                'no-aria',
-                'no-camellia',
-                'no-cast',
-                'no-chacha',
-                'no-cmac',
-                'no-des',
-                'no-dh',
-                'no-dsa',
-                'no-ecdh',
-                'no-ecdsa',
-                'no-idea',
-                'no-md4',
-                'no-mdc2',
-                'no-ocb',
-                'no-poly1305',
-                'no-rc2',
-                'no-rc4',
-                'no-rmd160',
-                'no-scrypt',
-                'no-seed',
-                'no-siphash',
-                'no-sm2',
-                'no-sm3',
-                'no-sm4',
-                'no-whirlpool',
+                "no-afalgeng",
+                "no-capieng",
+                "no-cms",
+                "no-ct",
+                "no-deprecated",
+                "no-dgram",
+                "no-dso",
+                "no-ec",
+                "no-ec2m",
+                "no-gost",
+                "no-nextprotoneg",
+                "no-ocsp",
+                "no-sock",
+                "no-srp",
+                "no-srtp",
+                "no-tests",
+                "no-ssl",
+                "no-tls",
+                "no-dtls",
+                "no-shared",
+                "no-aria",
+                "no-camellia",
+                "no-cast",
+                "no-chacha",
+                "no-cmac",
+                "no-des",
+                "no-dh",
+                "no-dsa",
+                "no-ecdh",
+                "no-ecdsa",
+                "no-idea",
+                "no-md4",
+                "no-mdc2",
+                "no-ocb",
+                "no-poly1305",
+                "no-rc2",
+                "no-rc4",
+                "no-rmd160",
+                "no-scrypt",
+                "no-seed",
+                "no-siphash",
+                "no-sm2",
+                "no-sm3",
+                "no-sm4",
+                "no-whirlpool",
                 openSslArch,
             ],
             {
                 cwd: openSslDir,
-                stdio: 'inherit',
+                stdio: "inherit",
             },
         );
-        proc.on('exit', (code) => {
+        proc.on("exit", (code) => {
             code ? reject(code) : resolve();
         });
     });
 
     await new Promise<void>((resolve, reject) => {
-        const proc = childProcess.spawn(
-            'nmake',
-            ['build_libs'],
-            {
-                cwd: openSslDir,
-                stdio: 'inherit',
-            },
-        );
-        proc.on('exit', (code) => {
+        const proc = childProcess.spawn("nmake", ["build_libs"], {
+            cwd: openSslDir,
+            stdio: "inherit",
+        });
+        proc.on("exit", (code) => {
             code ? reject(code) : resolve();
         });
     });
 
     await new Promise<void>((resolve, reject) => {
-        const proc = childProcess.spawn(
-            'nmake',
-            ['install_dev'],
-            {
-                cwd: openSslDir,
-                stdio: 'inherit',
-            },
-        );
-        proc.on('exit', (code) => {
+        const proc = childProcess.spawn("nmake", ["install_dev"], {
+            cwd: openSslDir,
+            stdio: "inherit",
+        });
+        proc.on("exit", (code) => {
             code ? reject(code) : resolve();
         });
     });
@@ -137,38 +129,28 @@ async function buildOpenSslWin(hakEnv: HakEnv, moduleInfo: DependencyInfo): Prom
 async function buildSqlCipherWin(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
     const version = moduleInfo.cfg.dependencies.sqlcipher;
     const sqlCipherDir = path.join(moduleInfo.moduleTargetDotHakDir, `sqlcipher-${version}`);
-    const buildDir = path.join(sqlCipherDir, 'bld');
+    const buildDir = path.join(sqlCipherDir, "bld");
 
     await mkdirp(buildDir);
 
     await new Promise<void>((resolve, reject) => {
-        const proc = childProcess.spawn(
-            'nmake',
-            ['/f', path.join('..', 'Makefile.msc'), 'libsqlite3.lib', 'TOP=..'],
-            {
-                cwd: buildDir,
-                stdio: 'inherit',
-                env: Object.assign({}, process.env, {
-                    CCOPTS: "-DSQLITE_HAS_CODEC -I" + path.join(moduleInfo.depPrefix, 'include'),
-                    LTLIBPATHS: "/LIBPATH:" + path.join(moduleInfo.depPrefix, 'lib'),
-                    LTLIBS: "libcrypto.lib",
-                }),
-            },
-        );
-        proc.on('exit', (code) => {
+        const proc = childProcess.spawn("nmake", ["/f", path.join("..", "Makefile.msc"), "libsqlite3.lib", "TOP=.."], {
+            cwd: buildDir,
+            stdio: "inherit",
+            env: Object.assign({}, process.env, {
+                CCOPTS: "-DSQLITE_HAS_CODEC -I" + path.join(moduleInfo.depPrefix, "include"),
+                LTLIBPATHS: "/LIBPATH:" + path.join(moduleInfo.depPrefix, "lib"),
+                LTLIBS: "libcrypto.lib",
+            }),
+        });
+        proc.on("exit", (code) => {
             code ? reject(code) : resolve();
         });
     });
 
-    await fsExtra.copy(
-        path.join(buildDir, 'libsqlite3.lib'),
-        path.join(moduleInfo.depPrefix, 'lib', 'sqlcipher.lib'),
-    );
+    await fsExtra.copy(path.join(buildDir, "libsqlite3.lib"), path.join(moduleInfo.depPrefix, "lib", "sqlcipher.lib"));
 
-    await fsExtra.copy(
-        path.join(buildDir, 'sqlite3.h'),
-        path.join(moduleInfo.depPrefix, 'include', 'sqlcipher.h'),
-    );
+    await fsExtra.copy(path.join(buildDir, "sqlite3.h"), path.join(moduleInfo.depPrefix, "include", "sqlcipher.h"));
 }
 
 async function buildSqlCipherUnix(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
@@ -176,21 +158,21 @@ async function buildSqlCipherUnix(hakEnv: HakEnv, moduleInfo: DependencyInfo): P
     const sqlCipherDir = path.join(moduleInfo.moduleTargetDotHakDir, `sqlcipher-${version}`);
 
     const args = [
-        '--prefix=' + moduleInfo.depPrefix + '',
-        '--enable-tempstore=yes',
-        '--enable-shared=no',
-        '--enable-tcl=no',
+        "--prefix=" + moduleInfo.depPrefix + "",
+        "--enable-tempstore=yes",
+        "--enable-shared=no",
+        "--enable-tcl=no",
     ];
 
     if (hakEnv.isMac()) {
-        args.push('--with-crypto-lib=commoncrypto');
+        args.push("--with-crypto-lib=commoncrypto");
     }
 
     if (hakEnv.wantsStaticSqlCipherUnix()) {
-        args.push('--enable-tcl=no');
+        args.push("--enable-tcl=no");
 
         if (hakEnv.isLinux()) {
-            args.push('--with-pic=yes');
+            args.push("--with-pic=yes");
         }
     }
 
@@ -201,9 +183,7 @@ async function buildSqlCipherUnix(hakEnv: HakEnv, moduleInfo: DependencyInfo): P
         args.push(`--host=${hakEnv.getTargetId()}`);
     }
 
-    const cflags = [
-        '-DSQLITE_HAS_CODEC',
-    ];
+    const cflags = ["-DSQLITE_HAS_CODEC"];
 
     if (!hakEnv.isHost()) {
         // `clang` uses more logical option naming.
@@ -211,58 +191,46 @@ async function buildSqlCipherUnix(hakEnv: HakEnv, moduleInfo: DependencyInfo): P
     }
 
     if (cflags.length) {
-        args.push(`CFLAGS=${cflags.join(' ')}`);
+        args.push(`CFLAGS=${cflags.join(" ")}`);
     }
 
     const ldflags: string[] = [];
 
     if (hakEnv.isMac()) {
-        ldflags.push('-framework Security');
-        ldflags.push('-framework Foundation');
+        ldflags.push("-framework Security");
+        ldflags.push("-framework Foundation");
     }
 
     if (ldflags.length) {
-        args.push(`LDFLAGS=${ldflags.join(' ')}`);
+        args.push(`LDFLAGS=${ldflags.join(" ")}`);
     }
 
     await new Promise<void>((resolve, reject) => {
-        const proc = childProcess.spawn(
-            path.join(sqlCipherDir, 'configure'),
-            args,
-            {
-                cwd: sqlCipherDir,
-                stdio: 'inherit',
-            },
-        );
-        proc.on('exit', (code) => {
+        const proc = childProcess.spawn(path.join(sqlCipherDir, "configure"), args, {
+            cwd: sqlCipherDir,
+            stdio: "inherit",
+        });
+        proc.on("exit", (code) => {
             code ? reject(code) : resolve();
         });
     });
 
     await new Promise<void>((resolve, reject) => {
-        const proc = childProcess.spawn(
-            'make',
-            [],
-            {
-                cwd: sqlCipherDir,
-                stdio: 'inherit',
-            },
-        );
-        proc.on('exit', (code) => {
+        const proc = childProcess.spawn("make", [], {
+            cwd: sqlCipherDir,
+            stdio: "inherit",
+        });
+        proc.on("exit", (code) => {
             code ? reject(code) : resolve();
         });
     });
 
     await new Promise<void>((resolve, reject) => {
-        const proc = childProcess.spawn(
-            'make',
-            ['install'],
-            {
-                cwd: sqlCipherDir,
-                stdio: 'inherit',
-            },
-        );
-        proc.on('exit', (code) => {
+        const proc = childProcess.spawn("make", ["install"], {
+            cwd: sqlCipherDir,
+            stdio: "inherit",
+        });
+        proc.on("exit", (code) => {
             code ? reject(code) : resolve();
         });
     });
@@ -277,8 +245,8 @@ async function buildMatrixSeshat(hakEnv: HakEnv, moduleInfo: DependencyInfo): Pr
     if (!hakEnv.isLinux() || hakEnv.wantsStaticSqlCipherUnix()) {
         Object.assign(env, {
             SQLCIPHER_STATIC: 1,
-            SQLCIPHER_LIB_DIR: path.join(moduleInfo.depPrefix, 'lib'),
-            SQLCIPHER_INCLUDE_DIR: path.join(moduleInfo.depPrefix, 'include'),
+            SQLCIPHER_LIB_DIR: path.join(moduleInfo.depPrefix, "lib"),
+            SQLCIPHER_INCLUDE_DIR: path.join(moduleInfo.depPrefix, "include"),
         });
     }
 
@@ -298,11 +266,11 @@ async function buildMatrixSeshat(hakEnv: HakEnv, moduleInfo: DependencyInfo): Pr
         // --exclude-libs ALL
         //     Prevent symbols from being exported by any archive libraries.
         //     Reduces output filesize and prevents being dynamically linked against.
-        env.RUSTFLAGS = '-Clink-arg=-Wl,-Bsymbolic -Clink-arg=-Wl,--exclude-libs,ALL';
+        env.RUSTFLAGS = "-Clink-arg=-Wl,-Bsymbolic -Clink-arg=-Wl,--exclude-libs,ALL";
     }
 
     if (hakEnv.isWin()) {
-        env.RUSTFLAGS = '-Ctarget-feature=+crt-static -Clink-args=libcrypto.lib';
+        env.RUSTFLAGS = "-Ctarget-feature=+crt-static -Clink-args=libcrypto.lib";
         // Note that in general, you can specify targets in Rust without having to have
         // the matching toolchain, however for this, cargo gets confused when building
         // the build scripts since they run on the host, but vcvarsall.bat sets the c
@@ -318,15 +286,15 @@ async function buildMatrixSeshat(hakEnv: HakEnv, moduleInfo: DependencyInfo): Pr
     console.log("Running neon with env", env);
     await new Promise<void>((resolve, reject) => {
         const proc = childProcess.spawn(
-            path.join(moduleInfo.nodeModuleBinDir, 'neon' + (hakEnv.isWin() ? '.cmd' : '')),
-            ['build', '--release'],
+            path.join(moduleInfo.nodeModuleBinDir, "neon" + (hakEnv.isWin() ? ".cmd" : "")),
+            ["build", "--release"],
             {
                 cwd: moduleInfo.moduleBuildDir,
                 env,
-                stdio: 'inherit',
+                stdio: "inherit",
             },
         );
-        proc.on('exit', (code) => {
+        proc.on("exit", (code) => {
             code ? reject(code) : resolve();
         });
     });

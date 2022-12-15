@@ -13,4 +13,3 @@ and can be served by any compatible Squirrel server, such as https://github.com/
 
 On macOS the update mechanism used is [Squirrel.Mac](https://github.com/Squirrel/Squirrel.Mac)
 using the newer JSON format as documented [here](https://github.com/Squirrel/Squirrel.Mac#update-file-json-format).
-

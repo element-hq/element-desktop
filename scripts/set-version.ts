@@ -11,31 +11,35 @@ import * as childProcess from "child_process";
 
 export async function versionFromAsar(): Promise<string> {
     try {
-        await fs.stat('webapp.asar');
+        await fs.stat("webapp.asar");
     } catch (e) {
         throw new Error("No 'webapp.asar' found. Run 'yarn run fetch'");
     }
 
-    return asar.extractFile('webapp.asar', 'version').toString().trim();
+    return asar.extractFile("webapp.asar", "version").toString().trim();
 }
 
 export async function setPackageVersion(ver: string): Promise<void> {
     // set version in package.json: electron-builder will use this to populate
     // all the various version fields
     await new Promise<void>((resolve, reject) => {
-        childProcess.execFile(process.platform === 'win32' ? 'yarn.cmd' : 'yarn', [
-            'version',
-            '-s',
-            '--no-git-tag-version', // This also means "don't commit to git" as it turns out
-            '--new-version',
-            ver,
-        ], (err) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve();
-            }
-        });
+        childProcess.execFile(
+            process.platform === "win32" ? "yarn.cmd" : "yarn",
+            [
+                "version",
+                "-s",
+                "--no-git-tag-version", // This also means "don't commit to git" as it turns out
+                "--new-version",
+                ver,
+            ],
+            (err) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            },
+        );
     });
 }
 
@@ -49,10 +53,12 @@ async function main(args: string[]): Promise<number> {
 }
 
 if (require.main === module) {
-    main(process.argv.slice(2)).then((ret) => {
-        process.exit(ret);
-    }).catch(e => {
-        console.error(e);
-        process.exit(1);
-    });
+    main(process.argv.slice(2))
+        .then((ret) => {
+            process.exit(ret);
+        })
+        .catch((e) => {
+            console.error(e);
+            process.exit(1);
+        });
 }

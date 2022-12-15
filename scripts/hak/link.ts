@@ -14,16 +14,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import path from 'path';
-import os from 'os';
-import fsProm from 'fs/promises';
-import childProcess from 'child_process';
+import path from "path";
+import os from "os";
+import fsProm from "fs/promises";
+import childProcess from "child_process";
 
-import HakEnv from './hakEnv';
-import { DependencyInfo } from './dep';
+import HakEnv from "./hakEnv";
+import { DependencyInfo } from "./dep";
 
 export default async function link(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
-    const yarnrc = path.join(hakEnv.projectRoot, '.yarnrc');
+    const yarnrc = path.join(hakEnv.projectRoot, ".yarnrc");
     // this is fairly terrible but it's reasonably clunky to either parse a yarnrc
     // properly or get yarn to do it, so this will probably suffice for now.
     // We just check to see if there is a local .yarnrc at all, and assume that
@@ -43,28 +43,28 @@ export default async function link(hakEnv: HakEnv, moduleInfo: DependencyInfo): 
             // (ie. Windows absolute paths) but strings in quotes get parsed as
             // JSON so need to be valid JSON encoded strings (ie. have the
             // backslashes escaped). JSON.stringify will add quotes and escape.
-            '--link-folder ' + JSON.stringify(path.join(hakEnv.dotHakDir, 'links')) + os.EOL,
+            "--link-folder " + JSON.stringify(path.join(hakEnv.dotHakDir, "links")) + os.EOL,
         );
     }
 
-    const yarnCmd = 'yarn' + (hakEnv.isWin() ? '.cmd' : '');
+    const yarnCmd = "yarn" + (hakEnv.isWin() ? ".cmd" : "");
 
     await new Promise<void>((resolve, reject) => {
-        const proc = childProcess.spawn(yarnCmd, ['link'], {
+        const proc = childProcess.spawn(yarnCmd, ["link"], {
             cwd: moduleInfo.moduleOutDir,
-            stdio: 'inherit',
+            stdio: "inherit",
         });
-        proc.on('exit', code => {
+        proc.on("exit", (code) => {
             code ? reject(code) : resolve();
         });
     });
 
     await new Promise<void>((resolve, reject) => {
-        const proc = childProcess.spawn(yarnCmd, ['link', moduleInfo.name], {
+        const proc = childProcess.spawn(yarnCmd, ["link", moduleInfo.name], {
             cwd: hakEnv.projectRoot,
-            stdio: 'inherit',
+            stdio: "inherit",
         });
-        proc.on('exit', code => {
+        proc.on("exit", (code) => {
             code ? reject(code) : resolve();
         });
     });
