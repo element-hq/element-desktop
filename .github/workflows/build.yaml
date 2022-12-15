@@ -1,11 +1,11 @@
 name: Build and Test
 on:
-    pull_request: {}
-    push:
-        branches: [develop, master]
+  pull_request: {}
+  push:
+    branches: [develop, master]
 concurrency:
-    group: ${{ github.workflow }}-${{ github.ref }}
-    cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   fetch:
     uses: ./.github/workflows/build_prepare.yaml
@@ -19,7 +19,7 @@ jobs:
     uses: ./.github/workflows/build_windows.yaml
     strategy:
       matrix:
-        arch: [ x64, x86 ]
+        arch: [x64, x86]
     with:
       arch: ${{ matrix.arch }}
 
@@ -29,7 +29,7 @@ jobs:
     uses: ./.github/workflows/build_linux.yaml
     strategy:
       matrix:
-        sqlcipher: [ system, static ]
+        sqlcipher: [system, static]
     with:
       sqlcipher: ${{ matrix.sqlcipher }}
 
@@ -51,12 +51,12 @@ jobs:
             artifact: macos
             executable: "./dist/mac-universal/Element.app/Contents/MacOS/Element"
             prepare_cmd: "find ./dist/mac-universal/Element.app -type f | perl -lne 'print if -B' | tr '\\n' '\\0' | xargs -0 -n1 chmod 755"
-          - name: 'Linux (sqlcipher: system)'
+          - name: "Linux (sqlcipher: system)"
             os: ubuntu
             artifact: linux-sqlcipher-system
             executable: "element-desktop"
             prepare_cmd: "sudo apt install ./dist/*.deb"
-          - name: 'Linux (sqlcipher: static)'
+          - name: "Linux (sqlcipher: static)"
             os: ubuntu
             artifact: linux-sqlcipher-static
             executable: "element-desktop"
@@ -76,98 +76,32 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-            config: ${{ github.event.pull_request.base.ref == 'develop' && 'element.io/nightly' || 'element.io/release' }}
-            version: ${{ github.event.pull_request.base.ref == 'develop' && 'develop' || '' }}
+          cache: "yarn"
 
-    windows:
-        needs: fetch
-        name: Windows
-        uses: ./.github/workflows/build_windows.yaml
-        strategy:
-            matrix:
-                arch: [x64, x86]
+      - name: Install Deps
+        run: "yarn install --pure-lockfile"
+
+      - uses: actions/download-artifact@v3
         with:
-            arch: ${{ matrix.arch }}
+          name: ${{ matrix.artifact }}
+          path: dist
 
-    linux:
-        needs: fetch
-        name: Linux
-        uses: ./.github/workflows/build_linux.yaml
-        strategy:
-            matrix:
-                sqlcipher: [system, static]
+      - name: Prepare for tests
+        run: ${{ matrix.prepare_cmd }}
+        if: matrix.prepare_cmd
+
+      - name: Run tests
+        uses: GabrielBB/xvfb-action@v1
+        timeout-minutes: 5
         with:
-            sqlcipher: ${{ matrix.sqlcipher }}
+          run: "yarn test"
+        env:
+          ELEMENT_DESKTOP_EXECUTABLE: ${{ matrix.executable }}
 
-    macos:
-        needs: fetch
-        name: macOS
-        uses: ./.github/workflows/build_macos.yaml
-
-    test:
-        needs:
-            - macos
-            - linux
-            - windows
-        strategy:
-            matrix:
-                include:
-                    # Disable macOS tests for now, they fail to run in CI, needs investigation.
-                    #          - name: macOS Universal
-                    #            os: macos
-                    #            artifact: macos
-                    #            executable: "./dist/mac-universal/Element.app/Contents/MacOS/Element"
-                    #            prepare_cmd: "chmod +x ./dist/mac-universal/Element.app/Contents/MacOS/Element"
-                    - name: "Linux (sqlcipher: system)"
-                      os: ubuntu
-                      artifact: linux-sqlcipher-system
-                      executable: "element-desktop"
-                      prepare_cmd: "sudo apt install ./dist/*.deb"
-                    - name: "Linux (sqlcipher: static)"
-                      os: ubuntu
-                      artifact: linux-sqlcipher-static
-                      executable: "element-desktop"
-                      prepare_cmd: "sudo apt install ./dist/*.deb"
-                    - name: Windows (x86)
-                      os: windows
-                      artifact: win-x86
-                      executable: "./dist/win-ia32-unpacked/Element.exe"
-                    - name: Windows (x64)
-                      os: windows
-                      artifact: win-x64
-                      executable: "./dist/win-unpacked/Element.exe"
-        name: Test ${{ matrix.name }}
-        runs-on: ${{ matrix.os }}-latest
-        steps:
-            - uses: actions/checkout@v3
-
-            - uses: actions/setup-node@v3
-              with:
-                  cache: "yarn"
-
-            - name: Install Deps
-              run: "yarn install --pure-lockfile"
-
-            - uses: actions/download-artifact@v3
-              with:
-                  name: ${{ matrix.artifact }}
-                  path: dist
-
-            - name: Prepare for tests
-              run: ${{ matrix.prepare_cmd }}
-              if: matrix.prepare_cmd
-
-            - name: Run tests
-              uses: GabrielBB/xvfb-action@v1
-              timeout-minutes: 5
-              with:
-                  run: "yarn test"
-              env:
-                  ELEMENT_DESKTOP_EXECUTABLE: ${{ matrix.executable }}
-
-            - name: Upload Artifacts
-              uses: actions/upload-artifact@v3
-              with:
-                  name: ${{ matrix.artifact }}
-                  path: test_artifacts
-                  retention-days: 1
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: ${{ matrix.artifact }}
+          path: test_artifacts
+          retention-days: 1
