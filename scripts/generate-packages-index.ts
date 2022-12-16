@@ -84,21 +84,21 @@ function humanFileSize(bytes: number, si = false, dp = 1): string {
     const thresh = si ? 1000 : 1024;
 
     if (Math.abs(bytes) < thresh) {
-        return bytes + ' B';
+        return bytes + " B";
     }
 
     const units = si
-        ? ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
-        : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
+        ? ["kB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
+        : ["KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"];
     let u = -1;
-    const r = 10**dp;
+    const r = 10 ** dp;
 
     do {
         bytes /= thresh;
         ++u;
     } while (Math.round(Math.abs(bytes) * r) / r >= thresh && u < units.length - 1);
 
-    return bytes.toFixed(dp) + ' ' + units[u];
+    return bytes.toFixed(dp) + " " + units[u];
 }
 
 const dateTimeOptions: Intl.DateTimeFormatOptions = {
@@ -122,7 +122,8 @@ function indexLayout(prefix: string, files: _Object[], dirs: string[]): string {
     }
 
     for (const file of files) {
-        if (!file.Key ||
+        if (
+            !file.Key ||
             HIDDEN_FILES.includes(`/${file.Key}`) ||
             HIDDEN_FILES.includes(file.Key.slice(file.Key.lastIndexOf("/") + 1))
         ) {
@@ -143,11 +144,15 @@ function indexLayout(prefix: string, files: _Object[], dirs: string[]): string {
         </tr>
     </thead>
     <tbody>
-        ${rows.map(([link, name, size, date]) => `<tr>
+        ${rows
+            .map(
+                ([link, name, size, date]) => `<tr>
             <td class="link"><a href="${link}">${name}</a></td>
             <td class="size">${size ? humanFileSize(size) : "-"}</td>
             <td class="date">${date?.toLocaleString("en-GB", dateTimeOptions) ?? "-"}</td>
-        </tr>`).join("")}
+        </tr>`,
+            )
+            .join("")}
     </tbody>
 </table>
     `);
@@ -166,17 +171,20 @@ async function generateIndex(Prefix: string): Promise<{
 
     const listResponse = await client.send(command);
     const files = listResponse.Contents ?? [];
-    const dirs = listResponse.CommonPrefixes
-        ?.map(p => p.Prefix?.slice(Prefix.length).split("/", 2)[0])
-        .filter(Boolean) as string[] ?? [];
+    const dirs =
+        (listResponse.CommonPrefixes?.map((p) => p.Prefix?.slice(Prefix.length).split("/", 2)[0]).filter(
+            Boolean,
+        ) as string[]) ?? [];
     const Body = indexLayout(Prefix, files, dirs);
 
-    await client.send(new PutObjectCommand({
-        Body,
-        Bucket,
-        ContentType: "text/html",
-        Key: Prefix + "index.html",
-    }));
+    await client.send(
+        new PutObjectCommand({
+            Body,
+            Bucket,
+            ContentType: "text/html",
+            Key: Prefix + "index.html",
+        }),
+    );
 
     return { files, dirs };
 }

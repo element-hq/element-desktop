@@ -1,24 +1,18 @@
 {
-  "compilerOptions": {
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "target": "es2016",
-    "sourceMap": false,
-    "outDir": "./lib",
-    "rootDir": "./src",
-    "declaration": true,
-    "typeRoots": ["src/@types"],
-    "lib": [
-      "es2019",
-      "dom"
-    ],
-    "types": ["jest", "node"],
-    "strict": true
-  },
-  "include": [
-    "./src/**/*.ts",
-    "./tests/**/*.ts"
-  ]
+    "compilerOptions": {
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "target": "es2016",
+        "sourceMap": false,
+        "outDir": "./lib",
+        "rootDir": "./src",
+        "declaration": true,
+        "typeRoots": ["src/@types"],
+        "lib": ["es2019", "dom"],
+        "types": ["jest", "node"],
+        "strict": true
+    },
+    "include": ["./src/**/*.ts", "./tests/**/*.ts"]
 }

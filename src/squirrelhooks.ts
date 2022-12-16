@@ -23,29 +23,29 @@ function runUpdateExe(args: string[]): Promise<void> {
     // Note that there's an Update.exe in the app-x.x.x directory and one in the parent
     // directory: we need to run the one in the parent directory, because it discovers
     // information about the app by inspecting the directory it's run from.
-    const updateExe = path.resolve(path.dirname(process.execPath), '..', 'Update.exe');
+    const updateExe = path.resolve(path.dirname(process.execPath), "..", "Update.exe");
     console.log(`Spawning '${updateExe}' with args '${args}'`);
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
         spawn(updateExe, args, {
             detached: true,
-        }).on('close', resolve);
+        }).on("close", resolve);
     });
 }
 
 function checkSquirrelHooks(): boolean {
-    if (process.platform !== 'win32') return false;
+    if (process.platform !== "win32") return false;
     const cmd = process.argv[1];
     const target = path.basename(process.execPath);
-    if (cmd === '--squirrel-install') {
-        runUpdateExe(['--createShortcut=' + target]).then(() => app.quit());
+    if (cmd === "--squirrel-install") {
+        runUpdateExe(["--createShortcut=" + target]).then(() => app.quit());
         return true;
-    } else if (cmd === '--squirrel-updated') {
+    } else if (cmd === "--squirrel-updated") {
         app.quit();
         return true;
-    } else if (cmd === '--squirrel-uninstall') {
-        runUpdateExe(['--removeShortcut=' + target]).then(() => app.quit());
+    } else if (cmd === "--squirrel-uninstall") {
+        runUpdateExe(["--removeShortcut=" + target]).then(() => app.quit());
         return true;
-    } else if (cmd === '--squirrel-obsolete') {
+    } else if (cmd === "--squirrel-obsolete") {
         app.quit();
         return true;
     }

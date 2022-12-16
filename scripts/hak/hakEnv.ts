@@ -14,16 +14,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import path from 'path';
-import os from 'os';
+import path from "path";
+import os from "os";
 import nodePreGypVersioning from "node-pre-gyp/lib/util/versioning";
 import { getElectronVersion } from "app-builder-lib/out/electron/electronVersion";
 
-import { Arch, Target, TARGETS, getHost, isHostId, TargetId } from './target';
+import { Arch, Target, TARGETS, getHost, isHostId, TargetId } from "./target";
 
 async function getRuntime(projectRoot: string): Promise<string> {
     const electronVersion = await getElectronVersion(projectRoot);
-    return electronVersion ? 'electron' : 'node-webkit';
+    return electronVersion ? "electron" : "node-webkit";
 }
 
 async function getRuntimeVersion(projectRoot: string): Promise<string> {
@@ -48,7 +48,7 @@ export default class HakEnv {
             throw new Error(`Unknown target ${targetId}!`);
         }
         this.target = target;
-        this.dotHakDir = path.join(this.projectRoot, '.hak');
+        this.dotHakDir = path.join(this.projectRoot, ".hak");
     }
 
     public async init(): Promise<void> {
@@ -62,7 +62,7 @@ export default class HakEnv {
 
     // {node_abi}-{platform}-{arch}
     public getNodeTriple(): string {
-        return this.getRuntimeAbi() + '-' + this.target.platform + '-' + this.target.arch;
+        return this.getRuntimeAbi() + "-" + this.target.platform + "-" + this.target.arch;
     }
 
     public getTargetId(): TargetId {
@@ -70,15 +70,15 @@ export default class HakEnv {
     }
 
     public isWin(): boolean {
-        return this.target.platform === 'win32';
+        return this.target.platform === "win32";
     }
 
     public isMac(): boolean {
-        return this.target.platform === 'darwin';
+        return this.target.platform === "darwin";
     }
 
     public isLinux(): boolean {
-        return this.target.platform === 'linux';
+        return this.target.platform === "linux";
     }
 
     public getTargetArch(): Arch {
@@ -93,7 +93,7 @@ export default class HakEnv {
         return Object.assign({}, process.env, {
             npm_config_arch: this.target.arch,
             npm_config_target_arch: this.target.arch,
-            npm_config_disturl: 'https://electronjs.org/headers',
+            npm_config_disturl: "https://electronjs.org/headers",
             npm_config_runtime: this.runtime,
             npm_config_target: this.runtimeVersion,
             npm_config_build_from_source: true,
@@ -102,7 +102,7 @@ export default class HakEnv {
     }
 
     public wantsStaticSqlCipherUnix(): boolean {
-        return this.isMac() || process.env.SQLCIPHER_STATIC == '1';
+        return this.isMac() || process.env.SQLCIPHER_STATIC == "1";
     }
 
     public wantsStaticSqlCipher(): boolean {

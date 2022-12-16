@@ -14,10 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import mkdirp from 'mkdirp';
+import mkdirp from "mkdirp";
 
-import { DependencyInfo } from './dep';
-import HakEnv from './hakEnv';
+import { DependencyInfo } from "./dep";
+import HakEnv from "./hakEnv";
 
 export default async function fetchDeps(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
     await mkdirp(moduleInfo.moduleDotHakDir);

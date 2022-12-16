@@ -1,11 +1,11 @@
-const { notarize } = require('@electron/notarize');
+const { notarize } = require("@electron/notarize");
 
 let warned = false;
-exports.default = async function(context) {
+exports.default = async function (context) {
     const { electronPlatformName, appOutDir } = context;
     const appId = context.packager.info.appInfo.id;
 
-    if (electronPlatformName === 'darwin') {
+    if (electronPlatformName === "darwin") {
         const appName = context.packager.appInfo.productFilename;
 
         const keychainProfile = process.env.NOTARIZE_KEYCHAIN_PROFILE;

@@ -14,12 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import fsProm from 'fs/promises';
-import childProcess from 'child_process';
-import pacote from 'pacote';
+import fsProm from "fs/promises";
+import childProcess from "child_process";
+import pacote from "pacote";
 
-import HakEnv from './hakEnv';
-import { DependencyInfo } from './dep';
+import HakEnv from "./hakEnv";
+import { DependencyInfo } from "./dep";
 
 export default async function fetch(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
     let haveModuleBuildDir;
@@ -41,15 +41,11 @@ export default async function fetch(hakEnv: HakEnv, moduleInfo: DependencyInfo):
 
     console.log("Running yarn install in " + moduleInfo.moduleBuildDir);
     await new Promise<void>((resolve, reject) => {
-        const proc = childProcess.spawn(
-            hakEnv.isWin() ? 'yarn.cmd' : 'yarn',
-            ['install', '--ignore-scripts'],
-            {
-                stdio: 'inherit',
-                cwd: moduleInfo.moduleBuildDir,
-            },
-        );
-        proc.on('exit', code => {
+        const proc = childProcess.spawn(hakEnv.isWin() ? "yarn.cmd" : "yarn", ["install", "--ignore-scripts"], {
+            stdio: "inherit",
+            cwd: moduleInfo.moduleBuildDir,
+        });
+        proc.on("exit", (code) => {
             code ? reject(code) : resolve();
         });
     });

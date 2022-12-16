@@ -28,22 +28,18 @@ import {
     DownloadItem,
     MenuItemConstructorOptions,
     IpcMainEvent,
-} from 'electron';
-import url from 'url';
-import fs from 'fs';
-import fetch from 'node-fetch';
-import { pipeline } from 'stream';
-import path from 'path';
+} from "electron";
+import url from "url";
+import fs from "fs";
+import fetch from "node-fetch";
+import { pipeline } from "stream";
+import path from "path";
 
-import { _t } from './language-helper';
+import { _t } from "./language-helper";
 
 const MAILTO_PREFIX = "mailto:";
 
-const PERMITTED_URL_SCHEMES: string[] = [
-    'http:',
-    'https:',
-    MAILTO_PREFIX,
-];
+const PERMITTED_URL_SCHEMES: string[] = ["http:", "https:", MAILTO_PREFIX];
 
 function safeOpenURL(target: string): void {
     // openExternal passes the target to open/start/xdg-open,
@@ -70,7 +66,7 @@ function onWindowOrNavigate(ev: Event, target: string): void {
 }
 
 function writeNativeImage(filePath: string, img: NativeImage): Promise<void> {
-    switch (filePath.split('.').pop()?.toLowerCase()) {
+    switch (filePath.split(".").pop()?.toLowerCase()) {
         case "jpg":
         case "jpeg":
             return fs.promises.writeFile(filePath, img.toJPEG(100));
@@ -85,7 +81,7 @@ function writeNativeImage(filePath: string, img: NativeImage): Promise<void> {
 function onLinkContextMenu(ev: Event, params: ContextMenuParams, webContents: WebContents): void {
     let url = params.linkURL || params.srcURL;
 
-    if (url.startsWith('vector://vector/webapp')) {
+    if (url.startsWith("vector://vector/webapp")) {
         // Avoid showing a context menu for app icons
         if (params.hasImageContents) return;
         // Rewrite URL so that it can be used outside of the app
@@ -94,82 +90,90 @@ function onLinkContextMenu(ev: Event, params: ContextMenuParams, webContents: We
 
     const popupMenu = new Menu();
     // No point trying to open blob: URLs in an external browser: it ain't gonna work.
-    if (!url.startsWith('blob:')) {
-        popupMenu.append(new MenuItem({
-            label: url,
-            click(): void {
-                safeOpenURL(url);
-            },
-        }));
+    if (!url.startsWith("blob:")) {
+        popupMenu.append(
+            new MenuItem({
+                label: url,
+                click(): void {
+                    safeOpenURL(url);
+                },
+            }),
+        );
     }
 
     if (params.hasImageContents) {
-        popupMenu.append(new MenuItem({
-            label: _t('Copy image'),
-            accelerator: 'c',
-            click(): void {
-                webContents.copyImageAt(params.x, params.y);
-            },
-        }));
+        popupMenu.append(
+            new MenuItem({
+                label: _t("Copy image"),
+                accelerator: "c",
+                click(): void {
+                    webContents.copyImageAt(params.x, params.y);
+                },
+            }),
+        );
     }
 
     // No point offering to copy a blob: URL either
-    if (!url.startsWith('blob:')) {
+    if (!url.startsWith("blob:")) {
         // Special-case e-mail URLs to strip the `mailto:` like modern browsers do
         if (url.startsWith(MAILTO_PREFIX)) {
-            popupMenu.append(new MenuItem({
-                label: _t('Copy email address'),
-                accelerator: 'a',
-                click(): void {
-                    clipboard.writeText(url.substr(MAILTO_PREFIX.length));
-                },
-            }));
+            popupMenu.append(
+                new MenuItem({
+                    label: _t("Copy email address"),
+                    accelerator: "a",
+                    click(): void {
+                        clipboard.writeText(url.substr(MAILTO_PREFIX.length));
+                    },
+                }),
+            );
         } else {
-            popupMenu.append(new MenuItem({
-                label: params.hasImageContents
-                    ? _t('Copy image address')
-                    : _t('Copy link address'),
-                accelerator: 'a',
-                click(): void {
-                    clipboard.writeText(url);
-                },
-            }));
+            popupMenu.append(
+                new MenuItem({
+                    label: params.hasImageContents ? _t("Copy image address") : _t("Copy link address"),
+                    accelerator: "a",
+                    click(): void {
+                        clipboard.writeText(url);
+                    },
+                }),
+            );
         }
     }
 
     // XXX: We cannot easily save a blob from the main process as
     // only the renderer can resolve them so don't give the user an option to.
-    if (params.hasImageContents && !url.startsWith('blob:')) {
-        popupMenu.append(new MenuItem({
-            label: _t('Save image as...'),
-            accelerator: 's',
-            async click(): Promise<void> {
-                const targetFileName = params.suggestedFilename || params.altText || "image.png";
-                const { filePath } = await dialog.showSaveDialog({
-                    defaultPath: targetFileName,
-                });
-
-                if (!filePath) return; // user cancelled dialog
-
-                try {
-                    if (url.startsWith("data:")) {
-                        await writeNativeImage(filePath, nativeImage.createFromDataURL(url));
-                    } else {
-                        const resp = await fetch(url);
-                        if (!resp.ok) throw new Error(`unexpected response ${resp.statusText}`);
-                        if (!resp.body) throw new Error(`unexpected response has no body ${resp.statusText}`);
-                        pipeline(resp.body, fs.createWriteStream(filePath));
-                    }
-                } catch (err) {
-                    console.error(err);
-                    dialog.showMessageBox({
-                        type: "error",
-                        title: _t("Failed to save image"),
-                        message: _t("The image failed to save"),
+    if (params.hasImageContents && !url.startsWith("blob:")) {
+        popupMenu.append(
+            new MenuItem({
+                label: _t("Save image as..."),
+                accelerator: "s",
+                async click(): Promise<void> {
+                    const targetFileName = params.suggestedFilename || params.altText || "image.png";
+                    const { filePath } = await dialog.showSaveDialog({
+                        defaultPath: targetFileName,
                     });
-                }
-            },
-        }));
+
+                    if (!filePath) return; // user cancelled dialog
+
+                    try {
+                        if (url.startsWith("data:")) {
+                            await writeNativeImage(filePath, nativeImage.createFromDataURL(url));
+                        } else {
+                            const resp = await fetch(url);
+                            if (!resp.ok) throw new Error(`unexpected response ${resp.statusText}`);
+                            if (!resp.body) throw new Error(`unexpected response has no body ${resp.statusText}`);
+                            pipeline(resp.body, fs.createWriteStream(filePath));
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        dialog.showMessageBox({
+                            type: "error",
+                            title: _t("Failed to save image"),
+                            message: _t("The image failed to save"),
+                        });
+                    }
+                },
+            }),
+        );
     }
 
     // popup() requires an options object even for no options
@@ -181,7 +185,7 @@ function cutCopyPasteSelectContextMenus(params: ContextMenuParams): MenuItemCons
     const options: MenuItemConstructorOptions[] = [];
 
     if (params.misspelledWord) {
-        params.dictionarySuggestions.forEach(word => {
+        params.dictionarySuggestions.forEach((word) => {
             options.push({
                 label: word,
                 click: (menuItem, browserWindow) => {
@@ -189,42 +193,52 @@ function cutCopyPasteSelectContextMenus(params: ContextMenuParams): MenuItemCons
                 },
             });
         });
-        options.push({
-            type: 'separator',
-        }, {
-            label: _t('Add to dictionary'),
-            click: (menuItem, browserWindow) => {
-                browserWindow?.webContents.session.addWordToSpellCheckerDictionary(params.misspelledWord);
+        options.push(
+            {
+                type: "separator",
             },
-        }, {
-            type: 'separator',
-        });
+            {
+                label: _t("Add to dictionary"),
+                click: (menuItem, browserWindow) => {
+                    browserWindow?.webContents.session.addWordToSpellCheckerDictionary(params.misspelledWord);
+                },
+            },
+            {
+                type: "separator",
+            },
+        );
     }
 
-    options.push({
-        role: 'cut',
-        label: _t('Cut'),
-        accelerator: 't',
-        enabled: params.editFlags.canCut,
-    }, {
-        role: 'copy',
-        label: _t('Copy'),
-        accelerator: 'c',
-        enabled: params.editFlags.canCopy,
-    }, {
-        role: 'paste',
-        label: _t('Paste'),
-        accelerator: 'p',
-        enabled: params.editFlags.canPaste,
-    }, {
-        role: 'pasteAndMatchStyle',
-        enabled: params.editFlags.canPaste,
-    }, {
-        role: 'selectAll',
-        label: _t("Select All"),
-        accelerator: 'a',
-        enabled: params.editFlags.canSelectAll,
-    });
+    options.push(
+        {
+            role: "cut",
+            label: _t("Cut"),
+            accelerator: "t",
+            enabled: params.editFlags.canCut,
+        },
+        {
+            role: "copy",
+            label: _t("Copy"),
+            accelerator: "c",
+            enabled: params.editFlags.canCopy,
+        },
+        {
+            role: "paste",
+            label: _t("Paste"),
+            accelerator: "p",
+            enabled: params.editFlags.canPaste,
+        },
+        {
+            role: "pasteAndMatchStyle",
+            enabled: params.editFlags.canPaste,
+        },
+        {
+            role: "selectAll",
+            label: _t("Select All"),
+            accelerator: "a",
+            enabled: params.editFlags.canSelectAll,
+        },
+    );
     return options;
 }
 
@@ -239,9 +253,9 @@ function onSelectedContextMenu(ev: Event, params: ContextMenuParams): void {
 
 function onEditableContextMenu(ev: Event, params: ContextMenuParams): void {
     const items: MenuItemConstructorOptions[] = [
-        { role: 'undo' },
-        { role: 'redo', enabled: params.editFlags.canRedo },
-        { type: 'separator' },
+        { role: "undo" },
+        { role: "redo", enabled: params.editFlags.canRedo },
+        { type: "separator" },
         ...cutCopyPasteSelectContextMenus(params),
     ];
 
@@ -254,7 +268,7 @@ function onEditableContextMenu(ev: Event, params: ContextMenuParams): void {
 
 let userDownloadIndex = 0;
 const userDownloadMap = new Map<number, string>(); // Map from id to path
-ipcMain.on('userDownloadAction', function(ev: IpcMainEvent, { id, open = false }) {
+ipcMain.on("userDownloadAction", function (ev: IpcMainEvent, { id, open = false }) {
     const path = userDownloadMap.get(id);
     if (open && path) {
         shell.openPath(path);
@@ -268,12 +282,12 @@ export default (webContents: WebContents): void => {
         return { action: "deny" };
     });
 
-    webContents.on('will-navigate', (ev: Event, target: string): void => {
+    webContents.on("will-navigate", (ev: Event, target: string): void => {
         if (target.startsWith("vector://")) return;
         return onWindowOrNavigate(ev, target);
     });
 
-    webContents.on('context-menu', function(ev: Event, params: ContextMenuParams): void {
+    webContents.on("context-menu", function (ev: Event, params: ContextMenuParams): void {
         if (params.linkURL || params.srcURL) {
             onLinkContextMenu(ev, params, webContents);
         } else if (params.selectionText) {
@@ -283,13 +297,13 @@ export default (webContents: WebContents): void => {
         }
     });
 
-    webContents.session.on('will-download', (event: Event, item: DownloadItem): void => {
-        item.once('done', (event, state) => {
-            if (state === 'completed') {
+    webContents.session.on("will-download", (event: Event, item: DownloadItem): void => {
+        item.once("done", (event, state) => {
+            if (state === "completed") {
                 const savePath = item.getSavePath();
                 const id = userDownloadIndex++;
                 userDownloadMap.set(id, savePath);
-                webContents.send('userDownloadCompleted', {
+                webContents.send("userDownloadCompleted", {
                     id,
                     name: path.basename(savePath),
                 });

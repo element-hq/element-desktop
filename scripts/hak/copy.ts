@@ -14,15 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import path from 'path';
-import fsProm from 'fs/promises';
-import childProcess from 'child_process';
-import rimraf from 'rimraf';
-import glob from 'glob';
-import mkdirp from 'mkdirp';
+import path from "path";
+import fsProm from "fs/promises";
+import childProcess from "child_process";
+import rimraf from "rimraf";
+import glob from "glob";
+import mkdirp from "mkdirp";
 
-import HakEnv from './hakEnv';
-import { DependencyInfo } from './dep';
+import HakEnv from "./hakEnv";
+import { DependencyInfo } from "./dep";
 
 export default async function copy(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
     if (moduleInfo.cfg.prune) {
@@ -34,7 +34,7 @@ export default async function copy(hakEnv: HakEnv, moduleInfo: DependencyInfo): 
             await mkdirp(moduleInfo.moduleOutDir);
             process.chdir(moduleInfo.moduleOutDir);
             await new Promise<void>((resolve, reject) => {
-                rimraf(moduleInfo.cfg.prune, {}, err => {
+                rimraf(moduleInfo.cfg.prune, {}, (err) => {
                     err ? reject(err) : resolve();
                 });
             });
@@ -48,46 +48,44 @@ export default async function copy(hakEnv: HakEnv, moduleInfo: DependencyInfo): 
         // is the same as moduleBuildDirs[0], so we're just listing the contents
         // of the first one.
         const files = await new Promise<string[]>((resolve, reject) => {
-            glob(moduleInfo.cfg.copy, {
-                nosort: true,
-                silent: true,
-                cwd: moduleInfo.moduleBuildDir,
-            }, (err, files) => {
-                err ? reject(err) : resolve(files);
-            });
+            glob(
+                moduleInfo.cfg.copy,
+                {
+                    nosort: true,
+                    silent: true,
+                    cwd: moduleInfo.moduleBuildDir,
+                },
+                (err, files) => {
+                    err ? reject(err) : resolve(files);
+                },
+            );
         });
 
         if (moduleInfo.moduleBuildDirs.length > 1) {
             if (!hakEnv.isMac()) {
                 console.error(
-                    "You asked me to copy multiple targets but I've only been taught " +
-                    "how to do that on macOS.",
+                    "You asked me to copy multiple targets but I've only been taught " + "how to do that on macOS.",
                 );
                 throw new Error("Can't copy multiple targets on this platform");
             }
 
             for (const f of files) {
-                const components = moduleInfo.moduleBuildDirs.map(dir => path.join(dir, f));
+                const components = moduleInfo.moduleBuildDirs.map((dir) => path.join(dir, f));
                 const dst = path.join(moduleInfo.moduleOutDir, f);
 
                 await mkdirp(path.dirname(dst));
                 await new Promise<void>((resolve, reject) => {
-                    childProcess.execFile('lipo',
-                        ['-create', '-output', dst, ...components], (err) => {
-                            if (err) {
-                                reject(err);
-                            } else {
-                                resolve();
-                            }
-                        },
-                    );
+                    childProcess.execFile("lipo", ["-create", "-output", dst, ...components], (err) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve();
+                        }
+                    });
                 });
             }
         } else {
-            console.log(
-                "Copying files from " +
-                moduleInfo.moduleBuildDir + " to " + moduleInfo.moduleOutDir,
-            );
+            console.log("Copying files from " + moduleInfo.moduleBuildDir + " to " + moduleInfo.moduleOutDir);
             for (const f of files) {
                 console.log("\t" + f);
                 const src = path.join(moduleInfo.moduleBuildDir, f);

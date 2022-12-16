@@ -14,20 +14,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import childProcess from 'child_process';
+import childProcess from "child_process";
 
-import HakEnv from '../../scripts/hak/hakEnv';
-import { DependencyInfo } from '../../scripts/hak/dep';
+import HakEnv from "../../scripts/hak/hakEnv";
+import { DependencyInfo } from "../../scripts/hak/dep";
 
-export default async function(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
-    const tools = [['python', '--version']]; // node-gyp uses python for reasons beyond comprehension
+export default async function (hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
+    const tools = [["python", "--version"]]; // node-gyp uses python for reasons beyond comprehension
 
     for (const tool of tools) {
         await new Promise<void>((resolve, reject) => {
             const proc = childProcess.spawn(tool[0], tool.slice(1), {
-                stdio: ['ignore'],
+                stdio: ["ignore"],
             });
-            proc.on('exit', (code) => {
+            proc.on("exit", (code) => {
                 if (code !== 0) {
                     reject("Can't find " + tool);
                 } else {

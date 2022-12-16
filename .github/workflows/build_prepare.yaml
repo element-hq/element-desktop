@@ -1,43 +1,43 @@
 on:
-  workflow_call:
-    inputs:
-      config:
-        type: string
-        required: true
-        description: "The config directory to use"
-      version:
-        type: string
-        required: false
-        description: "The version tag to fetch, or 'develop', will pick automatically if not passed"
+    workflow_call:
+        inputs:
+            config:
+                type: string
+                required: true
+                description: "The config directory to use"
+            version:
+                type: string
+                required: false
+                description: "The version tag to fetch, or 'develop', will pick automatically if not passed"
 jobs:
-  prepare:
-    name: Prepare
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
+    prepare:
+        name: Prepare
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
 
-      - uses: actions/setup-node@v3
-        with:
-          cache: "yarn"
+            - uses: actions/setup-node@v3
+              with:
+                  cache: "yarn"
 
-      - name: Install Deps
-        run: "yarn install --pure-lockfile"
+            - name: Install Deps
+              run: "yarn install --pure-lockfile"
 
-      - name: Fetch Element Web
-        run: yarn run fetch --noverify -d ${{ inputs.config }} ${{ inputs.version }}
+            - name: Fetch Element Web
+              run: yarn run fetch --noverify -d ${{ inputs.config }} ${{ inputs.version }}
 
-      # We split this out to save the build_* scripts having to do it to make use of `hashFiles` in the cache action
-      - name: Generate cache hash files
-        run: |
-          yarn run --silent electron --version > electronVersion
-          cat package.json | jq -c .hakDependencies > hakDependencies.json
+            # We split this out to save the build_* scripts having to do it to make use of `hashFiles` in the cache action
+            - name: Generate cache hash files
+              run: |
+                  yarn run --silent electron --version > electronVersion
+                  cat package.json | jq -c .hakDependencies > hakDependencies.json
 
-      - uses: actions/upload-artifact@v3
-        with:
-          name: webapp
-          retention-days: 1
-          path: |
-            webapp.asar
-            package.json
-            electronVersion
-            hakDependencies.json
+            - uses: actions/upload-artifact@v3
+              with:
+                  name: webapp
+                  retention-days: 1
+                  path: |
+                      webapp.asar
+                      package.json
+                      electronVersion
+                      hakDependencies.json
