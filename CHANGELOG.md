@@ -1,5 +1,5 @@
-Changes in [1.11.17-rc.1](https://github.com/vector-im/element-desktop/releases/tag/v1.11.17-rc.1) (2022-12-14)
-===============================================================================================================
+Changes in [1.11.17](https://github.com/vector-im/element-desktop/releases/tag/v1.11.17) (2022-12-21)
+=====================================================================================================
 
 ## 🚨 BREAKING CHANGES
  * This allows the update server to be entirely static, such as a CDN or object store, as defined at https ([\#461](https://github.com/vector-im/element-desktop/pull/461)).
@@ -22,6 +22,9 @@ Changes in [1.11.17-rc.1](https://github.com/vector-im/element-desktop/releases/
  * Show user an error if we fail to create a DM for verification. ([\#9624](https://github.com/matrix-org/matrix-react-sdk/pull/9624)).
 
 ## 🐛 Bug Fixes
+ * Prevent unnecessary m.direct updates ([\#9805](https://github.com/matrix-org/matrix-react-sdk/pull/9805)). Fixes vector-im/element-web#24059.
+ * Fix checkForPreJoinUISI for thread roots ([\#9803](https://github.com/matrix-org/matrix-react-sdk/pull/9803)). Fixes vector-im/element-web#24054.
+ * Load RTE components only when RTE labs is enabled ([\#9804](https://github.com/matrix-org/matrix-react-sdk/pull/9804)).
  * Fix issue where thread panel did not update correctly ([\#9746](https://github.com/matrix-org/matrix-react-sdk/pull/9746)). Fixes vector-im/element-web#23971.
  * Remove async call to get virtual room from room load ([\#9743](https://github.com/matrix-org/matrix-react-sdk/pull/9743)). Fixes vector-im/element-web#23968.
  * Check each thread for unread messages. ([\#9723](https://github.com/matrix-org/matrix-react-sdk/pull/9723)).
