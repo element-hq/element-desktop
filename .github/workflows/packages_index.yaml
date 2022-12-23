@@ -14,7 +14,7 @@ jobs:
     deploy:
         name: "Deploy"
         runs-on: ubuntu-latest
-        environment: develop
+        environment: packages.element.io
         env:
             R2_BUCKET: "packages-element-io"
             R2_URL: ${{ secrets.CF_R2_S3_API }}
