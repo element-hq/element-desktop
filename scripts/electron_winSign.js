@@ -1,7 +1,8 @@
 const { execFile } = require("child_process");
 
 // Loosely based on computeSignToolArgs from app-builder-lib/src/codeSign/windowsCodeSign.ts
-function computeSignToolArgs(options, keyContainer) {
+// combined with https://www.ssl.com/how-to/how-to-integrate-esigner-cka-with-ci-cd-tools-for-automated-code-signing/
+function computeSignToolArgs(options, keyContainer, eSignerKeyThumbprint) {
     const args = [];
 
     if (process.env.ELECTRON_BUILDER_OFFLINE !== "true") {
@@ -14,17 +15,23 @@ function computeSignToolArgs(options, keyContainer) {
         );
     }
 
-    args.push("/kc", keyContainer);
-    // To use the hardware token (this should probably be less hardcoded)
-    args.push("/csp", "eToken Base Cryptographic Provider");
-    // The certificate file. Somehow this appears to be the only way to specify
-    // the cert that works. If you specify the subject name or hash, it will
-    // say it can't associate the private key to the certificate.
-    // TODO: Find a way to pass this through from the electron-builder config
-    // so we don't have to hard-code this here
-    // fwiw https://stackoverflow.com/questions/17927895/automate-extended-validation-ev-code-signing
-    // is about the most useful resource on automating code signing...
-    args.push("/f", "element.io\\New_Vector_Ltd.pem");
+    if (keyContainer) {
+        args.push("/kc", keyContainer);
+        // To use the hardware token (this should probably be less hardcoded)
+        args.push("/csp", "eToken Base Cryptographic Provider");
+        // The certificate file. Somehow this appears to be the only way to specify
+        // the cert that works. If you specify the subject name or hash, it will
+        // say it can't associate the private key to the certificate.
+        // TODO: Find a way to pass this through from the electron-builder config
+        // so we don't have to hard-code this here
+        // fwiw https://stackoverflow.com/questions/17927895/automate-extended-validation-ev-code-signing
+        // is about the most useful resource on automating code signing...
+        args.push("/f", "element.io\\New_Vector_Ltd.pem");
+    }
+
+    if (eSignerKeyThumbprint) {
+        args.push("/sha1", eSignerKeyThumbprint);
+    }
 
     if (options.hash !== "sha1") {
         args.push("/fd", options.hash);
@@ -49,13 +56,16 @@ function computeSignToolArgs(options, keyContainer) {
 let warned = false;
 exports.default = async function (options) {
     const keyContainer = process.env.SIGNING_KEY_CONTAINER;
-    if (keyContainer === undefined) {
+    const eSignerKeyThumbprint = process.env.SIGNING_KEY_THUMBPRINT;
+
+    if (keyContainer === undefined && eSignerKeyThumbprint === undefined) {
         if (!warned) {
             console.warn(
-                "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n" +
-                    "! Skipping Windows signing.          !\n" +
-                    "! SIGNING_KEY_CONTAINER not defined. !\n" +
-                    "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
+                "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n" +
+                    "!    Skipping Windows signing.     !\n" +
+                    "! Provide SIGNING_KEY_CONTAINER or !\n" +
+                    "! SIGNING_KEY_THUMBPRINT           !\n" +
+                    "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
             );
             warned = true;
         }
@@ -63,7 +73,7 @@ exports.default = async function (options) {
     }
 
     return new Promise((resolve, reject) => {
-        const args = ["sign"].concat(computeSignToolArgs(options, keyContainer));
+        const args = ["sign"].concat(computeSignToolArgs(options, keyContainer, eSignerKeyThumbprint));
 
         execFile("signtool", args, {}, (error, stdout) => {
             if (error) {
