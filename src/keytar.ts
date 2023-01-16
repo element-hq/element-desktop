@@ -19,7 +19,7 @@ import type * as Keytar from "keytar"; // Hak dependency type
 let keytar: typeof Keytar | undefined;
 try {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    keytar = require('keytar');
+    keytar = require("keytar");
 } catch (e) {
     if ((<NodeJS.ErrnoException>e).code === "MODULE_NOT_FOUND") {
         console.log("Keytar isn't installed; secure key storage is disabled.");

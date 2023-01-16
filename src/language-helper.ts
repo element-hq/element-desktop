@@ -16,9 +16,9 @@ limitations under the License.
 
 import counterpart from "counterpart";
 
-import type Store from 'electron-store';
+import type Store from "electron-store";
 
-const FALLBACK_LOCALE = 'en';
+const FALLBACK_LOCALE = "en";
 
 export function _td(text: string): string {
     return text;
@@ -44,11 +44,11 @@ export function _t(text: string, variables: IVariables = {}): string {
     Object.keys(variables).forEach((key) => {
         if (variables[key] === undefined) {
             console.warn("safeCounterpartTranslate called with undefined interpolation name: " + key);
-            variables[key] = 'undefined';
+            variables[key] = "undefined";
         }
         if (variables[key] === null) {
             console.warn("safeCounterpartTranslate called with null interpolation name: " + key);
-            variables[key] = 'null';
+            variables[key] = "null";
         }
     });
     let translated = counterpart.translate(text, variables);
@@ -71,10 +71,10 @@ export class AppLocalization {
     private readonly store: TypedStore;
     private readonly localizedComponents?: Set<Component>;
 
-    public constructor({ store, components = [] }: { store: TypedStore, components: Component[] }) {
+    public constructor({ store, components = [] }: { store: TypedStore; components: Component[] }) {
         counterpart.registerTranslations(FALLBACK_LOCALE, this.fetchTranslationJson("en_EN"));
         counterpart.setFallbackLocale(FALLBACK_LOCALE);
-        counterpart.setSeparator('|');
+        counterpart.setSeparator("|");
 
         if (Array.isArray(components)) {
             this.localizedComponents = new Set(components);
@@ -119,7 +119,7 @@ export class AppLocalization {
             locales = [locales];
         }
 
-        const loadedLocales = locales.filter(locale => {
+        const loadedLocales = locales.filter((locale) => {
             const translations = this.fetchTranslationJson(locale);
             if (translations !== null) {
                 counterpart.registerTranslations(locale, translations);
@@ -135,7 +135,7 @@ export class AppLocalization {
 
     public resetLocalizedUI(): void {
         console.log("Resetting the UI components after locale change");
-        this.localizedComponents?.forEach(componentSetup => {
+        this.localizedComponents?.forEach((componentSetup) => {
             if (typeof componentSetup === "function") {
                 componentSetup();
             }

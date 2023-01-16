@@ -2,135 +2,135 @@
 # Due to this extra care must be taken to only ever run all build_* scripts against the same branch to ensure
 # the correct cache scoping, and additional care must be taken to not run untrusted actions on the develop branch.
 on:
-  workflow_call:
-    secrets:
-      APPLE_ID:
-        required: false
-      APPLE_ID_PASSWORD:
-        required: false
-      APPLE_TEAM_ID:
-        required: false
-      APPLE_CSC_KEY_PASSWORD:
-        required: false
-      APPLE_CSC_LINK:
-        required: false
+    workflow_call:
+        secrets:
+            APPLE_ID:
+                required: false
+            APPLE_ID_PASSWORD:
+                required: false
+            APPLE_TEAM_ID:
+                required: false
+            APPLE_CSC_KEY_PASSWORD:
+                required: false
+            APPLE_CSC_LINK:
+                required: false
     inputs:
-      version:
-        type: string
-        required: false
-        description: "Version string to override the one in package.json, used for non-release builds"
-      sign:
-        type: string
-        required: false
-        description: "Whether to sign & notarise the build, requires 'develop' environment"
-      deploy-mode:
-        type: string
-        required: false
-        description: "Whether to arrange artifacts in the arrangement needed for deployment, skipping unrelated ones"
-      base-url:
-        type: string
-        required: false
-        description: "The URL to which the output will be deployed, required if deploy-mode is enabled."
+        version:
+            type: string
+            required: false
+            description: "Version string to override the one in package.json, used for non-release builds"
+        sign:
+            type: string
+            required: false
+            description: "Whether to sign & notarise the build, requires 'develop' environment"
+        deploy-mode:
+            type: string
+            required: false
+            description: "Whether to arrange artifacts in the arrangement needed for deployment, skipping unrelated ones"
+        base-url:
+            type: string
+            required: false
+            description: "The URL to which the output will be deployed, required if deploy-mode is enabled."
 jobs:
-  build:
-    runs-on: macos-latest
-    environment: ${{ inputs.sign && 'packages.element.io' || '' }}
-    steps:
-      - uses: actions/checkout@v3
+    build:
+        runs-on: macos-latest
+        environment: ${{ inputs.sign && 'packages.element.io' || '' }}
+        steps:
+            - uses: actions/checkout@v3
 
-      - uses: actions/download-artifact@v3
-        with:
-          name: webapp
+            - uses: actions/download-artifact@v3
+              with:
+                  name: webapp
 
-      - name: Cache .hak
-        id: cache
-        uses: actions/cache@v3
-        with:
-          key: ${{ runner.os }}-${{ hashFiles('hakDependencies.json', 'electronVersion') }}
-          path: |
-            ./.hak
+            - name: Cache .hak
+              id: cache
+              uses: actions/cache@v3
+              with:
+                  key: ${{ runner.os }}-${{ hashFiles('hakDependencies.json', 'electronVersion') }}
+                  path: |
+                      ./.hak
 
-      - name: Install Rust
-        if: steps.cache.outputs.cache-hit != 'true'
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          target: aarch64-apple-darwin
+            - name: Install Rust
+              if: steps.cache.outputs.cache-hit != 'true'
+              uses: actions-rs/toolchain@v1
+              with:
+                  toolchain: stable
+                  target: aarch64-apple-darwin
 
-      - uses: actions/setup-node@v3
-        with:
-          cache: "yarn"
+            - uses: actions/setup-node@v3
+              with:
+                  cache: "yarn"
 
-      # Does not need branch matching as only analyses this layer
-      - name: Install Deps
-        run: "yarn install --pure-lockfile"
+            # Does not need branch matching as only analyses this layer
+            - name: Install Deps
+              run: "yarn install --pure-lockfile"
 
-      - name: Build Natives
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: "yarn build:native:universal"
+            - name: Build Natives
+              if: steps.cache.outputs.cache-hit != 'true'
+              run: "yarn build:native:universal"
 
-      - name: '[Nightly] Generate build config'
-        if: inputs.version
-        run: scripts/generate-builder-config.ts --nightly "${{ inputs.version }}"
+            - name: '[Nightly] Generate build config'
+              if: inputs.version
+              run: scripts/generate-builder-config.ts --nightly "${{ inputs.version }}"
 
-      - name: '[Release] Generate build config'
-        if: inputs.version == ''
-        run: scripts/generate-builder-config.ts
+            - name: '[Release] Generate build config'
+              if: inputs.version == ''
+              run: scripts/generate-builder-config.ts
 
-      - name: Build App
-        run: "yarn build:universal --publish never --config electron-builder.json"
-        env:
-          NOTARIZE_APPLE_ID: ${{ secrets.APPLE_ID }}
-          NOTARIZE_APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
-          NOTARIZE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-          CSC_KEY_PASSWORD: ${{ secrets.APPLE_CSC_KEY_PASSWORD }}
-          CSC_LINK: ${{ secrets.APPLE_CSC_LINK }}
+            - name: Build App
+              run: "yarn build:universal --publish never --config electron-builder.json"
+              env:
+                  NOTARIZE_APPLE_ID: ${{ secrets.APPLE_ID }}
+                  NOTARIZE_APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+                  NOTARIZE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+                  CSC_KEY_PASSWORD: ${{ secrets.APPLE_CSC_KEY_PASSWORD }}
+                  CSC_LINK: ${{ secrets.APPLE_CSC_LINK }}
 
-      - name: Prepare artifacts for deployment
-        if: inputs.deploy-mode
-        run: |
-          mv dist _dist
-          mkdir -p dist/install/macos dist/update/macos
-          mv _dist/*-mac.zip dist/update/macos/
-          mv _dist/*.dmg dist/install/macos/
+            - name: Prepare artifacts for deployment
+              if: inputs.deploy-mode
+              run: |
+                  mv dist _dist
+                  mkdir -p dist/install/macos dist/update/macos
+                  mv _dist/*-mac.zip dist/update/macos/
+                  mv _dist/*.dmg dist/install/macos/
+        
+                  PKG_JSON_VERSION=$(cat package.json | jq -r .version)
+                  LATEST=$(find dist -type f -iname "*-mac.zip" | xargs -0 -n1 -- basename)
+                  URL="${{ inputs.base-url }}/update/macos/$LATEST"
+        
+                  jq -n --arg version "${VERSION:-$PKG_JSON_VERSION}" --arg url "$URL" '
+                    {
+                      currentRelease: $version,
+                      releases: [{
+                        version: $version,
+                        updateTo: {
+                          version: $version,
+                          url: $url,
+                        },
+                      }],
+                    }
+                  ' > dist/update/macos/releases.json
+                  jq -n --arg version "${VERSION:-$PKG_JSON_VERSION}" --arg url "$URL" '
+                    { url: $url }
+                  ' > dist/update/macos/releases-legacy.json
+              env:
+                  VERSION: ${{ inputs.version }}
 
-          PKG_JSON_VERSION=$(cat package.json | jq -r .version)
-          LATEST=$(find dist -type f -iname "*-mac.zip" | xargs -0 -n1 -- basename)
-          URL="${{ inputs.base-url }}/update/macos/$LATEST"
+            # We don't wish to store the installer for every nightly ever, so we only keep the latest
+            - name: '[Nightly] Strip version from installer file'
+              if: inputs.deploy-mode && inputs.version
+              run: |
+                  mv dist/install/macos/*.dmg "dist/install/macos/Element Nightly.dmg"
 
-          jq -n --arg version "${VERSION:-$PKG_JSON_VERSION}" --arg url "$URL" '
-            {
-              currentRelease: $version,
-              releases: [{
-                version: $version,
-                updateTo: {
-                  version: $version,
-                  url: $url,
-                },
-              }],
-            }
-          ' > dist/update/macos/releases.json
-          jq -n --arg version "${VERSION:-$PKG_JSON_VERSION}" --arg url "$URL" '
-            { url: $url }
-          ' > dist/update/macos/releases-legacy.json
-        env:
-          VERSION: ${{ inputs.version }}
+            - name: '[Release] Prepare release latest symlink'
+              if: inputs.deploy-mode && inputs.version == ''
+              run: |
+                  LATEST=$(find dist -type f -iname "*.dmg" | xargs -0 -n1 -- basename)
+                  ln -s "dist/install/macos/$LATEST" dist/install/macos/Element.dmg
 
-      # We don't wish to store the installer for every nightly ever, so we only keep the latest
-      - name: '[Nightly] Strip version from installer file'
-        if: inputs.deploy-mode && inputs.version
-        run: |
-          mv dist/install/macos/*.dmg "dist/install/macos/Element Nightly.dmg"
-
-      - name: '[Release] Prepare release latest symlink'
-        if: inputs.deploy-mode && inputs.version == ''
-        run: |
-          LATEST=$(find dist -type f -iname "*.dmg" | xargs -0 -n1 -- basename)
-          ln -s "dist/install/macos/$LATEST" dist/install/macos/Element.dmg
-
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ inputs.deploy-mode && 'packages.element.io' || 'macos' }}
-          path: dist
-          retention-days: 1
+            - name: Upload Artifacts
+              uses: actions/upload-artifact@v3
+              with:
+                  name: ${{ inputs.deploy-mode && 'packages.element.io' || 'macos' }}
+                  path: dist
+                  retention-days: 1

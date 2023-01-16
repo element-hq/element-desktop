@@ -2,92 +2,92 @@
 # Due to this extra care must be taken to only ever run all build_* scripts against the same branch to ensure
 # the correct cache scoping, and additional care must be taken to not run untrusted actions on the develop branch.
 on:
-  workflow_call:
-    inputs:
-      arch:
-        type: string
-        required: true
-        description: "The architecture to build for, one of 'x64' | 'x86'"
+    workflow_call:
+        inputs:
+            arch:
+                type: string
+                required: true
+                description: "The architecture to build for, one of 'x64' | 'x86'"
 jobs:
-  build:
-    runs-on: windows-latest
-    steps:
-      - uses: kanga333/variable-mapper@master
-        id: config
-        with:
-          key: "${{ inputs.arch }}"
-          export_to: output
-          map: |
-            {
-              "x64": {
-                "target": "x86_64-pc-windows-msvc"
-              },
-              "x86": {
-                "target": "i686-pc-windows-msvc",
-                "build-args": "--ia32"
-              }
-            }
+    build:
+        runs-on: windows-latest
+        steps:
+            - uses: kanga333/variable-mapper@master
+              id: config
+              with:
+                  key: "${{ inputs.arch }}"
+                  export_to: output
+                  map: |
+                      {
+                        "x64": {
+                          "target": "x86_64-pc-windows-msvc"
+                        },
+                        "x86": {
+                          "target": "i686-pc-windows-msvc",
+                          "build-args": "--ia32"
+                        }
+                      }
 
-      - uses: actions/checkout@v3
+            - uses: actions/checkout@v3
 
-      - uses: actions/download-artifact@v3
-        with:
-          name: webapp
+            - uses: actions/download-artifact@v3
+              with:
+                  name: webapp
 
-      - name: Cache .hak
-        id: cache
-        uses: actions/cache@v3
-        with:
-          key: ${{ runner.os }}-${{ hashFiles('hakDependencies.json', 'electronVersion') }}
-          path: |
-            ./.hak
+            - name: Cache .hak
+              id: cache
+              uses: actions/cache@v3
+              with:
+                  key: ${{ runner.os }}-${{ hashFiles('hakDependencies.json', 'electronVersion') }}
+                  path: |
+                      ./.hak
 
-      - name: Set up build tools
-        uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: ${{ inputs.arch }}
+            - name: Set up build tools
+              uses: ilammy/msvc-dev-cmd@v1
+              with:
+                  arch: ${{ inputs.arch }}
 
-      # ActiveTCL package on choco is from 2015,
-      # this one is newer but includes more than we need
-      - name: Choco install tclsh
-        shell: pwsh
-        run: |
-          choco install -y magicsplat-tcl-tk --no-progress
-          echo "${HOME}/AppData/Local/Apps/Tcl86/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+            # ActiveTCL package on choco is from 2015,
+            # this one is newer but includes more than we need
+            - name: Choco install tclsh
+              shell: pwsh
+              run: |
+                  choco install -y magicsplat-tcl-tk --no-progress
+                  echo "${HOME}/AppData/Local/Apps/Tcl86/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
-      - name: Choco install NetWide Assembler
-        shell: pwsh
-        run: |
-          choco install -y nasm --no-progress
-          echo "C:/Program Files/NASM" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+            - name: Choco install NetWide Assembler
+              shell: pwsh
+              run: |
+                  choco install -y nasm --no-progress
+                  echo "C:/Program Files/NASM" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
-      - name: Install Rust
-        if: steps.cache.outputs.cache-hit != 'true'
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          target: ${{ steps.config.outputs.target }}
+            - name: Install Rust
+              if: steps.cache.outputs.cache-hit != 'true'
+              uses: actions-rs/toolchain@v1
+              with:
+                  toolchain: stable
+                  target: ${{ steps.config.outputs.target }}
 
-      - uses: actions/setup-node@v3
-        with:
-          cache: "yarn"
+            - uses: actions/setup-node@v3
+              with:
+                  cache: "yarn"
 
-      # Does not need branch matching as only analyses this layer
-      - name: Install Deps
-        run: "yarn install --pure-lockfile"
+            # Does not need branch matching as only analyses this layer
+            - name: Install Deps
+              run: "yarn install --pure-lockfile"
 
-      - name: Build Natives
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: |
-          refreshenv
-          yarn build:native --target ${{ steps.config.outputs.target }}
+            - name: Build Natives
+              if: steps.cache.outputs.cache-hit != 'true'
+              run: |
+                  refreshenv
+                  yarn build:native --target ${{ steps.config.outputs.target }}
 
-      - name: Build App
-        run: "yarn build --publish never -w ${{ steps.config.outputs.build-args }}"
+            - name: Build App
+              run: "yarn build --publish never -w ${{ steps.config.outputs.build-args }}"
 
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: win-${{ inputs.arch }}
-          path: dist
-          retention-days: 1
+            - name: Upload Artifacts
+              uses: actions/upload-artifact@v3
+              with:
+                  name: win-${{ inputs.arch }}
+                  path: dist
+                  retention-days: 1

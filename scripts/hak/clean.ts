@@ -14,11 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import path from 'path';
-import rimraf from 'rimraf';
+import path from "path";
+import rimraf from "rimraf";
 
-import { DependencyInfo } from './dep';
-import HakEnv from './hakEnv';
+import { DependencyInfo } from "./dep";
+import HakEnv from "./hakEnv";
 
 export default async function clean(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
     await new Promise<void>((resolve, reject) => {
@@ -32,7 +32,7 @@ export default async function clean(hakEnv: HakEnv, moduleInfo: DependencyInfo):
     });
 
     await new Promise<void>((resolve, reject) => {
-        rimraf(path.join(hakEnv.dotHakDir, 'links', moduleInfo.name), (err?: Error | null) => {
+        rimraf(path.join(hakEnv.dotHakDir, "links", moduleInfo.name), (err?: Error | null) => {
             if (err) {
                 reject(err);
             } else {
@@ -42,7 +42,7 @@ export default async function clean(hakEnv: HakEnv, moduleInfo: DependencyInfo):
     });
 
     await new Promise<void>((resolve, reject) => {
-        rimraf(path.join(hakEnv.projectRoot, 'node_modules', moduleInfo.name), (err?: Error | null) => {
+        rimraf(path.join(hakEnv.projectRoot, "node_modules", moduleInfo.name), (err?: Error | null) => {
             if (err) {
                 reject(err);
             } else {

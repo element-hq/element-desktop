@@ -50,5 +50,5 @@ declare module "keytar" {
      *
      * @returns A promise for the array of found credentials.
      */
-    export function findCredentials(service: string): Promise<Array<{ account: string, password: string}>>;
+    export function findCredentials(service: string): Promise<Array<{ account: string; password: string }>>;
 }

@@ -1,8 +1,8 @@
 name: Build and Test
 on:
-  pull_request: { }
+  pull_request: {}
   push:
-    branches: [ develop, staging, master ]
+    branches: [develop, staging, master]
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -19,7 +19,7 @@ jobs:
     uses: ./.github/workflows/build_windows.yaml
     strategy:
       matrix:
-        arch: [ x64, x86 ]
+        arch: [x64, x86]
     with:
       arch: ${{ matrix.arch }}
 
@@ -29,7 +29,7 @@ jobs:
     uses: ./.github/workflows/build_linux.yaml
     strategy:
       matrix:
-        sqlcipher: [ system, static ]
+        sqlcipher: [system, static]
     with:
       sqlcipher: ${{ matrix.sqlcipher }}
 
@@ -46,18 +46,17 @@ jobs:
     strategy:
       matrix:
         include:
-# Disable macOS tests for now, they fail to run in CI, needs investigation.
-#          - name: macOS Universal
-#            os: macos
-#            artifact: macos
-#            executable: "./dist/mac-universal/Element.app/Contents/MacOS/Element"
-#            prepare_cmd: "chmod +x ./dist/mac-universal/Element.app/Contents/MacOS/Element"
-          - name: 'Linux (sqlcipher: system)'
+          - name: macOS Universal
+            os: macos
+            artifact: macos
+            executable: "./dist/mac-universal/Element.app/Contents/MacOS/Element"
+            prepare_cmd: "find ./dist/mac-universal/Element.app -type f | perl -lne 'print if -B' | tr '\\n' '\\0' | xargs -0 -n1 chmod 755"
+          - name: "Linux (sqlcipher: system)"
             os: ubuntu
             artifact: linux-sqlcipher-system
             executable: "element-desktop"
             prepare_cmd: "sudo apt install ./dist/*.deb"
-          - name: 'Linux (sqlcipher: static)'
+          - name: "Linux (sqlcipher: static)"
             os: ubuntu
             artifact: linux-sqlcipher-static
             executable: "element-desktop"
@@ -101,6 +100,7 @@ jobs:
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
+        if: always()
         with:
           name: ${{ matrix.artifact }}
           path: test_artifacts

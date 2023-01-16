@@ -5,13 +5,16 @@
  * hosted on GitHub, https://GitHub.com/Naereen/Nginx-Fancyindex-Theme
  */
 
-@import url('./fonts/inter.css');
+@import url("./fonts/inter.css");
 
-* { font-family: 'Inter', sans-serif; }
-@supports (font-variation-settings: normal) {
-    * { font-family: 'Inter var', sans-serif; }
+* {
+    font-family: "Inter", sans-serif;
 }
-
+@supports (font-variation-settings: normal) {
+    * {
+        font-family: "Inter var", sans-serif;
+    }
+}
 
 * {
     margin: 0;
@@ -22,14 +25,14 @@
 }
 
 html {
-    color: #17191C;
+    color: #17191c;
     font-weight: 400;
     font-size: 1em;
     line-height: 1.6em;
 }
 
 body {
-    background-color: #F4F6FA;
+    background-color: #f4f6fa;
     margin: 0 auto;
     padding: 100px 20px 20px;
     max-width: 800px;
@@ -52,9 +55,11 @@ a {
     text-decoration: underline;
 }
 a:hover {
-    color: #0DBD8B;
+    color: #0dbd8b;
 }
-a.clear, a.clear:link, a.clear:visited {
+a.clear,
+a.clear:link,
+a.clear:visited {
     color: #666;
     padding: 2px 0;
     font-weight: 400;
@@ -74,7 +79,7 @@ a.clear, a.clear:link, a.clear:visited {
 input {
     vertical-align: middle;
     *overflow: visible;
-    font-family: 'Open Sans', sans-serif;
+    font-family: "Open Sans", sans-serif;
     font-weight: 300;
     display: inline-block;
     height: 20px;
@@ -89,20 +94,20 @@ input {
     width: 196px;
     background-color: #fff;
     border: 1px solid #ccc;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
-    -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
-    box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
-    -webkit-transition: border linear .2s,box-shadow linear .2s;
-    -moz-transition: border linear .2s,box-shadow linear .2s;
-    -o-transition: border linear .2s,box-shadow linear .2s;
-    transition: border linear .2s,box-shadow linear .2s;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
+    -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
+    -o-transition: border linear 0.2s, box-shadow linear 0.2s;
+    transition: border linear 0.2s, box-shadow linear 0.2s;
 }
 input:focus {
     outline: 0;
-    border-color: rgba(0,0,0,0.8);
-    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(0,0,0,0.6);
-    -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(0,0,0,0.6);
-    box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(0,0,0,0.6);
+    border-color: rgba(0, 0, 0, 0.8);
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(0, 0, 0, 0.6);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(0, 0, 0, 0.6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(0, 0, 0, 0.6);
 }
 input::-moz-focus-inner {
     padding: 0;
@@ -128,13 +133,12 @@ tr td:first-of-type {
     padding-right: 10px;
 }
 tr.parent a {
-    color: #9099A3;
+    color: #9099a3;
 }
 
 th {
-
     text-align: left;
-    font-size: .75em;
+    font-size: 0.75em;
     padding-right: 20px;
 }
 th + th {
@@ -157,7 +161,8 @@ td {
     -o-transition: background 300ms ease-in;
     transition: background 300ms ease-in;
 }
-td:last-child,th:last-child {
+td:last-child,
+th:last-child {
     text-align: right;
     padding-right: 0;
 }
@@ -187,11 +192,11 @@ td a {
     padding: 0;
     list-style: none;
     overflow: hidden;
-    background-color: #FFF;
+    background-color: #fff;
 }
 
 .nav li a {
-    color: #17191C;
+    color: #17191c;
     display: block;
     padding: 20px 20px;
     text-decoration: none;
@@ -199,7 +204,7 @@ td a {
 
 .nav li a:hover,
 .nav .menu-btn:hover {
-    color: #0DBD8B;
+    color: #0dbd8b;
 }
 
 .nav .logo {
@@ -216,7 +221,7 @@ td a {
 .nav .menu {
     clear: both;
     max-height: 0;
-    transition: max-height .2s ease-out;
+    transition: max-height 0.2s ease-out;
 }
 
 /* menu icon */
@@ -237,18 +242,18 @@ td a {
     margin-top: 6px;
     margin-bottom: 4px;
     position: relative;
-    transition: background .2s ease-out;
+    transition: background 0.2s ease-out;
     width: 18px;
 }
 
 .nav .menu-icon .navicon:before,
 .nav .menu-icon .navicon:after {
-    background: #17191C;
-    content: '';
+    background: #17191c;
+    content: "";
     display: block;
     height: 100%;
     position: absolute;
-    transition: all .2s ease-out;
+    transition: all 0.2s ease-out;
     width: 100%;
 }
 
@@ -303,13 +308,13 @@ td a {
         margin-left: 20px;
         padding: 12px 20px;
         border-radius: 100px;
-        background-color: #0DBD8B;
-        color:#FFF;
+        background-color: #0dbd8b;
+        color: #fff;
     }
 
     .nav .primary:hover {
         background-color: #099970;
-        color:#FFF;
+        color: #fff;
     }
 
     .nav .menu {
@@ -324,10 +329,10 @@ td a {
 
 footer {
     margin-top: 40px;
-    font-size:0.8em;
-    text-align:center;
+    font-size: 0.8em;
+    text-align: center;
 }
 
 footer a {
-    color:#03b381;
+    color: #03b381;
 }
