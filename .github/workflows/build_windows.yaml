@@ -112,7 +112,8 @@ jobs:
                   Expand-Archive -Force eSigner_CKA_1.0.3.zip
                   Remove-Item eSigner_CKA_1.0.3.zip
                   Move-Item -Destination “eSigner_CKA_1.0.3.exe” -Path “eSigner_CKA_1.0.3\SSL.COM eSigner CKA_1.0.3.exe”
-                  New-Item -ItemType Directory -Force -Path ${{ env.INSTALL_DIR }} ./eSigner_CKA_1.0.3.exe /CURRENTUSER /VERYSILENT /SUPPRESSMSGBOXES /DIR=”${{ env.INSTALL_DIR }}” | Out-Null
+                  New-Item -ItemType Directory -Force -Path ${{ env.INSTALL_DIR }}
+                  ./eSigner_CKA_1.0.3.exe /CURRENTUSER /VERYSILENT /SUPPRESSMSGBOXES /DIR=”${{ env.INSTALL_DIR }}” | Out-Null
                   
                   # Configure
                   ${{ env.INSTALL_DIR }}/eSignerCKATool.exe config -mode “${{ env.MODE }}” -user “${{ secrets.ESIGNER_USER_NAME }}” -pass “${{ secrets.ESIGNER_USER_PASSWORD }}” -totp “${{ secrets.ESIGNER_USER_TOTP }}” -key “${{ env.MASTER_KEY_FILE }}” -r
