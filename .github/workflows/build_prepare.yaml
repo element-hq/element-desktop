@@ -24,10 +24,10 @@ on:
             # Required if `calculate-nightly-versions` is set
             CF_R2_S3_API:
                 required: false
-    outputs:
-        macos-version:
-            description: "The version string the next macOS Nightly should use, only output for calculate-nightly-versions"
-            value: ${{ jobs.prepare.outputs.macos-version }}
+        outputs:
+            macos-version:
+                description: "The version string the next macOS Nightly should use, only output for calculate-nightly-versions"
+                value: ${{ jobs.prepare.outputs.macos-version }}
 jobs:
     prepare:
         name: Prepare
