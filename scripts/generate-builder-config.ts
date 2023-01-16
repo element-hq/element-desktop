@@ -125,7 +125,7 @@ async function main(): Promise<number | void> {
 
 main().then((ret) => {
     process.exit(ret!);
-}).catch(e => {
+}).catch((e) => {
     console.error(e);
     process.exit(1);
 });
