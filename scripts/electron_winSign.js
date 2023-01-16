@@ -58,7 +58,7 @@ exports.default = async function (options) {
     const keyContainer = process.env.SIGNING_KEY_CONTAINER;
     const eSignerKeyThumbprint = process.env.SIGNING_KEY_THUMBPRINT;
 
-    if (keyContainer === undefined && eSignerKeyThumbprint === undefined) {
+    if (!keyContainer && !eSignerKeyThumbprint) {
         if (!warned) {
             console.warn(
                 "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n" +
