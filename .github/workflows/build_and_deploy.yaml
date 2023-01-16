@@ -1,8 +1,5 @@
 name: Build and Deploy
 on:
-  # XXX: REMOVE BEFORE PR LANDS
-  push:
-    branches: [ t3chguy/notarize1 ]
   # Nightly build
   schedule:
     - cron: '0 9 * * *'
