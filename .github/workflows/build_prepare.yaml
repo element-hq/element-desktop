@@ -28,13 +28,21 @@ on:
             macos-version:
                 description: "The version string the next macOS Nightly should use, only output for calculate-nightly-versions"
                 value: ${{ jobs.prepare.outputs.macos-version }}
+            win32-x64-version:
+                description: "The version string the next Windows x64 Nightly should use, only output for calculate-nightly-versions"
+                value: ${{ jobs.prepare.outputs.win32-x64-version }}
+            win32-x86-version:
+                description: "The version string the next Windows x86 Nightly should use, only output for calculate-nightly-versions"
+                value: ${{ jobs.prepare.outputs.win32-x86-version }}
 jobs:
     prepare:
         name: Prepare
         environment: ${{ inputs.calculate-nightly-versions && 'packages.element.io' || '' }}
         runs-on: ubuntu-latest
         outputs:
-            macos-version: ${{ steps.macos.outputs.version }}
+            macos-version: ${{ steps.versions.outputs.macos }}
+            win32-x64-version: ${{ steps.macos.outputs.win_x64 }}
+            win32-x86-version: ${{ steps.macos.outputs.win_x86 }}
         steps:
             - uses: actions/checkout@v3
 
@@ -64,12 +72,17 @@ jobs:
                       electronVersion
                       hakDependencies.json
 
-            - name: Calculate macOS Nightly version
-              id: macos
+            - name: Calculate Nightly version
+              id: versions
               if: inputs.calculate-nightly-versions
               run: |
-                  LATEST=$(aws s3 cp s3://$R2_BUCKET/nightly/update/macos/releases.json - --endpoint-url $R2_URL --region auto | jq -r .currentRelease)
-                  echo "version=$(scripts/generate-nightly-version.ts --latest $LATEST)" >> $GITHUB_OUTPUT
+                  MACOS=$(aws s3 cp s3://$R2_BUCKET/nightly/update/macos/releases.json - --endpoint-url $R2_URL --region auto | jq -r .currentRelease)
+                  echo "macos=$(scripts/generate-nightly-version.ts --latest $MACOS)" >> $GITHUB_OUTPUT
+                  
+                  WINx64=$(aws s3 cp s3://$R2_BUCKET/nightly/update/win32/x64/RELEASES - --endpoint-url $R2_URL --region auto | awk '{print $2}' | cut -d "-" -f 5 | cut -c 8-)
+                  echo "win_x64=$(scripts/generate-nightly-version.ts --latest $WINx64)" >> $GITHUB_OUTPUT
+                  WINx86=$(aws s3 cp s3://$R2_BUCKET/nightly/update/win32/ia32/RELEASES - --endpoint-url $R2_URL --region auto | awk '{print $2}' | cut -d "-" -f 5 | cut -c 8-)
+                  echo "win_x86=$(scripts/generate-nightly-version.ts --latest $WINx86)" >> $GITHUB_OUTPUT
               env:
                   AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}

@@ -1,5 +1,7 @@
 name: Build and Deploy
 on:
+  # XXX: REMOVE THIS BEFORE MERGING
+  push: [t3chguy/ci-sign-windows]
   # Nightly build
   schedule:
     - cron: '0 9 * * *'
@@ -41,6 +43,24 @@ jobs:
       CF_R2_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
       CF_R2_TOKEN: ${{ secrets.CF_R2_TOKEN }}
       CF_R2_S3_API: ${{ secrets.CF_R2_S3_API }}
+
+  windows:
+    needs: prepare
+    name: Windows
+    uses: ./.github/workflows/build_windows.yaml
+    secrets: inherit
+    strategy:
+      matrix:
+        includes:
+          - arch: x64
+            version: ${{ needs.prepare.outputs.win32-x64-version }}
+          - arch: x86
+            version: ${{ needs.prepare.outputs.win32-x86-version }}
+    with:
+      sign: true
+      deploy-mode: true
+      arch: ${{ matrix.arch }}
+      version: ${{ matrix.version }}
 
   macos:
     needs: prepare
