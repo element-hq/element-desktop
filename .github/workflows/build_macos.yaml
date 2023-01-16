@@ -14,23 +14,23 @@ on:
                 required: false
             APPLE_CSC_LINK:
                 required: false
-    inputs:
-        version:
-            type: string
-            required: false
-            description: "Version string to override the one in package.json, used for non-release builds"
-        sign:
-            type: string
-            required: false
-            description: "Whether to sign & notarise the build, requires 'develop' environment"
-        deploy-mode:
-            type: string
-            required: false
-            description: "Whether to arrange artifacts in the arrangement needed for deployment, skipping unrelated ones"
-        base-url:
-            type: string
-            required: false
-            description: "The URL to which the output will be deployed, required if deploy-mode is enabled."
+        inputs:
+            version:
+                type: string
+                required: false
+                description: "Version string to override the one in package.json, used for non-release builds"
+            sign:
+                type: string
+                required: false
+                description: "Whether to sign & notarise the build, requires 'develop' environment"
+            deploy-mode:
+                type: string
+                required: false
+                description: "Whether to arrange artifacts in the arrangement needed for deployment, skipping unrelated ones"
+            base-url:
+                type: string
+                required: false
+                description: "The URL to which the output will be deployed, required if deploy-mode is enabled."
 jobs:
     build:
         runs-on: macos-latest

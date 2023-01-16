@@ -14,16 +14,16 @@ on:
                 type: string
                 required: false
                 description: "Whether to calculate the version strings new Nightly builds should use"
-    secrets:
-        # Required if `calculate-nightly-versions` is set
-        CF_R2_ACCESS_KEY_ID:
-            required: false
-        # Required if `calculate-nightly-versions` is set
-        CF_R2_TOKEN:
-            required: false
-        # Required if `calculate-nightly-versions` is set
-        CF_R2_S3_API:
-            required: false
+        secrets:
+            # Required if `calculate-nightly-versions` is set
+            CF_R2_ACCESS_KEY_ID:
+                required: false
+            # Required if `calculate-nightly-versions` is set
+            CF_R2_TOKEN:
+                required: false
+            # Required if `calculate-nightly-versions` is set
+            CF_R2_S3_API:
+                required: false
     outputs:
         macos-version:
             description: "The version string the next macOS Nightly should use, only output for calculate-nightly-versions"
