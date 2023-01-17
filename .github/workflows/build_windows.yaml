@@ -146,7 +146,7 @@ jobs:
             - name: Test signing
               run: |
                   .\signtool.exe sign /tr http://ts.ssl.com /fd sha256 /td sha256 /sha1 EE21E4B9A97234B5FCFA34D2E06AA527933BB512 /debug .\dist\win-unpacked\Element.exe
-              working-directory: "C:\Program Files (x86)\Windows Kits\10\bin\10.0.22000.0\x86"
+              working-directory: "C:/Program Files (x86)/Windows Kits/10/bin/10.0.22000.0/x86"
 
             - name: Prepare artifacts for deployment
               if: inputs.deploy-mode
