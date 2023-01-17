@@ -64,6 +64,7 @@ jobs:
             version: ${{ matrix.version }}
 
     macos:
+        if: inputs.macos
         needs: prepare
         name: macOS
         uses: ./.github/workflows/build_macos.yaml
