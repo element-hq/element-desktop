@@ -52,7 +52,7 @@ jobs:
         secrets: inherit
         strategy:
             matrix:
-                includes:
+                include:
                     - arch: x64
                       version: ${{ needs.prepare.outputs.win32-x64-version }}
                     - arch: x86
