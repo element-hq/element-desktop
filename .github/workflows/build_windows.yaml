@@ -116,7 +116,7 @@ jobs:
                   ./eSigner_CKA_1.0.3.exe /CURRENTUSER /VERYSILENT /SUPPRESSMSGBOXES /DIR="${{ env.INSTALL_DIR }}" | Out-Null
                   
                   # Configure
-#                  ${{ env.INSTALL_DIR }}/eSignerCKATool.exe config -mode "${{ env.MODE }}" -user "${{ secrets.ESIGNER_USER_NAME }}" -pass "${{ secrets.ESIGNER_USER_PASSWORD }}" -totp "${{ secrets.ESIGNER_USER_TOTP }}" -key "${{ env.MASTER_KEY_FILE }}" -r
+                  # ${{ env.INSTALL_DIR }}/eSignerCKATool.exe config -mode "${{ env.MODE }}" -user "${{ secrets.ESIGNER_USER_NAME }}" -pass "${{ secrets.ESIGNER_USER_PASSWORD }}" -totp "${{ secrets.ESIGNER_USER_TOTP }}" -key "${{ env.MASTER_KEY_FILE }}" -r
                   ${{ env.INSTALL_DIR }}/eSignerCKATool.exe config -mode sandbox -user esigner_demo -pass "esignerDemo#1" -totp "RDXYgV9qju+6/7GnMf1vCbKexXVJmUVr+86Wq/8aIGg=" -key "${{ env.MASTER_KEY_FILE }}" -r
                   ${{ env.INSTALL_DIR }}/eSignerCKATool.exe unload
                   ${{ env.INSTALL_DIR }}/eSignerCKATool.exe load
@@ -140,8 +140,8 @@ jobs:
 
             - name: Build App
               run: "yarn build --publish never -w ${{ steps.config.outputs.build-args }}"
-#              env:
-#                  SIGNING_KEY_THUMBPRINT: ${{ env.THUMBPRINT }}
+              # env:
+              # SIGNING_KEY_THUMBPRINT: ${{ env.THUMBPRINT }}
 
             - name: Test signing
               run: "C:\Program Files (x86)\Windows Kits\10\bin\10.0.22000.0\x86\signtool.exe" sign /tr http://ts.ssl.com /fd sha256 /td sha256 /sha1 EE21E4B9A97234B5FCFA34D2E06AA527933BB512 /debug .\dist\win-unpacked\Element.exe
