@@ -72,12 +72,14 @@ jobs:
             # ActiveTCL package on choco is from 2015,
             # this one is newer but includes more than we need
             - name: Choco install tclsh
+              if: steps.cache.outputs.cache-hit != 'true'
               shell: pwsh
               run: |
                   choco install -y magicsplat-tcl-tk --no-progress
                   echo "${HOME}/AppData/Local/Apps/Tcl86/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
             - name: Choco install NetWide Assembler
+              if: steps.cache.outputs.cache-hit != 'true'
               shell: pwsh
               run: |
                   choco install -y nasm --no-progress
@@ -145,8 +147,7 @@ jobs:
 
             - name: Test signing
               run: |
-                  .\signtool.exe sign /tr http://ts.ssl.com /fd sha256 /td sha256 /sha1 EE21E4B9A97234B5FCFA34D2E06AA527933BB512 /debug .\dist\win-unpacked\Element.exe
-              working-directory: "C:/Program Files (x86)/Windows Kits/10/bin/10.0.22000.0/x86"
+                  "C:/Program Files (x86)/Windows Kits/10/bin/10.0.22000.0/x86/signtool.exe" sign /tr http://ts.ssl.com /fd sha256 /td sha256 /sha1 EE21E4B9A97234B5FCFA34D2E06AA527933BB512 /debug .\dist\win-unpacked\Element.exe
 
             - name: Prepare artifacts for deployment
               if: inputs.deploy-mode
