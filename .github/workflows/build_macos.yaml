@@ -22,7 +22,7 @@ on:
             sign:
                 type: string
                 required: false
-                description: "Whether to sign & notarise the build, requires 'develop' environment"
+                description: "Whether to sign & notarise the build, requires 'packages.element.io' environment"
             deploy-mode:
                 type: string
                 required: false
