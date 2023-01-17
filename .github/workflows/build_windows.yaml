@@ -108,19 +108,19 @@ jobs:
               if: inputs.sign
               run: |
                   # Install
-                  Invoke-WebRequest -OutFile eSigner_CKA_1.0.3.zip “https://www.ssl.com/download/ssl-com-esigner-cka-1-0-3”
+                  Invoke-WebRequest -OutFile eSigner_CKA_1.0.3.zip "https://www.ssl.com/download/ssl-com-esigner-cka-1-0-3"
                   Expand-Archive -Force eSigner_CKA_1.0.3.zip
                   Remove-Item eSigner_CKA_1.0.3.zip
-                  Move-Item -Destination “eSigner_CKA_1.0.3.exe” -Path “eSigner_CKA_1.0.3\SSL.COM eSigner CKA_1.0.3.exe”
+                  Move-Item -Destination "eSigner_CKA_1.0.3.exe" -Path "eSigner_CKA_1.0.3\SSL.COM eSigner CKA_1.0.3.exe"
                   New-Item -ItemType Directory -Force -Path ${{ env.INSTALL_DIR }}
-                  ./eSigner_CKA_1.0.3.exe /CURRENTUSER /VERYSILENT /SUPPRESSMSGBOXES /DIR=”${{ env.INSTALL_DIR }}” | Out-Null
+                  ./eSigner_CKA_1.0.3.exe /CURRENTUSER /VERYSILENT /SUPPRESSMSGBOXES /DIR="${{ env.INSTALL_DIR }}" | Out-Null
                   
                   # Configure
-                  ${{ env.INSTALL_DIR }}/eSignerCKATool.exe config -mode “${{ env.MODE }}” -user “${{ secrets.ESIGNER_USER_NAME }}” -pass “${{ secrets.ESIGNER_USER_PASSWORD }}” -totp “${{ secrets.ESIGNER_USER_TOTP }}” -key “${{ env.MASTER_KEY_FILE }}” -r
+                  ${{ env.INSTALL_DIR }}/eSignerCKATool.exe config -mode "${{ env.MODE }}" -user "${{ secrets.ESIGNER_USER_NAME }}" -pass "${{ secrets.ESIGNER_USER_PASSWORD }}" -totp "${{ secrets.ESIGNER_USER_TOTP }}" -key "${{ env.MASTER_KEY_FILE }}" -r
                   ${{ env.INSTALL_DIR }}/eSignerCKATool.exe unload
                   ${{ env.INSTALL_DIR }}/eSignerCKATool.exe load
                   $CodeSigningCert = Get-ChildItem Cert:\CurrentUser\My -CodeSigningCert | Select-Object -First 1
-                  echo “THUMBPRINT=$($CodeSigningCert.Thumbprint)” >> $env:GITHUB_ENV
+                  echo "THUMBPRINT=$($CodeSigningCert.Thumbprint)" >> $env:GITHUB_ENV
                   
                   echo "C:/Program Files (x86)/Windows Kits/10/bin/10.0.17763.0/x86/" >> $env:GITHUB_PATH
               env:
