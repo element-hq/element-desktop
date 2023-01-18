@@ -33,7 +33,7 @@ function computeSignToolArgs(options, keyContainer, eSignerKeyThumbprint) {
         args.push("/sha1", eSignerKeyThumbprint);
     }
 
-    if (options.hash !== "sha1") {
+    if (options.hash !== "sha1" || !keyContainer) {
         args.push("/fd", options.hash);
         if (process.env.ELECTRON_BUILDER_OFFLINE !== "true") {
             args.push("/td", "sha256");
