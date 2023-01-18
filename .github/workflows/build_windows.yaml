@@ -151,6 +151,7 @@ jobs:
                   # SIGNING_KEY_THUMBPRINT: ${{ env.THUMBPRINT }}
 
             - name: Test signing
+              if: inputs.sign
               run: |
                   & "C:/Program Files (x86)/Windows Kits/10/bin/10.0.22000.0/x86/signtool.exe" sign /tr http://ts.ssl.com /fd sha256 /td sha256 /sha1 ${{ env.THUMBPRINT }} /debug ./dist/${{ steps.config.outputs.test }}/Element.exe
 
@@ -163,7 +164,7 @@ jobs:
                   mv _dist/squirrel-windows*/*.exe dist/install/win32/${{ inputs.arch }}/
                   mv _dist/squirrel-windows*/*.nupkg dist/update/win32/${{ inputs.arch }}/
                   mv _dist/squirrel-windows*/RELEASES dist/update/win32/${{ inputs.arch }}/
-                  mv _dist/*.msi dist/install/win32/${{ inputs.arch }}/msi/
+                  # mv _dist/*.msi dist/install/win32/${{ inputs.arch }}/msi/
 
             # We don't wish to store the installer for every nightly ever, so we only keep the latest
             - name: '[Nightly] Strip version from installer file'
