@@ -4,12 +4,13 @@ const { execFile } = require("child_process");
 // combined with https://www.ssl.com/how-to/how-to-integrate-esigner-cka-with-ci-cd-tools-for-automated-code-signing/
 function computeSignToolArgs(options, keyContainer, eSignerKeyThumbprint) {
     const args = [];
+    const wantsTimestampDigest = options.hash !== "sha1" || !keyContainer;
 
     if (process.env.ELECTRON_BUILDER_OFFLINE !== "true") {
         const timestampingServiceUrl = options.options.timeStampServer || "http://timestamp.digicert.com";
         args.push(
-            options.isNest || options.hash === "sha256" ? "/tr" : "/t",
-            options.isNest || options.hash === "sha256"
+            options.isNest || wantsTimestampDigest ? "/tr" : "/t",
+            options.isNest || wantsTimestampDigest
                 ? options.options.rfc3161TimeStampServer || "http://timestamp.comodoca.com/rfc3161"
                 : timestampingServiceUrl,
         );
@@ -33,7 +34,7 @@ function computeSignToolArgs(options, keyContainer, eSignerKeyThumbprint) {
         args.push("/sha1", eSignerKeyThumbprint);
     }
 
-    if (options.hash !== "sha1" || !keyContainer) {
+    if (wantsTimestampDigest) {
         args.push("/fd", options.hash);
         if (process.env.ELECTRON_BUILDER_OFFLINE !== "true") {
             args.push("/td", "sha256");
