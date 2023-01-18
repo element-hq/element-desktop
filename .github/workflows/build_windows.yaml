@@ -47,7 +47,7 @@ jobs:
                         },
                         "x86": {
                           "target": "i686-pc-windows-msvc",
-                          "build-args": "--ia32"
+                          "build-args": "--ia32",
                           "test": "win-ia32-unpacked"
                         }
                       }
