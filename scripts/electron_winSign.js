@@ -73,9 +73,10 @@ exports.default = async function (options) {
     }
 
     return new Promise((resolve, reject) => {
+        const executable = process.env.SIGNTOOL_PATH || "signtool";
         const args = ["sign"].concat(computeSignToolArgs(options, keyContainer, eSignerKeyThumbprint));
 
-        execFile("signtool", args, {}, (error, stdout) => {
+        execFile(executable, args, {}, (error, stdout) => {
             if (error) {
                 console.error("signtool failed with code " + error);
                 reject("signtool failed with code " + error);

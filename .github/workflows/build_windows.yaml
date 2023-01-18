@@ -109,12 +109,14 @@ jobs:
             - name: Install and configure eSigner CKA
               if: inputs.sign
               run: |
-                  # Install
+                  # Download
                   Invoke-WebRequest -OutFile eSigner_CKA_1.0.3.zip "https://www.ssl.com/download/ssl-com-esigner-cka-1-0-3"
                   Expand-Archive -Force eSigner_CKA_1.0.3.zip
                   Remove-Item eSigner_CKA_1.0.3.zip
                   Move-Item -Destination "eSigner_CKA_1.0.3.exe" -Path "eSigner_CKA_1.0.3\SSL.COM eSigner CKA_1.0.3.exe"
                   New-Item -ItemType Directory -Force -Path ${{ env.INSTALL_DIR }}
+                  
+                  # Install
                   ./eSigner_CKA_1.0.3.exe /CURRENTUSER /VERYSILENT /SUPPRESSMSGBOXES /DIR="${{ env.INSTALL_DIR }}" | Out-Null
                   
                   # Configure
@@ -122,10 +124,10 @@ jobs:
                   ${{ env.INSTALL_DIR }}/eSignerCKATool.exe config -mode sandbox -user esigner_demo -pass "esignerDemo#1" -totp "RDXYgV9qju+6/7GnMf1vCbKexXVJmUVr+86Wq/8aIGg=" -key "${{ env.MASTER_KEY_FILE }}" -r
                   ${{ env.INSTALL_DIR }}/eSignerCKATool.exe unload
                   ${{ env.INSTALL_DIR }}/eSignerCKATool.exe load
+                  
+                  # Extract thumbprint
                   $CodeSigningCert = Get-ChildItem Cert:\CurrentUser\My -CodeSigningCert | Select-Object -First 1
                   echo "THUMBPRINT=$($CodeSigningCert.Thumbprint)" >> $env:GITHUB_ENV
-                  
-                  echo "C:/Program Files (x86)/Windows Kits/10/bin/10.0.17763.0/x86/" >> $env:GITHUB_PATH
               env:
                   # XXX: UPDATE THIS BEFORE MERGING
                   MODE: sandbox
@@ -133,7 +135,7 @@ jobs:
                   MASTER_KEY_FILE: C:\Users\runneradmin\eSignerCKA\master.key
 
             - name: '[Nightly] Generate build config'
-              if: inputs.version
+              if: inputs.version != ''
               run: scripts/generate-builder-config.ts --nightly "${{ inputs.version }}"
 
             - name: '[Release] Generate build config'
@@ -142,16 +144,19 @@ jobs:
 
             - name: Build App
               run: "yarn build --publish never -w ${{ steps.config.outputs.build-args }}"
-              # env:
-              # SIGNING_KEY_THUMBPRINT: ${{ env.THUMBPRINT }}
+              env:
+                  SIGNTOOL_PATH: "C:/Program Files (x86)/Windows Kits/10/bin/10.0.22000.0/x86/signtool.exe"
+                  SIGNING_KEY_THUMBPRINT: ${{ env.THUMBPRINT }}
 
-            - name: Test signing
-              run: |
-                  tree dist
-                  & "C:/Program Files (x86)/Windows Kits/10/bin/10.0.22000.0/x86/signtool.exe" sign /tr http://ts.ssl.com /fd sha256 /td sha256 /sha1 EE21E4B9A97234B5FCFA34D2E06AA527933BB512 /debug ./dist/win-unpacked/Element.exe
+#            - name: Test signing
+#              run: |
+#                  # tree dist
+#                  & "C:/Program Files (x86)/Windows Kits/10/bin/10.0.22000.0/x86/signtool.exe" sign /tr http://ts.ssl.com /fd sha256 /td sha256 /sha1 EE21E4B9A97234B5FCFA34D2E06AA527933BB512 /debug ./dist/win-unpacked/Element.exe
+#                  & "C:/Program Files (x86)/Windows Kits/10/bin/10.0.22000.0/x86/signtool.exe" sign /tr http://ts.ssl.com /fd sha256 /td sha256 /sha1 EE21E4B9A97234B5FCFA34D2E06AA527933BB512 /debug ./dist/win-ia32-unpacked/Element.exe
 
             - name: Prepare artifacts for deployment
               if: inputs.deploy-mode
+              shell: bash
               run: |
                   mv dist _dist
                   mkdir -p dist/install/win32/${{ inputs.arch }}/msi dist/update/win32/${{ inputs.arch }}
@@ -162,13 +167,15 @@ jobs:
 
             # We don't wish to store the installer for every nightly ever, so we only keep the latest
             - name: '[Nightly] Strip version from installer file'
-              if: inputs.deploy-mode && inputs.version
+              if: inputs.deploy-mode && inputs.version != ''
+              shell: bash
               run: |
                   mv dist/install/win32/${{ inputs.arch }}/*.exe "dist/install/win32/${{ inputs.arch }}/Element Nightly Setup.exe"
                   mv dist/install/win32/${{ inputs.arch }}/msi/*.msi "dist/install/win32/${{ inputs.arch }}/msi/Element Nightly Setup.msi"
 
             - name: '[Release] Prepare release latest symlink'
               if: inputs.deploy-mode && inputs.version == ''
+              shell: bash
               run: |
                   LATEST=$(find dist -type f -iname "*.exe" | xargs -0 -n1 -- basename)
                   ln -s "dist/install/win32/${{ inputs.arch }}/$LATEST" "dist/install/win32/${{ inputs.arch }}/Element Setup.exe"
