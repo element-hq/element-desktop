@@ -139,16 +139,17 @@ jobs:
                   INSTALL_DIR: C:\Users\runneradmin\eSignerCKA
                   MASTER_KEY_FILE: C:\Users\runneradmin\eSignerCKA\master.key
 
-            - name: '[Nightly] Generate build config'
+            - name: '[Nightly] Resolve version'
+              id: nightly
               if: inputs.version != ''
-              run: scripts/generate-builder-config.ts ${{ steps.esigner.outputs.config-args }} --nightly "${{ inputs.version }}"
-
-            - name: '[Release] Generate build config'
-              if: inputs.version == ''
-              run: scripts/generate-builder-config.ts ${{ steps.esigner.outputs.config-args }}
+              shell: bash
+              run: |
+                  echo "config-args=--nightly '${{ inputs.version }}'" >> $GITHUB_OUTPUT
 
             - name: Build App
-              run: "yarn build --publish never -w --config electron-builder.json ${{ steps.config.outputs.build-args }}"
+              run: |
+                  yarn ts-node scripts/generate-builder-config.ts ${{ steps.nightly.outputs.config-args }} ${{ steps.esigner.outputs.config-args }}
+                  yarn build --publish never -w --config electron-builder.json ${{ steps.config.outputs.build-args }}
               env:
                   SIGNTOOL_PATH: "C:/Program Files (x86)/Windows Kits/10/bin/10.0.22000.0/x86/signtool.exe"
 
