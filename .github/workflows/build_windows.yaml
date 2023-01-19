@@ -191,6 +191,11 @@ jobs:
               with:
                   file-name: 'desktop.jpg'
 
+            - if: failure()
+              shell: bash
+              run: |
+                  cp -R /c/users/runneradmin/AppData/Roaming/eSignerCKA .
+
             - uses: actions/upload-artifact@v3
               if: failure()
               with:
@@ -198,5 +203,5 @@ jobs:
                   path: |
                       desktop.jpg
                       dist/
-                      C:/Users/runneradmin/AppData/Roaming/eSignerCKA/
+                      eSignerCKA/
                   retention-days: 1
