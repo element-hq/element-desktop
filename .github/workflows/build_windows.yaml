@@ -109,6 +109,7 @@ jobs:
                   yarn build:native --target ${{ steps.config.outputs.target }}
 
             - name: Install and configure eSigner CKA
+              id: esigner
               if: inputs.sign
               run: |
                   # Download
@@ -122,14 +123,16 @@ jobs:
                   ./eSigner_CKA_1.0.3.exe /CURRENTUSER /VERYSILENT /SUPPRESSMSGBOXES /DIR="${{ env.INSTALL_DIR }}" | Out-Null
                   
                   # Configure
-                  ${{ env.INSTALL_DIR }}/eSignerCKATool.exe config -mode "${{ env.MODE }}" -user "${{ secrets.ESIGNER_USER_NAME }}" -pass "${{ secrets.ESIGNER_USER_PASSWORD }}" -totp "${{ secrets.ESIGNER_USER_TOTP }}" -key "${{ env.MASTER_KEY_FILE }}" -r
-                  # ${{ env.INSTALL_DIR }}/eSignerCKATool.exe config -mode sandbox -user esigner_demo -pass "esignerDemo#1" -totp "RDXYgV9qju+6/7GnMf1vCbKexXVJmUVr+86Wq/8aIGg=" -key "${{ env.MASTER_KEY_FILE }}" -r
+                  # ${{ env.INSTALL_DIR }}/eSignerCKATool.exe config -mode "${{ env.MODE }}" -user "${{ secrets.ESIGNER_USER_NAME }}" -pass "${{ secrets.ESIGNER_USER_PASSWORD }}" -totp "${{ secrets.ESIGNER_USER_TOTP }}" -key "${{ env.MASTER_KEY_FILE }}" -r
+                  ${{ env.INSTALL_DIR }}/eSignerCKATool.exe config -mode sandbox -user esigner_demo -pass "esignerDemo#1" -totp "RDXYgV9qju+6/7GnMf1vCbKexXVJmUVr+86Wq/8aIGg=" -key "${{ env.MASTER_KEY_FILE }}" -r
                   ${{ env.INSTALL_DIR }}/eSignerCKATool.exe unload
                   ${{ env.INSTALL_DIR }}/eSignerCKATool.exe load
                   
                   # Extract thumbprint
                   $CodeSigningCert = Get-ChildItem Cert:\CurrentUser\My -CodeSigningCert | Select-Object -First 1
-                  echo "THUMBPRINT=$($CodeSigningCert.Thumbprint)" >> $env:GITHUB_ENV
+                  $Thumbprint = $CodeSigningCert.Thumbprint
+                  $SubjectName = ($CodeSigningCert.Subject -split "," | ConvertFrom-StringData).CN
+                  echo "config-args=--signtool-thumbprint '$Thumbprint' --signtool-subject-name '$SubjectName'" >> $env:GITHUB_OUTPUT
               env:
                   # XXX: UPDATE THIS BEFORE MERGING
                   MODE: sandbox
@@ -138,22 +141,16 @@ jobs:
 
             - name: '[Nightly] Generate build config'
               if: inputs.version != ''
-              run: scripts/generate-builder-config.ts --nightly "${{ inputs.version }}"
+              run: scripts/generate-builder-config.ts ${{ steps.esigner.outputs.config-args }} --nightly "${{ inputs.version }}"
 
             - name: '[Release] Generate build config'
               if: inputs.version == ''
-              run: scripts/generate-builder-config.ts
+              run: scripts/generate-builder-config.ts ${{ steps.esigner.outputs.config-args }}
 
             - name: Build App
-              run: "yarn build --publish never -w ${{ steps.config.outputs.build-args }}"
+              run: "yarn build --publish never -w --config electron-builder.json ${{ steps.config.outputs.build-args }}"
               env:
                   SIGNTOOL_PATH: "C:/Program Files (x86)/Windows Kits/10/bin/10.0.22000.0/x86/signtool.exe"
-                  # SIGNING_KEY_THUMBPRINT: ${{ env.THUMBPRINT }}
-
-            - name: Test signing
-              if: inputs.sign
-              run: |
-                  & "C:/Program Files (x86)/Windows Kits/10/bin/10.0.22000.0/x86/signtool.exe" sign /tr http://ts.ssl.com /fd sha256 /td sha256 /sha1 ${{ env.THUMBPRINT }} /debug ./dist/${{ steps.config.outputs.test }}/Element.exe
 
             - name: Prepare artifacts for deployment
               if: inputs.deploy-mode
