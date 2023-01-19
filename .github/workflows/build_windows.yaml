@@ -187,12 +187,12 @@ jobs:
                   retention-days: 1
 
             - uses: OrbitalOwen/desktop-screenshot-action@0.1
-              if: failed()
+              if: failure()
               with:
                   file-name: 'desktop.jpg'
 
             - uses: actions/upload-artifact@v3
-              if: failed()
+              if: failure()
               with:
                   name: failed
                   path: |
