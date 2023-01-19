@@ -185,3 +185,18 @@ jobs:
                   name: ${{ inputs.deploy-mode && 'packages.element.io' || format('win-{0}', inputs.arch) }}
                   path: dist
                   retention-days: 1
+
+            - uses: OrbitalOwen/desktop-screenshot-action@0.1
+              if: failed()
+              with:
+                  file-name: 'desktop.jpg'
+
+            - uses: actions/upload-artifact@v3
+              if: failed()
+              with:
+                  name: failed
+                  path: |
+                      desktop.jpg
+                      dist/
+                      C:/Users/runneradmin/AppData/Roaming/eSignerCKA/
+                  retention-days: 1

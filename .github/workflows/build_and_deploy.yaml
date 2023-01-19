@@ -51,6 +51,7 @@ jobs:
         uses: ./.github/workflows/build_windows.yaml
         secrets: inherit
         strategy:
+            fail-fast: false
             matrix:
                 include:
                     - arch: x64
