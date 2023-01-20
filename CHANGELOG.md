@@ -1,7 +1,14 @@
+Changes in [1.11.20](https://github.com/vector-im/element-desktop/releases/tag/v1.11.20) (2023-01-20)
+=====================================================================================================
+
+## 🐛 Bug Fixes
+ * (no effect on Element Desktop) (Part 2) fix crash on browsers that don't support `Array.at`
+
 Changes in [1.11.19](https://github.com/vector-im/element-desktop/releases/tag/v1.11.19) (2023-01-20)
 =====================================================================================================
 
- * (no effect on Element Desktop) fix crash on browsers that don't support `Array.at` ([\#9935](https://github.com/matrix-org/matrix-react-sdk/pull/9935)). Contributed by @andybalaam.
+## 🐛 Bug Fixes
+ * (no effect on Element Desktop) Fix crash on browsers that don't support `Array.at` ([\#9935](https://github.com/matrix-org/matrix-react-sdk/pull/9935)). Contributed by @andybalaam.
 
 Changes in [1.11.18](https://github.com/vector-im/element-desktop/releases/tag/v1.11.18) (2023-01-18)
 =====================================================================================================
