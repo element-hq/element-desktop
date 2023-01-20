@@ -94,9 +94,11 @@ jobs:
     deploy:
         needs:
             - macos
+            - windows_32bit
+            - windows_64bit
         runs-on: ubuntu-latest
         name: Deploy
-        if: github.event != 'workflow_dispatch' || inputs.deploy
+        if: always() && (github.event != 'workflow_dispatch' || inputs.deploy)
         environment: packages.element.io
         steps:
             - name: Download artifacts
