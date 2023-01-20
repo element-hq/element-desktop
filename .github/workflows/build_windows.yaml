@@ -123,9 +123,9 @@ jobs:
                   ./eSigner_CKA_1.0.3.exe /CURRENTUSER /VERYSILENT /SUPPRESSMSGBOXES /DIR="${{ env.INSTALL_DIR }}" | Out-Null
                   
                   # Disable logger
-                  $LogConfig = Get-Content -Path ${{ env.INSTALL_DIR}}/log4net.config.xml
+                  $LogConfig = Get-Content -Path ${{ env.INSTALL_DIR }}/log4net.config
                   $LogConfig[0] = '<log4net threshold="OFF">'
-                  $LogConfig | Set-Content -Path ${{ env.INSTALL_DIR}}/log4net.config.xml
+                  $LogConfig | Set-Content -Path ${{ env.INSTALL_DIR }}/log4net.config
                   
                   # Configure
                   ${{ env.INSTALL_DIR }}/eSignerCKATool.exe config -mode "${{ env.MODE }}" -user "${{ secrets.ESIGNER_USER_NAME }}" -pass "${{ secrets.ESIGNER_USER_PASSWORD }}" -totp "${{ secrets.ESIGNER_USER_TOTP }}" -key "${{ env.MASTER_KEY_FILE }}" -r
