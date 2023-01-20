@@ -22,6 +22,16 @@ on:
                 required: true
                 type: boolean
                 default: true
+            windows_32bit:
+                description: Whether to build Windows 32-bit
+                required: true
+                type: boolean
+                default: true
+            windows_64bit:
+                description: Whether to build Windows 64-bit
+                required: true
+                type: boolean
+                default: true
             deploy:
                 description: Whether to deploy artifacts
                 required: true
@@ -45,27 +55,32 @@ jobs:
             CF_R2_TOKEN: ${{ secrets.CF_R2_TOKEN }}
             CF_R2_S3_API: ${{ secrets.CF_R2_S3_API }}
 
-    windows:
+    windows_32bit:
+        if: github.event_name != 'workflow_dispatch' || inputs.windows_32bit
         needs: prepare
-        name: Windows
+        name: Windows 32-bit
         uses: ./.github/workflows/build_windows.yaml
         secrets: inherit
-        strategy:
-            fail-fast: false
-            matrix:
-                include:
-                    - arch: x64
-                      version: ${{ needs.prepare.outputs.win32-x64-version }}
-                    - arch: x86
-                      version: ${{ needs.prepare.outputs.win32-x86-version }}
         with:
             sign: true
             deploy-mode: true
-            arch: ${{ matrix.arch }}
-            version: ${{ matrix.version }}
+            arch: x64
+            version: ${{ needs.prepare.outputs.win32-x64-version }}
+
+    windows_64bit:
+        if: github.event_name != 'workflow_dispatch' || inputs.windows_64bit
+        needs: prepare
+        name: Windows 64-bit
+        uses: ./.github/workflows/build_windows.yaml
+        secrets: inherit
+        with:
+            sign: true
+            deploy-mode: true
+            arch: x86
+            version: ${{ needs.prepare.outputs.win32-x86-version }}
 
     macos:
-        if: inputs.macos
+        if: github.event_name != 'workflow_dispatch' || inputs.macos
         needs: prepare
         name: macOS
         uses: ./.github/workflows/build_macos.yaml
