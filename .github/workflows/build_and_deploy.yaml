@@ -46,7 +46,7 @@ jobs:
       CF_R2_S3_API: ${{ secrets.CF_R2_S3_API }}
 
   macos:
-    if: inputs.macos
+    if: github.event_name != 'workflow_dispatch' || inputs.macos
     needs: prepare
     name: macOS
     uses: ./.github/workflows/build_macos.yaml
