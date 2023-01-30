@@ -110,7 +110,7 @@ jobs:
                       }],
                     }
                   ' > dist/update/macos/releases.json
-                  jq -n --arg version "${VERSION:-$PKG_JSON_VERSION}" --arg url "$URL" '
+                  jq -n --arg url "$URL" '
                     { url: $url }
                   ' > dist/update/macos/releases-legacy.json
               env:
