@@ -1,5 +1,8 @@
 name: Build and Deploy
 on:
+  # XXX: REMOVE THIS BEFORE MERGING
+  push:
+      branches: ["t3chguy/notarize1"]
   # Nightly build
   schedule:
     - cron: '0 9 * * *'
@@ -59,7 +62,7 @@ jobs:
       - macos
     runs-on: ubuntu-latest
     name: Deploy
-    if: github.event != 'workflow_dispatch' || inputs.deploy
+    if: always() && (github.event != 'workflow_dispatch' || inputs.deploy)
     environment: packages.element.io
     steps:
       - name: Download artifacts
