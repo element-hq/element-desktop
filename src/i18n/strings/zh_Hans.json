@@ -42,5 +42,6 @@
     "Show/Hide": "显示/隐藏",
     "Are you sure you want to quit?": "你确定要退出吗？",
     "Cancel": "取消",
-    "Copy image address": "复制图片地址"
+    "Copy image address": "复制图片地址",
+    "Close %(brand)s": "关闭 %(brand)s"
 }
