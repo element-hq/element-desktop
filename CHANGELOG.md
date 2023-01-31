@@ -1,5 +1,5 @@
-Changes in [1.11.21-rc.1](https://github.com/vector-im/element-desktop/releases/tag/v1.11.21-rc.1) (2023-01-24)
-===============================================================================================================
+Changes in [1.11.21](https://github.com/vector-im/element-desktop/releases/tag/v1.11.21) (2023-01-31)
+=====================================================================================================
 
 ## ✨ Features
  * Move pin drop out of labs ([\#22993](https://github.com/vector-im/element-web/pull/22993)).
