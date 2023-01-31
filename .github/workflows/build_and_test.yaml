@@ -2,7 +2,7 @@ name: Build and Test
 on:
   pull_request: {}
   push:
-    branches: [develop, master]
+    branches: [develop, staging, master]
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true

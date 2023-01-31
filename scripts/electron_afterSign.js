@@ -8,12 +8,21 @@ exports.default = async function (context) {
     if (electronPlatformName === "darwin") {
         const appName = context.packager.appInfo.productFilename;
 
-        const keychainProfile = process.env.NOTARIZE_KEYCHAIN_PROFILE;
-        if (keychainProfile === undefined) {
+        const notarizeToolCredentials = {};
+        if (process.env.NOTARIZE_KEYCHAIN_PROFILE) {
+            notarizeToolCredentials.keychainProfile = process.env.NOTARIZE_KEYCHAIN_PROFILE;
+            notarizeToolCredentials.keychain = process.env.NOTARIZE_KEYCHAIN;
+        } if (process.env.NOTARIZE_APPLE_ID && process.env.NOTARIZE_APPLE_ID_PASSWORD && process.env.NOTARIZE_TEAM_ID) {
+            notarizeToolCredentials.appleId = process.env.NOTARIZE_APPLE_ID;
+            notarizeToolCredentials.appleIdPassword = process.env.NOTARIZE_APPLE_ID_PASSWORD;
+            notarizeToolCredentials.teamId = process.env.NOTARIZE_TEAM_ID;
+        } else {
             if (!warned) {
                 console.log("*****************************************");
-                console.log("* NOTARIZE_KEYCHAIN_PROFILE is not set. *");
                 console.log("*   This build will NOT be notarised.   *");
+                console.log("* Provide NOTARIZE_KEYCHAIN_PROFILE or  *");
+                console.log("* NOTARIZE_APPLE_ID, NOTARIZE_TEAM_ID   *");
+                console.log("* and NOTARIZE_APPLE_ID_PASSWORD        *");
                 console.log("*****************************************");
                 warned = true;
             }
@@ -25,8 +34,7 @@ exports.default = async function (context) {
             tool: "notarytool",
             appBundleId: appId,
             appPath: `${appOutDir}/${appName}.app`,
-            keychainProfile,
-            keychain: process.env.NOTARIZE_KEYCHAIN,
+            ...notarizeToolCredentials,
         });
     }
 };

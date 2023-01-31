@@ -1,3 +1,4 @@
+# This action helps perform common actions before the build_* actions are started in parallel.
 on:
     workflow_call:
         inputs:
@@ -9,10 +10,31 @@ on:
                 type: string
                 required: false
                 description: "The version tag to fetch, or 'develop', will pick automatically if not passed"
+            calculate-nightly-versions:
+                type: string
+                required: false
+                description: "Whether to calculate the version strings new Nightly builds should use"
+        secrets:
+            # Required if `calculate-nightly-versions` is set
+            CF_R2_ACCESS_KEY_ID:
+                required: false
+            # Required if `calculate-nightly-versions` is set
+            CF_R2_TOKEN:
+                required: false
+            # Required if `calculate-nightly-versions` is set
+            CF_R2_S3_API:
+                required: false
+        outputs:
+            macos-version:
+                description: "The version string the next macOS Nightly should use, only output for calculate-nightly-versions"
+                value: ${{ jobs.prepare.outputs.macos-version }}
 jobs:
     prepare:
         name: Prepare
+        environment: ${{ inputs.calculate-nightly-versions && 'packages.element.io' || '' }}
         runs-on: ubuntu-latest
+        outputs:
+            macos-version: ${{ steps.macos.outputs.version }}
         steps:
             - uses: actions/checkout@v3
 
@@ -41,3 +63,14 @@ jobs:
                       package.json
                       electronVersion
                       hakDependencies.json
+
+            - name: Calculate macOS Nightly version
+              id: macos
+              if: inputs.calculate-nightly-versions
+              run: |
+                  LATEST=$(aws s3 cp s3://$R2_BUCKET/nightly/update/macos/releases.json - --endpoint-url $R2_URL --region auto | jq -r .currentRelease)
+                  echo "version=$(scripts/generate-nightly-version.ts --latest $LATEST)" >> $GITHUB_OUTPUT
+              env:
+                  AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
+                  R2_URL: ${{ secrets.CF_R2_S3_API }}

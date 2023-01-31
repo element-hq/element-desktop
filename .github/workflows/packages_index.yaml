@@ -5,14 +5,20 @@ on:
         branches: [develop]
         paths:
             - "packages.element.io/**"
-    # Trigger a daily rebuild for nightlies
+    # Trigger a daily rebuild for (mac-mini built) Nightly builds
     schedule:
         - cron: "0 11 * * *"
+  # Trigger after Nightly builds are deployed
+    workflow_run:
+        workflows: [ "Build and Deploy" ]
+        types:
+            - completed
     # Manual trigger for rebuilding for releases
     workflow_dispatch: {}
 jobs:
     deploy:
         name: "Deploy"
+        if: github.event != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
         runs-on: ubuntu-latest
         environment: packages.element.io
         env:
