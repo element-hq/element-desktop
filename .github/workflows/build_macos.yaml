@@ -77,6 +77,7 @@ jobs:
 
             # We split these because electron-builder gets upset if we set CSC_LINK even to an empty string
             - name: '[Signed] Build App'
+              if: inputs.sign != ''
               run: |
                   scripts/generate-builder-config.ts ${{ steps.nightly.outputs.config-args }}
                   yarn build:universal --publish never --config electron-builder.json
@@ -88,6 +89,7 @@ jobs:
                   CSC_LINK: ${{ secrets.APPLE_CSC_LINK }}
 
             - name: '[Unsigned] Build App'
+              if: inputs.sign == ''
               run: |
                   scripts/generate-builder-config.ts ${{ steps.nightly.outputs.config-args }}
                   yarn build:universal --publish never --config electron-builder.json
