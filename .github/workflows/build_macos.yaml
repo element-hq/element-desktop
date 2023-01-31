@@ -85,6 +85,7 @@ jobs:
                   NOTARIZE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
                   CSC_KEY_PASSWORD: ${{ secrets.APPLE_CSC_KEY_PASSWORD }}
                   CSC_LINK: ${{ secrets.APPLE_CSC_LINK }}
+                  CSC_IDENTITY_AUTO_DISCOVERY: ${{ inputs.sign || 'false' }}
 
             - name: Prepare artifacts for deployment
               if: inputs.deploy-mode
