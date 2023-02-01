@@ -3,9 +3,9 @@
 # the correct cache scoping, and additional care must be taken to not run untrusted actions on the develop branch.
 on:
     workflow_call:
-#        secrets:
-#            GPG_KEY:
-#                required: false
+        secrets:
+            GPG_SIGNING_KEY:
+                required: false
         inputs:
             version:
                 type: string
@@ -84,12 +84,16 @@ jobs:
               run: |
                   sudo apt-get install -y reprepro
                   # Sync reprepro data bucket?
+                  
+                  echo -n "$GPG_SIGNING_KEY" | base64 --decode | gpg --import
+                  
                   # Load GPG key
                   
-                  grep Codename debian/conf/distributions | sed -n 's/Codename: //p' | while -r target ; do
+                  grep Codename debian/conf/distributions | sed -n 's/Codename: //p' | while read -r target ; do
                       reprepro -b debian includedeb "$target" ./dist/*.deb
                   done
-
+              env:
+                  GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
 
             - name: Upload Artifacts
               uses: actions/upload-artifact@v3
