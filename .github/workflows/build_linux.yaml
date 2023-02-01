@@ -82,7 +82,7 @@ jobs:
             - name: Prepare artifacts for deployment (reprepro)
               if: inputs.deploy-mode
               run: |
-                  apt install -y reprepro
+                  sudo apt-get install -y reprepro
                   # Sync reprepro data bucket?
                   # Load GPG key
                   
