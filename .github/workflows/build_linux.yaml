@@ -3,11 +3,22 @@
 # the correct cache scoping, and additional care must be taken to not run untrusted actions on the develop branch.
 on:
     workflow_call:
+#        secrets:
+#            GPG_KEY:
+#                required: false
         inputs:
+            version:
+                type: string
+                required: false
+                description: "Version string to override the one in package.json, used for non-release builds"
             sqlcipher:
                 type: string
                 required: true
                 description: "How to link sqlcipher, one of 'system' | 'static'"
+            deploy-mode:
+                type: string
+                required: false
+                description: "Whether to arrange artifacts in the arrangement needed for deployment, skipping unrelated ones, this uses reprepro and requires 'packages.element.io' environment"
 jobs:
     build:
         runs-on: ubuntu-latest
@@ -50,11 +61,35 @@ jobs:
               env:
                   SQLCIPHER_STATIC: ${{ inputs.sqlcipher == 'static' && '1' || '' }}
 
-            - name: Build App
-              run: "yarn build --publish never -l"
+            - name: '[Nightly] Resolve version'
+              id: nightly
+              if: inputs.version != ''
+              run: |
+                  echo "config-args=--nightly '${{ inputs.version }}'" >> $GITHUB_OUTPUT
 
-            - name: Install .deb
-              run: "sudo apt install ./dist/*.deb"
+            - name: Generate debian control file
+              run: |
+                  cp element.io/${{ inputs.version && 'nightly' || 'release' }}/control.template debcontrol
+                  INPUT_VERSION="${{ inputs.version }}"
+                  VERSION=${INPUT_VERSION:-$(cat package.json | jq -r .version)}
+                  echo "Version: $VERSION\n" >> debcontrol
+
+            - name: Build App
+              run: |
+                  scripts/generate-builder-config.ts ${{ steps.nightly.outputs.config-args }} --deb-custom-control=debcontrol
+                  yarn build --publish never -l
+
+            - name: Prepare artifacts for deployment (reprepro)
+              if: inputs.deploy-mode
+              run: |
+                  apt install -y reprepro
+                  # Sync reprepro data bucket?
+                  # Load GPG key
+                  
+                  grep Codename debian/conf/distributions | sed -n 's/Codename: //p' | while -r target ; do
+                      reprepro -b debian includedeb "$target" ./dist/*.deb
+                  done
+
 
             - name: Upload Artifacts
               uses: actions/upload-artifact@v3
