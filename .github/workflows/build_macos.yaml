@@ -75,7 +75,9 @@ jobs:
               run: |
                   echo "config-args=--nightly '${{ inputs.version }}'" >> $GITHUB_OUTPUT
 
-            - name: Build App
+            # We split these because electron-builder gets upset if we set CSC_LINK even to an empty string
+            - name: '[Signed] Build App'
+              if: inputs.sign != ''
               run: |
                   scripts/generate-builder-config.ts ${{ steps.nightly.outputs.config-args }}
                   yarn build:universal --publish never --config electron-builder.json
@@ -85,6 +87,14 @@ jobs:
                   NOTARIZE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
                   CSC_KEY_PASSWORD: ${{ secrets.APPLE_CSC_KEY_PASSWORD }}
                   CSC_LINK: ${{ secrets.APPLE_CSC_LINK }}
+
+            - name: '[Unsigned] Build App'
+              if: inputs.sign == ''
+              run: |
+                  scripts/generate-builder-config.ts ${{ steps.nightly.outputs.config-args }}
+                  yarn build:universal --publish never --config electron-builder.json
+              env:
+                  CSC_IDENTITY_AUTO_DISCOVERY: false
 
             - name: Prepare artifacts for deployment
               if: inputs.deploy-mode
