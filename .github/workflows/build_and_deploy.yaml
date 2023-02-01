@@ -1,5 +1,7 @@
 name: Build and Deploy
 on:
+  # XXX: Remove before merging
+  push: [t3chguy/ci-reprepro-linux]
   # Nightly build
   schedule:
     - cron: '0 9 * * *'
@@ -16,6 +18,11 @@ on:
           - release
       macos:
         description: Whether to build macOS
+        required: true
+        type: boolean
+        default: true
+      linux:
+        description: Whether to build Linux
         required: true
         type: boolean
         default: true
@@ -53,6 +60,16 @@ jobs:
       deploy-mode: true
       base-url: https://packages.element.io/${{ inputs.mode == 'release' && 'desktop' || 'nightly' }}
       version: ${{ needs.prepare.outputs.macos-version }}
+
+  linux:
+    if: github.event_name != 'workflow_dispatch' || inputs.linux
+    needs: fetch
+    name: Linux
+    uses: ./.github/workflows/build_linux.yaml
+    with:
+      sqlcipher: system
+      deploy-mode: true
+      version: ${{ needs.prepare.outputs.linux-version }}
 
   deploy:
     needs:
