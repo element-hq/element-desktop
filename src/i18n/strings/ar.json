@@ -41,5 +41,7 @@
     "Undo": "تراجَع",
     "Quit": "غادِر",
     "Show/Hide": "اعرض/أخفِ",
-    "Are you sure you want to quit?": "أمتأكّد من الإغلاق؟"
+    "Are you sure you want to quit?": "أمتأكّد من الإغلاق؟",
+    "Copy image address": "انسخ عنوان (رابط) الصورة",
+    "Close %(brand)s": "اغلاق %(brand)s"
 }
