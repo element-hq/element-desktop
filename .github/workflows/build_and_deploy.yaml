@@ -64,8 +64,8 @@ jobs:
         with:
             sign: true
             deploy-mode: true
-            arch: x64
-            version: ${{ needs.prepare.outputs.win32-x64-version }}
+            arch: x86
+            version: ${{ needs.prepare.outputs.win32-x86-version }}
 
     windows_64bit:
         if: github.event_name != 'workflow_dispatch' || inputs.windows_64bit
@@ -76,8 +76,8 @@ jobs:
         with:
             sign: true
             deploy-mode: true
-            arch: x86
-            version: ${{ needs.prepare.outputs.win32-x86-version }}
+            arch: x64
+            version: ${{ needs.prepare.outputs.win32-x64-version }}
 
     macos:
         if: github.event_name != 'workflow_dispatch' || inputs.macos
