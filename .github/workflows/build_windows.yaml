@@ -42,13 +42,11 @@ jobs:
                   map: |
                       {
                         "x64": {
-                          "target": "x86_64-pc-windows-msvc",
-                          "test": "win-unpacked"
+                          "target": "x86_64-pc-windows-msvc"
                         },
                         "x86": {
                           "target": "i686-pc-windows-msvc",
-                          "build-args": "--ia32",
-                          "test": "win-ia32-unpacked"
+                          "build-args": "--ia32"
                         }
                       }
 
