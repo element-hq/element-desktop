@@ -1,8 +1,5 @@
 name: Build and Deploy
 on:
-    # XXX: REMOVE THIS BEFORE MERGING
-    push:
-        branches: ["t3chguy/ci-sign-windows"]
     # Nightly build
     schedule:
         - cron: '0 9 * * *'
