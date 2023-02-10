@@ -42,13 +42,11 @@ jobs:
                   map: |
                       {
                         "x64": {
-                          "target": "x86_64-pc-windows-msvc",
-                          "test": "win-unpacked"
+                          "target": "x86_64-pc-windows-msvc"
                         },
                         "x86": {
                           "target": "i686-pc-windows-msvc",
-                          "build-args": "--ia32",
-                          "test": "win-ia32-unpacked"
+                          "build-args": "--ia32"
                         }
                       }
 
@@ -113,10 +111,10 @@ jobs:
               if: inputs.sign
               run: |
                   # Download
-                  Invoke-WebRequest -OutFile eSigner_CKA_1.0.4.zip "https://vault.bit.ovh/api/public/dl/ZyRhSCh7"
+                  Invoke-WebRequest -OutFile eSigner_CKA_1.0.4.zip "https://vault.bit.ovh/api/public/dl/UwBJZzWh"
                   Expand-Archive -Force eSigner_CKA_1.0.4.zip
                   Remove-Item eSigner_CKA_1.0.4.zip
-                  Move-Item -Destination "eSigner_CKA_1.0.4.exe" -Path "eSigner_CKA_1.0.4\SSL.COM eSigner CKA_1.0.4-build-20230202.exe"
+                  Move-Item -Destination "eSigner_CKA_1.0.4.exe" -Path "eSigner_CKA_1.0.4\SSL.COM eSigner CKA_1.0.4-build-20230207.exe"
                   New-Item -ItemType Directory -Force -Path ${{ env.INSTALL_DIR }}
                   
                   # Install
