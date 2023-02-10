@@ -180,8 +180,7 @@ jobs:
               shell: bash
               run: |
                   ln -s "$(find . -type f -iname "*.dmg" | xargs -0 -n1 -- basename)" "Element Setup.exe"
-              with:
-                  working-directory: "dist/install/win32/${{ inputs.arch }}"
+              working-directory: "dist/install/win32/${{ inputs.arch }}"
 
             - name: Upload Artifacts
               uses: actions/upload-artifact@v3
