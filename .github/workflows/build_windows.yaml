@@ -175,14 +175,15 @@ jobs:
               shell: bash
               run: |
                   mv dist/install/win32/${{ inputs.arch }}/*.exe "dist/install/win32/${{ inputs.arch }}/Element Nightly Setup.exe"
-                  mv dist/install/win32/${{ inputs.arch }}/msi/*.msi "dist/install/win32/${{ inputs.arch }}/msi/Element Nightly Setup.msi"
+                  # mv dist/install/win32/${{ inputs.arch }}/msi/*.msi "dist/install/win32/${{ inputs.arch }}/msi/Element Nightly Setup.msi"
 
             - name: '[Release] Prepare release latest symlink'
               if: inputs.deploy-mode && inputs.version == ''
               shell: bash
               run: |
-                  LATEST=$(find dist -type f -iname "*.exe" | xargs -0 -n1 -- basename)
-                  ln -s "dist/install/win32/${{ inputs.arch }}/$LATEST" "dist/install/win32/${{ inputs.arch }}/Element Setup.exe"
+                  ln -s "$(find . -type f -iname "*.dmg" | xargs -0 -n1 -- basename)" "Element Setup.exe"
+              with:
+                  working-directory: "dist/install/win32/${{ inputs.arch }}"
 
             - name: Upload Artifacts
               uses: actions/upload-artifact@v3
