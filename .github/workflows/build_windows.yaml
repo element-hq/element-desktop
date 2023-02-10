@@ -179,7 +179,7 @@ jobs:
               if: inputs.deploy-mode && inputs.version == ''
               shell: bash
               run: |
-                  ln -s "$(find . -type f -iname "*.dmg" | xargs -0 -n1 -- basename)" "Element Setup.exe"
+                  ln -s "$(find . -type f -iname "*.exe" | xargs -0 -n1 -- basename)" "Element Setup.exe"
               working-directory: "dist/install/win32/${{ inputs.arch }}"
 
             - name: Upload Artifacts
