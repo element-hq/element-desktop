@@ -93,7 +93,6 @@ async function main(): Promise<number | void> {
 
     if (argv.nightly) {
         cfg.appId = NIGHTLY_APP_ID;
-        cfg.linux.desktop.StartupWMClass += "-nightly";
         cfg.extraMetadata!.productName += " Nightly";
         cfg.extraMetadata!.name = NIGHTLY_APP_NAME;
 
