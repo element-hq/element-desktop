@@ -90,7 +90,7 @@ jobs:
       - name: Deploy artifacts
         run: |
           mv packages.element.io/debian .
-          aws s3 cp --recursive debian s3://$R2_BUCKET/debian --endpoint-url $R2_URL --region auto
+          aws s3 cp --recursive debian/ s3://$R2_BUCKET/debian --endpoint-url $R2_URL --region auto
           aws s3 cp --recursive packages.element.io/ s3://$R2_BUCKET/$DEPLOYMENT_DIR --endpoint-url $R2_URL --region auto
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
