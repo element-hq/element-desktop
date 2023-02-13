@@ -22,6 +22,7 @@ on:
 jobs:
     build:
         runs-on: ubuntu-latest
+        environment: ${{ inputs.deploy-mode && 'packages.element.io' || '' }}
         steps:
             - uses: actions/checkout@v3
 
@@ -83,14 +84,15 @@ jobs:
               if: inputs.deploy-mode
               run: |
                   sudo apt-get install -y reprepro
-                  # Sync reprepro data bucket?
                   
                   # Load GPG key
                   echo -n "$GPG_SIGNING_KEY" | base64 --decode | gpg --import
                   
+                  # Sync reprepro data bucket?
                   grep Codename debian/conf/distributions | sed -n 's/Codename: //p' | while read -r target ; do
                       reprepro -b debian includedeb "$target" ./dist/*.deb
                   done
+                  # Sync reprepro data bucket?
               env:
                   GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
 
