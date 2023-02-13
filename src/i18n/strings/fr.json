@@ -42,5 +42,6 @@
     "Stop Speaking": "Arrêter la dictée",
     "Start Speaking": "Commencer la dictée",
     "Copy image address": "Copier l'adresse de l'image",
-    "Redo": "Refaire"
+    "Redo": "Refaire",
+    "Close %(brand)s": "Fermer %(brand)s"
 }
