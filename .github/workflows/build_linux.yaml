@@ -88,7 +88,7 @@ jobs:
               with:
                   gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
                   passphrase: ${{ secrets.GPG_PASSPHRASE }}
-                  fingerprint: 75741890063E5E9A46135D01C2850B265AC085BD
+                  fingerprint: 12D4CD600C2240A9F4A82071D7B0B66941D01538
 
             - name: Prepare artifacts for deployment (reprepro)
               if: inputs.deploy-mode
