@@ -4,7 +4,9 @@
 on:
     workflow_call:
         secrets:
-            GPG_SIGNING_KEY:
+            GPG_PRIVATE_KEY:
+                required: false
+            GPG_PASSPHRASE:
                 required: false
         inputs:
             version:
@@ -80,13 +82,17 @@ jobs:
                   scripts/generate-builder-config.ts ${{ steps.nightly.outputs.config-args }} --deb-custom-control=debcontrol
                   yarn build --publish never -l
 
+            - name: Load GPG key
+              if: inputs.deploy-mode
+              uses: crazy-max/ghaction-import-gpg@v5
+              with:
+                  gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+                  passphrase: ${{ secrets.GPG_PASSPHRASE }}
+
             - name: Prepare artifacts for deployment (reprepro)
               if: inputs.deploy-mode
               run: |
                   sudo apt-get install -y reprepro
-                  
-                  # Load GPG key
-                  echo -n "$GPG_SIGNING_KEY" | base64 --decode | gpg --import
                   
                   # Sync reprepro data bucket?
                   grep Codename debian/conf/distributions | sed -n 's/Codename: //p' | while read -r target ; do
