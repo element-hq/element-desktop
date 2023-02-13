@@ -93,6 +93,10 @@ jobs:
             - name: Prepare artifacts for deployment (reprepro)
               if: inputs.deploy-mode
               run: |
+                  # Clear out the template packages.element.io directory, it has a dedicated deploy workflow
+                  rm -R packages.element.io/*
+                  
+                  # Install reprepro
                   sudo apt-get install -y reprepro
                   
                   # Sync reprepro data bucket?
