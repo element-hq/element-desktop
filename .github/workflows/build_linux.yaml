@@ -85,9 +85,8 @@ jobs:
                   sudo apt-get install -y reprepro
                   # Sync reprepro data bucket?
                   
-                  echo -n "$GPG_SIGNING_KEY" | base64 --decode | gpg --import
-                  
                   # Load GPG key
+                  echo -n "$GPG_SIGNING_KEY" | base64 --decode | gpg --import
                   
                   grep Codename debian/conf/distributions | sed -n 's/Codename: //p' | while read -r target ; do
                       reprepro -b debian includedeb "$target" ./dist/*.deb

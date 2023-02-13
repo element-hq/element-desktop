@@ -67,6 +67,7 @@ jobs:
     needs: prepare
     name: Linux
     uses: ./.github/workflows/build_linux.yaml
+    secrets: inherit
     with:
       sqlcipher: system
       deploy-mode: true
