@@ -135,8 +135,8 @@ jobs:
             - name: '[Release] Prepare release latest symlink'
               if: inputs.deploy-mode && inputs.version == ''
               run: |
-                  LATEST=$(find dist -type f -iname "*.dmg" | xargs -0 -n1 -- basename)
-                  ln -s "dist/install/macos/$LATEST" dist/install/macos/Element.dmg
+                  ln -s "$(find . -type f -iname "*.dmg" | xargs -0 -n1 -- basename)" "Element.dmg"
+              working-directory: "dist/install/macos"
 
             - name: Upload Artifacts
               uses: actions/upload-artifact@v3
