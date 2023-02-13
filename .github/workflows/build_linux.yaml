@@ -104,6 +104,6 @@ jobs:
             - name: Upload Artifacts
               uses: actions/upload-artifact@v3
               with:
-                  name: linux-sqlcipher-${{ inputs.sqlcipher }}
-                  path: dist
+                  name: ${{ inputs.deploy-mode && 'packages.element.io' || format('linux-sqlcipher-{0}', inputs.sqlcipher) }}
+                  path: ${{ inputs.deploy-mode && 'packages.element.io' || 'dist' }}
                   retention-days: 1

@@ -2,4 +2,4 @@
 keepunreferencedfiles
 
 # output dir
-outdir +b/../packages.element.im/debian
+outdir +b/../packages.element.io/debian
