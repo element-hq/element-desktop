@@ -88,7 +88,7 @@ jobs:
           path: packages.element.io
 
       - name: Deploy debian repo
-        if: inputs.linux
+        if: github.event_name != 'workflow_dispatch' || inputs.linux
         run: |
           mv packages.element.io/debian .
           aws s3 cp --recursive debian/ s3://$R2_BUCKET/debian --endpoint-url $R2_URL --region auto
@@ -98,7 +98,7 @@ jobs:
           R2_URL: ${{ secrets.CF_R2_S3_API }}
 
       - name: Deploy artifacts
-        if: inputs.macos
+        if: github.event_name != 'workflow_dispatch' || inputs.macos
         run: |
           aws s3 cp --recursive packages.element.io/ s3://$R2_BUCKET/$DEPLOYMENT_DIR --endpoint-url $R2_URL --region auto
         env:
