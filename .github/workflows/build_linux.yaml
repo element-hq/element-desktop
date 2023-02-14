@@ -86,7 +86,7 @@ jobs:
             - name: Build App
               run: |
                   scripts/generate-builder-config.ts ${{ steps.nightly.outputs.config-args }} --deb-custom-control=debcontrol
-                  yarn build --publish never -l
+                  yarn build --publish never -l --config electron-builder.json
 
             - name: Load GPG key
               if: inputs.deploy-mode
