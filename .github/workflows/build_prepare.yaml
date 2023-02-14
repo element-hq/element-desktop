@@ -80,4 +80,6 @@ jobs:
               env:
                   AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
+                  # XXX: UPDATE THIS BEFORE WHEN GOING LIVE
+                  R2_BUCKET: 'packages-element-io-test'
                   R2_URL: ${{ secrets.CF_R2_S3_API }}
