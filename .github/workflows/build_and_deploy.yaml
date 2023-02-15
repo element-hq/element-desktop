@@ -1,8 +1,5 @@
 name: Build and Deploy
 on:
-  # XXX: Remove before merging
-  push:
-    branches: [t3chguy/ci-reprepro-linux]
   # Nightly build
   schedule:
     - cron: '0 9 * * *'
