@@ -42,5 +42,6 @@
     "Show/Hide": "Sýna/Fela",
     "Are you sure you want to quit?": "Ertu viss um að þú viljir hætta?",
     "Cancel": "Hætta við",
-    "Copy image address": "Afrita slóð myndar"
+    "Copy image address": "Afrita slóð myndar",
+    "Close %(brand)s": "Loka %(brand)s"
 }
