@@ -5,7 +5,7 @@ on:
         branches: ["t3chguy/ci-sign-windows"]
     # Nightly build
     schedule:
-        - cron: '0 9 * * *'
+        - cron: "0 9 * * *"
     # Manual nightly & release
     workflow_dispatch:
         inputs:
@@ -42,7 +42,7 @@ concurrency:
     cancel-in-progress: true
 env:
     # XXX: UPDATE THIS BEFORE WHEN GOING LIVE
-    R2_BUCKET: 'packages-element-io-test'
+    R2_BUCKET: "packages-element-io-test"
 jobs:
     prepare:
         uses: ./.github/workflows/build_prepare.yaml

@@ -78,7 +78,7 @@ jobs:
               run: |
                   MACOS=$(aws s3 cp s3://$R2_BUCKET/nightly/update/macos/releases.json - --endpoint-url $R2_URL --region auto | jq -r .currentRelease)
                   echo "macos=$(scripts/generate-nightly-version.ts --latest $MACOS)" >> $GITHUB_OUTPUT
-                  
+
                   WINx64=$(aws s3 cp s3://$R2_BUCKET/nightly/update/win32/x64/RELEASES - --endpoint-url $R2_URL --region auto | awk '{print $2}' | cut -d "-" -f 5 | cut -c 8-)
                   echo "win_x64=$(scripts/generate-nightly-version.ts --latest $WINx64)" >> $GITHUB_OUTPUT
                   WINx86=$(aws s3 cp s3://$R2_BUCKET/nightly/update/win32/ia32/RELEASES - --endpoint-url $R2_URL --region auto | awk '{print $2}' | cut -d "-" -f 5 | cut -c 8-)

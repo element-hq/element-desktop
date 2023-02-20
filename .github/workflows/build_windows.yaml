@@ -116,21 +116,21 @@ jobs:
                   Remove-Item eSigner_CKA_1.0.4.zip
                   Move-Item -Destination "eSigner_CKA_1.0.4.exe" -Path "eSigner_CKA_1.0.4\SSL.COM eSigner CKA_1.0.4-build-20230207.exe"
                   New-Item -ItemType Directory -Force -Path ${{ env.INSTALL_DIR }}
-                  
+
                   # Install
                   ./eSigner_CKA_1.0.4.exe /CURRENTUSER /VERYSILENT /SUPPRESSMSGBOXES /DIR="${{ env.INSTALL_DIR }}" | Out-Null
-                  
+
                   # Disable logger
                   $LogConfig = Get-Content -Path ${{ env.INSTALL_DIR }}/log4net.config
                   $LogConfig[0] = '<log4net threshold="OFF">'
                   $LogConfig | Set-Content -Path ${{ env.INSTALL_DIR }}/log4net.config
-                  
+
                   # Configure
                   ${{ env.INSTALL_DIR }}/eSignerCKATool.exe config -mode "${{ env.MODE }}" -user "${{ secrets.ESIGNER_USER_NAME }}" -pass "${{ secrets.ESIGNER_USER_PASSWORD }}" -totp "${{ secrets.ESIGNER_USER_TOTP }}" -key "${{ env.MASTER_KEY_FILE }}" -r
                   # ${{ env.INSTALL_DIR }}/eSignerCKATool.exe config -mode sandbox -user esigner_demo -pass "esignerDemo#1" -totp "RDXYgV9qju+6/7GnMf1vCbKexXVJmUVr+86Wq/8aIGg=" -key "${{ env.MASTER_KEY_FILE }}" -r
                   ${{ env.INSTALL_DIR }}/eSignerCKATool.exe unload
                   ${{ env.INSTALL_DIR }}/eSignerCKATool.exe load
-                  
+
                   # Extract thumbprint
                   $CodeSigningCert = Get-ChildItem Cert:\CurrentUser\My -CodeSigningCert | Select-Object -First 1
                   $Thumbprint = $CodeSigningCert.Thumbprint
@@ -142,7 +142,7 @@ jobs:
                   INSTALL_DIR: C:\Users\runneradmin\eSignerCKA
                   MASTER_KEY_FILE: C:\Users\runneradmin\eSignerCKA\master.key
 
-            - name: '[Nightly] Resolve version'
+            - name: "[Nightly] Resolve version"
               id: nightly
               if: inputs.version != ''
               shell: bash
@@ -168,14 +168,14 @@ jobs:
                   # mv _dist/*.msi dist/install/win32/${{ inputs.arch }}/msi/
 
             # We don't wish to store the installer for every nightly ever, so we only keep the latest
-            - name: '[Nightly] Strip version from installer file'
+            - name: "[Nightly] Strip version from installer file"
               if: inputs.deploy-mode && inputs.version != ''
               shell: bash
               run: |
                   mv dist/install/win32/${{ inputs.arch }}/*.exe "dist/install/win32/${{ inputs.arch }}/Element Nightly Setup.exe"
                   # mv dist/install/win32/${{ inputs.arch }}/msi/*.msi "dist/install/win32/${{ inputs.arch }}/msi/Element Nightly Setup.msi"
 
-            - name: '[Release] Prepare release latest symlink'
+            - name: "[Release] Prepare release latest symlink"
               if: inputs.deploy-mode && inputs.version == ''
               shell: bash
               run: |

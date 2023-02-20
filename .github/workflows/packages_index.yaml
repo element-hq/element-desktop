@@ -8,9 +8,9 @@ on:
     # Trigger a daily rebuild for (mac-mini built) Nightly builds
     schedule:
         - cron: "0 11 * * *"
-  # Trigger after Nightly builds are deployed
+    # Trigger after Nightly builds are deployed
     workflow_run:
-        workflows: [ "Build and Deploy" ]
+        workflows: ["Build and Deploy"]
         types:
             - completed
     # Manual trigger for rebuilding for releases

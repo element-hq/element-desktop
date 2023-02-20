@@ -69,14 +69,14 @@ jobs:
               if: steps.cache.outputs.cache-hit != 'true'
               run: "yarn build:native:universal"
 
-            - name: '[Nightly] Resolve version'
+            - name: "[Nightly] Resolve version"
               id: nightly
               if: inputs.version != ''
               run: |
                   echo "config-args=--nightly '${{ inputs.version }}'" >> $GITHUB_OUTPUT
 
             # We split these because electron-builder gets upset if we set CSC_LINK even to an empty string
-            - name: '[Signed] Build App'
+            - name: "[Signed] Build App"
               if: inputs.sign != ''
               run: |
                   scripts/generate-builder-config.ts ${{ steps.nightly.outputs.config-args }}
@@ -88,7 +88,7 @@ jobs:
                   CSC_KEY_PASSWORD: ${{ secrets.APPLE_CSC_KEY_PASSWORD }}
                   CSC_LINK: ${{ secrets.APPLE_CSC_LINK }}
 
-            - name: '[Unsigned] Build App'
+            - name: "[Unsigned] Build App"
               if: inputs.sign == ''
               run: |
                   scripts/generate-builder-config.ts ${{ steps.nightly.outputs.config-args }}
@@ -103,11 +103,11 @@ jobs:
                   mkdir -p dist/install/macos dist/update/macos
                   mv _dist/*-mac.zip dist/update/macos/
                   mv _dist/*.dmg dist/install/macos/
-        
+
                   PKG_JSON_VERSION=$(cat package.json | jq -r .version)
                   LATEST=$(find dist -type f -iname "*-mac.zip" | xargs -0 -n1 -- basename)
                   URL="${{ inputs.base-url }}/update/macos/$LATEST"
-        
+
                   jq -n --arg version "${VERSION:-$PKG_JSON_VERSION}" --arg url "$URL" '
                     {
                       currentRelease: $version,
@@ -127,12 +127,12 @@ jobs:
                   VERSION: ${{ inputs.version }}
 
             # We don't wish to store the installer for every nightly ever, so we only keep the latest
-            - name: '[Nightly] Strip version from installer file'
+            - name: "[Nightly] Strip version from installer file"
               if: inputs.deploy-mode && inputs.version != ''
               run: |
                   mv dist/install/macos/*.dmg "dist/install/macos/Element Nightly.dmg"
 
-            - name: '[Release] Prepare release latest symlink'
+            - name: "[Release] Prepare release latest symlink"
               if: inputs.deploy-mode && inputs.version == ''
               run: |
                   LATEST=$(find dist -type f -iname "*.dmg" | xargs -0 -n1 -- basename)
