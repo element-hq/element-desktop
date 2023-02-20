@@ -35,7 +35,6 @@
     "docker:build:native": "scripts/in-docker.sh yarn run hak",
     "docker:build": "scripts/in-docker.sh yarn run build",
     "docker:install": "scripts/in-docker.sh yarn install",
-    "debrepo": "scripts/mkrepo.sh",
     "clean": "rimraf webapp.asar dist packages deploys lib",
     "hak": "ts-node scripts/hak/index.ts",
     "test": "jest"

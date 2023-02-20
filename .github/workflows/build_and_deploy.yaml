@@ -19,6 +19,11 @@ on:
         required: true
         type: boolean
         default: true
+      linux:
+        description: Whether to build Linux
+        required: true
+        type: boolean
+        default: true
       deploy:
         description: Whether to deploy artifacts
         required: true
@@ -54,6 +59,17 @@ jobs:
       base-url: https://packages.element.io/${{ inputs.mode == 'release' && 'desktop' || 'nightly' }}
       version: ${{ needs.prepare.outputs.macos-version }}
 
+  linux:
+    if: github.event_name != 'workflow_dispatch' || inputs.linux
+    needs: prepare
+    name: Linux
+    uses: ./.github/workflows/build_linux.yaml
+    secrets: inherit
+    with:
+      sqlcipher: system
+      deploy-mode: true
+      version: ${{ needs.prepare.outputs.linux-version }}
+
   deploy:
     needs:
       - macos
@@ -68,8 +84,20 @@ jobs:
           name: packages.element.io
           path: packages.element.io
 
+      - name: Deploy debian repo
+        if: github.event_name != 'workflow_dispatch' || inputs.linux
+        run: |
+          mv packages.element.io/debian .
+          aws s3 cp --recursive debian/ s3://$R2_BUCKET/debian --endpoint-url $R2_URL --region auto
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
+          R2_URL: ${{ secrets.CF_R2_S3_API }}
+
       - name: Deploy artifacts
-        run: aws s3 cp --recursive packages.element.io/ s3://$R2_BUCKET/$DEPLOYMENT_DIR --endpoint-url $R2_URL --region auto
+        if: github.event_name != 'workflow_dispatch' || inputs.macos
+        run: |
+          aws s3 cp --recursive packages.element.io/ s3://$R2_BUCKET/$DEPLOYMENT_DIR --endpoint-url $R2_URL --region auto
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}

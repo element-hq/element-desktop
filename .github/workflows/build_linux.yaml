@@ -3,14 +3,34 @@
 # the correct cache scoping, and additional care must be taken to not run untrusted actions on the develop branch.
 on:
     workflow_call:
+        secrets:
+            GPG_PRIVATE_KEY:
+                required: false
+            GPG_PASSPHRASE:
+                required: false
+            CF_R2_ACCESS_KEY_ID:
+                required: false
+            CF_R2_TOKEN:
+                required: false
+            CF_R2_S3_API:
+                required: false
         inputs:
+            version:
+                type: string
+                required: false
+                description: "Version string to override the one in package.json, used for non-release builds"
             sqlcipher:
                 type: string
                 required: true
                 description: "How to link sqlcipher, one of 'system' | 'static'"
+            deploy-mode:
+                type: string
+                required: false
+                description: "Whether to arrange artifacts in the arrangement needed for deployment, skipping unrelated ones, this uses reprepro and requires 'packages.element.io' environment"
 jobs:
     build:
         runs-on: ubuntu-latest
+        environment: ${{ inputs.deploy-mode && 'packages.element.io' || '' }}
         steps:
             - uses: actions/checkout@v3
 
@@ -50,15 +70,59 @@ jobs:
               env:
                   SQLCIPHER_STATIC: ${{ inputs.sqlcipher == 'static' && '1' || '' }}
 
-            - name: Build App
-              run: "yarn build --publish never -l"
+            - name: '[Nightly] Resolve version'
+              id: nightly
+              if: inputs.version != ''
+              run: |
+                  echo "config-args=--nightly '${{ inputs.version }}'" >> $GITHUB_OUTPUT
 
-            - name: Install .deb
-              run: "sudo apt install ./dist/*.deb"
+            - name: Generate debian control file
+              run: |
+                  cp element.io/${{ inputs.version && 'nightly' || 'release' }}/control.template debcontrol
+                  INPUT_VERSION="${{ inputs.version }}"
+                  VERSION=${INPUT_VERSION:-$(cat package.json | jq -r .version)}
+                  echo "Version: $VERSION" >> debcontrol
+
+            - name: Build App
+              run: |
+                  scripts/generate-builder-config.ts ${{ steps.nightly.outputs.config-args }} --deb-custom-control=debcontrol
+                  yarn build --publish never -l --config electron-builder.json
+
+            - name: Load GPG key
+              if: inputs.deploy-mode
+              uses: crazy-max/ghaction-import-gpg@111c56156bcc6918c056dbef52164cfa583dc549 # v5
+              with:
+                  gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+                  passphrase: ${{ secrets.GPG_PASSPHRASE }}
+                  fingerprint: 75741890063E5E9A46135D01C2850B265AC085BD
+
+            - name: Prepare artifacts for deployment (reprepro)
+              if: inputs.deploy-mode
+              run: |
+                  # Clear out the template packages.element.io directory, it has a dedicated deploy workflow
+                  rm -R packages.element.io/*
+                  
+                  # Install reprepro
+                  sudo apt-get install -y reprepro
+                  
+                  # Fetch reprepro database
+                  aws s3 cp --recursive s3://$R2_BUCKET debian/db/ --endpoint-url $R2_URL --region auto
+                  
+                  grep Codename debian/conf/distributions | sed -n 's/Codename: //p' | while read -r target ; do
+                      reprepro -b debian includedeb "$target" ./dist/*.deb
+                  done
+                  
+                  # Store reprepro database
+                  aws s3 cp --recursive debian/db/ s3://$R2_BUCKET --endpoint-url $R2_URL --region auto
+              env:
+                  R2_BUCKET: packages-element-io-db
+                  AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
+                  R2_URL: ${{ secrets.CF_R2_S3_API }}
 
             - name: Upload Artifacts
               uses: actions/upload-artifact@v3
               with:
-                  name: linux-sqlcipher-${{ inputs.sqlcipher }}
-                  path: dist
+                  name: ${{ inputs.deploy-mode && 'packages.element.io' || format('linux-sqlcipher-{0}', inputs.sqlcipher) }}
+                  path: ${{ inputs.deploy-mode && 'packages.element.io' || 'dist' }}
                   retention-days: 1

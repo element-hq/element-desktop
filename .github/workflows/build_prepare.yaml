@@ -28,13 +28,17 @@ on:
             macos-version:
                 description: "The version string the next macOS Nightly should use, only output for calculate-nightly-versions"
                 value: ${{ jobs.prepare.outputs.macos-version }}
+            linux-version:
+                description: "The version string the next Linux Nightly should use, only output for calculate-nightly-versions"
+                value: ${{ jobs.prepare.outputs.linux-version }}
 jobs:
     prepare:
         name: Prepare
         environment: ${{ inputs.calculate-nightly-versions && 'packages.element.io' || '' }}
         runs-on: ubuntu-latest
         outputs:
-            macos-version: ${{ steps.macos.outputs.version }}
+            macos-version: ${{ steps.versions.outputs.macos }}
+            linux-version: ${{ steps.versions.outputs.linux }}
         steps:
             - uses: actions/checkout@v3
 
@@ -64,13 +68,18 @@ jobs:
                       electronVersion
                       hakDependencies.json
 
-            - name: Calculate macOS Nightly version
-              id: macos
+            - name: Calculate Nightly versions
+              id: versions
               if: inputs.calculate-nightly-versions
               run: |
-                  LATEST=$(aws s3 cp s3://$R2_BUCKET/nightly/update/macos/releases.json - --endpoint-url $R2_URL --region auto | jq -r .currentRelease)
-                  echo "version=$(scripts/generate-nightly-version.ts --latest $LATEST)" >> $GITHUB_OUTPUT
+                  MACOS=$(aws s3 cp s3://$R2_BUCKET/nightly/update/macos/releases.json - --endpoint-url $R2_URL --region auto | jq -r .currentRelease)
+                  echo "macos=$(scripts/generate-nightly-version.ts --latest $MACOS)" >> $GITHUB_OUTPUT
+
+                  LINUX=$(aws s3 cp s3://$R2_BUCKET/debian/dists/default/main/binary-amd64/Packages - --endpoint-url $R2_URL --region auto | grep "Package: element-nightly" -A 50 | grep Version -m1 | sed -n 's/Version: //p')
+                  echo "linux=$(scripts/generate-nightly-version.ts --latest $LINUX)" >> $GITHUB_OUTPUT
               env:
                   AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
+                  # XXX: UPDATE THIS BEFORE WHEN GOING LIVE
+                  R2_BUCKET: 'packages-element-io-test'
                   R2_URL: ${{ secrets.CF_R2_S3_API }}
