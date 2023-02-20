@@ -108,6 +108,7 @@ jobs:
               id: esigner
               if: inputs.sign
               run: |
+                  Set-PSDebug -Trace 2
                   Set-StrictMode -Version 'Latest'
 
                   # Download
@@ -135,11 +136,11 @@ jobs:
                   ${{ env.INSTALL_DIR }}/eSignerCKATool.exe unload
                   ${{ env.INSTALL_DIR }}/eSignerCKATool.exe load
 
-                  # Extract thumbprint
+                  # Extract thumbprint and subject name
                   $CodeSigningCert = Get-ChildItem Cert:\CurrentUser\My -CodeSigningCert | Select-Object -First 1
                   $Thumbprint = $CodeSigningCert.Thumbprint
-                  $SubjectName = ($CodeSigningCert.Subject -split "," | ConvertFrom-StringData).CN
-                  echo "config-args=--signtool-thumbprint '$Thumbprint' --signtool-subject-name '$SubjectName'" >> $env:GITHUB_OUTPUT
+                  $Subject = $CodeSigningCert.Subject -split "," | ConvertFrom-StringData
+                  echo "config-args=--signtool-thumbprint '$Thumbprint' --signtool-subject-name '$Subject.CN'" >> $env:GITHUB_OUTPUT
               env:
                   # XXX: UPDATE THIS BEFORE WHEN GOING LIVE
                   MODE: sandbox
