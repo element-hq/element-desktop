@@ -139,7 +139,13 @@ jobs:
                   $CodeSigningCert = Get-ChildItem Cert:\CurrentUser\My -CodeSigningCert | Select-Object -First 1
                   echo $CodeSigningCert
                   $Thumbprint = $CodeSigningCert.Thumbprint
-                  $SubjectName = ($CodeSigningCert.Subject -split "," | ConvertFrom-StringData).CN
+                  
+                  echo "DEBUG"
+                  $CodeSigningCert.Subject -split ", ?"
+                  $CodeSigningCert.Subject -split ", ?" | ConvertFrom-StringData
+                  echo "DEBUG"
+                  
+                  $SubjectName = ($CodeSigningCert.Subject -split ", ?" | ConvertFrom-StringData).CN
                   echo "config-args=--signtool-thumbprint '$Thumbprint' --signtool-subject-name '$SubjectName'" >> $env:GITHUB_OUTPUT
               env:
                   # XXX: UPDATE THIS BEFORE WHEN GOING LIVE
