@@ -119,7 +119,7 @@ jobs:
 
                   # Install
                   New-Item -ItemType Directory -Force -Path $env:INSTALL_DIR
-                  ./eSigner_CKA.exe /CURRENTUSER /VERYSILENT /SUPPRESSMSGBOXES /DIR="$env:INSTALL_DIR" | Out-Null
+                  ./eSigner_CKA.exe /CURRENTUSER /VERYSILENT /SUPPRESSMSGBOXES /DIR="${{ env.INSTALL_DIR }}" | Out-Null
 
                   # Disable logger
                   $LogConfig = Get-Content -Path "$env:INSTALL_DIR/log4net.config"
@@ -127,7 +127,7 @@ jobs:
                   $LogConfig | Set-Content -Path "$env:INSTALL_DIR/log4net.config"
 
                   # Configure
-                  ${{ env.INSTALL_DIR }}/eSignerCKATool.exe config -mode "$env:MODE" -user "${{ secrets.ESIGNER_USER_NAME }}" -pass "${{ secrets.ESIGNER_USER_PASSWORD }}" -totp "${{ secrets.ESIGNER_USER_TOTP }}" -key "$env:MASTER_KEY_FILE" -r
+                  ${{ env.INSTALL_DIR }}/eSignerCKATool.exe config -mode "${{ env.MODE }}" -user "${{ secrets.ESIGNER_USER_NAME }}" -pass "${{ secrets.ESIGNER_USER_PASSWORD }}" -totp "${{ secrets.ESIGNER_USER_TOTP }}" -key "${{ env.MASTER_KEY_FILE }}" -r
                   ${{ env.INSTALL_DIR }}/eSignerCKATool.exe unload
                   ${{ env.INSTALL_DIR }}/eSignerCKATool.exe load
 
