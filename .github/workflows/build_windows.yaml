@@ -110,6 +110,8 @@ jobs:
               id: esigner
               if: inputs.sign
               run: |
+                  Set-StrictMode -Version 'Latest'
+
                   # Download
                   Invoke-WebRequest -OutFile eSigner_CKA.exe "https://packages.element.io/tools/SSL.COM%20eSigner%20CKA_1.0.4-build-20230214.exe"
 
