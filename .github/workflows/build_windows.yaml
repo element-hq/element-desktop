@@ -123,8 +123,8 @@ jobs:
                   $LogConfig | Set-Content -Path ${{ env.INSTALL_DIR }}/log4net.config
 
                   # Configure
-                  ${{ env.INSTALL_DIR }}/eSignerCKATool.exe config -mode "${{ env.MODE }}" -user "${{ secrets.ESIGNER_USER_NAME }}" -pass "${{ secrets.ESIGNER_USER_PASSWORD }}" -totp "${{ secrets.ESIGNER_USER_TOTP }}" -key "${{ env.MASTER_KEY_FILE }}" -r
-                  # ${{ env.INSTALL_DIR }}/eSignerCKATool.exe config -mode sandbox -user esigner_demo -pass "esignerDemo#1" -totp "RDXYgV9qju+6/7GnMf1vCbKexXVJmUVr+86Wq/8aIGg=" -key "${{ env.MASTER_KEY_FILE }}" -r
+                  #${{ env.INSTALL_DIR }}/eSignerCKATool.exe config -mode "${{ env.MODE }}" -user "${{ secrets.ESIGNER_USER_NAME }}" -pass "${{ secrets.ESIGNER_USER_PASSWORD }}" -totp "${{ secrets.ESIGNER_USER_TOTP }}" -key "${{ env.MASTER_KEY_FILE }}" -r
+                  ${{ env.INSTALL_DIR }}/eSignerCKATool.exe config -mode sandbox -user esigner_demo -pass "esignerDemo#1" -totp "RDXYgV9qju+6/7GnMf1vCbKexXVJmUVr+86Wq/8aIGg=" -key "${{ env.MASTER_KEY_FILE }}" -r
                   ${{ env.INSTALL_DIR }}/eSignerCKATool.exe unload
                   ${{ env.INSTALL_DIR }}/eSignerCKATool.exe load
 
