@@ -113,22 +113,23 @@ jobs:
                   Set-StrictMode -Version 'Latest'
 
                   # Download
-                  Invoke-WebRequest -OutFile eSigner_CKA.exe "https://packages.element.io/tools/SSL.COM%20eSigner%20CKA_1.0.4-build-20230214.exe"
+                  #Invoke-WebRequest -OutFile eSigner_CKA.exe "https://packages.element.io/tools/SSL.COM%20eSigner%20CKA_1.0.4-build-20230214.exe"
+                  # XXX: switch away from 0207 before merging as this CKA is unsigned
+                  Invoke-WebRequest -OutFile eSigner_CKA.exe "https://packages.element.io/tools/SSL.COM%20eSigner%20CKA_1.0.4-build-20230207.exe"
 
                   # Install
-                  New-Item -ItemType Directory -Force -Path ${{ env.INSTALL_DIR }}
-                  ./eSigner_CKA.exe /CURRENTUSER /VERYSILENT /SUPPRESSMSGBOXES /DIR="${{ env.INSTALL_DIR }}" | Out-Null
+                  New-Item -ItemType Directory -Force -Path $env:INSTALL_DIR
+                  ./eSigner_CKA.exe /CURRENTUSER /VERYSILENT /SUPPRESSMSGBOXES /DIR="$env:INSTALL_DIR" | Out-Null
 
                   # Disable logger
-                  $LogConfig = Get-Content -Path ${{ env.INSTALL_DIR }}/log4net.config
+                  $LogConfig = Get-Content -Path "$env:INSTALL_DIR/log4net.config"
                   $LogConfig[0] = '<log4net threshold="OFF">'
-                  $LogConfig | Set-Content -Path ${{ env.INSTALL_DIR }}/log4net.config
+                  $LogConfig | Set-Content -Path "$env:INSTALL_DIR/log4net.config"
 
                   # Configure
-                  #${{ env.INSTALL_DIR }}/eSignerCKATool.exe config -mode "${{ env.MODE }}" -user "${{ secrets.ESIGNER_USER_NAME }}" -pass "${{ secrets.ESIGNER_USER_PASSWORD }}" -totp "${{ secrets.ESIGNER_USER_TOTP }}" -key "${{ env.MASTER_KEY_FILE }}" -r
-                  ${{ env.INSTALL_DIR }}/eSignerCKATool.exe config -mode sandbox -user esigner_demo -pass "esignerDemo#1" -totp "RDXYgV9qju+6/7GnMf1vCbKexXVJmUVr+86Wq/8aIGg=" -key "${{ env.MASTER_KEY_FILE }}" -r
-                  ${{ env.INSTALL_DIR }}/eSignerCKATool.exe unload
-                  ${{ env.INSTALL_DIR }}/eSignerCKATool.exe load
+                  "$env:INSTALL_DIR/eSignerCKATool.exe" config -mode "$env:MODE" -user "${{ secrets.ESIGNER_USER_NAME }}" -pass "${{ secrets.ESIGNER_USER_PASSWORD }}" -totp "${{ secrets.ESIGNER_USER_TOTP }}" -key "$env:MASTER_KEY_FILE" -r
+                  "$env:INSTALL_DIR/eSignerCKATool.exe" unload
+                  "$env:INSTALL_DIR/eSignerCKATool.exe" load
 
                   # Extract thumbprint
                   $CodeSigningCert = Get-ChildItem Cert:\CurrentUser\My -CodeSigningCert | Select-Object -First 1
@@ -136,7 +137,7 @@ jobs:
                   $SubjectName = ($CodeSigningCert.Subject -split "," | ConvertFrom-StringData).CN
                   echo "config-args=--signtool-thumbprint '$Thumbprint' --signtool-subject-name '$SubjectName'" >> $env:GITHUB_OUTPUT
               env:
-                  # XXX: UPDATE THIS BEFORE MERGING
+                  # XXX: UPDATE THIS BEFORE WHEN GOING LIVE
                   MODE: sandbox
                   INSTALL_DIR: C:\Users\runneradmin\eSignerCKA
                   MASTER_KEY_FILE: C:\Users\runneradmin\eSignerCKA\master.key
