@@ -111,13 +111,16 @@ jobs:
                   Set-StrictMode -Version 'Latest'
 
                   # Download
-                  Invoke-WebRequest -OutFile eSigner_CKA_1.0.4.zip "https://vault.bit.ovh/api/public/dl/UwBJZzWh"
-                  Expand-Archive -Force eSigner_CKA_1.0.4.zip
-                  Remove-Item eSigner_CKA_1.0.4.zip
-                  Move-Item -Destination "eSigner_CKA.exe" -Path "eSigner_CKA_1.0.4\SSL.COM eSigner CKA_1.0.4-build-20230207.exe"
+                  #Invoke-WebRequest -OutFile eSigner_CKA_1.0.4.zip "https://vault.bit.ovh/api/public/dl/UwBJZzWh"
+                  
+                  #Invoke-WebRequest -OutFile eSigner_CKA.zip "https://www.ssl.com/download/ssl-com-esigner-cka"
+                  #Expand-Archive -Force eSigner_CKA.zip
+                  #Remove-Item eSigner_CKA.zip
+                  #Move-Item -Destination "eSigner_CKA.exe" -Path "eSigner_CKA\SSL.COM eSigner CKA_1.0.4-build-20230214.exe"
+
                   #Invoke-WebRequest -OutFile eSigner_CKA.exe "https://packages.element.io/tools/SSL.COM%20eSigner%20CKA_1.0.4-build-20230214.exe"
                   # XXX: switch away from 0207 before merging as this CKA is unsigned
-                  #Invoke-WebRequest -OutFile eSigner_CKA.exe "https://packages.element.io/tools/SSL.COM%20eSigner%20CKA_1.0.4-build-20230207.exe"
+                  Invoke-WebRequest -OutFile eSigner_CKA.exe "https://packages.element.io/tools/SSL.COM%20eSigner%20CKA_1.0.4-build-20230207.exe"
 
                   # Install
                   New-Item -ItemType Directory -Force -Path "$env:INSTALL_DIR"
