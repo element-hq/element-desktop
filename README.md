@@ -151,7 +151,7 @@ For a developer guide, see the [translating dev doc](https://github.com/vector-i
 
 [<img src="https://translate.element.io/widgets/element-desktop/-/multi-auto.svg" alt="translationsstatus" width="340">](https://translate.element.io/engage/element-desktop/?utm_source=widget)
 
-# Report bugs & give feedback
+# Report bugs and give feedback
 
 If you run into any bugs or have feedback you'd like to share, please let us know on GitHub.
 
