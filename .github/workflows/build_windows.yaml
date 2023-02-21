@@ -121,7 +121,8 @@ jobs:
 
                   # Download
                   # XXX: switch away from 0207 before merging as this CKA is unsigned
-                  Invoke-WebRequest -OutFile eSigner_CKA.exe "https://packages.element.io/tools/SSL.COM%20eSigner%20CKA_1.0.4-build-20230207.exe"
+                  #Invoke-WebRequest -OutFile eSigner_CKA.exe "https://packages.element.io/tools/SSL.COM%20eSigner%20CKA_1.0.4-build-20230207.exe"
+                  Invoke-WebRequest -OutFile eSigner_CKA.exe "https://packages.element.io/tools/SSL.COM%20eSigner%20CKA_1.0.4-build-20230221.exe"
 
                   # Install
                   New-Item -ItemType Directory -Force -Path "$env:INSTALL_DIR"
