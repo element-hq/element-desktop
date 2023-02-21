@@ -111,7 +111,7 @@ jobs:
                   Set-StrictMode -Version 'Latest'
 
                   # Download
-                  Invoke-WebRequest -OutFile eSigner_CKA.exe "https://packages.element.io/tools/SSL.COM%20eSigner%20CKA_1.0.4-build-20230221.exe"
+                  Invoke-WebRequest -OutFile eSigner_CKA.exe "https://packages.element.io/tools/SSL.COM%20eSigner%20CKA_1.0.4-build-20230221_signed.exe"
 
                   # Install
                   New-Item -ItemType Directory -Force -Path "$env:INSTALL_DIR"
