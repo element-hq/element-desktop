@@ -31,6 +31,12 @@ on:
             linux-version:
                 description: "The version string the next Linux Nightly should use, only output for calculate-nightly-versions"
                 value: ${{ jobs.prepare.outputs.linux-version }}
+            win32-x64-version:
+                description: "The version string the next Windows x64 Nightly should use, only output for calculate-nightly-versions"
+                value: ${{ jobs.prepare.outputs.win32-x64-version }}
+            win32-x86-version:
+                description: "The version string the next Windows x86 Nightly should use, only output for calculate-nightly-versions"
+                value: ${{ jobs.prepare.outputs.win32-x86-version }}
 jobs:
     prepare:
         name: Prepare
@@ -39,6 +45,8 @@ jobs:
         outputs:
             macos-version: ${{ steps.versions.outputs.macos }}
             linux-version: ${{ steps.versions.outputs.linux }}
+            win32-x64-version: ${{ steps.versions.outputs.win_x64 }}
+            win32-x86-version: ${{ steps.versions.outputs.win_x86 }}
         steps:
             - uses: actions/checkout@v3
 
@@ -77,9 +85,14 @@ jobs:
 
                   LINUX=$(aws s3 cp s3://$R2_BUCKET/debian/dists/default/main/binary-amd64/Packages - --endpoint-url $R2_URL --region auto | grep "Package: element-nightly" -A 50 | grep Version -m1 | sed -n 's/Version: //p')
                   echo "linux=$(scripts/generate-nightly-version.ts --latest $LINUX)" >> $GITHUB_OUTPUT
+
+                  WINx64=$(aws s3 cp s3://$R2_BUCKET/nightly/update/win32/x64/RELEASES - --endpoint-url $R2_URL --region auto | awk '{print $2}' | cut -d "-" -f 5 | cut -c 8-)
+                  echo "win_x64=$(scripts/generate-nightly-version.ts --latest $WINx64)" >> $GITHUB_OUTPUT
+                  WINx86=$(aws s3 cp s3://$R2_BUCKET/nightly/update/win32/ia32/RELEASES - --endpoint-url $R2_URL --region auto | awk '{print $2}' | cut -d "-" -f 5 | cut -c 8-)
+                  echo "win_x86=$(scripts/generate-nightly-version.ts --latest $WINx86)" >> $GITHUB_OUTPUT
               env:
                   AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
                   # XXX: UPDATE THIS BEFORE WHEN GOING LIVE
-                  R2_BUCKET: 'packages-element-io-test'
+                  R2_BUCKET: "packages-element-io-test"
                   R2_URL: ${{ secrets.CF_R2_S3_API }}

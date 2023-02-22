@@ -8,6 +8,7 @@ const HIDDEN_FILES = [
     ".DS_Store",
     "index.html",
     "/fonts/",
+    "/tools/",
     "/nginx-theme/",
     ".~tmp~/",
     "msi/",

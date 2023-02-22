@@ -70,7 +70,7 @@ jobs:
               env:
                   SQLCIPHER_STATIC: ${{ inputs.sqlcipher == 'static' && '1' || '' }}
 
-            - name: '[Nightly] Resolve version'
+            - name: "[Nightly] Resolve version"
               id: nightly
               if: inputs.version != ''
               run: |
@@ -101,17 +101,17 @@ jobs:
               run: |
                   # Clear out the template packages.element.io directory, it has a dedicated deploy workflow
                   rm -R packages.element.io/*
-                  
+
                   # Install reprepro
                   sudo apt-get install -y reprepro
-                  
+
                   # Fetch reprepro database
                   aws s3 cp --recursive s3://$R2_BUCKET debian/db/ --endpoint-url $R2_URL --region auto
-                  
+
                   grep Codename debian/conf/distributions | sed -n 's/Codename: //p' | while read -r target ; do
                       reprepro -b debian includedeb "$target" ./dist/*.deb
                   done
-                  
+
                   # Store reprepro database
                   aws s3 cp --recursive debian/db/ s3://$R2_BUCKET --endpoint-url $R2_URL --region auto
               env:

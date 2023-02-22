@@ -22,10 +22,12 @@ const NIGHTLY_APP_ID = "im.riot.nightly";
 const NIGHTLY_APP_NAME = "element-desktop-nightly";
 
 const argv = parseArgs<{
-    nightly?: string;
+    "nightly"?: string;
+    "signtool-thumbprint"?: string;
+    "signtool-subject-name"?: string;
     "deb-custom-control"?: string;
 }>(process.argv.slice(2), {
-    string: ["nightly", "deb-custom-control"],
+    string: ["nightly", "deb-custom-control", "signtool-thumbprint", "signtool-subject-name"],
 });
 
 interface File {
@@ -54,7 +56,10 @@ interface PackageBuild {
         target: {
             target: string;
         };
-        sign: string;
+        sign?: string;
+        signingHashAlgorithms?: string[];
+        certificateSubjectName?: string;
+        certificateSha1?: string;
     };
     deb?: {
         fpm?: string[];
@@ -108,6 +113,13 @@ async function main(): Promise<number | void> {
         cfg.extraMetadata!.version = version;
     }
 
+    if (argv["signtool-thumbprint"] && argv["signtool-subject-name"]) {
+        delete cfg.win.sign;
+        cfg.win.signingHashAlgorithms = ["sha256"];
+        cfg.win.certificateSubjectName = argv["signtool-subject-name"];
+        cfg.win.certificateSha1 = argv["signtool-thumbprint"];
+    }
+
     if (os.platform() === "linux") {
         // Electron crashes on debian if there's a space in the path.
         // https://github.com/vector-im/element-web/issues/13171
@@ -123,9 +135,11 @@ async function main(): Promise<number | void> {
     await fsProm.writeFile(ELECTRON_BUILDER_CFG_FILE, JSON.stringify(cfg, null, 4));
 }
 
-main().then((ret) => {
-    process.exit(ret!);
-}).catch((e) => {
-    console.error(e);
-    process.exit(1);
-});
+main()
+    .then((ret) => {
+        process.exit(ret!);
+    })
+    .catch((e) => {
+        console.error(e);
+        process.exit(1);
+    });
