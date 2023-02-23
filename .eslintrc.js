@@ -21,7 +21,7 @@ module.exports = {
     },
     overrides: [
         {
-            files: ["src/**/*.ts", "test/**/*.ts"],
+            files: ["src/**/*.ts"],
             extends: ["plugin:matrix-org/typescript"],
             rules: {
                 // Things we do that break the ideal style
