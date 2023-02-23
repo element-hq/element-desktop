@@ -1,23 +1,8 @@
 module.exports = {
     plugins: ["matrix-org"],
-    extends: ["plugin:matrix-org/javascript"],
+    extends: [".eslintrc.js"],
     parserOptions: {
-        ecmaVersion: 2021,
         project: ["hak/tsconfig.json"],
-    },
-    env: {
-        es6: true,
-        node: true,
-        // we also have some browser code (ie. the preload script)
-        browser: true,
-    },
-    // NOTE: These rules are frozen and new rules should not be added here.
-    // New changes belong in https://github.com/matrix-org/eslint-plugin-matrix-org/
-    rules: {
-        "quotes": "off",
-        "indent": "off",
-        "prefer-promise-reject-errors": "off",
-        "no-async-promise-executor": "off",
     },
     overrides: [
         {
