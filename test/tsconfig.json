@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "resolveJsonModule": true,
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "target": "es2017",
+        "module": "commonjs",
+        "sourceMap": false,
+        "strict": true,
+        "lib": ["es2019", "dom"]
+    },
+    "include": ["./**/*.ts"],
+    "ts-node": {
+        "transpileOnly": true
+    }
+}
