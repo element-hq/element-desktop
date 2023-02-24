@@ -9,10 +9,10 @@
         "outDir": "./lib",
         "rootDir": "./src",
         "declaration": true,
-        "typeRoots": ["src/@types"],
+        "typeRoots": ["src/@types", "node_modules/@types"],
         "lib": ["es2019", "dom"],
-        "types": ["jest", "node"],
+        "types": ["node"],
         "strict": true
     },
-    "include": ["./src/**/*.ts", "./tests/**/*.ts"]
+    "include": ["./src/**/*.ts"]
 }

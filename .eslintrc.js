@@ -3,6 +3,7 @@ module.exports = {
     extends: ["plugin:matrix-org/javascript"],
     parserOptions: {
         ecmaVersion: 2021,
+        project: ["tsconfig.json"],
     },
     env: {
         es6: true,
@@ -20,7 +21,7 @@ module.exports = {
     },
     overrides: [
         {
-            files: ["{src,scripts,hak}/**/*.{ts,tsx}"],
+            files: ["src/**/*.ts"],
             extends: ["plugin:matrix-org/typescript"],
             rules: {
                 // Things we do that break the ideal style
