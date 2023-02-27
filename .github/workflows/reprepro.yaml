@@ -43,9 +43,6 @@ jobs:
             - name: Run reprepro
               if: inputs.deploy-mode
               run: |
-                  # Clear out the template packages.element.io directory, it has a dedicated deploy workflow
-                  rm -R packages.element.io/*
-                  
                   # Install reprepro
                   sudo apt-get install -y reprepro
                   
@@ -63,3 +60,13 @@ jobs:
                   AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
                   R2_URL: ${{ secrets.CF_R2_S3_API }}
+
+            - name: Deploy debian repo
+              run: |
+                  aws s3 cp --recursive packages.element.io/debian/ s3://$R2_BUCKET/debian --endpoint-url $R2_URL --region auto
+              env:
+                  AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
+                  R2_URL: ${{ secrets.CF_R2_S3_API }}
+                  # XXX: UPDATE THIS BEFORE WHEN GOING LIVE
+                  R2_BUCKET: "packages-element-io-test"
