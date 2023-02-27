@@ -99,16 +99,23 @@ jobs:
         needs: prepare
         name: Linux
         uses: ./.github/workflows/build_linux.yaml
-        secrets: inherit
         with:
             sqlcipher: system
             deploy-mode: true
             version: ${{ needs.prepare.outputs.linux-version }}
 
+    reprepro:
+        needs: linux
+        name: Run reprepro
+        uses: ./.github/workflows/reprepro.yaml
+        secrets: inherit
+        with:
+            artifact-name: linux-sqlcipher-system
+
     deploy:
         needs:
             - macos
-            - linux
+            - reprepro
             - windows_32bit
             - windows_64bit
         runs-on: ubuntu-latest
