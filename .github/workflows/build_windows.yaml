@@ -40,11 +40,13 @@ jobs:
                   map: |
                       {
                         "x64": {
-                          "target": "x86_64-pc-windows-msvc"
+                          "target": "x86_64-pc-windows-msvc",
+                          "dir": "x64",
                         },
                         "x86": {
                           "target": "i686-pc-windows-msvc",
-                          "build-args": "--ia32"
+                          "build-args": "--ia32",
+                          "dir": "ia32",
                         }
                       }
 
@@ -160,26 +162,30 @@ jobs:
               shell: bash
               run: |
                   mv dist _dist
-                  mkdir -p dist/install/win32/${{ inputs.arch }}/msi dist/update/win32/${{ inputs.arch }}
-                  mv _dist/squirrel-windows*/*.exe dist/install/win32/${{ inputs.arch }}/
-                  mv _dist/squirrel-windows*/*.nupkg dist/update/win32/${{ inputs.arch }}/
-                  mv _dist/squirrel-windows*/RELEASES dist/update/win32/${{ inputs.arch }}/
-                  # mv _dist/*.msi dist/install/win32/${{ inputs.arch }}/msi/
+                  mkdir -p "dist/install/win32/$DIR/msi" "dist/update/win32/$DIR"
+                  mv _dist/squirrel-windows*/*.exe "dist/install/win32/$DIR"
+                  mv _dist/squirrel-windows*/*.nupkg "dist/update/win32/$DIR/"
+                  mv _dist/squirrel-windows*/RELEASES "dist/update/win32/$DIR/"
+                  # mv _dist/*.msi "dist/install/win32/$DIR/msi/"
+              env:
+                  DIR: ${{ steps.config.outputs.dir }}
 
             # We don't wish to store the installer for every nightly ever, so we only keep the latest
             - name: "[Nightly] Strip version from installer file"
               if: inputs.deploy-mode && inputs.version != ''
               shell: bash
               run: |
-                  mv dist/install/win32/${{ inputs.arch }}/*.exe "dist/install/win32/${{ inputs.arch }}/Element Nightly Setup.exe"
-                  # mv dist/install/win32/${{ inputs.arch }}/msi/*.msi "dist/install/win32/${{ inputs.arch }}/msi/Element Nightly Setup.msi"
+                  mv dist/install/win32/$DIR/*.exe "dist/install/win32/$DIR/Element Nightly Setup.exe"
+                  # mv dist/install/win32/$DIR/msi/*.msi "dist/install/win32/$DIR/msi/Element Nightly Setup.msi"
+              env:
+                  DIR: ${{ steps.config.outputs.dir }}
 
             - name: "[Release] Prepare release latest symlink"
               if: inputs.deploy-mode && inputs.version == ''
               shell: bash
               run: |
                   ln -s "$(find . -type f -iname "*.exe" | xargs -0 -n1 -- basename)" "Element Setup.exe"
-              working-directory: "dist/install/win32/${{ inputs.arch }}"
+              working-directory: "dist/install/win32/${{ steps.config.outputs.dir }}"
 
             - name: Upload Artifacts
               uses: actions/upload-artifact@v3
