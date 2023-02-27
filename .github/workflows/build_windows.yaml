@@ -41,12 +41,12 @@ jobs:
                       {
                         "x64": {
                           "target": "x86_64-pc-windows-msvc",
-                          "dir": "x64",
+                          "dir": "x64"
                         },
                         "x86": {
                           "target": "i686-pc-windows-msvc",
                           "build-args": "--ia32",
-                          "dir": "ia32",
+                          "dir": "ia32"
                         }
                       }
 
