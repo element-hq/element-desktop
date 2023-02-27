@@ -90,7 +90,8 @@ jobs:
         with:
             sign: true
             deploy-mode: true
-            base-url: https://packages.element.io/${{ inputs.mode == 'release' && 'desktop' || 'nightly' }}
+            # XXX: UPDATE THIS BEFORE WHEN GOING LIVE
+            base-url: https://packages-element-io-test.element.io/${{ inputs.mode == 'release' && 'desktop' || 'nightly' }}
             version: ${{ needs.prepare.outputs.macos-version }}
 
     linux:
