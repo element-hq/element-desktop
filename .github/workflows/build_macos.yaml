@@ -106,7 +106,8 @@ jobs:
 
                   PKG_JSON_VERSION=$(cat package.json | jq -r .version)
                   LATEST=$(find dist -type f -iname "*-mac.zip" | xargs -0 -n1 -- basename)
-                  URL="${{ inputs.base-url }}/update/macos/$LATEST"
+                  # Encode spaces in the URL as Squirrel.Mac complains about bad JSON otherwise
+                  URL="${{ inputs.base-url }}/update/macos/${LATEST// /%20}"
 
                   jq -n --arg version "${VERSION:-$PKG_JSON_VERSION}" --arg url "$URL" '
                     {
