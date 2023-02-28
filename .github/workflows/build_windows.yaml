@@ -1,0 +1,195 @@
+# This workflow relies on actions/cache to store the hak dependency artifacts as they take a long time to build
+# Due to this extra care must be taken to only ever run all build_* scripts against the same branch to ensure
+# the correct cache scoping, and additional care must be taken to not run untrusted actions on the develop branch.
+on:
+    workflow_call:
+        secrets:
+            ESIGNER_USER_NAME:
+                required: false
+            ESIGNER_USER_PASSWORD:
+                required: false
+            ESIGNER_USER_TOTP:
+                required: false
+        inputs:
+            arch:
+                type: string
+                required: true
+                description: "The architecture to build for, one of 'x64' | 'x86'"
+            version:
+                type: string
+                required: false
+                description: "Version string to override the one in package.json, used for non-release builds"
+            sign:
+                type: string
+                required: false
+                description: "Whether to sign & notarise the build, requires 'packages.element.io' environment"
+            deploy-mode:
+                type: string
+                required: false
+                description: "Whether to arrange artifacts in the arrangement needed for deployment, skipping unrelated ones"
+jobs:
+    build:
+        runs-on: windows-latest
+        environment: ${{ inputs.sign && 'packages.element.io' || '' }}
+        steps:
+            - uses: kanga333/variable-mapper@master
+              id: config
+              with:
+                  key: "${{ inputs.arch }}"
+                  export_to: output
+                  map: |
+                      {
+                        "x64": {
+                          "target": "x86_64-pc-windows-msvc",
+                          "dir": "x64"
+                        },
+                        "x86": {
+                          "target": "i686-pc-windows-msvc",
+                          "build-args": "--ia32",
+                          "dir": "ia32"
+                        }
+                      }
+
+            - uses: actions/checkout@v3
+
+            - uses: actions/download-artifact@v3
+              with:
+                  name: webapp
+
+            - name: Cache .hak
+              id: cache
+              uses: actions/cache@v3
+              with:
+                  key: ${{ runner.os }}-${{ hashFiles('hakDependencies.json', 'electronVersion') }}
+                  path: |
+                      ./.hak
+
+            - name: Set up build tools
+              uses: ilammy/msvc-dev-cmd@v1
+              with:
+                  arch: ${{ inputs.arch }}
+
+            # ActiveTCL package on choco is from 2015,
+            # this one is newer but includes more than we need
+            - name: Choco install tclsh
+              if: steps.cache.outputs.cache-hit != 'true'
+              shell: pwsh
+              run: |
+                  choco install -y magicsplat-tcl-tk --no-progress
+                  echo "${HOME}/AppData/Local/Apps/Tcl86/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+            - name: Choco install NetWide Assembler
+              if: steps.cache.outputs.cache-hit != 'true'
+              shell: pwsh
+              run: |
+                  choco install -y nasm --no-progress
+                  echo "C:/Program Files/NASM" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+            - name: Install Rust
+              if: steps.cache.outputs.cache-hit != 'true'
+              uses: actions-rs/toolchain@v1
+              with:
+                  toolchain: stable
+                  target: ${{ steps.config.outputs.target }}
+
+            - uses: actions/setup-node@v3
+              with:
+                  cache: "yarn"
+
+            # Does not need branch matching as only analyses this layer
+            - name: Install Deps
+              run: "yarn install --pure-lockfile"
+
+            - name: Build Natives
+              if: steps.cache.outputs.cache-hit != 'true'
+              run: |
+                  refreshenv
+                  yarn build:native --target ${{ steps.config.outputs.target }}
+
+            - name: Install and configure eSigner CKA
+              id: esigner
+              if: inputs.sign
+              run: |
+                  Set-StrictMode -Version 'Latest'
+
+                  # Download
+                  Invoke-WebRequest -OutFile eSigner_CKA.exe "https://packages.element.io/tools/SSL.COM%20eSigner%20CKA_1.0.4-build-20230221_signed.exe"
+
+                  # Install
+                  New-Item -ItemType Directory -Force -Path "$env:INSTALL_DIR"
+                  ./eSigner_CKA.exe /CURRENTUSER /VERYSILENT /SUPPRESSMSGBOXES /DIR="${{ env.INSTALL_DIR }}" | Out-Null
+
+                  # Disable logger
+                  $LogConfig = Get-Content -Path ${{ env.INSTALL_DIR }}/log4net.config
+                  $LogConfig[0] = '<log4net threshold="OFF">'
+                  $LogConfig | Set-Content -Path ${{ env.INSTALL_DIR }}/log4net.config
+
+                  # Configure
+                  ${{ env.INSTALL_DIR }}/eSignerCKATool.exe config -mode "${{ env.MODE }}" -user "${{ secrets.ESIGNER_USER_NAME }}" -pass "${{ secrets.ESIGNER_USER_PASSWORD }}" -totp "${{ secrets.ESIGNER_USER_TOTP }}" -key "${{ env.MASTER_KEY_FILE }}" -r
+                  ${{ env.INSTALL_DIR }}/eSignerCKATool.exe unload
+                  ${{ env.INSTALL_DIR }}/eSignerCKATool.exe load
+
+                  # Find certificate
+                  $CodeSigningCert = Get-ChildItem Cert:\CurrentUser\My -CodeSigningCert | Select-Object -First 1
+                  echo Certificate: $CodeSigningCert
+
+                  # Extract thumbprint and subject name
+                  $Thumbprint = $CodeSigningCert.Thumbprint
+                  $SubjectName = ($CodeSigningCert.Subject -replace ", ?", "`n" | ConvertFrom-StringData).CN
+                  echo "config-args=--signtool-thumbprint '$Thumbprint' --signtool-subject-name '$SubjectName'" >> $env:GITHUB_OUTPUT
+              env:
+                  # XXX: UPDATE THIS BEFORE WHEN GOING LIVE
+                  MODE: sandbox
+                  INSTALL_DIR: C:\Users\runneradmin\eSignerCKA
+                  MASTER_KEY_FILE: C:\Users\runneradmin\eSignerCKA\master.key
+
+            - name: "[Nightly] Resolve version"
+              id: nightly
+              if: inputs.version != ''
+              shell: bash
+              run: |
+                  echo "config-args=--nightly '${{ inputs.version }}'" >> $GITHUB_OUTPUT
+
+            - name: Build App
+              run: |
+                  yarn ts-node scripts/generate-builder-config.ts ${{ steps.nightly.outputs.config-args }} ${{ steps.esigner.outputs.config-args }}
+                  yarn build --publish never -w --config electron-builder.json ${{ steps.config.outputs.build-args }}
+              env:
+                  SIGNTOOL_PATH: "C:/Program Files (x86)/Windows Kits/10/bin/10.0.22000.0/x86/signtool.exe"
+
+            - name: Prepare artifacts for deployment
+              if: inputs.deploy-mode
+              shell: bash
+              run: |
+                  mv dist _dist
+                  mkdir -p "dist/install/win32/$DIR/msi" "dist/update/win32/$DIR"
+                  mv _dist/squirrel-windows*/*.exe "dist/install/win32/$DIR"
+                  mv _dist/squirrel-windows*/*.nupkg "dist/update/win32/$DIR/"
+                  mv _dist/squirrel-windows*/RELEASES "dist/update/win32/$DIR/"
+                  # mv _dist/*.msi "dist/install/win32/$DIR/msi/"
+              env:
+                  DIR: ${{ steps.config.outputs.dir }}
+
+            # We don't wish to store the installer for every nightly ever, so we only keep the latest
+            - name: "[Nightly] Strip version from installer file"
+              if: inputs.deploy-mode && inputs.version != ''
+              shell: bash
+              run: |
+                  mv dist/install/win32/$DIR/*.exe "dist/install/win32/$DIR/Element Nightly Setup.exe"
+                  # mv dist/install/win32/$DIR/msi/*.msi "dist/install/win32/$DIR/msi/Element Nightly Setup.msi"
+              env:
+                  DIR: ${{ steps.config.outputs.dir }}
+
+            - name: "[Release] Prepare release latest symlink"
+              if: inputs.deploy-mode && inputs.version == ''
+              shell: bash
+              run: |
+                  ln -s "$(find . -type f -iname "*.exe" | xargs -0 -n1 -- basename)" "Element Setup.exe"
+              working-directory: "dist/install/win32/${{ steps.config.outputs.dir }}"
+
+            - name: Upload Artifacts
+              uses: actions/upload-artifact@v3
+              with:
+                  name: ${{ inputs.deploy-mode && 'packages.element.io' || format('win-{0}', inputs.arch) }}
+                  path: dist
+                  retention-days: 1

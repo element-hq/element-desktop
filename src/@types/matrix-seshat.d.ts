@@ -86,7 +86,7 @@ declare module "matrix-seshat" {
     }
 
     export class Seshat {
-        constructor(path: string, config?: IConfig);
+        public constructor(path: string, config?: IConfig);
         public addEvent(matrixEvent: IMatrixEvent, profile?: IMatrixProfile): void;
         public deleteEvent(eventId: string): Promise<boolean>;
         public commit(force?: boolean): Promise<number>;
@@ -132,7 +132,7 @@ declare module "matrix-seshat" {
     }
 
     export class SeshatRecovery {
-        constructor(path: string, config?: IConfig);
+        public constructor(path: string, config?: IConfig);
         public info(): IRecoveryInfo;
         public getUserVersion(): Promise<number>;
         public shutdown(): Promise<void>;
@@ -140,6 +140,6 @@ declare module "matrix-seshat" {
     }
 
     export class ReindexError extends Error {
-        constructor(message?: string);
+        public constructor(message?: string);
     }
 }
