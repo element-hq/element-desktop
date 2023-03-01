@@ -15,7 +15,6 @@
 import parseArgs from "minimist";
 import fsProm from "fs/promises";
 import * as os from "os";
-import { NotarizeOptions } from "@electron/notarize";
 
 const ELECTRON_BUILDER_CFG_FILE = "electron-builder.json";
 
@@ -53,7 +52,7 @@ interface PackageBuild {
     mac: {
         category: string;
         darkModeSupport: boolean;
-        notarize?: Partial<NotarizeOptions> | boolean | null;
+        notarize?: { teamId: string } | boolean | null;
     };
     win: {
         target: {
@@ -126,7 +125,6 @@ async function main(): Promise<number | void> {
     if (argv["notarytool-team-id"]) {
         delete cfg.afterSign;
         cfg.mac.notarize = {
-            tool: "notarytool",
             teamId: argv["notarytool-team-id"],
         };
     }
