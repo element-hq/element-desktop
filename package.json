@@ -80,7 +80,7 @@
     "@typescript-eslint/eslint-plugin": "^5.42.0",
     "@typescript-eslint/parser": "^5.42.0",
     "allchange": "^1.0.6",
-    "app-builder-lib": "^23.6.0",
+    "app-builder-lib": "^24.0.0-alpha.13",
     "babel-jest": "^29.0.0",
     "chokidar": "^3.5.2",
     "detect-libc": "^1.0.3",
