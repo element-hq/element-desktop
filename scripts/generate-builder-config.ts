@@ -15,6 +15,7 @@
 import parseArgs from "minimist";
 import fsProm from "fs/promises";
 import * as os from "os";
+import { NotarizeOptions } from "@electron/notarize";
 
 const ELECTRON_BUILDER_CFG_FILE = "electron-builder.json";
 
@@ -25,9 +26,10 @@ const argv = parseArgs<{
     "nightly"?: string;
     "signtool-thumbprint"?: string;
     "signtool-subject-name"?: string;
+    "notarytool-team-id"?: string;
     "deb-custom-control"?: string;
 }>(process.argv.slice(2), {
-    string: ["nightly", "deb-custom-control", "signtool-thumbprint", "signtool-subject-name"],
+    string: ["nightly", "deb-custom-control", "signtool-thumbprint", "signtool-subject-name", "notarytool-team-id"],
 });
 
 interface File {
@@ -51,6 +53,7 @@ interface PackageBuild {
     mac: {
         category: string;
         darkModeSupport: boolean;
+        notarize?: Partial<NotarizeOptions> | boolean | null;
     };
     win: {
         target: {
@@ -67,8 +70,8 @@ interface PackageBuild {
     directories: {
         output: string;
     };
-    afterPack: string;
-    afterSign: string;
+    afterPack?: string;
+    afterSign?: string;
     protocols: Array<{
         name: string;
         schemes: string[];
@@ -118,6 +121,14 @@ async function main(): Promise<number | void> {
         cfg.win.signingHashAlgorithms = ["sha256"];
         cfg.win.certificateSubjectName = argv["signtool-subject-name"];
         cfg.win.certificateSha1 = argv["signtool-thumbprint"];
+    }
+
+    if (argv["notarytool-team-id"]) {
+        delete cfg.afterSign;
+        cfg.mac.notarize = {
+            tool: "notarytool",
+            teamId: argv["notarytool-team-id"],
+        };
     }
 
     if (os.platform() === "linux") {
