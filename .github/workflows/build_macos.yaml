@@ -79,7 +79,7 @@ jobs:
             - name: "[Signed] Build App"
               if: inputs.sign != ''
               run: |
-                  scripts/generate-builder-config.ts ${{ steps.nightly.outputs.config-args }} --notarytool-team-id='${{ secrets.NOTARIZE_TEAM_ID }}'
+                  scripts/generate-builder-config.ts ${{ steps.nightly.outputs.config-args }} --notarytool-team-id='${{ secrets.APPLE_TEAM_ID }}'
                   yarn build:universal --publish never --config electron-builder.json
               env:
                   APPLE_ID: ${{ secrets.APPLE_ID }}
