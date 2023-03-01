@@ -12,7 +12,7 @@ exports.default = async function (context) {
         if (process.env.NOTARIZE_KEYCHAIN_PROFILE) {
             notarizeToolCredentials.keychainProfile = process.env.NOTARIZE_KEYCHAIN_PROFILE;
             notarizeToolCredentials.keychain = process.env.NOTARIZE_KEYCHAIN;
-        } if (process.env.NOTARIZE_APPLE_ID && process.env.NOTARIZE_APPLE_ID_PASSWORD && process.env.NOTARIZE_TEAM_ID) {
+        } else if (process.env.NOTARIZE_APPLE_ID && process.env.NOTARIZE_APPLE_ID_PASSWORD && process.env.NOTARIZE_TEAM_ID) {
             notarizeToolCredentials.appleId = process.env.NOTARIZE_APPLE_ID;
             notarizeToolCredentials.appleIdPassword = process.env.NOTARIZE_APPLE_ID_PASSWORD;
             notarizeToolCredentials.teamId = process.env.NOTARIZE_TEAM_ID;
