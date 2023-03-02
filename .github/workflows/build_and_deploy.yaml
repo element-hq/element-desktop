@@ -1,5 +1,7 @@
 name: Build and Deploy
 on:
+    push:
+        branches: ["t3chguy/protect-reprepro"]
     # Nightly build
     schedule:
         - cron: "0 9 * * *"
