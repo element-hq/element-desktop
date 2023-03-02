@@ -101,16 +101,23 @@ jobs:
         needs: prepare
         name: Linux
         uses: ./.github/workflows/build_linux.yaml
-        secrets: inherit
         with:
             sqlcipher: system
             deploy-mode: true
             version: ${{ needs.prepare.outputs.linux-version }}
 
+    reprepro:
+        needs: linux
+        name: Run reprepro
+        if: needs.linux.result == 'success' && (github.event != 'workflow_dispatch' || inputs.deploy)
+        uses: ./.github/workflows/reprepro.yaml
+        secrets: inherit
+        with:
+            artifact-name: linux-sqlcipher-system
+
     deploy:
         needs:
             - macos
-            - linux
             - windows_32bit
             - windows_64bit
         runs-on: ubuntu-latest
@@ -123,16 +130,6 @@ jobs:
               with:
                   name: packages.element.io
                   path: packages.element.io
-
-            - name: Deploy debian repo
-              if: github.event_name != 'workflow_dispatch' || inputs.linux
-              run: |
-                  mv packages.element.io/debian .
-                  aws s3 cp --recursive debian/ s3://$R2_BUCKET/debian --endpoint-url $R2_URL --region auto
-              env:
-                  AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
-                  AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
-                  R2_URL: ${{ secrets.CF_R2_S3_API }}
 
             - name: Deploy artifacts
               if: github.event_name != 'workflow_dispatch' || inputs.macos || inputs.windows_32bit || inputs.windows_64bit
