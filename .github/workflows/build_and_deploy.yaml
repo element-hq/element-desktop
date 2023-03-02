@@ -101,7 +101,6 @@ jobs:
         uses: ./.github/workflows/build_linux.yaml
         with:
             sqlcipher: system
-            deploy-mode: true
             version: ${{ needs.prepare.outputs.linux-version }}
 
     reprepro:
