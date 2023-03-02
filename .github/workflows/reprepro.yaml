@@ -20,7 +20,7 @@ on:
 concurrency: reprepro
 jobs:
     reprepro:
-        name: Run reprepro
+        name: Deploy debian package
         environment: packages.element.io
         runs-on: ubuntu-latest
         steps:
@@ -33,7 +33,6 @@ jobs:
                   path: dist
 
             - name: Load GPG key
-              if: inputs.deploy-mode
               uses: crazy-max/ghaction-import-gpg@111c56156bcc6918c056dbef52164cfa583dc549 # v5
               with:
                   gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
@@ -41,7 +40,6 @@ jobs:
                   fingerprint: 75741890063E5E9A46135D01C2850B265AC085BD
 
             - name: Run reprepro
-              if: inputs.deploy-mode
               run: |
                   # Install reprepro
                   sudo apt-get install -y reprepro

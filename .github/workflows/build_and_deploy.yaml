@@ -40,8 +40,7 @@ on:
                 type: boolean
                 default: true
 # We limit the concurrency on this workflow to prevent deployments stepping on each other
-# and more importantly to guard the reprepro database.
-# Care has to be taken to make deployments atomic.
+# and more importantly to guard the reprepro database. Care has to be taken to make deployments atomic.
 concurrency: ${{ github.workflow }}
 env:
     # XXX: UPDATE THIS BEFORE WHEN GOING LIVE
@@ -104,15 +103,8 @@ jobs:
             sqlcipher: system
             version: ${{ needs.prepare.outputs.linux-version }}
 
-    reprepro:
-        needs: linux
-        name: Run reprepro
-        if: needs.linux.result == 'success' && (github.event != 'workflow_dispatch' || inputs.deploy)
-        uses: ./.github/workflows/reprepro.yaml
-        secrets: inherit
-        with:
-            artifact-name: linux-sqlcipher-system
-
+    # This deploy job only handles Windows & macOS as those are stateless and static,
+    # Linux will be deployed after via reprepro after it
     deploy:
         needs:
             - macos
@@ -138,3 +130,15 @@ jobs:
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
                   R2_URL: ${{ secrets.CF_R2_S3_API }}
                   DEPLOYMENT_DIR: ${{ inputs.mode == 'release' && 'desktop' || 'nightly' }}
+
+    reprepro:
+        needs:
+            - linux
+            # We queue this after the other deploy stage as we want to abort if that fails
+            - deploy
+        name: Run reprepro
+        if: needs.linux.result == 'success' && (github.event != 'workflow_dispatch' || inputs.deploy)
+        uses: ./.github/workflows/reprepro.yaml
+        secrets: inherit
+        with:
+            artifact-name: linux-sqlcipher-system
