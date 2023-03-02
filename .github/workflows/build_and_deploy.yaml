@@ -103,8 +103,8 @@ jobs:
             sqlcipher: system
             version: ${{ needs.prepare.outputs.linux-version }}
 
-    # This deploy job only handles Windows & macOS as those are stateless and static,
-    # Linux will be deployed after via reprepro after it, but we list it as a dependency to abort if it fails.
+    # This deploy job only handles Windows & macOS as those are stateless and static.
+    # Linux will be deployed via reprepro after it, but we list it as a dependency to abort if it fails.
     deploy:
         needs:
             - macos
