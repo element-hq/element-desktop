@@ -61,6 +61,13 @@ jobs:
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
                   R2_URL: ${{ secrets.CF_R2_S3_API }}
 
+            - name: Check repository works
+              run: |
+                  sudo wget -O /usr/share/keyrings/element-io-archive-keyring.gpg https://packages.element.io/debian/element-io-archive-keyring.gpg
+                  echo "deb [signed-by=/usr/share/keyrings/element-io-archive-keyring.gpg] file://$(pwd)/packages.element.io/debian/ default main" | sudo tee /etc/apt/sources.list.d/element-io.list
+                  sudo apt update
+                  apt-cache-policy element-*
+
             - name: Deploy debian repo
               run: |
                   aws s3 cp --recursive packages.element.io/debian/ s3://$R2_BUCKET/debian --endpoint-url $R2_URL --region auto
