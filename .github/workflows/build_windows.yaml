@@ -31,6 +31,8 @@ jobs:
     build:
         runs-on: windows-latest
         environment: ${{ inputs.sign && 'packages.element.io' || '' }}
+        env:
+            SIGNTOOL_PATH: "C:/Program Files (x86)/Windows Kits/10/bin/10.0.22000.0/x86/signtool.exe"
         steps:
             - uses: kanga333/variable-mapper@master
               id: config
@@ -154,8 +156,11 @@ jobs:
               run: |
                   yarn ts-node scripts/generate-builder-config.ts ${{ steps.nightly.outputs.config-args }} ${{ steps.esigner.outputs.config-args }}
                   yarn build --publish never -w --config electron-builder.json ${{ steps.config.outputs.build-args }}
-              env:
-                  SIGNTOOL_PATH: "C:/Program Files (x86)/Windows Kits/10/bin/10.0.22000.0/x86/signtool.exe"
+
+            - name: Check app was signed successfully
+              if: inputs.sign != ''
+              run: |
+                  . "$env:SIGNTOOL_PATH" verify /pa (get-item ./dist/squirrel-windows*/*.exe)
 
             - name: Prepare artifacts for deployment
               if: inputs.deploy-mode
