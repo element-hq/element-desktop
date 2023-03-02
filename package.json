@@ -2,7 +2,7 @@
   "name": "element-desktop",
   "productName": "Element",
   "main": "lib/electron-main.js",
-  "version": "1.11.23",
+  "version": "1.11.24",
   "description": "A feature-rich client for Matrix.org",
   "author": "Element",
   "repository": {
@@ -142,10 +142,7 @@
         "deb"
       ],
       "category": "Network;InstantMessaging;Chat",
-      "maintainer": "support@element.io",
-      "desktop": {
-        "StartupWMClass": "element"
-      }
+      "maintainer": "support@element.io"
     },
     "mac": {
       "category": "public.app-category.social-networking",

@@ -20,9 +20,14 @@ on:
 concurrency: reprepro
 jobs:
     reprepro:
-        name: Run reprepro
+        name: Deploy debian package
         environment: packages.element.io
         runs-on: ubuntu-latest
+        env:
+            # XXX: UPDATE THIS BEFORE WHEN GOING LIVE
+            R2_BUCKET: "packages-element-io-test"
+            R2_DB_BUCKET: packages-element-io-db
+            R2_URL: ${{ secrets.CF_R2_S3_API }}
         steps:
             - uses: actions/checkout@v3
 
@@ -33,33 +38,26 @@ jobs:
                   path: dist
 
             - name: Load GPG key
-              if: inputs.deploy-mode
               uses: crazy-max/ghaction-import-gpg@111c56156bcc6918c056dbef52164cfa583dc549 # v5
               with:
                   gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
                   passphrase: ${{ secrets.GPG_PASSPHRASE }}
                   fingerprint: 75741890063E5E9A46135D01C2850B265AC085BD
 
+            - name: Install reprepro
+              run: sudo apt-get install -y reprepro
+
+            - name: Fetch database
+              run: aws s3 cp --recursive s3://$R2_DB_BUCKET debian/db/ --endpoint-url $R2_URL --region auto
+              env:
+                  AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
+
             - name: Run reprepro
-              if: inputs.deploy-mode
               run: |
-                  # Install reprepro
-                  sudo apt-get install -y reprepro
-                  
-                  # Fetch reprepro database
-                  aws s3 cp --recursive s3://$R2_BUCKET debian/db/ --endpoint-url $R2_URL --region auto
-                  
                   grep Codename debian/conf/distributions | sed -n 's/Codename: //p' | while read -r target ; do
                       reprepro -b debian includedeb "$target" ./dist/*.deb
                   done
-                  
-                  # Store reprepro database
-                  aws s3 cp --recursive debian/db/ s3://$R2_BUCKET --endpoint-url $R2_URL --region auto
-              env:
-                  R2_BUCKET: packages-element-io-db
-                  AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
-                  AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
-                  R2_URL: ${{ secrets.CF_R2_S3_API }}
 
             - name: Check repository works
               run: |
@@ -75,6 +73,9 @@ jobs:
               env:
                   AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
-                  R2_URL: ${{ secrets.CF_R2_S3_API }}
-                  # XXX: UPDATE THIS BEFORE WHEN GOING LIVE
-                  R2_BUCKET: "packages-element-io-test"
+
+            - name: Store database
+              run: aws s3 cp --recursive debian/db/ s3://$R2_DB_BUCKET --endpoint-url $R2_URL --region auto
+              env:
+                  AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}

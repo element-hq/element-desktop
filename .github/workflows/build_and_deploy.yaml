@@ -42,9 +42,7 @@ on:
                 required: true
                 type: boolean
                 default: true
-concurrency:
-    group: ${{ github.workflow }}-${{ github.ref }}
-    cancel-in-progress: true
+concurrency: ${{ github.workflow }}
 env:
     # XXX: UPDATE THIS BEFORE WHEN GOING LIVE
     R2_BUCKET: "packages-element-io-test"
@@ -106,15 +104,8 @@ jobs:
             sqlcipher: system
             version: ${{ needs.prepare.outputs.linux-version }}
 
-    reprepro:
-        needs: linux
-        name: Run reprepro
-        if: needs.linux.result == 'success' && (github.event != 'workflow_dispatch' || inputs.deploy)
-        uses: ./.github/workflows/reprepro.yaml
-        secrets: inherit
-        with:
-            artifact-name: linux-sqlcipher-system
-
+    # This deploy job only handles Windows & macOS as those are stateless and static.
+    # Linux will be deployed via reprepro after it, but we list it as a dependency to abort if it fails.
     deploy:
         needs:
             - macos
@@ -122,7 +113,7 @@ jobs:
             - windows_64bit
         runs-on: ubuntu-latest
         name: Deploy
-        if: always() && (github.event != 'workflow_dispatch' || inputs.deploy)
+        if: github.event != 'workflow_dispatch' || (inputs.deploy && (inputs.macos || inputs.windows_32bit || inputs.windows_64bit))
         environment: packages.element.io
         steps:
             - name: Download artifacts
@@ -132,7 +123,6 @@ jobs:
                   path: packages.element.io
 
             - name: Deploy artifacts
-              if: github.event_name != 'workflow_dispatch' || inputs.macos || inputs.windows_32bit || inputs.windows_64bit
               run: |
                   aws s3 cp --recursive packages.element.io/ s3://$R2_BUCKET/$DEPLOYMENT_DIR --endpoint-url $R2_URL --region auto
               env:
@@ -140,3 +130,15 @@ jobs:
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
                   R2_URL: ${{ secrets.CF_R2_S3_API }}
                   DEPLOYMENT_DIR: ${{ inputs.mode == 'release' && 'desktop' || 'nightly' }}
+
+    reprepro:
+        needs:
+            - linux
+            # We queue this after the other deploy stage as we want to abort if that fails
+            - deploy
+        name: Run reprepro
+        if: github.event != 'workflow_dispatch' || (inputs.deploy && inputs.linux)
+        uses: ./.github/workflows/reprepro.yaml
+        secrets: inherit
+        with:
+            artifact-name: linux-sqlcipher-system
