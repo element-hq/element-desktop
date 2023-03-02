@@ -27,6 +27,7 @@ jobs:
             # XXX: UPDATE THIS BEFORE WHEN GOING LIVE
             R2_BUCKET: "packages-element-io-test"
             R2_DB_BUCKET: packages-element-io-db
+            R2_URL: ${{ secrets.CF_R2_S3_API }}
         steps:
             - uses: actions/checkout@v3
 
@@ -51,7 +52,6 @@ jobs:
               env:
                   AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
-                  R2_URL: ${{ secrets.CF_R2_S3_API }}
 
             - name: Run reprepro
               run: |
@@ -65,11 +65,9 @@ jobs:
               env:
                   AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
-                  R2_URL: ${{ secrets.CF_R2_S3_API }}
 
             - name: Store database
               run: aws s3 cp --recursive debian/db/ s3://$R2_DB_BUCKET --endpoint-url $R2_URL --region auto
               env:
                   AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
-                  R2_URL: ${{ secrets.CF_R2_S3_API }}
