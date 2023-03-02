@@ -39,9 +39,10 @@ on:
                 required: true
                 type: boolean
                 default: true
-concurrency:
-    group: ${{ github.workflow }}-${{ github.ref }}
-    cancel-in-progress: true
+# We limit the concurrency on this workflow to prevent deployments stepping on each other
+# and more importantly to guard the reprepro database.
+# Care has to be taken to make deployments atomic.
+concurrency: ${{ github.workflow }}
 env:
     # XXX: UPDATE THIS BEFORE WHEN GOING LIVE
     R2_BUCKET: "packages-element-io-test"
