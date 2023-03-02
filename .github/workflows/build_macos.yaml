@@ -91,8 +91,10 @@ jobs:
             - name: Check app was signed & notarised successfully
               if: inputs.sign != ''
               run: |
-                  codesign -dv --verbose=4 dist/install/macos/*.app
-                  spctl -a -vvv -t install dist/install/macos/*.app
+                  hdiutil attach dist/install/macos/*.app
+                  codesign -dv --verbose=4 /Volumes/Element*/*.app
+                  spctl -a -vvv -t install /Volumes/Element*/*.app
+                  hdiutil detach /Volumes/Element*
 
             - name: "[Unsigned] Build App"
               if: inputs.sign == ''
