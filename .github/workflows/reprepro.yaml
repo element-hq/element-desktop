@@ -66,9 +66,15 @@ jobs:
                   # Point apt at local apt repo
                   echo "deb [signed-by=/usr/share/keyrings/element-io-archive-keyring.gpg] http://localhost:8000/debian/ default main" | sudo tee /etc/apt/sources.list.d/element-io.list
 
+                  # Start http server and fetch from it via apt
                   python3 -m http.server 8000 &
                   sudo apt-get update --allow-insecure-repositories
-                  apt-cache-policy element-*
+                  killall python3
+
+                  # Validate the package in the repo quacks like the one we expect
+                  package=$(grep "Package:" ./dist/*.deb | sed -n 's/ Package: //p')
+                  version=$(grep "Version:" ./dist/*.deb | sed -n 's/ Version: //p')
+                  apt-cache show "$package" | grep "Version: $version"
               working-directory: ./packages.element.io
 
             - name: Deploy debian repo
