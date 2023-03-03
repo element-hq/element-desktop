@@ -61,12 +61,24 @@ jobs:
 
             - name: Check repository works
               run: |
-                  ls -lah $(pwd)/packages.element.io/debian/dists/default/
-                  ls -lah $(pwd)/packages.element.io/debian/dists/default/main/binary-amd64
+                  # Download signing keyring
                   sudo wget -O /usr/share/keyrings/element-io-archive-keyring.gpg https://packages.element.io/debian/element-io-archive-keyring.gpg
+                       
+                  # Fix _apt permissions
+                  sudo chown -Rv _apt:root /var/cache/apt/archives/partial/
+                  sudo chmod -Rv 700 /var/cache/apt/archives/partial/
+                       
                   echo "deb [signed-by=/usr/share/keyrings/element-io-archive-keyring.gpg] file://$(pwd)/packages.element.io/debian/ default main" | sudo tee /etc/apt/sources.list.d/element-io.list
+#                  echo "deb [signed-by=/usr/share/keyrings/element-io-archive-keyring.gpg] http://localhost:8000/debian/ default main" | sudo tee /etc/apt/sources.list.d/element-io.list
+
+#                  python3 -m http.server 8000 &
+#                  sudo apt-get update --allow-insecure-repositories
                   sudo apt-get update
                   apt-cache-policy element-*
+#                  killall python3
+#                  ls -lah $(pwd)/packages.element.io/debian/dists/default/
+#                  ls -lah $(pwd)/packages.element.io/debian/dists/default/main/binary-amd64
+#              working-directory: ./packages.element.io
 
             - name: Deploy debian repo
               run: |
