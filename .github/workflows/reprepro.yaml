@@ -72,8 +72,9 @@ jobs:
                   killall python3
 
                   # Validate the package in the repo quacks like the one we expect
-                  package=$(grep "Package:" ./dist/*.deb | sed -n 's/ Package: //p')
-                  version=$(grep "Version:" ./dist/*.deb | sed -n 's/ Version: //p')
+                  info=$(dpkg --info ../dist/*.deb)
+                  package=$(echo "$info" | grep "Package:" | sed -n 's/ Package: //p')
+                  version=$(echo "$info" | grep "Version:" | sed -n 's/ Version: //p')
                   apt-cache show "$package" | grep "Version: $version"
               working-directory: ./packages.element.io
 
