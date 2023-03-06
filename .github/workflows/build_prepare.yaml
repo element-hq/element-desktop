@@ -66,7 +66,7 @@ jobs:
                   yarn run --silent electron --version > electronVersion
                   cat package.json | jq -c .hakDependencies > hakDependencies.json
 
-            - name: [Nightly] Calculate versions
+            - name: "[Nightly] Calculate versions"
               id: versions
               if: inputs.nightly
               run: |
@@ -92,7 +92,7 @@ jobs:
               run: |
                   echo "version=$(cat package.json | jq -r .version)" >> $GITHUB_OUTPUT
 
-            - name: [Release] Fetch release
+            - name: "[Release] Fetch release"
               id: release
               if: !inputs.nightly && inputs.version != 'develop'
               uses: cardinalby/git-get-release-action@cedef2faf69cb7c55b285bad07688d04430b7ada # v1
@@ -101,7 +101,7 @@ jobs:
               with:
                   tag: v${{ steps.package.outputs.version }}
 
-            - name: [Release] Write changelog
+            - name: "[Release] Write changelog"
               if: !inputs.nightly && inputs.version != 'develop'
               run: |
                   TIME=$(date -d "$PUBLISHED_AT" -R)
