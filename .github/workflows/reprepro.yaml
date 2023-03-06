@@ -59,6 +59,25 @@ jobs:
                       reprepro -b debian includedeb "$target" ./dist/*.deb
                   done
 
+            - name: Check repository works
+              run: |
+                  # Download signing keyring
+                  sudo wget -O /usr/share/keyrings/element-io-archive-keyring.gpg https://packages.element.io/debian/element-io-archive-keyring.gpg
+                  # Point apt at local apt repo
+                  echo "deb [signed-by=/usr/share/keyrings/element-io-archive-keyring.gpg] http://localhost:8000/debian/ default main" | sudo tee /etc/apt/sources.list.d/element-io.list
+
+                  # Start http server and fetch from it via apt
+                  python3 -m http.server 8000 &
+                  sudo apt-get update --allow-insecure-repositories
+                  killall python3
+
+                  # Validate the package in the repo quacks like the one we expect
+                  info=$(dpkg --info ../dist/*.deb)
+                  package=$(echo "$info" | grep "Package:" | sed -n 's/ Package: //p')
+                  version=$(echo "$info" | grep "Version:" | sed -n 's/ Version: //p')
+                  apt-cache show "$package" | grep "Version: $version"
+              working-directory: ./packages.element.io
+
             - name: Deploy debian repo
               run: |
                   aws s3 cp --recursive packages.element.io/debian/ s3://$R2_BUCKET/debian --endpoint-url $R2_URL --region auto
