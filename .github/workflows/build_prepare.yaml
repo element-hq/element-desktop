@@ -104,13 +104,16 @@ jobs:
             - name: Write changelog
               # if: inputs.nightly == ''
               run:
-                  echo "element-desktop ($VERSION) whatever; urgency=medium\n" >> changelog.Debian
-                  echo "$BODY\n" >> changelog.Debian
-                  echo " -- support@element.io  $TIME" >> changelog.Debian
+                  TIME=$(date -d "$PUBLISHED_AT" -R)
+                  echo "element-desktop ($VERSION) main; urgency=medium" >> changelog.Debian
+                  echo "" >> changelog.Debian
+                  echo "$BODY" | sed 's/^ \*/  */g;s/^##/  */g' >> changelog.Debian
+                  echo "" >> changelog.Debian
+                  echo " -- ${{ github.actor }} <support@element.io>  $TIME" >> changelog.Debian
               env:
                   VERSION: v${{ steps.package.outputs.version }}
                   BODY: ${{ steps.release.outputs.body }}
-                  TIME: ${{ steps.release.outputs.published_at }}
+                  PUBLISHED_AT: ${{ steps.release.outputs.published_at }}
 
             - uses: actions/upload-artifact@v3
               with:
