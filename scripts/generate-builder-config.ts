@@ -92,10 +92,10 @@ async function main(): Promise<number | void> {
         };
 
         if (argv["deb-custom-control"]) {
-            cfg.deb.fpm!.push(`--deb-custom-control="${argv["deb-custom-control"]}"`);
+            cfg.deb.fpm!.push(`--deb-custom-control=${argv["deb-custom-control"]}`);
         }
         if (argv["deb-changelog"]) {
-            cfg.deb.fpm!.push(`--deb-changelog="${argv["deb-changelog"]}"`);
+            cfg.deb.fpm!.push(`--deb-changelog=${argv["deb-changelog"]}`);
         }
     }
 
