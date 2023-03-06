@@ -103,7 +103,7 @@ jobs:
 
             - name: Write changelog
               # if: inputs.nightly == ''
-              run:
+              run: |
                   TIME=$(date -d "$PUBLISHED_AT" -R)
                   echo "element-desktop ($VERSION) main; urgency=medium" >> changelog.Debian
                   echo "" >> changelog.Debian
