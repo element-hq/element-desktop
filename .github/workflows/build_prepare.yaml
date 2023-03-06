@@ -94,7 +94,7 @@ jobs:
 
             - name: Fetch release
               id: release
-              # if: inputs.nightly == ''
+              if: inputs.nightly == ''
               uses: cardinalby/git-get-release-action@cedef2faf69cb7c55b285bad07688d04430b7ada # v1
               env:
                   GITHUB_TOKEN: ${{ github.token }}
@@ -102,7 +102,7 @@ jobs:
                   tag: v${{ steps.package.outputs.version }}
 
             - name: Write changelog
-              # if: inputs.nightly == ''
+              if: inputs.nightly == ''
               run: |
                   TIME=$(date -d "$PUBLISHED_AT" -R)
                   echo "element-desktop ($VERSION) default; urgency=medium" >> changelog.Debian
