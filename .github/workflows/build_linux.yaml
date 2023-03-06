@@ -64,7 +64,7 @@ jobs:
               id: release
               if: inputs.version == ''
               run: |
-                  echo "config-args=--deb-changelog './changelog.Debian'" >> $GITHUB_OUTPUT
+                  echo "config-args=--deb-changelog changelog.Debian" >> $GITHUB_OUTPUT
 
             - name: Generate debian control file
               run: |
