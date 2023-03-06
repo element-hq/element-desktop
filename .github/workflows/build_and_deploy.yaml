@@ -49,7 +49,7 @@ jobs:
         with:
             config: element.io/${{ inputs.mode || 'nightly' }}
             version: ${{ inputs.mode == 'release' && '' || 'develop' }}
-            calculate-nightly-versions: ${{ inputs.mode != 'release' }}
+            nightly: ${{ inputs.mode != 'release' }}
         secrets:
             CF_R2_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
             CF_R2_TOKEN: ${{ secrets.CF_R2_TOKEN }}

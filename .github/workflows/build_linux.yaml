@@ -60,6 +60,12 @@ jobs:
               run: |
                   echo "config-args=--nightly '${{ inputs.version }}'" >> $GITHUB_OUTPUT
 
+            - name: "[Release] Resolve changelog"
+              id: release
+              if: inputs.version == ''
+              run: |
+                  echo "config-args=--deb-changelog './changelog.Debian'" >> $GITHUB_OUTPUT
+
             - name: Generate debian control file
               run: |
                   cp element.io/${{ inputs.version && 'nightly' || 'release' }}/control.template debcontrol
@@ -69,7 +75,10 @@ jobs:
 
             - name: Build App
               run: |
-                  scripts/generate-builder-config.ts ${{ steps.nightly.outputs.config-args }} --deb-custom-control=debcontrol
+                  scripts/generate-builder-config.ts \
+                      ${{ steps.nightly.outputs.config-args }} \
+                      ${{ steps.release.outputs.config-args }} \
+                      --deb-custom-control=debcontrol
                   yarn build --publish never -l --config electron-builder.json
 
             - name: Upload Artifacts
