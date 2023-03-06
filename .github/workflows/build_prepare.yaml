@@ -105,9 +105,9 @@ jobs:
               # if: inputs.nightly == ''
               run: |
                   TIME=$(date -d "$PUBLISHED_AT" -R)
-                  echo "element-desktop ($VERSION) main; urgency=medium" >> changelog.Debian
+                  echo "element-desktop ($VERSION) default; urgency=medium" >> changelog.Debian
                   echo "" >> changelog.Debian
-                  echo "$BODY" | sed 's/^ \*/  */g;s/^##/  */g' >> changelog.Debian
+                  echo "$BODY" | sed 's/^##/\n  */g;s/^\*/  */g' | perl -pe 's/\[.+?]\((.+?)\)/\1/g' >> changelog.Debian
                   echo "" >> changelog.Debian
                   echo " -- ${{ github.actor }} <support@element.io>  $TIME" >> changelog.Debian
               env:
