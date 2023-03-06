@@ -4,6 +4,10 @@
 on:
     workflow_call:
         inputs:
+            config:
+                type: string
+                required: true
+                description: "The config directory to use"
             version:
                 type: string
                 required: false
@@ -67,11 +71,11 @@ jobs:
                       echo "config-args=--deb-changelog changelog.Debian" >> $GITHUB_OUTPUT
                   fi
                   
-                  cp "element.io/$DIR/control.template" debcontrol
+                  cp "$DIR/control.template" debcontrol
                   VERSION=${INPUT_VERSION:-$(cat package.json | jq -r .version)}
                   echo "Version: $VERSION" >> debcontrol
               env:
-                  DIR: ${{ inputs.version && 'nightly' || 'release' }}
+                  DIR: ${{ inputs.config }}
                   INPUT_VERSION: ${{ inputs.version }}
 
             - name: Build App
