@@ -1,8 +1,5 @@
 name: Build and Deploy
 on:
-    # XXX: remove before merge
-    push:
-        branches: ["t3chguy/assert-signing"]
     # Nightly build
     schedule:
         - cron: "0 9 * * *"
