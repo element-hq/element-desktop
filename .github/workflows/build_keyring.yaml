@@ -7,6 +7,10 @@ on:
                 required: true
                 type: boolean
                 default: true
+            fingerprint:
+                description: The expected gpg fingerprint
+                required: true
+                type: string
 concurrency: ${{ github.workflow }}
 jobs:
     build:
@@ -18,15 +22,14 @@ jobs:
             - name: Prepare
               run: |
                   mkdir -p element-io-archive-keyring/usr/share/keyrings/
+                  cp packages.element.io/debian/element-io-archive-keyring.gpg element-io-archive-keyring/usr/share/keyrings/element-io-archive-keyring.gpg
 
-            - name: Download keyring.gpg
+            - name: Check fingerprint
               run: |
-                  wget "https://packages.element.io/debian/element-io-archive-keyring.gpg" \
-                      -O element-io-archive-keyring/usr/share/keyrings/element-io-archive-keyring.gpg
-
-            - name: Import keyring
-              run: |
-                  gpg --import --import-options show-only element-io-archive-keyring/usr/share/keyrings/element-io-archive-keyring.gpg
+                  gpg --import element-io-archive-keyring/usr/share/keyrings/element-io-archive-keyring.gpg
+                  gpg --fingerprint "$FINGERPRINT"
+              env:
+                  FINGERPRINT: ${{ inputs.fingerprint }}
 
             - name: Build deb package
               run: |
