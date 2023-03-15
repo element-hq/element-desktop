@@ -23,7 +23,7 @@ import { ElectronApplication, Page } from "playwright-core";
 
 describe("App launch", () => {
     const artifactsPath = path.join(process.cwd(), "test_artifacts");
-    fs.mkdirSync(artifactsPath);
+    if (!fs.existsSync(artifactsPath)) fs.mkdirSync(artifactsPath);
 
     const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "element-desktop-tests"));
     console.log("Using temp profile directory: ", tmpDir);
@@ -48,7 +48,7 @@ describe("App launch", () => {
             },
         });
         window = await app.firstWindow();
-    }, 60000);
+    }, 30000);
 
     afterAll(async () => {
         await app?.close().catch((e) => {
@@ -62,5 +62,5 @@ describe("App launch", () => {
         await window.locator(".mx_Welcome").waitFor();
         await expect(window).toMatchURL("vector://vector/webapp/#/welcome");
         await window.screenshot({ path: path.join(artifactsPath, "welcome.png") });
-    }, 60000);
+    }, 30000);
 });

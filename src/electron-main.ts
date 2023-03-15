@@ -334,9 +334,9 @@ loadConfig().then(() => {
         Sentry.init({
             dsn,
             environment,
+            // We don't actually use this IPC, but we do not want Sentry injecting preloads
+            ipcMode: Sentry.IPCMode.Classic,
         });
-    } else {
-        console.log("@@", global.vectorConfig);
     }
 });
 
