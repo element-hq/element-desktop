@@ -19,7 +19,8 @@ limitations under the License.
 
 // Squirrel on windows starts the app with various flags as hooks to tell us when we've been installed/uninstalled etc.
 import "./squirrelhooks";
-import { app, BrowserWindow, Menu, autoUpdater, protocol, dialog } from "electron";
+import { app, BrowserWindow, Menu, autoUpdater, protocol, dialog, Input } from "electron";
+import * as Sentry from "@sentry/electron/main";
 import AutoLaunch from "auto-launch";
 import path from "path";
 import windowStateKeeper from "electron-window-state";
@@ -38,7 +39,6 @@ import webContentsHandler from "./webcontents-handler";
 import * as updater from "./updater";
 import { getProfileFromDeeplink, protocolInit } from "./protocol";
 import { _t, AppLocalization } from "./language-helper";
-import Input = Electron.Input;
 
 const argv = minimist(process.argv, {
     alias: { help: "h" },
@@ -119,8 +119,9 @@ async function tryPaths(name: string, root: string, rawPaths: string[]): Promise
 
 const homeserverProps = ["default_is_url", "default_hs_url", "default_server_name", "default_server_config"] as const;
 
-// Find the webapp resources and set up things that require them
-async function setupGlobals(): Promise<void> {
+async function loadConfig(): Promise<void> {
+    if (global.vectorConfig) return;
+
     // find the webapp asar.
     asarPath = await tryPaths("webapp", __dirname, [
         // If run from the source checkout, this will be in the directory above
@@ -132,14 +133,6 @@ async function setupGlobals(): Promise<void> {
         "../webapp",
         // from a packaged application
         "../../webapp",
-    ]);
-
-    // we assume the resources path is in the same place as the asar
-    resPath = await tryPaths("res", path.dirname(asarPath), [
-        // If run from the source checkout
-        "res",
-        // if run from packaged application
-        "",
     ]);
 
     try {
@@ -168,7 +161,7 @@ async function setupGlobals(): Promise<void> {
                 .reduce((obj, key) => {
                     obj[key] = global.vectorConfig[key];
                     return obj;
-                }, {} as Omit<Partial<typeof global["vectorConfig"]>, keyof typeof homeserverProps>);
+                }, {} as Omit<Partial<(typeof global)["vectorConfig"]>, keyof typeof homeserverProps>);
         }
 
         global.vectorConfig = Object.assign(global.vectorConfig, localConfig);
@@ -186,6 +179,19 @@ async function setupGlobals(): Promise<void> {
 
         // Could not load local config, this is expected in most cases.
     }
+}
+
+// Find the webapp resources and set up things that require them
+async function setupGlobals(): Promise<void> {
+    await loadConfig();
+
+    // we assume the resources path is in the same place as the asar
+    resPath = await tryPaths("res", path.dirname(asarPath), [
+        // If run from the source checkout
+        "res",
+        // if run from packaged application
+        "",
+    ]);
 
     // The tray icon
     // It's important to call `path.join` so we don't end up with the packaged asar in the final path.
@@ -320,6 +326,20 @@ if (global.store.get("disableHardwareAcceleration", false) === true) {
     console.log("Disabling hardware acceleration.");
     app.disableHardwareAcceleration();
 }
+
+loadConfig().then(() => {
+    const { dsn, environment } = global.vectorConfig.sentry || {};
+    if (dsn) {
+        console.log(`Enabling Sentry with dsn=${dsn} environment=${environment}`);
+        Sentry.init({
+            dsn,
+            environment,
+            debug: true,
+        });
+    } else {
+        console.log("@@", global.vectorConfig);
+    }
+});
 
 app.on("ready", async () => {
     try {
