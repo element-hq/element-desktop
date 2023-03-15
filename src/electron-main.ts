@@ -113,30 +113,32 @@ async function tryPaths(name: string, root: string, rawPaths: string[]): Promise
 
 const homeserverProps = ["default_is_url", "default_hs_url", "default_server_name", "default_server_config"] as const;
 
-// Things we need throughout the file but need to be created async to are initialised in setupGlobals()
-let asarPath: string;
+let asarPathPromise: Promise<string> | undefined;
 // Find the webapp resource file and store it in global scope `asarPath`
-async function findAsar(): Promise<void> {
-    // find the webapp asar.
-    asarPath = await tryPaths("webapp", __dirname, [
-        // If run from the source checkout, this will be in the directory above
-        "../webapp.asar",
-        // but if run from a packaged application, electron-main.js will be in
-        // a different asar file, so it will be two levels above
-        "../../webapp.asar",
-        // also try without the 'asar' suffix to allow symlinking in a directory
-        "../webapp",
-        // from a packaged application
-        "../../webapp",
-    ]);
+function getAsarPath(): Promise<string> {
+    if (!asarPathPromise) {
+        asarPathPromise = tryPaths("webapp", __dirname, [
+            // If run from the source checkout, this will be in the directory above
+            "../webapp.asar",
+            // but if run from a packaged application, electron-main.js will be in
+            // a different asar file, so it will be two levels above
+            "../../webapp.asar",
+            // also try without the 'asar' suffix to allow symlinking in a directory
+            "../webapp",
+            // from a packaged application
+            "../../webapp",
+        ]);
+    }
+
+    return asarPathPromise;
 }
 
-// Loads the config from asar and applies changes from config.json in userData if one exists
-// Writes config to `global.vectorConfig` - if set the function will bail early
+// Loads the config from asar and applies a config.json from userData atop if one exists
+// Writes config to `global.vectorConfig`. Does nothing if `global.vectorConfig` is already set.
 async function loadConfig(): Promise<void> {
     if (global.vectorConfig) return;
 
-    await findAsar();
+    const asarPath = await getAsarPath();
 
     try {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -198,11 +200,10 @@ async function configureSentry(): Promise<void> {
         });
     }
 }
-configureSentry();
 
 // Set up globals for Tray and AutoLaunch
 async function setupGlobals(): Promise<void> {
-    await findAsar();
+    const asarPath = await getAsarPath();
     await loadConfig();
 
     // we assume the resources path is in the same place as the asar
@@ -286,6 +287,8 @@ const warnBeforeExit = (event: Event, input: Input): void => {
     }
 };
 
+configureSentry();
+
 // handle uncaught errors otherwise it displays
 // stack traces in popup dialogs, which is terrible (which
 // it will do any time the auto update poke fails, and there's
@@ -347,8 +350,10 @@ if (global.store.get("disableHardwareAcceleration", false) === true) {
 }
 
 app.on("ready", async () => {
+    let asarPath: string;
+
     try {
-        await findAsar();
+        asarPath = await getAsarPath();
         await setupGlobals();
         await moveAutoLauncher();
     } catch (e) {
