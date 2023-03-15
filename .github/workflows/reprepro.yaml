@@ -1,0 +1,92 @@
+on:
+    workflow_call:
+        inputs:
+            artifact-name:
+                type: string
+                required: true
+                description: "The name of the artifact containing the debs to include"
+        secrets:
+            GPG_PRIVATE_KEY:
+                required: false
+            GPG_PASSPHRASE:
+                required: false
+            CF_R2_ACCESS_KEY_ID:
+                required: false
+            CF_R2_TOKEN:
+                required: false
+            CF_R2_S3_API:
+                required: false
+# Protect reprepro database using concurrency
+concurrency: reprepro
+jobs:
+    reprepro:
+        name: Deploy debian package
+        environment: packages.element.io
+        runs-on: ubuntu-latest
+        env:
+            # XXX: UPDATE THIS BEFORE WHEN GOING LIVE
+            R2_BUCKET: "packages-element-io-test"
+            R2_DB_BUCKET: packages-element-io-db
+            R2_URL: ${{ secrets.CF_R2_S3_API }}
+        steps:
+            - uses: actions/checkout@v3
+
+            - name: Download artifacts
+              uses: actions/download-artifact@v3
+              with:
+                  name: ${{ inputs.artifact-name }}
+                  path: dist
+
+            - name: Load GPG key
+              uses: crazy-max/ghaction-import-gpg@111c56156bcc6918c056dbef52164cfa583dc549 # v5
+              with:
+                  gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+                  passphrase: ${{ secrets.GPG_PASSPHRASE }}
+                  fingerprint: 75741890063E5E9A46135D01C2850B265AC085BD
+
+            - name: Install reprepro
+              run: sudo apt-get install -y reprepro
+
+            - name: Fetch database
+              run: aws s3 cp --recursive s3://$R2_DB_BUCKET debian/db/ --endpoint-url $R2_URL --region auto
+              env:
+                  AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
+
+            - name: Run reprepro
+              run: |
+                  grep Codename debian/conf/distributions | sed -n 's/Codename: //p' | while read -r target ; do
+                      reprepro -b debian includedeb "$target" ./dist/*.deb
+                  done
+
+            - name: Check repository works
+              run: |
+                  # Download signing keyring
+                  sudo wget -O /usr/share/keyrings/element-io-archive-keyring.gpg https://packages.element.io/debian/element-io-archive-keyring.gpg
+                  # Point apt at local apt repo
+                  echo "deb [signed-by=/usr/share/keyrings/element-io-archive-keyring.gpg] http://localhost:8000/debian/ default main" | sudo tee /etc/apt/sources.list.d/element-io.list
+
+                  # Start http server and fetch from it via apt
+                  python3 -m http.server 8000 &
+                  sudo apt-get update --allow-insecure-repositories
+                  killall python3
+
+                  # Validate the package in the repo quacks like the one we expect
+                  info=$(dpkg --info ../dist/*.deb)
+                  package=$(echo "$info" | grep "Package:" | sed -n 's/ Package: //p')
+                  version=$(echo "$info" | grep "Version:" | sed -n 's/ Version: //p')
+                  apt-cache show "$package" | grep "Version: $version"
+              working-directory: ./packages.element.io
+
+            - name: Deploy debian repo
+              run: |
+                  aws s3 cp --recursive packages.element.io/debian/ s3://$R2_BUCKET/debian --endpoint-url $R2_URL --region auto
+              env:
+                  AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
+
+            - name: Store database
+              run: aws s3 cp --recursive debian/db/ s3://$R2_DB_BUCKET --endpoint-url $R2_URL --region auto
+              env:
+                  AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}

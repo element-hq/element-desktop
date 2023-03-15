@@ -14,16 +14,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import path from 'path';
-import os from 'os';
+import path from "path";
+import os from "os";
 import nodePreGypVersioning from "node-pre-gyp/lib/util/versioning";
 import { getElectronVersion } from "app-builder-lib/out/electron/electronVersion";
 
-import { Arch, Target, TARGETS, getHost, isHostId, TargetId } from './target';
+import { Arch, Target, TARGETS, getHost, isHostId, TargetId } from "./target";
 
 async function getRuntime(projectRoot: string): Promise<string> {
     const electronVersion = await getElectronVersion(projectRoot);
-    return electronVersion ? 'electron' : 'node-webkit';
+    return electronVersion ? "electron" : "node-webkit";
 }
 
 async function getRuntimeVersion(projectRoot: string): Promise<string> {
@@ -37,38 +37,32 @@ async function getRuntimeVersion(projectRoot: string): Promise<string> {
 
 export default class HakEnv {
     public readonly target: Target;
-    public runtime: string;
-    public runtimeVersion: string;
+    public runtime?: string;
+    public runtimeVersion?: string;
     public dotHakDir: string;
 
-    constructor(public readonly projectRoot: string, targetId: TargetId | null) {
-        if (targetId) {
-            this.target = TARGETS[targetId];
-        } else {
-            this.target = getHost();
-        }
+    public constructor(public readonly projectRoot: string, targetId: TargetId | null) {
+        const target = targetId ? TARGETS[targetId] : getHost();
 
-        if (!this.target) {
+        if (!target) {
             throw new Error(`Unknown target ${targetId}!`);
         }
-        this.dotHakDir = path.join(this.projectRoot, '.hak');
+        this.target = target;
+        this.dotHakDir = path.join(this.projectRoot, ".hak");
     }
 
-    public async init() {
+    public async init(): Promise<void> {
         this.runtime = await getRuntime(this.projectRoot);
         this.runtimeVersion = await getRuntimeVersion(this.projectRoot);
     }
 
     public getRuntimeAbi(): string {
-        return nodePreGypVersioning.get_runtime_abi(
-            this.runtime,
-            this.runtimeVersion,
-        );
+        return nodePreGypVersioning.get_runtime_abi(this.runtime!, this.runtimeVersion!);
     }
 
     // {node_abi}-{platform}-{arch}
     public getNodeTriple(): string {
-        return this.getRuntimeAbi() + '-' + this.target.platform + '-' + this.target.arch;
+        return this.getRuntimeAbi() + "-" + this.target.platform + "-" + this.target.arch;
     }
 
     public getTargetId(): TargetId {
@@ -76,15 +70,15 @@ export default class HakEnv {
     }
 
     public isWin(): boolean {
-        return this.target.platform === 'win32';
+        return this.target.platform === "win32";
     }
 
     public isMac(): boolean {
-        return this.target.platform === 'darwin';
+        return this.target.platform === "darwin";
     }
 
     public isLinux(): boolean {
-        return this.target.platform === 'linux';
+        return this.target.platform === "linux";
     }
 
     public getTargetArch(): Arch {
@@ -95,11 +89,11 @@ export default class HakEnv {
         return isHostId(this.target.id);
     }
 
-    public makeGypEnv(): Record<string, string> {
+    public makeGypEnv(): Record<string, string | undefined> {
         return Object.assign({}, process.env, {
             npm_config_arch: this.target.arch,
             npm_config_target_arch: this.target.arch,
-            npm_config_disturl: 'https://electronjs.org/headers',
+            npm_config_disturl: "https://electronjs.org/headers",
             npm_config_runtime: this.runtime,
             npm_config_target: this.runtimeVersion,
             npm_config_build_from_source: true,
@@ -107,12 +101,8 @@ export default class HakEnv {
         });
     }
 
-    public getNodeModuleBin(name: string): string {
-        return path.join(this.projectRoot, 'node_modules', '.bin', name);
-    }
-
     public wantsStaticSqlCipherUnix(): boolean {
-        return this.isMac() || process.env.SQLCIPHER_STATIC == '1';
+        return this.isMac() || process.env.SQLCIPHER_STATIC == "1";
     }
 
     public wantsStaticSqlCipher(): boolean {

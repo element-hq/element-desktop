@@ -14,17 +14,25 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import path from 'path';
-import childProcess from 'child_process';
-import fs from 'fs';
-import fsProm from 'fs/promises';
-import needle from 'needle';
-import tar from 'tar';
+import path from "path";
+import childProcess from "child_process";
+import fs from "fs";
+import fsProm from "fs/promises";
+import tar from "tar";
+import fetch from "node-fetch";
+import { promises as stream } from "stream";
 
-import HakEnv from '../../scripts/hak/hakEnv';
-import { DependencyInfo } from '../../scripts/hak/dep';
+import HakEnv from "../../scripts/hak/hakEnv";
+import { DependencyInfo } from "../../scripts/hak/dep";
 
-export default async function(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
+async function download(url: string, filename: string): Promise<void> {
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error(`unexpected response ${resp.statusText}`);
+    if (!resp.body) throw new Error(`unexpected response has no body ${resp.statusText}`);
+    await stream.pipeline(resp.body, fs.createWriteStream(filename));
+}
+
+export default async function (hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
     if (hakEnv.wantsStaticSqlCipher()) {
         await getSqlCipher(hakEnv, moduleInfo);
     }
@@ -57,11 +65,7 @@ async function getSqlCipher(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise
         haveSqlcipherTar = false;
     }
     if (!haveSqlcipherTar) {
-        const bob = needle('get', `https://github.com/sqlcipher/sqlcipher/archive/v${version}.tar.gz`, {
-            follow: 10,
-            output: sqlCipherTarball,
-        });
-        await bob;
+        await download(`https://github.com/sqlcipher/sqlcipher/archive/v${version}.tar.gz`, sqlCipherTarball);
     }
 
     // Extract the tarball to per-target directories, then we avoid cross-contaiminating archs
@@ -79,15 +83,11 @@ async function getSqlCipher(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise
         await new Promise<void>((resolve, reject) => {
             const readStream = fs.createReadStream(patchFile);
 
-            const proc = childProcess.spawn(
-                'patch',
-                ['-p1'],
-                {
-                    cwd: sqlCipherDir,
-                    stdio: ['pipe', 'inherit', 'inherit'],
-                },
-            );
-            proc.on('exit', (code) => {
+            const proc = childProcess.spawn("patch", ["-p1"], {
+                cwd: sqlCipherDir,
+                stdio: ["pipe", "inherit", "inherit"],
+            });
+            proc.on("exit", (code) => {
                 code ? reject(code) : resolve();
             });
             readStream.pipe(proc.stdin);
@@ -118,10 +118,7 @@ async function getOpenSsl(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<v
         haveOpenSslTar = false;
     }
     if (!haveOpenSslTar) {
-        await needle('get', `https://www.openssl.org/source/openssl-${version}.tar.gz`, {
-            follow: 10,
-            output: openSslTarball,
-        });
+        await download(`https://www.openssl.org/source/openssl-${version}.tar.gz`, openSslTarball);
     }
 
     console.log("extracting " + openSslTarball + " in " + moduleInfo.moduleTargetDotHakDir);

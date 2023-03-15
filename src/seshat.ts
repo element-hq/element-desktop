@@ -34,22 +34,20 @@ let ReindexError: typeof ReindexErrorType;
 
 try {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const seshatModule = require('matrix-seshat');
+    const seshatModule = require("matrix-seshat");
     Seshat = seshatModule.Seshat;
     SeshatRecovery = seshatModule.SeshatRecovery;
     ReindexError = seshatModule.ReindexError;
     seshatSupported = true;
 } catch (e) {
-    if (e.code === "MODULE_NOT_FOUND") {
+    if ((<NodeJS.ErrnoException>e).code === "MODULE_NOT_FOUND") {
         console.log("Seshat isn't installed, event indexing is disabled.");
     } else {
         console.warn("Seshat unexpected error:", e);
     }
 }
 
-const eventStorePath = path.join(app.getPath('userData'), 'EventStore');
-
-let eventIndex: SeshatType = null;
+let eventIndex: SeshatType | null = null;
 
 const seshatDefaultPassphrase = "DEFAULT_PASSPHRASE";
 async function getOrCreatePassphrase(key: string): Promise<string> {
@@ -66,9 +64,8 @@ async function getOrCreatePassphrase(key: string): Promise<string> {
         } catch (e) {
             console.log("Error getting the event index passphrase out of the secret store", e);
         }
-    } else {
-        return seshatDefaultPassphrase;
     }
+    return seshatDefaultPassphrase;
 }
 
 const deleteContents = async (p: string): Promise<void> => {
@@ -78,29 +75,29 @@ const deleteContents = async (p: string): Promise<void> => {
     }
 };
 
-ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
+ipcMain.on("seshat", async function (_ev: IpcMainEvent, payload): Promise<void> {
     if (!global.mainWindow) return;
 
-    const sendError = (id, e) => {
+    // We do this here to ensure we get the path after --profile has been resolved
+    const eventStorePath = path.join(app.getPath("userData"), "EventStore");
+
+    const sendError = (id: string, e: Error): void => {
         const error = {
             message: e.message,
         };
 
-        global.mainWindow.webContents.send('seshatReply', {
-            id: id,
-            error: error,
-        });
+        global.mainWindow?.webContents.send("seshatReply", { id, error });
     };
 
     const args = payload.args || [];
     let ret: any;
 
     switch (payload.name) {
-        case 'supportsEventIndexing':
+        case "supportsEventIndexing":
             ret = seshatSupported;
             break;
 
-        case 'initEventIndex':
+        case "initEventIndex":
             if (eventIndex === null) {
                 const userId = args[0];
                 const deviceId = args[1];
@@ -130,22 +127,21 @@ ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
 
                             try {
                                 await deleteContents(eventStorePath);
-                            } catch (e) {
-                            }
+                            } catch (e) {}
                         } else {
                             await recoveryIndex.reindex();
                         }
 
                         eventIndex = new Seshat(eventStorePath, { passphrase });
                     } else {
-                        sendError(payload.id, e);
+                        sendError(payload.id, <Error>e);
                         return;
                     }
                 }
             }
             break;
 
-        case 'closeEventIndex':
+        case "closeEventIndex":
             if (eventIndex !== null) {
                 const index = eventIndex;
                 eventIndex = null;
@@ -153,129 +149,126 @@ ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
                 try {
                     await index.shutdown();
                 } catch (e) {
-                    sendError(payload.id, e);
+                    sendError(payload.id, <Error>e);
                     return;
                 }
             }
             break;
 
-        case 'deleteEventIndex': {
+        case "deleteEventIndex": {
             try {
                 await deleteContents(eventStorePath);
-            } catch (e) {
-
-            }
+            } catch (e) {}
             break;
         }
 
-        case 'isEventIndexEmpty':
+        case "isEventIndexEmpty":
             if (eventIndex === null) ret = true;
             else ret = await eventIndex.isEmpty();
             break;
 
-        case 'isRoomIndexed':
+        case "isRoomIndexed":
             if (eventIndex === null) ret = false;
             else ret = await eventIndex.isRoomIndexed(args[0]);
             break;
 
-        case 'addEventToIndex':
+        case "addEventToIndex":
             try {
-                eventIndex.addEvent(args[0], args[1]);
+                eventIndex?.addEvent(args[0], args[1]);
             } catch (e) {
-                sendError(payload.id, e);
+                sendError(payload.id, <Error>e);
                 return;
             }
             break;
 
-        case 'deleteEvent':
+        case "deleteEvent":
             try {
-                ret = await eventIndex.deleteEvent(args[0]);
+                ret = await eventIndex?.deleteEvent(args[0]);
             } catch (e) {
-                sendError(payload.id, e);
+                sendError(payload.id, <Error>e);
                 return;
             }
             break;
 
-        case 'commitLiveEvents':
+        case "commitLiveEvents":
             try {
-                ret = await eventIndex.commit();
+                ret = await eventIndex?.commit();
             } catch (e) {
-                sendError(payload.id, e);
+                sendError(payload.id, <Error>e);
                 return;
             }
             break;
 
-        case 'searchEventIndex':
+        case "searchEventIndex":
             try {
-                ret = await eventIndex.search(args[0]);
+                ret = await eventIndex?.search(args[0]);
             } catch (e) {
-                sendError(payload.id, e);
+                sendError(payload.id, <Error>e);
                 return;
             }
             break;
 
-        case 'addHistoricEvents':
+        case "addHistoricEvents":
             if (eventIndex === null) ret = false;
             else {
                 try {
-                    ret = await eventIndex.addHistoricEvents(
-                        args[0], args[1], args[2]);
+                    ret = await eventIndex.addHistoricEvents(args[0], args[1], args[2]);
                 } catch (e) {
-                    sendError(payload.id, e);
+                    sendError(payload.id, <Error>e);
                     return;
                 }
             }
             break;
 
-        case 'getStats':
+        case "getStats":
             if (eventIndex === null) ret = 0;
             else {
                 try {
                     ret = await eventIndex.getStats();
                 } catch (e) {
-                    sendError(payload.id, e);
+                    sendError(payload.id, <Error>e);
                     return;
                 }
             }
             break;
 
-        case 'removeCrawlerCheckpoint':
+        case "removeCrawlerCheckpoint":
             if (eventIndex === null) ret = false;
             else {
                 try {
                     ret = await eventIndex.removeCrawlerCheckpoint(args[0]);
                 } catch (e) {
-                    sendError(payload.id, e);
+                    sendError(payload.id, <Error>e);
                     return;
                 }
             }
             break;
 
-        case 'addCrawlerCheckpoint':
+        case "addCrawlerCheckpoint":
             if (eventIndex === null) ret = false;
             else {
                 try {
                     ret = await eventIndex.addCrawlerCheckpoint(args[0]);
                 } catch (e) {
-                    sendError(payload.id, e);
+                    sendError(payload.id, <Error>e);
                     return;
                 }
             }
             break;
 
-        case 'loadFileEvents':
+        case "loadFileEvents":
             if (eventIndex === null) ret = [];
             else {
                 try {
                     ret = await eventIndex.loadFileEvents(args[0]);
                 } catch (e) {
-                    sendError(payload.id, e);
+                    sendError(payload.id, <Error>e);
                     return;
                 }
             }
             break;
 
-        case 'loadCheckpoints':
+        case "loadCheckpoints":
             if (eventIndex === null) ret = [];
             else {
                 try {
@@ -286,39 +279,39 @@ ipcMain.on('seshat', async function(_ev: IpcMainEvent, payload): Promise<void> {
             }
             break;
 
-        case 'setUserVersion':
+        case "setUserVersion":
             if (eventIndex === null) break;
             else {
                 try {
                     await eventIndex.setUserVersion(args[0]);
                 } catch (e) {
-                    sendError(payload.id, e);
+                    sendError(payload.id, <Error>e);
                     return;
                 }
             }
             break;
 
-        case 'getUserVersion':
+        case "getUserVersion":
             if (eventIndex === null) ret = 0;
             else {
                 try {
                     ret = await eventIndex.getUserVersion();
                 } catch (e) {
-                    sendError(payload.id, e);
+                    sendError(payload.id, <Error>e);
                     return;
                 }
             }
             break;
 
         default:
-            global.mainWindow.webContents.send('seshatReply', {
+            global.mainWindow.webContents.send("seshatReply", {
                 id: payload.id,
                 error: "Unknown IPC Call: " + payload.name,
             });
             return;
     }
 
-    global.mainWindow.webContents.send('seshatReply', {
+    global.mainWindow.webContents.send("seshatReply", {
         id: payload.id,
         reply: ret,
     });

@@ -1,0 +1,338 @@
+/* styles.css
+ * Better styling for of Nginx FancyIndex page
+ * © 2015-17, Lilian Besson (Naereen) and contributors,
+ * open-sourced under the MIT License, https://lbesson.mit-license.org/
+ * hosted on GitHub, https://GitHub.com/Naereen/Nginx-Fancyindex-Theme
+ */
+
+@import url("./fonts/inter.css");
+
+* {
+    font-family: "Inter", sans-serif;
+}
+@supports (font-variation-settings: normal) {
+    * {
+        font-family: "Inter var", sans-serif;
+    }
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+html {
+    color: #17191c;
+    font-weight: 400;
+    font-size: 1em;
+    line-height: 1.6em;
+}
+
+body {
+    background-color: #f4f6fa;
+    margin: 0 auto;
+    padding: 100px 20px 20px;
+    max-width: 800px;
+}
+
+thead {
+    font-weight: 300;
+    font-size: 1.2em;
+}
+
+h1 {
+    font-weight: 700;
+    text-align: center;
+    font-size: 1.6em;
+    line-height: 1.2em;
+}
+
+a {
+    color: #545454;
+    text-decoration: underline;
+}
+a:hover {
+    color: #0dbd8b;
+}
+a.clear,
+a.clear:link,
+a.clear:visited {
+    color: #666;
+    padding: 2px 0;
+    font-weight: 400;
+    font-size: 14px;
+    margin: 0 0 0 20px;
+    line-height: 14px;
+    display: inline-block;
+    border-bottom: transparent 1px solid;
+    vertical-align: -10px;
+    -webkit-transition: all 300ms ease-in;
+    -moz-transition: all 300ms ease-in;
+    -ms-transition: all 300ms ease-in;
+    -o-transition: all 300ms ease-in;
+    transition: all 300ms ease-in;
+}
+
+input {
+    vertical-align: middle;
+    *overflow: visible;
+    font-family: "Open Sans", sans-serif;
+    font-weight: 300;
+    display: inline-block;
+    height: 20px;
+    padding: 4px 32px 4px 6px;
+    margin: 0 auto 9px;
+    font-size: 14px;
+    line-height: 20px;
+    color: #555;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    width: 196px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
+    -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
+    -o-transition: border linear 0.2s, box-shadow linear 0.2s;
+    transition: border linear 0.2s, box-shadow linear 0.2s;
+}
+input:focus {
+    outline: 0;
+    border-color: rgba(0, 0, 0, 0.8);
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(0, 0, 0, 0.6);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(0, 0, 0, 0.6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(0, 0, 0, 0.6);
+}
+input::-moz-focus-inner {
+    padding: 0;
+    border: 0;
+}
+
+table {
+    border-collapse: collapse;
+    font-size: 1em;
+    max-width: 100%;
+    margin: 20px auto 0;
+}
+
+tr {
+    outline: 0;
+    border: 0;
+}
+tr:hover td {
+    background: #f6f6f6;
+}
+tr td:first-of-type {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+tr.parent a {
+    color: #9099a3;
+}
+
+th {
+    text-align: left;
+    font-size: 0.75em;
+    padding-right: 20px;
+}
+th + th {
+    width: 25%;
+}
+th + th + th + th {
+    width: 5%;
+}
+
+td {
+    padding: 5px 0;
+    outline: 0;
+    border: 0;
+    border-bottom: 1px solid #edf1f5;
+    vertical-align: middle;
+    text-align: left;
+    -webkit-transition: background 300ms ease-in;
+    -moz-transition: background 300ms ease-in;
+    -ms-transition: background 300ms ease-in;
+    -o-transition: background 300ms ease-in;
+    transition: background 300ms ease-in;
+}
+td:last-child,
+th:last-child {
+    text-align: right;
+    padding-right: 0;
+}
+td a {
+    display: block;
+}
+
+.parent a:hover {
+    color: #2a2a2a;
+}
+
+/* nav */
+
+.nav {
+    background-color: #fff;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    z-index: 3;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow: hidden;
+    background-color: #fff;
+}
+
+.nav li a {
+    color: #17191c;
+    display: block;
+    padding: 20px 20px;
+    text-decoration: none;
+}
+
+.nav li a:hover,
+.nav .menu-btn:hover {
+    color: #0dbd8b;
+}
+
+.nav .logo {
+    display: block;
+    float: left;
+    font-size: 2em;
+    padding-top: 18px;
+    padding-left: 20px;
+    text-decoration: none;
+}
+
+/* menu */
+
+.nav .menu {
+    clear: both;
+    max-height: 0;
+    transition: max-height 0.2s ease-out;
+}
+
+/* menu icon */
+
+.nav .menu-icon {
+    cursor: pointer;
+    display: inline-block;
+    float: right;
+    padding: 28px 20px;
+    position: relative;
+    user-select: none;
+}
+
+.nav .menu-icon .navicon {
+    background: #fff;
+    display: block;
+    height: 2px;
+    margin-top: 6px;
+    margin-bottom: 4px;
+    position: relative;
+    transition: background 0.2s ease-out;
+    width: 18px;
+}
+
+.nav .menu-icon .navicon:before,
+.nav .menu-icon .navicon:after {
+    background: #17191c;
+    content: "";
+    display: block;
+    height: 100%;
+    position: absolute;
+    transition: all 0.2s ease-out;
+    width: 100%;
+}
+
+.nav .menu-icon .navicon:before {
+    top: 5px;
+}
+
+.nav .menu-icon .navicon:after {
+    top: -5px;
+}
+
+/* menu btn */
+
+.nav .menu-btn {
+    display: none;
+}
+
+.nav .menu-btn:checked ~ .menu {
+    max-height: 100%;
+}
+
+.nav .menu-btn:checked ~ .menu-icon .navicon {
+    background: transparent;
+}
+
+.nav .menu-btn:checked ~ .menu-icon .navicon:before {
+    transform: rotate(-45deg);
+}
+
+.nav .menu-btn:checked ~ .menu-icon .navicon:after {
+    transform: rotate(45deg);
+}
+
+.nav .menu-btn:checked ~ .menu-icon:not(.steps) .navicon:before,
+.nav .menu-btn:checked ~ .menu-icon:not(.steps) .navicon:after {
+    top: 0;
+}
+
+@media (min-width: 72em) {
+    .nav {
+        padding-left: 200px;
+        padding-right: 200px;
+    }
+    .nav li {
+        float: left;
+    }
+    .nav li a {
+        padding: 20px 22px;
+    }
+    .nav .primary {
+        margin-top: 8px;
+        margin-left: 20px;
+        padding: 12px 20px;
+        border-radius: 100px;
+        background-color: #0dbd8b;
+        color: #fff;
+    }
+
+    .nav .primary:hover {
+        background-color: #099970;
+        color: #fff;
+    }
+
+    .nav .menu {
+        clear: none;
+        float: right;
+        max-height: none;
+    }
+    .nav .menu-icon {
+        display: none;
+    }
+}
+
+footer {
+    margin-top: 40px;
+    font-size: 0.8em;
+    text-align: center;
+}
+
+footer a {
+    color: #03b381;
+}

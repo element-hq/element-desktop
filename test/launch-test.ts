@@ -45,15 +45,17 @@ describe("App launch", () => {
             args,
             recordVideo: {
                 dir: artifactsPath,
-            }
+            },
         });
         window = await app.firstWindow();
-    });
+    }, 30000);
 
     afterAll(async () => {
-        await app?.close();
+        await app?.close().catch((e) => {
+            console.error(e);
+        });
         fs.rmSync(tmpDir, { recursive: true });
-    });
+    }, 30000);
 
     it("should launch and render the welcome view successfully", async () => {
         await window.locator("#matrixchat").waitFor();

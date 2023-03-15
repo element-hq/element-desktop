@@ -1,6 +1,6 @@
 {
     "Bring All to Front": "全部移至最前",
-    "Add to dictionary": "加入至字典",
+    "Add to dictionary": "新增到字典",
     "The image failed to save": "儲存圖片失敗",
     "Failed to save image": "儲存圖片失敗",
     "Save image as...": "另存圖片為...",
@@ -41,7 +41,7 @@
     "Quit": "退出",
     "Show/Hide": "顯示/隱藏",
     "Are you sure you want to quit?": "您確定要退出嗎？",
-    "Close Element": "關閉 Element",
     "Cancel": "取消",
-    "Copy image address": "複製圖片地址"
+    "Copy image address": "複製圖片地址",
+    "Close %(brand)s": "關閉 %(brand)s"
 }
