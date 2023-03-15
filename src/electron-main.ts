@@ -334,7 +334,6 @@ loadConfig().then(() => {
         Sentry.init({
             dsn,
             environment,
-            debug: true,
         });
     } else {
         console.log("@@", global.vectorConfig);
