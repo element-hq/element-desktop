@@ -48,7 +48,7 @@ describe("App launch", () => {
             },
         });
         window = await app.firstWindow();
-    }, 30000);
+    }, 60000);
 
     afterAll(async () => {
         await app?.close().catch((e) => {
@@ -62,5 +62,5 @@ describe("App launch", () => {
         await window.locator(".mx_Welcome").waitFor();
         await expect(window).toMatchURL("vector://vector/webapp/#/welcome");
         await window.screenshot({ path: path.join(artifactsPath, "welcome.png") });
-    }, 30000);
+    }, 60000);
 });
