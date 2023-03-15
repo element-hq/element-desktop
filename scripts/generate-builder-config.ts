@@ -7,6 +7,9 @@
  * On Windows:
  *  Prefixes the nightly version with `0.0.1-nightly.` as it breaks if it is not semver
  *
+ * On macOS:
+ *   Passes --notarytool-team-id to build.mac.notarize.notarize if specified
+ *
  * On Linux:
  *  Replaces spaces in the product name with dashes as spaces in paths can cause issues
  *  Passes --deb-custom-control to build.deb.fpm if specified
@@ -30,7 +33,14 @@ const argv = parseArgs<{
     "deb-custom-control"?: string;
     "deb-changelog"?: string;
 }>(process.argv.slice(2), {
-    string: ["nightly", "deb-custom-control", "deb-changelog", "signtool-thumbprint", "signtool-subject-name", "notarytool-team-id"],
+    string: [
+        "nightly",
+        "deb-custom-control",
+        "deb-changelog",
+        "signtool-thumbprint",
+        "signtool-subject-name",
+        "notarytool-team-id",
+    ],
 });
 
 type DeepWriteable<T> = { -readonly [P in keyof T]: DeepWriteable<T[P]> };
@@ -85,7 +95,7 @@ async function main(): Promise<number | void> {
 
     if (argv["notarytool-team-id"]) {
         delete cfg.afterSign;
-        cfg.mac.notarize = {
+        cfg.mac!.notarize = {
             teamId: argv["notarytool-team-id"],
         };
     }
