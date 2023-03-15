@@ -8,7 +8,7 @@
  *  Prefixes the nightly version with `0.0.1-nightly.` as it breaks if it is not semver
  *
  * On macOS:
- *   Passes --notarytool-team-id to build.mac.notarize.notarize if specified
+ *   Passes --notarytool-team-id to build.mac.notarize.notarize if specified and removes build.mac.afterSign
  *
  * On Linux:
  *  Replaces spaces in the product name with dashes as spaces in paths can cause issues

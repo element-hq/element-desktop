@@ -1,7 +1,5 @@
 name: Build and Deploy
 on:
-    push:
-        branches: ["t3chguy/notarise-v2"]
     # Nightly build
     schedule:
         - cron: "0 9 * * *"
@@ -109,6 +107,7 @@ jobs:
     deploy:
         needs:
             - macos
+            - linux
             - windows_32bit
             - windows_64bit
         runs-on: ubuntu-latest
