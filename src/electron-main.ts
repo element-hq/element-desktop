@@ -233,7 +233,7 @@ async function setupGlobals(): Promise<void> {
 }
 
 // Look for an auto-launcher under 'Riot' and if we find one,
-// port it's enabled/disabled-ness over to the new 'Element' launcher
+// port its enabled/disabled-ness over to the new 'Element' launcher
 async function moveAutoLauncher(): Promise<void> {
     if (!global.vectorConfig.brand || global.vectorConfig.brand === "Element") {
         const oldLauncher = new AutoLaunch({
