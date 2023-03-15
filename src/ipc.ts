@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 import { app, autoUpdater, desktopCapturer, ipcMain, powerSaveBlocker } from "electron";
-import { clearAllUserData } from "electron-clear-data";
+import { relaunchApp } from "electron-clear-data";
 
 import IpcMainEvent = Electron.IpcMainEvent;
 import { recordSSOSession } from "./protocol";
@@ -189,7 +189,9 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
 
         case "clearStorage":
             global.store.clear();
-            clearAllUserData();
+            global.mainWindow.webContents.session.flushStorageData();
+            await global.mainWindow.webContents.session.clearStorageData();
+            relaunchApp();
             break;
 
         default:
