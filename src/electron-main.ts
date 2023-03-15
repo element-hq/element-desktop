@@ -44,12 +44,6 @@ const argv = minimist(process.argv, {
     alias: { help: "h" },
 });
 
-// Things we need throughout the file but need to be created
-// async to are initialised in setupGlobals()
-let asarPath: string;
-let resPath: string;
-let iconPath: string;
-
 if (argv["help"]) {
     console.log("Options:");
     console.log("  --profile-dir {path}: Path to where to store the profile.");
@@ -119,21 +113,30 @@ async function tryPaths(name: string, root: string, rawPaths: string[]): Promise
 
 const homeserverProps = ["default_is_url", "default_hs_url", "default_server_name", "default_server_config"] as const;
 
-async function loadConfig(): Promise<void> {
-    if (global.vectorConfig) return;
-
+// Things we need throughout the file but need to be created async to are initialised in setupGlobals()
+let asarPath: string;
+// Find the webapp resource file and store it in global scope `asarPath`
+async function findAsar(): Promise<void> {
     // find the webapp asar.
     asarPath = await tryPaths("webapp", __dirname, [
         // If run from the source checkout, this will be in the directory above
         "../webapp.asar",
         // but if run from a packaged application, electron-main.js will be in
-        // a different asar file so it will be two levels above
+        // a different asar file, so it will be two levels above
         "../../webapp.asar",
         // also try without the 'asar' suffix to allow symlinking in a directory
         "../webapp",
         // from a packaged application
         "../../webapp",
     ]);
+}
+
+// Loads the config from asar and applies changes from config.json in userData if one exists
+// Writes config to `global.vectorConfig` - if set the function will bail early
+async function loadConfig(): Promise<void> {
+    if (global.vectorConfig) return;
+
+    await findAsar();
 
     try {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -181,12 +184,29 @@ async function loadConfig(): Promise<void> {
     }
 }
 
-// Find the webapp resources and set up things that require them
+// Configure Electron Sentry and crashReporter using sentry.dsn in config.json if one is present.
+async function configureSentry(): Promise<void> {
+    await loadConfig();
+    const { dsn, environment } = global.vectorConfig.sentry || {};
+    if (dsn) {
+        console.log(`Enabling Sentry with dsn=${dsn} environment=${environment}`);
+        Sentry.init({
+            dsn,
+            environment,
+            // We don't actually use this IPC, but we do not want Sentry injecting preloads
+            ipcMode: Sentry.IPCMode.Classic,
+        });
+    }
+}
+configureSentry();
+
+// Set up globals for Tray and AutoLaunch
 async function setupGlobals(): Promise<void> {
+    await findAsar();
     await loadConfig();
 
     // we assume the resources path is in the same place as the asar
-    resPath = await tryPaths("res", path.dirname(asarPath), [
+    const resPath = await tryPaths("res", path.dirname(asarPath), [
         // If run from the source checkout
         "res",
         // if run from packaged application
@@ -196,9 +216,8 @@ async function setupGlobals(): Promise<void> {
     // The tray icon
     // It's important to call `path.join` so we don't end up with the packaged asar in the final path.
     const iconFile = `element.${process.platform === "win32" ? "ico" : "png"}`;
-    iconPath = path.join(resPath, "img", iconFile);
     global.trayConfig = {
-        icon_path: iconPath,
+        icon_path: path.join(resPath, "img", iconFile),
         brand: global.vectorConfig.brand || "Element",
     };
 
@@ -212,9 +231,9 @@ async function setupGlobals(): Promise<void> {
     });
 }
 
+// Look for an auto-launcher under 'Riot' and if we find one,
+// port it's enabled/disabled-ness over to the new 'Element' launcher
 async function moveAutoLauncher(): Promise<void> {
-    // Look for an auto-launcher under 'Riot' and if we find one, port it's
-    // enabled/disabled-ness over to the new 'Element' launcher
     if (!global.vectorConfig.brand || global.vectorConfig.brand === "Element") {
         const oldLauncher = new AutoLaunch({
             name: "Riot",
@@ -327,21 +346,9 @@ if (global.store.get("disableHardwareAcceleration", false) === true) {
     app.disableHardwareAcceleration();
 }
 
-loadConfig().then(() => {
-    const { dsn, environment } = global.vectorConfig.sentry || {};
-    if (dsn) {
-        console.log(`Enabling Sentry with dsn=${dsn} environment=${environment}`);
-        Sentry.init({
-            dsn,
-            environment,
-            // We don't actually use this IPC, but we do not want Sentry injecting preloads
-            ipcMode: Sentry.IPCMode.Classic,
-        });
-    }
-});
-
 app.on("ready", async () => {
     try {
+        await findAsar();
         await setupGlobals();
         await moveAutoLauncher();
     } catch (e) {
@@ -441,7 +448,7 @@ app.on("ready", async () => {
         // https://www.electronjs.org/docs/faq#the-font-looks-blurry-what-is-this-and-what-can-i-do
         backgroundColor: "#fff",
 
-        icon: iconPath,
+        icon: global.trayConfig.icon_path,
         show: false,
         autoHideMenuBar: global.store.get("autoHideMenuBar", true),
 
