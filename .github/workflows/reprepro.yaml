@@ -67,7 +67,7 @@ jobs:
                   echo "deb [signed-by=/usr/share/keyrings/element-io-archive-keyring.gpg] http://127.0.0.1:8000/debian/ default main" | sudo tee /etc/apt/sources.list.d/element-io.list
 
                   # Start http server and fetch from it via apt
-                  python3 -m http.server 8000 &
+                  python3 -m http.server 8000 --bind 127.0.0.1 &
                   sudo apt-get update --allow-insecure-repositories
                   killall python3
 
