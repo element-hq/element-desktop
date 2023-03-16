@@ -114,7 +114,7 @@ async function tryPaths(name: string, root: string, rawPaths: string[]): Promise
 const homeserverProps = ["default_is_url", "default_hs_url", "default_server_name", "default_server_config"] as const;
 
 let asarPathPromise: Promise<string> | undefined;
-// Find the webapp resource file and store it in global scope `asarPath`
+// Get the webapp resource file path, memoizes result
 function getAsarPath(): Promise<string> {
     if (!asarPathPromise) {
         asarPathPromise = tryPaths("webapp", __dirname, [
@@ -133,7 +133,7 @@ function getAsarPath(): Promise<string> {
     return asarPathPromise;
 }
 
-// Loads the config from asar and applies a config.json from userData atop if one exists
+// Loads the config from asar, and applies a config.json from userData atop if one exists
 // Writes config to `global.vectorConfig`. Does nothing if `global.vectorConfig` is already set.
 async function loadConfig(): Promise<void> {
     if (global.vectorConfig) return;
