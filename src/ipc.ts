@@ -200,7 +200,7 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
                     const button = new TouchBarButton({
                         label: r.initial,
                         backgroundColor: defaultColors[total % defaultColors.length],
-                        click: () => {
+                        click: (): void => {
                             global.mainWindow?.loadURL(`vector://vector/webapp/#/room/${r.roomId}`);
                         },
                     });
