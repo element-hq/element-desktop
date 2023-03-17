@@ -157,8 +157,6 @@ jobs:
 
             - name: Check app was signed successfully
               if: inputs.sign != ''
-              # XXX: UPDATE THIS BEFORE WHEN GOING LIVE
-              continue-on-error: true
               run: |
                   . "$env:SIGNTOOL_PATH" verify /pa (get-item ./dist/squirrel-windows*/*.exe)
 
