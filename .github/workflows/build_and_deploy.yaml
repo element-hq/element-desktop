@@ -1,8 +1,5 @@
 name: Build and Deploy
 on:
-    # XXX: test
-    push:
-        branches: ["t3chguy/prod-ssl-com"]
     # Nightly build
     schedule:
         - cron: "0 9 * * *"
