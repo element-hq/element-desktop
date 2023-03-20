@@ -11,6 +11,9 @@
   },
   "license": "Apache-2.0",
   "files": [],
+  "engines": {
+    "node": ">=16.0.0"
+  },
   "scripts": {
     "i18n": "matrix-gen-i18n",
     "prunei18n": "matrix-prune-i18n",
