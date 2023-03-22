@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { app, autoUpdater, desktopCapturer, ipcMain, powerSaveBlocker } from "electron";
+import { app, autoUpdater, desktopCapturer, ipcMain, powerSaveBlocker, TouchBar, nativeImage } from "electron";
 import { relaunchApp } from "electron-clear-data";
 
 import IpcMainEvent = Electron.IpcMainEvent;
@@ -193,6 +193,56 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
             await global.mainWindow.webContents.session.clearStorageData();
             relaunchApp();
             break;
+
+        case "breadcrumbs": {
+            if (process.platform === "darwin") {
+                const { TouchBarPopover, TouchBarButton } = TouchBar;
+
+                const recentsBar = new TouchBar({
+                    items: args[0].map((r: { roomId: string; avatarUrl: string | null; initial: string }) => {
+                        const defaultColors = ["#0DBD8B", "#368bd6", "#ac3ba8"];
+                        let total = 0;
+                        for (let i = 0; i < r.roomId.length; ++i) {
+                            total += r.roomId.charCodeAt(i);
+                        }
+
+                        const button = new TouchBarButton({
+                            label: r.initial,
+                            backgroundColor: defaultColors[total % defaultColors.length],
+                            click: (): void => {
+                                global.mainWindow?.loadURL(`vector://vector/webapp/#/room/${r.roomId}`);
+                            },
+                        });
+                        if (r.avatarUrl) {
+                            fetch(r.avatarUrl)
+                                .then((resp) => {
+                                    if (!resp.ok) return;
+                                    return resp.arrayBuffer();
+                                })
+                                .then((arrayBuffer) => {
+                                    const buffer = Buffer.from(arrayBuffer!);
+                                    button.icon = nativeImage.createFromBuffer(buffer);
+                                    button.label = "";
+                                    button.backgroundColor = "";
+                                });
+                        }
+                        return button;
+                    }),
+                });
+
+                const touchBar = new TouchBar({
+                    items: [
+                        new TouchBarPopover({
+                            label: "Recents",
+                            showCloseButton: true,
+                            items: recentsBar,
+                        }),
+                    ],
+                });
+                global.mainWindow.setTouchBar(touchBar);
+            }
+            break;
+        }
 
         default:
             global.mainWindow.webContents.send("ipcReply", {
