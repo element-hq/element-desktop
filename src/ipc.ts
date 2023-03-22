@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 import { app, autoUpdater, desktopCapturer, ipcMain, powerSaveBlocker, TouchBar, nativeImage } from "electron";
+import { relaunchApp } from "electron-clear-data";
 
 import IpcMainEvent = Electron.IpcMainEvent;
 import { recordSSOSession } from "./protocol";
@@ -184,6 +185,13 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
                 name: source.name,
                 thumbnailURL: source.thumbnail.toDataURL(),
             }));
+            break;
+
+        case "clearStorage":
+            global.store.clear();
+            global.mainWindow.webContents.session.flushStorageData();
+            await global.mainWindow.webContents.session.clearStorageData();
+            relaunchApp();
             break;
 
         case "breadcrumbs": {
