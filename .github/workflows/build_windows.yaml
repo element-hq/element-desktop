@@ -133,7 +133,7 @@ jobs:
                   $LogConfig | Set-Content -Path ${{ env.INSTALL_DIR }}/log4net.config
 
                   # Configure
-                  ${{ env.INSTALL_DIR }}/eSignerCKATool.exe config -mode "${{ env.MODE }}" -user "${{ secrets.ESIGNER_USER_NAME }}" -pass "${{ secrets.ESIGNER_USER_PASSWORD }}" -totp "${{ secrets.ESIGNER_USER_TOTP }}" -key "${{ env.MASTER_KEY_FILE }}" -r
+                  ${{ env.INSTALL_DIR }}/eSignerCKATool.exe config -mode product -user "${{ secrets.ESIGNER_USER_NAME }}" -pass "${{ secrets.ESIGNER_USER_PASSWORD }}" -totp "${{ secrets.ESIGNER_USER_TOTP }}" -key "${{ env.MASTER_KEY_FILE }}" -r
                   ${{ env.INSTALL_DIR }}/eSignerCKATool.exe unload
                   ${{ env.INSTALL_DIR }}/eSignerCKATool.exe load
 
@@ -146,8 +146,6 @@ jobs:
                   $SubjectName = ($CodeSigningCert.Subject -replace ", ?", "`n" | ConvertFrom-StringData).CN
                   echo "config-args=--signtool-thumbprint '$Thumbprint' --signtool-subject-name '$SubjectName'" >> $env:GITHUB_OUTPUT
               env:
-                  # XXX: UPDATE THIS BEFORE WHEN GOING LIVE
-                  MODE: sandbox
                   INSTALL_DIR: C:\Users\runneradmin\eSignerCKA
                   MASTER_KEY_FILE: C:\Users\runneradmin\eSignerCKA\master.key
 
@@ -165,8 +163,6 @@ jobs:
 
             - name: Check app was signed successfully
               if: inputs.sign != ''
-              # XXX: UPDATE THIS BEFORE WHEN GOING LIVE
-              continue-on-error: true
               run: |
                   . "$env:SIGNTOOL_PATH" verify /pa (get-item ./dist/squirrel-windows*/*.exe)
 

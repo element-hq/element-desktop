@@ -5,7 +5,7 @@
 If you want to build native modules, make sure that the following tools are installed on your system.
 
 -   [Git for Windows](https://git-scm.com/download/win)
--   [Node 14](https://nodejs.org)
+-   [Node 16](https://nodejs.org)
 -   [Python 3](https://www.python.org/downloads/) (if you type 'python' into command prompt it will offer to install it from the windows store)
 -   [Strawberry Perl](https://strawberryperl.com/)
 -   [Rustup](https://rustup.rs/)
