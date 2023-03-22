@@ -7,6 +7,9 @@
  * On Windows:
  *  Prefixes the nightly version with `0.0.1-nightly.` as it breaks if it is not semver
  *
+ * On macOS:
+ *   Passes --notarytool-team-id to build.mac.notarize.notarize if specified and removes build.mac.afterSign
+ *
  * On Linux:
  *  Replaces spaces in the product name with dashes as spaces in paths can cause issues
  *  Passes --deb-custom-control to build.deb.fpm if specified
@@ -26,10 +29,18 @@ const argv = parseArgs<{
     "nightly"?: string;
     "signtool-thumbprint"?: string;
     "signtool-subject-name"?: string;
+    "notarytool-team-id"?: string;
     "deb-custom-control"?: string;
     "deb-changelog"?: string;
 }>(process.argv.slice(2), {
-    string: ["nightly", "deb-custom-control", "deb-changelog", "signtool-thumbprint", "signtool-subject-name"],
+    string: [
+        "nightly",
+        "deb-custom-control",
+        "deb-changelog",
+        "signtool-thumbprint",
+        "signtool-subject-name",
+        "notarytool-team-id",
+    ],
 });
 
 type DeepWriteable<T> = { -readonly [P in keyof T]: DeepWriteable<T[P]> };
@@ -80,6 +91,13 @@ async function main(): Promise<number | void> {
         cfg.win!.signingHashAlgorithms = ["sha256"];
         cfg.win!.certificateSubjectName = argv["signtool-subject-name"];
         cfg.win!.certificateSha1 = argv["signtool-thumbprint"];
+    }
+
+    if (argv["notarytool-team-id"]) {
+        delete cfg.afterSign;
+        cfg.mac!.notarize = {
+            teamId: argv["notarytool-team-id"],
+        };
     }
 
     if (os.platform() === "linux") {
