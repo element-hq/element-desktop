@@ -100,10 +100,10 @@ const x8664PcWindowsMsvc: WindowsTarget = {
 };
 
 const aarch64WindowsMsvc: WindowsTarget = {
-    id: 'aarch64-pc-windows-msvc',
-    platform: 'win32',
-    arch: 'arm64',
-    vcVarsArch: 'arm64',
+    id: "aarch64-pc-windows-msvc",
+    platform: "win32",
+    arch: "arm64",
+    vcVarsArch: "arm64",
 };
 
 const x8664UnknownLinuxGnu: LinuxTarget = {
@@ -170,7 +170,7 @@ export const TARGETS: Record<TargetId, Target> = {
     // Windows
     "i686-pc-windows-msvc": i686PcWindowsMsvc,
     "x86_64-pc-windows-msvc": x8664PcWindowsMsvc,
-    'aarch64-pc-windows-msvc': aarch64WindowsMsvc,
+    "aarch64-pc-windows-msvc": aarch64WindowsMsvc,
     // Linux
     "i686-unknown-linux-musl": i686UnknownLinuxMusl,
     "i686-unknown-linux-gnu": i686UnknownLinuxGnu,

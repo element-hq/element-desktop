@@ -54,6 +54,7 @@ jobs:
               if: steps.cache.outputs.cache-hit != 'true'
               uses: actions-rs/toolchain@v1
               with:
+                  default: true
                   toolchain: stable
                   target: aarch64-apple-darwin
 
