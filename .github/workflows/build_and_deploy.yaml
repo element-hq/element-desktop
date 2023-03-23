@@ -41,8 +41,7 @@ on:
                 default: true
 concurrency: ${{ github.workflow }}
 env:
-    # XXX: UPDATE THIS BEFORE WHEN GOING LIVE
-    R2_BUCKET: "packages-element-io-test"
+    R2_BUCKET: "packages-element-io"
 jobs:
     prepare:
         uses: ./.github/workflows/build_prepare.yaml
@@ -88,8 +87,7 @@ jobs:
         with:
             sign: true
             deploy-mode: true
-            # XXX: UPDATE THIS BEFORE WHEN GOING LIVE
-            base-url: https://packages-element-io-test.element.io/${{ inputs.mode == 'release' && 'desktop' || 'nightly' }}
+            base-url: https://packages.element.io/${{ inputs.mode == 'release' && 'desktop' || 'nightly' }}
             version: ${{ needs.prepare.outputs.macos-version }}
 
     linux:

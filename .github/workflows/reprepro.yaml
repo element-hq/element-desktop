@@ -24,8 +24,7 @@ jobs:
         environment: packages.element.io
         runs-on: ubuntu-latest
         env:
-            # XXX: UPDATE THIS BEFORE WHEN GOING LIVE
-            R2_BUCKET: "packages-element-io-test"
+            R2_BUCKET: "packages-element-io"
             R2_DB_BUCKET: packages-element-io-db
             R2_URL: ${{ secrets.CF_R2_S3_API }}
         steps:
