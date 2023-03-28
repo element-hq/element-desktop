@@ -41,15 +41,14 @@ on:
                 default: true
 concurrency: ${{ github.workflow }}
 env:
-    # XXX: UPDATE THIS BEFORE WHEN GOING LIVE
-    R2_BUCKET: "packages-element-io-test"
+    R2_BUCKET: "packages-element-io"
 jobs:
     prepare:
         uses: ./.github/workflows/build_prepare.yaml
         with:
             config: element.io/${{ inputs.mode || 'nightly' }}
             version: ${{ inputs.mode == 'release' && '' || 'develop' }}
-            calculate-nightly-versions: ${{ inputs.mode != 'release' }}
+            nightly: ${{ inputs.mode != 'release' }}
         secrets:
             CF_R2_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
             CF_R2_TOKEN: ${{ secrets.CF_R2_TOKEN }}
@@ -88,8 +87,7 @@ jobs:
         with:
             sign: true
             deploy-mode: true
-            # XXX: UPDATE THIS BEFORE WHEN GOING LIVE
-            base-url: https://packages-element-io-test.element.io/${{ inputs.mode == 'release' && 'desktop' || 'nightly' }}
+            base-url: https://packages.element.io/${{ inputs.mode == 'release' && 'desktop' || 'nightly' }}
             version: ${{ needs.prepare.outputs.macos-version }}
 
     linux:
@@ -98,6 +96,7 @@ jobs:
         name: Linux
         uses: ./.github/workflows/build_linux.yaml
         with:
+            config: element.io/${{ inputs.mode || 'nightly' }}
             sqlcipher: system
             version: ${{ needs.prepare.outputs.linux-version }}
 
@@ -111,7 +110,7 @@ jobs:
             - windows_64bit
         runs-on: ubuntu-latest
         name: Deploy
-        if: github.event != 'workflow_dispatch' || (inputs.deploy && (inputs.macos || inputs.windows_32bit || inputs.windows_64bit))
+        if: github.event_name != 'workflow_dispatch' || (inputs.deploy && (inputs.macos || inputs.windows_32bit || inputs.windows_64bit))
         environment: packages.element.io
         steps:
             - name: Download artifacts
@@ -135,7 +134,7 @@ jobs:
             # We queue this after the other deploy stage as we want to abort if that fails
             - deploy
         name: Run reprepro
-        if: github.event != 'workflow_dispatch' || (inputs.deploy && inputs.linux)
+        if: github.event_name != 'workflow_dispatch' || (inputs.deploy && inputs.linux)
         uses: ./.github/workflows/reprepro.yaml
         secrets: inherit
         with:

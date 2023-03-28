@@ -4,6 +4,10 @@
 on:
     workflow_call:
         inputs:
+            config:
+                type: string
+                required: true
+                description: "The config directory to use"
             version:
                 type: string
                 required: false
@@ -34,6 +38,7 @@ jobs:
               if: steps.cache.outputs.cache-hit != 'true'
               uses: actions-rs/toolchain@v1
               with:
+                  default: true
                   toolchain: stable
 
             - name: Install libsqlcipher-dev
@@ -60,16 +65,26 @@ jobs:
               run: |
                   echo "config-args=--nightly '${{ inputs.version }}'" >> $GITHUB_OUTPUT
 
-            - name: Generate debian control file
+            - name: Generate debian files and arguments
+              id: debian
               run: |
-                  cp element.io/${{ inputs.version && 'nightly' || 'release' }}/control.template debcontrol
-                  INPUT_VERSION="${{ inputs.version }}"
+                  if [ -f changelog.Debian ]; then
+                      echo "config-args=--deb-changelog changelog.Debian" >> $GITHUB_OUTPUT
+                  fi
+                  
+                  cp "$DIR/control.template" debcontrol
                   VERSION=${INPUT_VERSION:-$(cat package.json | jq -r .version)}
                   echo "Version: $VERSION" >> debcontrol
+              env:
+                  DIR: ${{ inputs.config }}
+                  INPUT_VERSION: ${{ inputs.version }}
 
             - name: Build App
               run: |
-                  scripts/generate-builder-config.ts ${{ steps.nightly.outputs.config-args }} --deb-custom-control=debcontrol
+                  scripts/generate-builder-config.ts \
+                      ${{ steps.nightly.outputs.config-args }} \
+                      ${{ steps.debian.outputs.config-args }} \
+                      --deb-custom-control=debcontrol
                   yarn build --publish never -l --config electron-builder.json
 
             - name: Upload Artifacts

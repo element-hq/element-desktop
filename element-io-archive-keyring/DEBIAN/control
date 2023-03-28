@@ -1,0 +1,7 @@
+Package: element-io-archive-keyring
+Architecture: all
+Section: contrib/meta
+Maintainer: support@element.io
+Priority: optional
+Version: 1.1
+Description: The packages.element.io repository keyring

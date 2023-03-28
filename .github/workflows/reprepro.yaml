@@ -24,8 +24,7 @@ jobs:
         environment: packages.element.io
         runs-on: ubuntu-latest
         env:
-            # XXX: UPDATE THIS BEFORE WHEN GOING LIVE
-            R2_BUCKET: "packages-element-io-test"
+            R2_BUCKET: "packages-element-io"
             R2_DB_BUCKET: packages-element-io-db
             R2_URL: ${{ secrets.CF_R2_S3_API }}
         steps:
@@ -64,10 +63,10 @@ jobs:
                   # Download signing keyring
                   sudo wget -O /usr/share/keyrings/element-io-archive-keyring.gpg https://packages.element.io/debian/element-io-archive-keyring.gpg
                   # Point apt at local apt repo
-                  echo "deb [signed-by=/usr/share/keyrings/element-io-archive-keyring.gpg] http://localhost:8000/debian/ default main" | sudo tee /etc/apt/sources.list.d/element-io.list
+                  echo "deb [signed-by=/usr/share/keyrings/element-io-archive-keyring.gpg] http://127.0.0.1:8000/debian/ default main" | sudo tee /etc/apt/sources.list.d/element-io.list
 
                   # Start http server and fetch from it via apt
-                  python3 -m http.server 8000 &
+                  python3 -m http.server 8000 --bind 127.0.0.1 &
                   sudo apt-get update --allow-insecure-repositories
                   killall python3
 

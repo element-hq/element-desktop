@@ -22,6 +22,15 @@ import fsExtra from "fs-extra";
 import HakEnv from "../../scripts/hak/hakEnv";
 import { DependencyInfo } from "../../scripts/hak/dep";
 
+type WinConfiguration =
+    | "VC-WIN32"
+    | "VC-WIN64A"
+    | "VC-WIN64-ARM"
+    | "VC-WIN64-CLANGASM-ARM"
+    | "VC-CLANG-WIN64-CLANGASM-ARM"
+    | "VC-WIN32-HYBRIDCRT"
+    | "VC-WIN64A-HYBRIDCRT";
+
 export default async function (hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
     if (hakEnv.isWin()) {
         await buildOpenSslWin(hakEnv, moduleInfo);
@@ -36,7 +45,18 @@ async function buildOpenSslWin(hakEnv: HakEnv, moduleInfo: DependencyInfo): Prom
     const version = moduleInfo.cfg.dependencies.openssl;
     const openSslDir = path.join(moduleInfo.moduleTargetDotHakDir, `openssl-${version}`);
 
-    const openSslArch = hakEnv.getTargetArch() === "x64" ? "VC-WIN64A" : "VC-WIN32";
+    let openSslArch: WinConfiguration;
+    switch (hakEnv.getTargetArch()) {
+        case "x64":
+            openSslArch = "VC-WIN64A";
+            break;
+        case "ia32":
+            openSslArch = "VC-WIN32";
+            break;
+        case "arm64":
+            openSslArch = "VC-WIN64-ARM";
+            break;
+    }
 
     console.log("Building openssl in " + openSslDir);
     await new Promise<void>((resolve, reject) => {
