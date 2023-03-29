@@ -8,7 +8,7 @@
  *  Prefixes the nightly version with `0.0.1-nightly.` as it breaks if it is not semver
  *
  * On macOS:
- *   Passes --notarytool-team-id to build.mac.notarize.notarize if specified and removes build.mac.afterSign
+ *   Passes --notarytool-team-id to build.mac.notarize.notarize if specified
  *
  * On Linux:
  *  Replaces spaces in the product name with dashes as spaces in paths can cause issues
@@ -87,14 +87,12 @@ async function main(): Promise<number | void> {
     }
 
     if (argv["signtool-thumbprint"] && argv["signtool-subject-name"]) {
-        delete cfg.win!.sign;
         cfg.win!.signingHashAlgorithms = ["sha256"];
         cfg.win!.certificateSubjectName = argv["signtool-subject-name"];
         cfg.win!.certificateSha1 = argv["signtool-thumbprint"];
     }
 
     if (argv["notarytool-team-id"]) {
-        delete cfg.afterSign;
         cfg.mac!.notarize = {
             teamId: argv["notarytool-team-id"],
         };

@@ -157,14 +157,12 @@
     "win": {
       "target": [
         "squirrel"
-      ],
-      "sign": "scripts/electron_winSign"
+      ]
     },
     "directories": {
       "output": "dist"
     },
     "afterPack": "scripts/electron_afterPack",
-    "afterSign": "scripts/electron_afterSign",
     "protocols": [
       {
         "name": "element",
