@@ -39,17 +39,6 @@ jobs:
                   path: |
                       ./.hak
 
-            - name: Install Rust
-              if: steps.cache.outputs.cache-hit != 'true'
-              uses: actions-rs/toolchain@v1
-              with:
-                  default: true
-                  toolchain: stable
-
-            - name: Install libsqlcipher-dev
-              if: steps.cache.outputs.cache-hit != 'true' && inputs.sqlcipher == 'system'
-              run: sudo apt-get install -y libsqlcipher-dev
-
             - uses: actions/setup-node@v3
               with:
                   cache: "yarn"
