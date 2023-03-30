@@ -1,8 +1,9 @@
+# Docker image to facilitate building Element Desktop with native bits using a glibc version with broader compatibility
 FROM buildpack-deps:bionic-curl
 
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN curl -L https://yarnpkg.com/latest.tar.gz | tar xvz && mv yarn-* /yarn && ln -s /yarn/bin/yarn /usr/bin/yarn
+RUN curl --proto "=https" -L https://yarnpkg.com/latest.tar.gz | tar xvz && mv yarn-* /yarn && ln -s /yarn/bin/yarn /usr/bin/yarn
 RUN apt-get -qq update && apt-get -qq dist-upgrade && \
   # add repo for git-lfs
   curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
@@ -14,6 +15,8 @@ RUN apt-get -qq update && apt-get -qq dist-upgrade && \
   apt-get -qq install --no-install-recommends qtbase5-dev bsdtar build-essential autoconf libssl-dev gcc-multilib g++-multilib lzip rpm python libcurl4 git git-lfs ssh unzip tcl \
   libsecret-1-dev libgnome-keyring-dev \
   libopenjp2-tools \
+  # Used by github actions \
+  jq \
   # Used by seshat (when not SQLCIPHER_STATIC) \
   libsqlcipher-dev && \
   # git-lfs
@@ -34,7 +37,7 @@ ENV FORCE_COLOR true
 ENV NODE_VERSION 16.18.1
 
 # this package is used for snapcraft and we should not clear apt list - to avoid apt-get update during snap build
-RUN curl -L https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.gz | tar xz -C /usr/local --strip-components=1 && \
+RUN curl --proto "=https" -L https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.gz | tar xz -C /usr/local --strip-components=1 && \
   unlink /usr/local/CHANGELOG.md && unlink /usr/local/LICENSE && unlink /usr/local/README.md && \
   # https://github.com/npm/npm/issues/4531
   npm config set unsafe-perm true
