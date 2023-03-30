@@ -24,7 +24,7 @@ on:
                 required: false
                 description: "Whether to sign & notarise the build, requires 'packages.element.io' environment"
             deploy-mode:
-                type: string
+                type: boolean
                 required: false
                 description: "Whether to arrange artifacts in the arrangement needed for deployment, skipping unrelated ones"
 jobs:
