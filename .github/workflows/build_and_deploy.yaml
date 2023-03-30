@@ -1,5 +1,7 @@
 name: Build and Deploy
 on:
+    push:
+        branches: ["t3chguy/fix/18486"]
     # Nightly build
     schedule:
         - cron: "0 9 * * *"
@@ -41,7 +43,7 @@ on:
                 default: true
 concurrency: ${{ github.workflow }}
 env:
-    R2_BUCKET: "packages-element-io"
+    R2_BUCKET: "packages-element-io-test"
 jobs:
     prepare:
         uses: ./.github/workflows/build_prepare.yaml
