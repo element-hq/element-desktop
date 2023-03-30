@@ -21,9 +21,6 @@ jobs:
         runs-on: ubuntu-latest
         container:
             image: ghcr.io/vector-im/element-desktop-dockerbuild:t3chguy-dockerbuild
-            volumes:
-                - "/usr/local/share/.cache/yarn/v6:/usr/local/share/.cache/yarn/v6"
-                - "${{ github.workspace }}/.hak:${{ github.workspace }}/.hak"
         defaults:
             run:
                 shell: bash
@@ -45,6 +42,9 @@ jobs:
             - uses: actions/setup-node@v3
               with:
                   cache: "yarn"
+              env:
+                  # Workaround for https://github.com/actions/setup-node/issues/317
+                  FORCE_COLOR: 0
 
             # Does not need branch matching as only analyses this layer
             - name: Install Deps
