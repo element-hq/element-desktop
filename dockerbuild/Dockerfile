@@ -3,7 +3,7 @@ FROM buildpack-deps:bionic-curl
 
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN curl -L https://yarnpkg.com/latest.tar.gz | tar xvz && mv yarn-* /yarn && ln -s /yarn/bin/yarn /usr/bin/yarn
+RUN curl --proto "=https" -L https://yarnpkg.com/latest.tar.gz | tar xvz && mv yarn-* /yarn && ln -s /yarn/bin/yarn /usr/bin/yarn
 RUN apt-get -qq update && apt-get -qq dist-upgrade && \
   # add repo for git-lfs
   curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
@@ -35,7 +35,7 @@ ENV FORCE_COLOR true
 ENV NODE_VERSION 16.18.1
 
 # this package is used for snapcraft and we should not clear apt list - to avoid apt-get update during snap build
-RUN curl -L https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.gz | tar xz -C /usr/local --strip-components=1 && \
+RUN curl --proto "=https" -L https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.gz | tar xz -C /usr/local --strip-components=1 && \
   unlink /usr/local/CHANGELOG.md && unlink /usr/local/LICENSE && unlink /usr/local/README.md && \
   # https://github.com/npm/npm/issues/4531
   npm config set unsafe-perm true
