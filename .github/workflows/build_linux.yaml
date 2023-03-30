@@ -15,6 +15,11 @@ on:
 jobs:
     build:
         runs-on: ubuntu-latest
+        container:
+            image: ghcr.io/vector-im/element-desktop-dockerbuild:t3chguy-dockerbuild
+        defaults:
+            run:
+                shell: bash
         steps:
             - uses: actions/checkout@v3
 
@@ -30,19 +35,12 @@ jobs:
                   path: |
                       ./.hak
 
-            - name: Install Rust
-              if: steps.cache.outputs.cache-hit != 'true'
-              uses: actions-rs/toolchain@v1
-              with:
-                  toolchain: stable
-
-            - name: Install libsqlcipher-dev
-              if: steps.cache.outputs.cache-hit != 'true' && inputs.sqlcipher == 'system'
-              run: sudo apt-get install -y libsqlcipher-dev
-
             - uses: actions/setup-node@v3
               with:
                   cache: "yarn"
+              env:
+                  # Workaround for https://github.com/actions/setup-node/issues/317
+                  FORCE_COLOR: 0
 
             # Does not need branch matching as only analyses this layer
             - name: Install Deps
@@ -69,7 +67,7 @@ jobs:
 
             - name: Build App
               run: |
-                  scripts/generate-builder-config.ts ${{ steps.nightly.outputs.config-args }} --deb-custom-control=debcontrol
+                  npx ts-node scripts/generate-builder-config.ts ${{ steps.nightly.outputs.config-args }} --deb-custom-control=debcontrol
                   yarn build --publish never -l --config electron-builder.json
 
             - name: Upload Artifacts
