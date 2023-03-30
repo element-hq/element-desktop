@@ -19,6 +19,11 @@ on:
 jobs:
     build:
         runs-on: ubuntu-latest
+        container:
+            image: ghcr.io/vector-im/element-desktop-dockerbuild:t3chguy-dockerbuild
+        defaults:
+            run:
+                shell: bash
         steps:
             - uses: actions/checkout@v3
 
@@ -71,7 +76,7 @@ jobs:
                   if [ -f changelog.Debian ]; then
                       echo "config-args=--deb-changelog changelog.Debian" >> $GITHUB_OUTPUT
                   fi
-                  
+
                   cp "$DIR/control.template" debcontrol
                   VERSION=${INPUT_VERSION:-$(cat package.json | jq -r .version)}
                   echo "Version: $VERSION" >> debcontrol
