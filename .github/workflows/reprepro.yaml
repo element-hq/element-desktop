@@ -24,8 +24,8 @@ jobs:
         environment: packages.element.io
         runs-on: ubuntu-latest
         env:
-            R2_BUCKET: "packages-element-io-test"
-            R2_DB_BUCKET: packages-element-io-db-test
+            R2_BUCKET: "packages-element-io"
+            R2_DB_BUCKET: packages-element-io-db
             R2_URL: ${{ secrets.CF_R2_S3_API }}
         steps:
             - uses: actions/checkout@v3
