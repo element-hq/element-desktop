@@ -75,7 +75,7 @@ jobs:
 
             - name: Build App
               run: |
-                  scripts/generate-builder-config.ts \
+                  npx ts-node scripts/generate-builder-config.ts \
                       ${{ steps.nightly.outputs.config-args }} \
                       ${{ steps.debian.outputs.config-args }} \
                       --deb-custom-control=debcontrol
