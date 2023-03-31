@@ -1,3 +1,9 @@
+Changes in [1.11.28](https://github.com/vector-im/element-desktop/releases/tag/v1.11.28) (2023-03-31)
+=====================================================================================================
+
+## 🐛 Bug Fixes
+ * Fix broken lockfile. Fixes vector-im/element-web#25008.
+
 Changes in [1.11.27](https://github.com/vector-im/element-desktop/releases/tag/v1.11.27) (2023-03-31)
 =====================================================================================================
 
