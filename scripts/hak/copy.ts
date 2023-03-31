@@ -18,7 +18,7 @@ import path from "path";
 import fsProm from "fs/promises";
 import childProcess from "child_process";
 import rimraf from "rimraf";
-import glob from "glob";
+import { glob } from "glob";
 import mkdirp from "mkdirp";
 
 import HakEnv from "./hakEnv";
@@ -47,19 +47,12 @@ export default async function copy(hakEnv: HakEnv, moduleInfo: DependencyInfo): 
         // If there are multiple moduleBuildDirs, singular moduleBuildDir
         // is the same as moduleBuildDirs[0], so we're just listing the contents
         // of the first one.
-        const files = await new Promise<string[]>((resolve, reject) => {
-            glob(
-                moduleInfo.cfg.copy,
-                {
-                    nosort: true,
-                    silent: true,
-                    cwd: moduleInfo.moduleBuildDir,
-                },
-                (err, files) => {
-                    err ? reject(err) : resolve(files);
-                },
-            );
-        });
+        const files = await glob(
+            moduleInfo.cfg.copy,
+            {
+                cwd: moduleInfo.moduleBuildDir,
+            },
+        );
 
         if (moduleInfo.moduleBuildDirs.length > 1) {
             if (!hakEnv.isMac()) {
