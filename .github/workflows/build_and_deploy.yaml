@@ -41,7 +41,7 @@ on:
                 default: true
 concurrency: ${{ github.workflow }}
 env:
-    R2_BUCKET: "packages-element-io"
+    R2_BUCKET: ${{ vars.R2_BUCKET }}
 jobs:
     prepare:
         uses: ./.github/workflows/build_prepare.yaml
@@ -153,7 +153,7 @@ jobs:
         if: github.event_name != 'workflow_dispatch' || (inputs.deploy && inputs.linux)
         environment: packages.element.io
         env:
-            R2_INCOMING_BUCKET: packages-element-io-incoming
+            R2_INCOMING_BUCKET: ${{ vars.R2_INCOMING_BUCKET }}
             R2_URL: ${{ secrets.CF_R2_S3_API }}
         steps:
             - name: Download artifact
