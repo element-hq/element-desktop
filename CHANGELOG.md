@@ -1,3 +1,10 @@
+Changes in [1.11.27](https://github.com/vector-im/element-desktop/releases/tag/v1.11.27) (2023-03-31)
+=====================================================================================================
+
+## 🐛 Bug Fixes
+ * Run build_linux in docker using an older glibc ([\#599](https://github.com/vector-im/element-desktop/pull/599)). Fixes vector-im/element-web#24981.
+ * Fix detection of encryption for all users in a room ([\#10487](https://github.com/matrix-org/matrix-react-sdk/pull/10487)). Fixes vector-im/element-web#24995.
+
 Changes in [1.11.26](https://github.com/vector-im/element-desktop/releases/tag/v1.11.26) (2023-03-28)
 =====================================================================================================
 
