@@ -7,6 +7,9 @@
  * On Windows:
  *  Prefixes the nightly version with `0.0.1-nightly.` as it breaks if it is not semver
  *
+ * On macOS:
+ *   Passes --notarytool-team-id to build.mac.notarize.notarize if specified and removes build.mac.afterSign
+ *
  * On Linux:
  *  Replaces spaces in the product name with dashes as spaces in paths can cause issues
  *  Passes --deb-custom-control to build.deb.fpm if specified
@@ -15,6 +18,7 @@
 import parseArgs from "minimist";
 import fsProm from "fs/promises";
 import * as os from "os";
+import { Configuration } from "app-builder-lib";
 
 const ELECTRON_BUILDER_CFG_FILE = "electron-builder.json";
 
@@ -25,54 +29,23 @@ const argv = parseArgs<{
     "nightly"?: string;
     "signtool-thumbprint"?: string;
     "signtool-subject-name"?: string;
+    "notarytool-team-id"?: string;
     "deb-custom-control"?: string;
+    "deb-changelog"?: string;
 }>(process.argv.slice(2), {
-    string: ["nightly", "deb-custom-control", "signtool-thumbprint", "signtool-subject-name"],
+    string: [
+        "nightly",
+        "deb-custom-control",
+        "deb-changelog",
+        "signtool-thumbprint",
+        "signtool-subject-name",
+        "notarytool-team-id",
+    ],
 });
 
-interface File {
-    from: string;
-    to: string;
-}
+type DeepWriteable<T> = { -readonly [P in keyof T]: DeepWriteable<T[P]> };
 
-interface PackageBuild {
-    appId: string;
-    asarUnpack: string;
-    files: Array<string | File>;
-    extraResources: Array<string | File>;
-    linux: {
-        target: string;
-        category: string;
-        maintainer: string;
-        desktop: {
-            StartupWMClass: string;
-        };
-    };
-    mac: {
-        category: string;
-        darkModeSupport: boolean;
-    };
-    win: {
-        target: {
-            target: string;
-        };
-        sign?: string;
-        signingHashAlgorithms?: string[];
-        certificateSubjectName?: string;
-        certificateSha1?: string;
-    };
-    deb?: {
-        fpm?: string[];
-    };
-    directories: {
-        output: string;
-    };
-    afterPack: string;
-    afterSign: string;
-    protocols: Array<{
-        name: string;
-        schemes: string[];
-    }>;
+interface PackageBuild extends DeepWriteable<Omit<Configuration, "extraMetadata">> {
     extraMetadata?: {
         productName?: string;
         name?: string;
@@ -114,10 +87,17 @@ async function main(): Promise<number | void> {
     }
 
     if (argv["signtool-thumbprint"] && argv["signtool-subject-name"]) {
-        delete cfg.win.sign;
-        cfg.win.signingHashAlgorithms = ["sha256"];
-        cfg.win.certificateSubjectName = argv["signtool-subject-name"];
-        cfg.win.certificateSha1 = argv["signtool-thumbprint"];
+        delete cfg.win!.sign;
+        cfg.win!.signingHashAlgorithms = ["sha256"];
+        cfg.win!.certificateSubjectName = argv["signtool-subject-name"];
+        cfg.win!.certificateSha1 = argv["signtool-thumbprint"];
+    }
+
+    if (argv["notarytool-team-id"]) {
+        delete cfg.afterSign;
+        cfg.mac!.notarize = {
+            teamId: argv["notarytool-team-id"],
+        };
     }
 
     if (os.platform() === "linux") {
@@ -125,10 +105,15 @@ async function main(): Promise<number | void> {
         // https://github.com/vector-im/element-web/issues/13171
         cfg.extraMetadata!.productName = cfg.extraMetadata!.productName!.replace(/ /g, "-");
 
+        cfg.deb = {
+            fpm: [],
+        };
+
         if (argv["deb-custom-control"]) {
-            cfg.deb = {
-                fpm: [`--deb-custom-control=${argv["deb-custom-control"]}`],
-            };
+            cfg.deb.fpm!.push(`--deb-custom-control=${argv["deb-custom-control"]}`);
+        }
+        if (argv["deb-changelog"]) {
+            cfg.deb.fpm!.push(`--deb-changelog=${argv["deb-changelog"]}`);
         }
     }
 

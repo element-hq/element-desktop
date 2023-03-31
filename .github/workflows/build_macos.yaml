@@ -54,6 +54,7 @@ jobs:
               if: steps.cache.outputs.cache-hit != 'true'
               uses: actions-rs/toolchain@v1
               with:
+                  default: true
                   toolchain: stable
                   target: aarch64-apple-darwin
 
@@ -79,12 +80,11 @@ jobs:
             - name: "[Signed] Build App"
               if: inputs.sign != ''
               run: |
-                  scripts/generate-builder-config.ts ${{ steps.nightly.outputs.config-args }}
+                  scripts/generate-builder-config.ts ${{ steps.nightly.outputs.config-args }} --notarytool-team-id='${{ secrets.APPLE_TEAM_ID }}'
                   yarn build:universal --publish never --config electron-builder.json
               env:
-                  NOTARIZE_APPLE_ID: ${{ secrets.APPLE_ID }}
-                  NOTARIZE_APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
-                  NOTARIZE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+                  APPLE_ID: ${{ secrets.APPLE_ID }}
+                  APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
                   CSC_KEY_PASSWORD: ${{ secrets.APPLE_CSC_KEY_PASSWORD }}
                   CSC_LINK: ${{ secrets.APPLE_CSC_LINK }}
 

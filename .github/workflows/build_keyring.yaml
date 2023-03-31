@@ -1,0 +1,53 @@
+name: Build Keyring package
+on:
+    workflow_dispatch:
+        inputs:
+            deploy:
+                description: Deploy artifacts
+                required: true
+                type: boolean
+                default: true
+            fingerprint:
+                description: The expected gpg fingerprint
+                required: true
+                type: string
+concurrency: ${{ github.workflow }}
+jobs:
+    build:
+        name: Build Keyring package
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+
+            - name: Prepare
+              run: |
+                  mkdir -p element-io-archive-keyring/usr/share/keyrings/
+                  cp packages.element.io/debian/element-io-archive-keyring.gpg element-io-archive-keyring/usr/share/keyrings/element-io-archive-keyring.gpg
+
+            - name: Check fingerprint
+              run: |
+                  gpg --import element-io-archive-keyring/usr/share/keyrings/element-io-archive-keyring.gpg
+                  gpg --fingerprint "$FINGERPRINT"
+              env:
+                  FINGERPRINT: ${{ inputs.fingerprint }}
+
+            - name: Build deb package
+              run: |
+                  chmod u=rw,go=r element-io-archive-keyring/usr/share/keyrings/element-io-archive-keyring.gpg
+                  dpkg-deb -Zxz --root-owner-group --build element-io-archive-keyring element-io-archive-keyring.deb
+
+            - name: Upload Artifact
+              uses: actions/upload-artifact@v3
+              with:
+                  name: element-io-archive-keyring
+                  path: "*.deb"
+                  retention-days: 1
+
+    reprepro:
+        needs: build
+        name: Run reprepro
+        if: inputs.deploy
+        uses: ./.github/workflows/reprepro.yaml
+        secrets: inherit
+        with:
+            artifact-name: element-io-archive-keyring

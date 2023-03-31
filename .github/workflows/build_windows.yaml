@@ -14,7 +14,7 @@ on:
             arch:
                 type: string
                 required: true
-                description: "The architecture to build for, one of 'x64' | 'x86'"
+                description: "The architecture to build for, one of 'x64' | 'x86' | 'arm64'"
             version:
                 type: string
                 required: false
@@ -45,6 +45,12 @@ jobs:
                           "target": "x86_64-pc-windows-msvc",
                           "dir": "x64"
                         },
+                        "arm64": {
+                          "target": "aarch64-pc-windows-msvc",
+                          "build-args": "--arm64",
+                          "arch": "amd64_arm64",
+                          "dir": "arm64"
+                        },
                         "x86": {
                           "target": "i686-pc-windows-msvc",
                           "build-args": "--ia32",
@@ -62,14 +68,14 @@ jobs:
               id: cache
               uses: actions/cache@v3
               with:
-                  key: ${{ runner.os }}-${{ hashFiles('hakDependencies.json', 'electronVersion') }}
+                  key: ${{ runner.os }}-${{ inputs.arch }}-${{ hashFiles('hakDependencies.json', 'electronVersion') }}
                   path: |
                       ./.hak
 
             - name: Set up build tools
               uses: ilammy/msvc-dev-cmd@v1
               with:
-                  arch: ${{ inputs.arch }}
+                  arch: ${{ steps.config.outputs.arch || inputs.arch }}
 
             # ActiveTCL package on choco is from 2015,
             # this one is newer but includes more than we need
@@ -91,6 +97,7 @@ jobs:
               if: steps.cache.outputs.cache-hit != 'true'
               uses: actions-rs/toolchain@v1
               with:
+                  default: true
                   toolchain: stable
                   target: ${{ steps.config.outputs.target }}
 
@@ -127,7 +134,7 @@ jobs:
                   $LogConfig | Set-Content -Path ${{ env.INSTALL_DIR }}/log4net.config
 
                   # Configure
-                  ${{ env.INSTALL_DIR }}/eSignerCKATool.exe config -mode "${{ env.MODE }}" -user "${{ secrets.ESIGNER_USER_NAME }}" -pass "${{ secrets.ESIGNER_USER_PASSWORD }}" -totp "${{ secrets.ESIGNER_USER_TOTP }}" -key "${{ env.MASTER_KEY_FILE }}" -r
+                  ${{ env.INSTALL_DIR }}/eSignerCKATool.exe config -mode product -user "${{ secrets.ESIGNER_USER_NAME }}" -pass "${{ secrets.ESIGNER_USER_PASSWORD }}" -totp "${{ secrets.ESIGNER_USER_TOTP }}" -key "${{ env.MASTER_KEY_FILE }}" -r
                   ${{ env.INSTALL_DIR }}/eSignerCKATool.exe unload
                   ${{ env.INSTALL_DIR }}/eSignerCKATool.exe load
 
@@ -140,8 +147,6 @@ jobs:
                   $SubjectName = ($CodeSigningCert.Subject -replace ", ?", "`n" | ConvertFrom-StringData).CN
                   echo "config-args=--signtool-thumbprint '$Thumbprint' --signtool-subject-name '$SubjectName'" >> $env:GITHUB_OUTPUT
               env:
-                  # XXX: UPDATE THIS BEFORE WHEN GOING LIVE
-                  MODE: sandbox
                   INSTALL_DIR: C:\Users\runneradmin\eSignerCKA
                   MASTER_KEY_FILE: C:\Users\runneradmin\eSignerCKA\master.key
 
@@ -159,8 +164,6 @@ jobs:
 
             - name: Check app was signed successfully
               if: inputs.sign != ''
-              # XXX: UPDATE THIS BEFORE WHEN GOING LIVE
-              continue-on-error: true
               run: |
                   . "$env:SIGNTOOL_PATH" verify /pa (get-item ./dist/squirrel-windows*/*.exe)
 

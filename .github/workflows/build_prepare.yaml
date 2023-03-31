@@ -10,37 +10,38 @@ on:
                 type: string
                 required: false
                 description: "The version tag to fetch, or 'develop', will pick automatically if not passed"
-            calculate-nightly-versions:
-                type: string
+            nightly:
+                type: boolean
                 required: false
-                description: "Whether to calculate the version strings new Nightly builds should use"
+                default: false
+                description: "Whether the build is a Nightly and to calculate the version strings new builds should use"
         secrets:
-            # Required if `calculate-nightly-versions` is set
+            # Required if `nightly` is set
             CF_R2_ACCESS_KEY_ID:
                 required: false
-            # Required if `calculate-nightly-versions` is set
+            # Required if `nightly` is set
             CF_R2_TOKEN:
                 required: false
-            # Required if `calculate-nightly-versions` is set
+            # Required if `nightly` is set
             CF_R2_S3_API:
                 required: false
         outputs:
             macos-version:
-                description: "The version string the next macOS Nightly should use, only output for calculate-nightly-versions"
+                description: "The version string the next macOS Nightly should use, only output for nightly"
                 value: ${{ jobs.prepare.outputs.macos-version }}
             linux-version:
-                description: "The version string the next Linux Nightly should use, only output for calculate-nightly-versions"
+                description: "The version string the next Linux Nightly should use, only output for nightly"
                 value: ${{ jobs.prepare.outputs.linux-version }}
             win32-x64-version:
-                description: "The version string the next Windows x64 Nightly should use, only output for calculate-nightly-versions"
+                description: "The version string the next Windows x64 Nightly should use, only output for nightly"
                 value: ${{ jobs.prepare.outputs.win32-x64-version }}
             win32-x86-version:
-                description: "The version string the next Windows x86 Nightly should use, only output for calculate-nightly-versions"
+                description: "The version string the next Windows x86 Nightly should use, only output for nightly"
                 value: ${{ jobs.prepare.outputs.win32-x86-version }}
 jobs:
     prepare:
         name: Prepare
-        environment: ${{ inputs.calculate-nightly-versions && 'packages.element.io' || '' }}
+        environment: ${{ inputs.nightly && 'packages.element.io' || '' }}
         runs-on: ubuntu-latest
         outputs:
             macos-version: ${{ steps.versions.outputs.macos }}
@@ -66,19 +67,9 @@ jobs:
                   yarn run --silent electron --version > electronVersion
                   cat package.json | jq -c .hakDependencies > hakDependencies.json
 
-            - uses: actions/upload-artifact@v3
-              with:
-                  name: webapp
-                  retention-days: 1
-                  path: |
-                      webapp.asar
-                      package.json
-                      electronVersion
-                      hakDependencies.json
-
-            - name: Calculate Nightly versions
+            - name: "[Nightly] Calculate versions"
               id: versions
-              if: inputs.calculate-nightly-versions
+              if: inputs.nightly
               run: |
                   MACOS=$(aws s3 cp s3://$R2_BUCKET/nightly/update/macos/releases.json - --endpoint-url $R2_URL --region auto | jq -r .currentRelease)
                   echo "macos=$(scripts/generate-nightly-version.ts --latest $MACOS)" >> $GITHUB_OUTPUT
@@ -93,6 +84,43 @@ jobs:
               env:
                   AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
-                  # XXX: UPDATE THIS BEFORE WHEN GOING LIVE
-                  R2_BUCKET: "packages-element-io-test"
+                  R2_BUCKET: "packages-element-io"
                   R2_URL: ${{ secrets.CF_R2_S3_API }}
+
+            - name: Check version
+              id: package
+              run: |
+                  echo "version=$(cat package.json | jq -r .version)" >> $GITHUB_OUTPUT
+
+            - name: "[Release] Fetch release"
+              id: release
+              if: ${{ !inputs.nightly && inputs.version != 'develop' }}
+              uses: cardinalby/git-get-release-action@cedef2faf69cb7c55b285bad07688d04430b7ada # v1
+              env:
+                  GITHUB_TOKEN: ${{ github.token }}
+              with:
+                  tag: v${{ steps.package.outputs.version }}
+
+            - name: "[Release] Write changelog"
+              if: ${{ !inputs.nightly && inputs.version != 'develop' }}
+              run: |
+                  TIME=$(date -d "$PUBLISHED_AT" -R)
+                  echo "element-desktop ($VERSION) default; urgency=medium" >> changelog.Debian
+                  echo "$BODY" | sed 's/^##/\n  */g;s/^\*/  */g' | perl -pe 's/\[.+?]\((.+?)\)/\1/g' >> changelog.Debian
+                  echo "" >> changelog.Debian
+                  echo " -- ${{ github.actor }} <support@element.io>  $TIME" >> changelog.Debian
+              env:
+                  VERSION: v${{ steps.package.outputs.version }}
+                  BODY: ${{ steps.release.outputs.body }}
+                  PUBLISHED_AT: ${{ steps.release.outputs.published_at }}
+
+            - uses: actions/upload-artifact@v3
+              with:
+                  name: webapp
+                  retention-days: 1
+                  path: |
+                      webapp.asar
+                      package.json
+                      electronVersion
+                      hakDependencies.json
+                      changelog.Debian
