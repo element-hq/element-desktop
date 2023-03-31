@@ -80,7 +80,7 @@ jobs:
                   cache: "yarn"
 
             - name: Install Deps
-              run: "yarn install --pure-lockfile"
+              run: "yarn install --frozen-lockfile"
 
             - uses: actions/download-artifact@v3
               with:
@@ -98,6 +98,71 @@ jobs:
                   run: "yarn test"
               env:
                   ELEMENT_DESKTOP_EXECUTABLE: ${{ matrix.executable }}
+
+            - name: Upload Artifacts
+              uses: actions/upload-artifact@v3
+              if: always()
+              with:
+                  name: ${{ matrix.artifact }}
+                  path: test_artifacts
+                  retention-days: 1
+
+    test_linux_arm64:
+        needs:
+            - linux
+        strategy:
+            matrix:
+                include:
+                    - name: "Linux [arm64] (sqlcipher: system)"
+                      artifact: linux-arm64-sqlcipher-system
+                    - name: "Linux [arm64] (sqlcipher: static)"
+                      artifact: linux-arm64-sqlcipher-static
+        name: Test ${{ matrix.name }}
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+
+            - uses: actions/setup-node@v3
+              with:
+                  cache: "yarn"
+
+            - name: Install Deps
+              run: "yarn install --frozen-lockfile"
+
+            - uses: actions/download-artifact@v3
+              with:
+                  name: ${{ matrix.artifact }}
+                  path: dist
+
+            - uses: uraimo/run-on-arch-action@v2
+              name: Build artifact
+              id: build
+              timeout-minutes: 20
+              with:
+                  arch: aarch64
+                  distro: ubuntu_latest
+                  setup: |
+                      mkdir -p "${PWD}/dist"
+                  dockerRunArgs: |
+                      --volume "${PWD}/dist:/dist"
+                  env: |
+                      ELEMENT_DESKTOP_EXECUTABLE: element-desktop
+                  install: |
+                      apt update
+                      apt-get install -y xvfb x11-xserver-utils
+                      apt install ./dist/*.deb
+
+                  # Produce a binary artifact and place it in the mounted volume
+                  run: |
+                      xvfb-run --auto-servernum yarn test
+                      mv dist/* /dist/
+
+            - name: Run tests
+              uses: coactions/setup-xvfb@v1
+              timeout-minutes: 5
+              with:
+                  run: "yarn test"
+              env:
 
             - name: Upload Artifacts
               uses: actions/upload-artifact@v3
