@@ -152,7 +152,8 @@
     },
     "mac": {
       "category": "public.app-category.social-networking",
-      "darkModeSupport": true
+      "darkModeSupport": true,
+      "gatekeeperAssess": true
     },
     "win": {
       "target": [
