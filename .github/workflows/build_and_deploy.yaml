@@ -1,7 +1,5 @@
 name: Build and Deploy
 on:
-    push:
-        branches: ["t3chguy/fix/18486"]
     # Nightly build
     schedule:
         - cron: "0 9 * * *"
