@@ -149,8 +149,33 @@ jobs:
             # We queue this after the other deploy stage as we want to abort if that fails
             - deploy
         name: Run reprepro
+        runs-on: ubuntu-latest
         if: github.event_name != 'workflow_dispatch' || (inputs.deploy && inputs.linux)
-        uses: ./.github/workflows/reprepro.yaml
-        secrets: inherit
-        with:
-            artifact-name: linux-sqlcipher-system
+        environment: packages.element.io
+        env:
+            R2_INCOMING_BUCKET: packages-element-io-incoming
+            R2_URL: ${{ secrets.CF_R2_S3_API }}
+        steps:
+            - name: Download artifact
+              uses: actions/download-artifact@v3
+              with:
+                  name: linux-sqlcipher-system
+                  path: linux-sqlcipher-system
+
+            - name: Upload incoming deb
+              id: upload
+              run: |
+                  deb="$(ls linux-sqlcipher-system/*.deb | tail -n1)"
+                  echo "incoming=$deb" >> $GITHUB_OUTPUT
+                  aws s3 cp "$deb" "s3://$R2_INCOMING_BUCKET" --endpoint-url "$R2_URL" --region auto
+              env:
+                  AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
+
+            - name: Notify packages.element.io of incoming deb
+              uses: peter-evans/repository-dispatch@26b39ed245ab8f31526069329e112ab2fb224588 # v2
+              with:
+                  token: ${{ secrets.ELEMENT_BOT_TOKEN }}
+                  repository: vector-im/packages.element.io
+                  event-type: reprepro-incoming
+                  client-payload: '{"incoming": "${{ steps.upload.outputs.incoming }}"}'
