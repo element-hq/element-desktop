@@ -16,6 +16,10 @@ on:
                 type: string
                 required: true
                 description: "How to link sqlcipher, one of 'system' | 'static'"
+            deploy-mode:
+                type: boolean
+                required: false
+                description: "Whether to arrange artifacts in the arrangement needed for deployment, skipping unrelated ones"
 jobs:
     build:
         runs-on: ubuntu-latest
@@ -84,9 +88,37 @@ jobs:
                       --deb-custom-control=debcontrol
                   yarn build --publish never -l --config electron-builder.json
 
+            - name: Stash deb package
+              if: inputs.deploy-mode
+              uses: actions/upload-artifact@v3
+              with:
+                  name: linux-sqlcipher-${{ inputs.sqlcipher }}-deb
+                  path: dist/*.deb
+                  retention-days: 1
+
+            - name: Prepare artifacts for deployment
+              if: inputs.deploy-mode
+              run: |
+                  mv dist _dist
+                  mkdir -p "dist/install/linux/glibc-x86-64/"
+                  mv _dist/*.tar.gz "dist/install/linux/glibc-x86-64"
+
+            # We don't wish to store the tarball for every nightly ever, so we only keep the latest
+            - name: "[Nightly] Strip version from tarball"
+              if: inputs.deploy-mode && inputs.version != ''
+              run: |
+                  mv dist/install/linux/glibc-x86-64/*.tar.gz "dist/install/linux/glibc-x86-64/element-desktop-nightly.tar.gz"
+
+            - name: "[Release] Prepare release latest symlink"
+              if: inputs.deploy-mode && inputs.version == ''
+              shell: bash
+              run: |
+                  ln -s "$(find . -type f -iname "*.tar.gz" | xargs -0 -n1 -- basename)" "element-desktop.tar.gz"
+              working-directory: "dist/install/linux/glibc-x86-64"
+
             - name: Upload Artifacts
               uses: actions/upload-artifact@v3
               with:
-                  name: linux-sqlcipher-${{ inputs.sqlcipher }}
+                  name: ${{ inputs.deploy-mode && 'packages.element.io' || format('linux-sqlcipher-{0}', inputs.sqlcipher) }}
                   path: dist
                   retention-days: 1
