@@ -90,7 +90,7 @@ jobs:
 
             - name: Check ldd
               run: |
-                  if ${SQLCIPHER_STATIC} == '1'; then
+                  if [ "$SQLCIPHER_STATIC" == "1" ]; then
                       ldd dist/linux-unpacked/resources/app.asar.unpacked/node_modules/matrix-seshat/native/index.node | grep libsqlcipher.so.0
                       ldd dist/linux-unpacked/resources/app.asar.unpacked/node_modules/matrix-seshat/native/index.node | grep -v libcrypto.so.1.1
                   else
