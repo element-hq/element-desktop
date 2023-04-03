@@ -80,7 +80,7 @@ jobs:
                   cache: "yarn"
 
             - name: Install Deps
-              run: "yarn install --pure-lockfile"
+              run: "yarn install --frozen-lockfile"
 
             - uses: actions/download-artifact@v3
               with:

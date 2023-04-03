@@ -56,7 +56,7 @@ jobs:
                   cache: "yarn"
 
             - name: Install Deps
-              run: "yarn install --pure-lockfile"
+              run: "yarn install --frozen-lockfile"
 
             - name: Fetch Element Web
               run: yarn run fetch --noverify -d ${{ inputs.config }} ${{ inputs.version }}
@@ -108,8 +108,9 @@ jobs:
                   echo "element-desktop ($VERSION) default; urgency=medium" >> changelog.Debian
                   echo "$BODY" | sed 's/^##/\n  */g;s/^\*/  */g' | perl -pe 's/\[.+?]\((.+?)\)/\1/g' >> changelog.Debian
                   echo "" >> changelog.Debian
-                  echo " -- ${{ github.actor }} <support@element.io>  $TIME" >> changelog.Debian
+                  echo " -- $ACTOR <support@element.io>  $TIME" >> changelog.Debian
               env:
+                  ACTOR: ${{ github.actor }}
                   VERSION: v${{ steps.package.outputs.version }}
                   BODY: ${{ steps.release.outputs.body }}
                   PUBLISHED_AT: ${{ steps.release.outputs.published_at }}
