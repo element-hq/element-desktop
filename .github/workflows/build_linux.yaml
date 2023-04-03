@@ -24,7 +24,7 @@ jobs:
     build:
         runs-on: ubuntu-latest
         container:
-            image: ghcr.io/vector-im/element-desktop-dockerbuild:t3chguy-dockerbuild
+            image: ghcr.io/vector-im/element-desktop-dockerbuild:${{ github.ref_name == 'master' && 'master' || 'develop' }}
         defaults:
             run:
                 shell: bash
