@@ -24,7 +24,7 @@ on:
                 required: false
                 description: "Whether to sign & notarise the build, requires 'packages.element.io' environment"
             deploy-mode:
-                type: string
+                type: boolean
                 required: false
                 description: "Whether to arrange artifacts in the arrangement needed for deployment, skipping unrelated ones"
 jobs:
@@ -107,7 +107,7 @@ jobs:
 
             # Does not need branch matching as only analyses this layer
             - name: Install Deps
-              run: "yarn install --pure-lockfile"
+              run: "yarn install --frozen-lockfile"
 
             - name: Build Natives
               if: steps.cache.outputs.cache-hit != 'true'

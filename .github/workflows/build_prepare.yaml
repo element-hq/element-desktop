@@ -56,7 +56,7 @@ jobs:
                   cache: "yarn"
 
             - name: Install Deps
-              run: "yarn install --pure-lockfile"
+              run: "yarn install --frozen-lockfile"
 
             - name: Fetch Element Web
               run: yarn run fetch --noverify -d ${{ inputs.config }} ${{ inputs.version }}

@@ -90,22 +90,37 @@ jobs:
             base-url: https://packages.element.io/${{ inputs.mode == 'release' && 'desktop' || 'nightly' }}
             version: ${{ needs.prepare.outputs.macos-version }}
 
+    # We do not put this call into deploy-mode as we do not want it to add to the packages.element.io artifact
+    # We ship this build via reprepro only
     linux:
         if: github.event_name != 'workflow_dispatch' || inputs.linux
         needs: prepare
-        name: Linux
+        name: Linux (sqlcipher system)
         uses: ./.github/workflows/build_linux.yaml
         with:
             config: element.io/${{ inputs.mode || 'nightly' }}
             sqlcipher: system
             version: ${{ needs.prepare.outputs.linux-version }}
 
-    # This deploy job only handles Windows & macOS as those are stateless and static.
+    # We ship the static build via static tarball only
+    linux_static:
+        if: github.event_name != 'workflow_dispatch' || inputs.linux
+        needs: prepare
+        name: Linux (sqlcipher static)
+        uses: ./.github/workflows/build_linux.yaml
+        with:
+            deploy-mode: true
+            config: element.io/${{ inputs.mode || 'nightly' }}
+            sqlcipher: static
+            version: ${{ needs.prepare.outputs.linux-version }}
+
+    # This deploy job only handles Windows, macOS & linux_static as those are stateless and static.
     # Linux will be deployed via reprepro after it, but we list it as a dependency to abort if it fails.
     deploy:
         needs:
             - macos
             - linux
+            - linux_static
             - windows_32bit
             - windows_64bit
         runs-on: ubuntu-latest
