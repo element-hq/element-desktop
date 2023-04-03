@@ -64,7 +64,7 @@ jobs:
 
             # Does not need branch matching as only analyses this layer
             - name: Install Deps
-              run: "yarn install --pure-lockfile"
+              run: "yarn install --frozen-lockfile"
 
             - name: Build Natives
               if: steps.cache.outputs.cache-hit != 'true'
