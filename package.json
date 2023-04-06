@@ -52,7 +52,8 @@
     "docker:install": "scripts/in-docker.sh yarn install",
     "clean": "rimraf webapp.asar dist packages deploys lib",
     "hak": "ts-node scripts/hak/index.ts",
-    "test": "jest"
+    "test": "jest",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@sentry/electron": "^4.3.0",
@@ -63,7 +64,9 @@
     "electron-window-state": "^5.0.3",
     "minimist": "^1.2.6",
     "node-fetch": "^2",
-    "png-to-ico": "^2.1.1"
+    "patch-package": "^6.5.1",
+    "png-to-ico": "^2.1.1",
+    "postinstall-postinstall": "^2.1.0"
   },
   "devDependencies": {
     "@aws-sdk/client-s3": "^3.213.0",
