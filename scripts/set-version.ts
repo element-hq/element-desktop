@@ -6,7 +6,7 @@
  */
 
 import { promises as fs } from "fs";
-import * as asar from "asar";
+import * as asar from "@electron/asar";
 import * as childProcess from "child_process";
 
 export async function versionFromAsar(): Promise<string> {
