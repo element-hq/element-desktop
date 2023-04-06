@@ -9,7 +9,7 @@
         "strict": true,
         "lib": ["es2019", "dom"]
     },
-    "include": ["./**/*.ts"],
+    "include": ["../src/@types", "./**/*.ts"],
     "ts-node": {
         "transpileOnly": true
     }
