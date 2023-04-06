@@ -2043,7 +2043,7 @@
     ajv "^6.12.0"
     ajv-keywords "^3.4.1"
 
-"@electron/asar@^3.2.0", "@electron/asar@^3.2.1":
+"@electron/asar@^3.2.1", "@electron/asar@^3.2.3":
   version "3.2.3"
   resolved "https://registry.yarnpkg.com/@electron/asar/-/asar-3.2.3.tgz#f598db50061ae5f90ad651f0255366b4e818000e"
   integrity sha512-wmOfE6szYyqZhRIiLH+eyZEp+bGcJI0OD/SCvSUrfBE0jvauyGYO2ZhpWxmNCcDojKu5DYrsVqT5BOCZZ01XIg==
@@ -3449,18 +3449,6 @@ array.prototype.flatmap@^1.3.1:
     define-properties "^1.1.4"
     es-abstract "^1.20.4"
     es-shim-unscopables "^1.0.0"
-
-asar@^3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/asar/-/asar-3.2.0.tgz#e6edb5edd6f627ebef04db62f771c61bea9c1221"
-  integrity sha512-COdw2ZQvKdFGFxXwX3oYh2/sOsJWJegrdJCGxnN4MZ7IULgRBp9P6665aqj9z1v9VwP4oP1hRBojRDQ//IGgAg==
-  dependencies:
-    chromium-pickle-js "^0.2.0"
-    commander "^5.0.0"
-    glob "^7.1.6"
-    minimatch "^3.0.4"
-  optionalDependencies:
-    "@types/glob" "^7.1.1"
 
 assert-plus@^1.0.0:
   version "1.0.0"
