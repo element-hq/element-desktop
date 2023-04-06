@@ -220,7 +220,8 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
                                     return resp.arrayBuffer();
                                 })
                                 .then((arrayBuffer) => {
-                                    const buffer = Buffer.from(arrayBuffer!);
+                                    if (!arrayBuffer) return;
+                                    const buffer = Buffer.from(arrayBuffer);
                                     button.icon = nativeImage.createFromBuffer(buffer);
                                     button.label = "";
                                     button.backgroundColor = "";
