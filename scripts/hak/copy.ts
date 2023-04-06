@@ -33,11 +33,7 @@ export default async function copy(hakEnv: HakEnv, moduleInfo: DependencyInfo): 
         try {
             await mkdirp(moduleInfo.moduleOutDir);
             process.chdir(moduleInfo.moduleOutDir);
-            await new Promise<void>((resolve, reject) => {
-                rimraf(moduleInfo.cfg.prune, {}, (err) => {
-                    err ? reject(err) : resolve();
-                });
-            });
+            await rimraf(moduleInfo.cfg.prune);
         } finally {
             process.chdir(oldCwd);
         }
@@ -47,12 +43,9 @@ export default async function copy(hakEnv: HakEnv, moduleInfo: DependencyInfo): 
         // If there are multiple moduleBuildDirs, singular moduleBuildDir
         // is the same as moduleBuildDirs[0], so we're just listing the contents
         // of the first one.
-        const files = await glob(
-            moduleInfo.cfg.copy,
-            {
-                cwd: moduleInfo.moduleBuildDir,
-            },
-        );
+        const files = await glob(moduleInfo.cfg.copy, {
+            cwd: moduleInfo.moduleBuildDir,
+        });
 
         if (moduleInfo.moduleBuildDirs.length > 1) {
             if (!hakEnv.isMac()) {
