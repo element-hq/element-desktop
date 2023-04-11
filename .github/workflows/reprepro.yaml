@@ -12,8 +12,6 @@ on:
                 required: true
             CF_R2_TOKEN:
                 required: true
-            CF_R2_S3_API:
-                required: true
 # Protect reprepro database using concurrency
 concurrency: reprepro
 jobs:
@@ -23,7 +21,7 @@ jobs:
         runs-on: ubuntu-latest
         env:
             R2_INCOMING_BUCKET: ${{ vars.R2_INCOMING_BUCKET }}
-            R2_URL: ${{ secrets.CF_R2_S3_API }}
+            R2_URL: ${{ vars.CF_R2_S3_API }}
         steps:
             - name: Download artifact
               uses: actions/download-artifact@v3

@@ -52,7 +52,6 @@ jobs:
         secrets:
             CF_R2_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
             CF_R2_TOKEN: ${{ secrets.CF_R2_TOKEN }}
-            CF_R2_S3_API: ${{ secrets.CF_R2_S3_API }}
 
     windows_32bit:
         if: github.event_name != 'workflow_dispatch' || inputs.windows_32bit
@@ -140,7 +139,7 @@ jobs:
               env:
                   AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
-                  R2_URL: ${{ secrets.CF_R2_S3_API }}
+                  R2_URL: ${{ vars.CF_R2_S3_API }}
                   DEPLOYMENT_DIR: ${{ inputs.mode == 'release' && 'desktop' || 'nightly' }}
 
             - name: Notify packages.element.io of new files
