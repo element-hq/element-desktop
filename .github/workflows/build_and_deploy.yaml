@@ -143,6 +143,13 @@ jobs:
                   R2_URL: ${{ secrets.CF_R2_S3_API }}
                   DEPLOYMENT_DIR: ${{ inputs.mode == 'release' && 'desktop' || 'nightly' }}
 
+            - name: Notify packages.element.io of new files
+              uses: peter-evans/repository-dispatch@26b39ed245ab8f31526069329e112ab2fb224588 # v2
+              with:
+                  token: ${{ secrets.ELEMENT_BOT_TOKEN }}
+                  repository: vector-im/packages.element.io
+                  event-type: packages-index
+
     reprepro:
         needs:
             - linux
