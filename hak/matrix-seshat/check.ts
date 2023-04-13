@@ -70,7 +70,7 @@ export default async function (hakEnv: HakEnv, moduleInfo: DependencyInfo): Prom
     await new Promise((resolve, reject) => {
         const rustc = childProcess.execFile(
             "rustc",
-            ["--target", hakEnv.getTargetId(), "-o", "tmp", "-"],
+            ["--target", hakEnv.getTargetId(), "--emit=obj", "-o", "tmp", "-"],
             (err, out) => {
                 if (err) {
                     reject(
@@ -86,6 +86,8 @@ export default async function (hakEnv: HakEnv, moduleInfo: DependencyInfo): Prom
             },
         );
         rustc.stdin!.write("fn main() {}");
+        rustc.stdout!.pipe(process.stdout);
+        rustc.stderr!.pipe(process.stderr);
         rustc.stdin!.end();
     });
 }
