@@ -23,8 +23,56 @@ jobs:
         with:
             arch: ${{ matrix.arch }}
 
+    # This allows core contributors to test changes to the dockerbuild image within a pull request
+    linux_docker:
+        name: Linux docker
+        runs-on: ubuntu-latest
+        if: github.event_name == 'pull_request'
+        outputs:
+            docker-image: ${{ steps.docker.outputs.image }}
+        permissions:
+            contents: read
+            packages: write
+        env:
+            REGISTRY: ghcr.io
+            IMAGE_NAME: ${{ github.repository }}-dockerbuild-pr
+        steps:
+            - uses: actions/checkout@v3
+
+            - name: "Get modified files"
+              id: changed_files
+              uses: tj-actions/changed-files@79adacd43ea069e57037edc891ea8d33013bc3da # v35
+              with:
+                  files: |
+                      dockerbuild/*
+            - name: Log in to the Container registry
+              if: steps.changed_files.outputs.any_modified == 'true'
+              uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+              with:
+                  registry: ${{ env.REGISTRY }}
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
+
+            - id: docker
+              if: steps.changed_files.outputs.any_modified == 'true'
+              run: |
+                  echo "image=$IMAGE:$PR" >> $GITHUB_OUTPUT
+              env:
+                  IMAGE: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+                  PR: ${{ github.event.pull_request.number }}
+
+            - name: Build and push Docker image
+              if: steps.changed_files.outputs.any_modified == 'true'
+              uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+              with:
+                  context: dockerbuild
+                  push: true
+                  tags: ${{ steps.docker.outputs.image }}
+
     linux:
-        needs: fetch
+        needs:
+            - fetch
+            - linux_docker
         name: Linux
         uses: ./.github/workflows/build_linux.yaml
         strategy:
@@ -33,6 +81,7 @@ jobs:
         with:
             config: ${{ github.event.pull_request.base.ref == 'develop' && 'element.io/nightly' || 'element.io/release' }}
             sqlcipher: ${{ matrix.sqlcipher }}
+            docker-image: ${{ needs.linux_docker.outputs.docker-image }}
 
     macos:
         needs: fetch
