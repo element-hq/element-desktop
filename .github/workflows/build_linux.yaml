@@ -90,19 +90,8 @@ jobs:
                   apt-get -qq update
                   apt-get -qq install --no-install-recommends crossbuild-essential-arm64 libsqlcipher-dev:arm64 libssl-dev:arm64 libsecret-1-dev:arm64 libgnome-keyring-dev:arm64
                   rustup target add aarch64-unknown-linux-gnu
-                  mv dockerbuild/.cargo .
-
-                  echo "AS=/usr/bin/aarch64-linux-gnu-as" >> $GITHUB_ENV
-                  echo "STRIP=/usr/bin/aarch64-linux-gnu-strip" >> $GITHUB_ENV
-                  echo "AR=/usr/bin/aarch64-linux-gnu-ar" >> $GITHUB_ENV
-                  echo "CC=/usr/bin/aarch64-linux-gnu-gcc" >> $GITHUB_ENV
-                  echo "CPP=/usr/bin/aarch64-linux-gnu-cpp" >> $GITHUB_ENV
-                  echo "CXX=/usr/bin/aarch64-linux-gnu-g++" >> $GITHUB_ENV
-                  echo "LD=/usr/bin/aarch64-linux-gnu-ld" >> $GITHUB_ENV
-                  echo "FC=/usr/bin/aarch64-linux-gnu-gfortran" >> $GITHUB_ENV
-                  echo "PKG_CONFIG_PATH=/usr/lib/aarch64-linux-gnu/pkgconfig" >> $GITHUB_ENV
-                  echo "CFLAGS=-L/usr/lib/aarch64-linux-gnu" >> $GITHUB_ENV
-                  echo "RUSTFLAGS=-L/usr/lib/aarch64-linux-gnu" >> $GITHUB_ENV
+                  mv dockerbuild/aarch64/.cargo .
+                  cat dockerbuild/aarch64/.env >> $GITHUB_ENV
 
             - name: Build Natives
               if: steps.cache.outputs.cache-hit != 'true'
