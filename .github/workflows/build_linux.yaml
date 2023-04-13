@@ -139,14 +139,14 @@ jobs:
                   set -x
                   shopt -s globstar
 
-                  FILES=$(file "dist/**/*.node")
+                  FILES=$(file dist/**/*.node)
                   echo "$FILES"
 
                   if [ grep -v "$ARCH" ]; then
                       exit 1
                   fi
 
-                  LIBS=$(readelf -d "dist/**/*.node" | grep NEEDED)
+                  LIBS=$(readelf -d dist/**/*.node | grep NEEDED)
                   echo "$LIBS"
 
                   if [ "$SQLCIPHER_STATIC" == "1" ]; then
