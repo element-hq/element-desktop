@@ -81,7 +81,7 @@ jobs:
               run: "yarn install --frozen-lockfile"
 
             - name: Prepare for static sqlcipher build
-              if: inputs.sqlcipher === 'static'
+              if: inputs.sqlcipher == 'static'
               run: |
                   echo "SQLCIPHER_STATIC=1" >> $GITHUB_ENV
 
