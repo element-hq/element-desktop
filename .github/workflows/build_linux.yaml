@@ -87,6 +87,7 @@ jobs:
             - name: Prepare for cross compilation
               if: steps.cache.outputs.cache-hit != 'true' && inputs.arch == 'arm64'
               run: |
+                  set -x
                   sed -i 's/deb http/deb [arch=amd64] http/g' /etc/apt/sources.list
                   echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ bionic main multiverse restricted universe" | tee -a /etc/apt/sources.list
                   echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ bionic-updates main multiverse restricted universe" | tee -a /etc/apt/sources.list
@@ -134,9 +135,10 @@ jobs:
             - name: Check native libraries
               continue-on-error: ${{ inputs.arch == 'arm64' }}
               run: |
+                  set -x
                   shopt -s globstar
                   WRONG_ARCHES=$(file dist/**/*.node | grep -v "$ARCH")
-                  if [ "$WRONG_ARCHES" != "" ]; then
+                  if [ ! -z "$WRONG_ARCHES" ]; then
                       echo "$WRONG_ARCHES"
                       exit 1
                   fi
