@@ -36,8 +36,6 @@ jobs:
         defaults:
             run:
                 shell: bash
-        env:
-            SQLCIPHER_STATIC: ${{ inputs.sqlcipher == 'static' && '1' || '' }}
         steps:
             - uses: kanga333/variable-mapper@master
               id: config
@@ -81,6 +79,11 @@ jobs:
             # Does not need branch matching as only analyses this layer
             - name: Install Deps
               run: "yarn install --frozen-lockfile"
+
+            - name: Prepare for static sqlcipher build
+              if: inputs.sqlcipher === 'static'
+              run: |
+                  echo "SQLCIPHER_STATIC=1" >> $GITHUB_ENV
 
             # Ideally the docker image would be ready for cross-compilation but libsqlcipher-dev is not Multi-Arch compatible
             # https://unix.stackexchange.com/a/349359
