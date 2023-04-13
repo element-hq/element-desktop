@@ -138,13 +138,15 @@ jobs:
               run: |
                   set -x
                   shopt -s globstar
-                  WRONG_ARCHES=$(file dist/**/*.node | grep -v "$ARCH")
-                  if [ ! -z "$WRONG_ARCHES" ]; then
-                      echo "$WRONG_ARCHES"
+
+                  FILES=$(file "dist/**/*.node")
+                  echo "$FILES"
+
+                  if [ grep -v "$ARCH" ]; then
                       exit 1
                   fi
 
-                  LIBS=$(readelf -d dist/**/*.node | grep NEEDED)
+                  LIBS=$(readelf -d "dist/**/*.node" | grep NEEDED)
                   echo "$LIBS"
 
                   if [ "$SQLCIPHER_STATIC" == "1" ]; then
