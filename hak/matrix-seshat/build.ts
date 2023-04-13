@@ -222,8 +222,8 @@ async function buildSqlCipherUnix(hakEnv: HakEnv, moduleInfo: DependencyInfo): P
         ldflags.push("-framework Foundation");
     }
 
+    if (process.env.LDFLAGS) ldflags.unshift(process.env.LDFLAGS);
     if (ldflags.length) {
-        if (process.env.LDFLAGS) ldflags.unshift(process.env.LDFLAGS);
         args.push(`LDFLAGS=${ldflags.join(" ")}`);
     }
 
