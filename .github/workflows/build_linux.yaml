@@ -133,7 +133,8 @@ jobs:
                   yarn build --publish never -l --config electron-builder.json ${{ steps.config.outputs.build-args }}
 
             - name: Check native libraries
-              continue-on-error: ${{ inputs.arch == 'arm64' }}
+              # XXX: remove this later
+              # continue-on-error: ${{ inputs.arch == 'arm64' }}
               run: |
                   set -x
                   shopt -s globstar
@@ -190,6 +191,8 @@ jobs:
               working-directory: "dist/install/linux/glibc-x86-64"
 
             - name: Upload Artifacts
+              # XXX: remove this later
+              if: always()
               uses: actions/upload-artifact@v3
               with:
                   name: ${{ inputs.deploy-mode && 'packages.element.io' || format('linux-{0}-sqlcipher-{1}', inputs.arch, inputs.sqlcipher) }}
