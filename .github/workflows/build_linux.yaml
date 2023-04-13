@@ -84,6 +84,7 @@ jobs:
               if: inputs.sqlcipher == 'static'
               run: |
                   echo "SQLCIPHER_STATIC=1" >> $GITHUB_ENV
+                  echo "LDFLAGS=-lcrypto" >> $GITHUB_ENV
 
             # Ideally the docker image would be ready for cross-compilation but libsqlcipher-dev is not Multi-Arch compatible
             # https://unix.stackexchange.com/a/349359
