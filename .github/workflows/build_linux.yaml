@@ -20,11 +20,15 @@ on:
                 type: boolean
                 required: false
                 description: "Whether to arrange artifacts in the arrangement needed for deployment, skipping unrelated ones"
+            docker-image:
+                type: string
+                required: false
+                description: "The docker image to use for the build, defaults to ghcr.io/vector-im/element-desktop-dockerbuild"
 jobs:
     build:
         runs-on: ubuntu-latest
         container:
-            image: ghcr.io/vector-im/element-desktop-dockerbuild:${{ github.ref_name == 'master' && 'master' || 'develop' }}
+            image: ${{ inputs.docker-image || format('ghcr.io/vector-im/element-desktop-dockerbuild:{0}', github.ref_name == 'master' && 'master' || 'develop') }}
         defaults:
             run:
                 shell: bash
@@ -39,7 +43,7 @@ jobs:
               id: cache
               uses: actions/cache@v3
               with:
-                  key: ${{ runner.os }}-${{ inputs.sqlcipher }}-${{ hashFiles('hakDependencies.json', 'electronVersion') }}
+                  key: ${{ runner.os }}-${{ inputs.docker-image || github.ref_name }}-${{ inputs.sqlcipher }}-${{ hashFiles('hakDependencies.json', 'electronVersion') }}
                   path: |
                       ./.hak
 
