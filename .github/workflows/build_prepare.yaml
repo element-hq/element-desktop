@@ -22,9 +22,6 @@ on:
             # Required if `nightly` is set
             CF_R2_TOKEN:
                 required: false
-            # Required if `nightly` is set
-            CF_R2_S3_API:
-                required: false
         outputs:
             macos-version:
                 description: "The version string the next macOS Nightly should use, only output for nightly"
@@ -84,8 +81,8 @@ jobs:
               env:
                   AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
-                  R2_BUCKET: "packages-element-io"
-                  R2_URL: ${{ secrets.CF_R2_S3_API }}
+                  R2_BUCKET: ${{ vars.R2_BUCKET }}
+                  R2_URL: ${{ vars.CF_R2_S3_API }}
 
             - name: Check version
               id: package
