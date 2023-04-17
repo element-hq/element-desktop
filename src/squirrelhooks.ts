@@ -36,20 +36,24 @@ function checkSquirrelHooks(): boolean {
     if (process.platform !== "win32") return false;
     const cmd = process.argv[1];
     const target = path.basename(process.execPath);
-    if (cmd === "--squirrel-install") {
-        runUpdateExe(["--createShortcut=" + target]).then(() => app.quit());
-        return true;
-    } else if (cmd === "--squirrel-updated") {
-        app.quit();
-        return true;
-    } else if (cmd === "--squirrel-uninstall") {
-        runUpdateExe(["--removeShortcut=" + target]).then(() => app.quit());
-        return true;
-    } else if (cmd === "--squirrel-obsolete") {
-        app.quit();
-        return true;
+
+    switch (cmd) {
+        case "--squirrel-install":
+            runUpdateExe(["--createShortcut=" + target]).then(() => app.quit());
+            return true;
+
+        case "--squirrel-updated":
+        case "--squirrel-obsolete":
+            app.quit();
+            return true;
+
+        case "--squirrel-uninstall":
+            runUpdateExe(["--removeShortcut=" + target]).then(() => app.quit());
+            return true;
+
+        default:
+            return false;
     }
-    return false;
 }
 
 if (checkSquirrelHooks()) {
