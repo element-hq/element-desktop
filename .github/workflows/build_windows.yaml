@@ -34,7 +34,7 @@ jobs:
         env:
             SIGNTOOL_PATH: "C:/Program Files (x86)/Windows Kits/10/bin/10.0.22000.0/x86/signtool.exe"
         steps:
-            - uses: kanga333/variable-mapper@master
+            - uses: kanga333/variable-mapper@3681b75f5c6c00162721168fb91ab74925eaebcb
               id: config
               with:
                   key: "${{ inputs.arch }}"
@@ -73,7 +73,7 @@ jobs:
                       ./.hak
 
             - name: Set up build tools
-              uses: ilammy/msvc-dev-cmd@v1
+              uses: ilammy/msvc-dev-cmd@cec98b9d092141f74527d0afa6feb2af698cfe89
               with:
                   arch: ${{ steps.config.outputs.arch || inputs.arch }}
 
@@ -95,7 +95,7 @@ jobs:
 
             - name: Install Rust
               if: steps.cache.outputs.cache-hit != 'true'
-              uses: actions-rs/toolchain@v1
+              uses: actions-rs/toolchain@b2417cde72dcf67f306c0ae8e0828a81bf0b189f
               with:
                   default: true
                   toolchain: stable
