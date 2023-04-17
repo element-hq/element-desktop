@@ -1,5 +1,0 @@
-# don't delete old debs by default
-keepunreferencedfiles
-
-# output dir
-outdir +b/../packages.element.io/debian

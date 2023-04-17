@@ -192,7 +192,7 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
             global.mainWindow.webContents.session.flushStorageData();
             await global.mainWindow.webContents.session.clearStorageData();
             relaunchApp();
-            break;
+            return; // the app is about to stop, we don't need to reply to the IPC
 
         case "breadcrumbs": {
             if (process.platform === "darwin") {
