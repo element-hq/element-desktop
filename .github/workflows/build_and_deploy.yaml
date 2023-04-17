@@ -49,9 +49,9 @@ jobs:
     prepare:
         uses: ./.github/workflows/build_prepare.yaml
         with:
-            config: element.io/${{ inputs.mode || 'nightly' }}
-            version: ${{ inputs.mode == 'release' && '' || 'develop' }}
-            nightly: ${{ inputs.mode != 'release' }}
+            config: element.io/${{ inputs.mode || (github.event_name == 'release' && 'release') || 'nightly' }}
+            version: ${{ (inputs.mode == 'release' || github.event_name == 'release') && '' || 'develop' }}
+            nightly: ${{ inputs.mode != 'release' && github.event_name != 'release' }}
         secrets:
             CF_R2_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
             CF_R2_TOKEN: ${{ secrets.CF_R2_TOKEN }}
@@ -89,7 +89,7 @@ jobs:
         with:
             sign: true
             deploy-mode: true
-            base-url: https://packages.element.io/${{ inputs.mode == 'release' && 'desktop' || 'nightly' }}
+            base-url: https://packages.element.io/${{ (inputs.mode == 'release' || github.event_name == 'release') && 'desktop' || 'nightly' }}
             version: ${{ needs.prepare.outputs.macos-version }}
 
     # We do not put this call into deploy-mode as we do not want it to add to the packages.element.io artifact
@@ -100,7 +100,7 @@ jobs:
         name: Linux (sqlcipher system)
         uses: ./.github/workflows/build_linux.yaml
         with:
-            config: element.io/${{ inputs.mode || 'nightly' }}
+            config: element.io/${{ inputs.mode || (github.event_name == 'release' && 'release') || 'nightly' }}
             sqlcipher: system
             version: ${{ needs.prepare.outputs.linux-version }}
 
@@ -112,7 +112,7 @@ jobs:
         uses: ./.github/workflows/build_linux.yaml
         with:
             deploy-mode: true
-            config: element.io/${{ inputs.mode || 'nightly' }}
+            config: element.io/${{ inputs.mode || (github.event_name == 'release' && 'release') || 'nightly' }}
             sqlcipher: static
             version: ${{ needs.prepare.outputs.linux-version }}
 
@@ -143,7 +143,7 @@ jobs:
                   AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
                   R2_URL: ${{ vars.CF_R2_S3_API }}
-                  DEPLOYMENT_DIR: ${{ inputs.mode == 'release' && 'desktop' || 'nightly' }}
+                  DEPLOYMENT_DIR: ${{ (inputs.mode == 'release' || github.event_name == 'release') && 'desktop' || 'nightly' }}
 
             - name: Notify packages.element.io of new files
               uses: peter-evans/repository-dispatch@26b39ed245ab8f31526069329e112ab2fb224588 # v2
