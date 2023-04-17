@@ -62,7 +62,9 @@ jobs:
             - name: Generate cache hash files
               run: |
                   yarn run --silent electron --version > electronVersion
-                  cat package.json | jq -c .hakDependencies > hakDependencies.json
+                  cat package.json | jq -c .hakDependencies | sha1sum > hakHash
+                  find hak -type f -print0 | xargs -0 sha1sum >> hakHash
+                  find scripts/hak -type f -print0 | xargs -0 sha1sum >> hakHash
 
             - name: "[Nightly] Calculate versions"
               id: versions
@@ -120,5 +122,5 @@ jobs:
                       webapp.asar
                       package.json
                       electronVersion
-                      hakDependencies.json
+                      hakHash
                       changelog.Debian

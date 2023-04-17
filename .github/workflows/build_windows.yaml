@@ -68,7 +68,7 @@ jobs:
               id: cache
               uses: actions/cache@v3
               with:
-                  key: ${{ runner.os }}-${{ inputs.arch }}-${{ hashFiles('hakDependencies.json', 'electronVersion') }}
+                  key: ${{ runner.os }}-${{ inputs.arch }}-${{ hashFiles('hakHash', 'electronVersion') }}
                   path: |
                       ./.hak
 
