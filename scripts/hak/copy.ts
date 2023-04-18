@@ -17,7 +17,7 @@ limitations under the License.
 import path from "path";
 import fsProm from "fs/promises";
 import childProcess from "child_process";
-import rimraf from "rimraf";
+import { rimraf } from "rimraf";
 import { glob } from "glob";
 import mkdirp from "mkdirp";
 
