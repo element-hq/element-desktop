@@ -205,14 +205,15 @@ async function buildSqlCipherUnix(hakEnv: HakEnv, moduleInfo: DependencyInfo): P
 
     const cflags = ["-DSQLITE_HAS_CODEC"];
 
-    if (!hakEnv.isHost()) {
+    // If the caller has specified CFLAGS then we shouldn't specify target
+    // as their compiler may be incompatible (gcc)
+    if (!hakEnv.isHost() && !process.env.CFLAGS) {
         // `clang` uses more logical option naming.
         cflags.push(`--target=${hakEnv.getTargetId()}`);
     }
 
-    if (cflags.length) {
-        args.push(`CFLAGS=${cflags.join(" ")}`);
-    }
+    if (process.env.CFLAGS) cflags.unshift(process.env.CFLAGS);
+    args.push(`CFLAGS=${cflags.join(" ")}`);
 
     const ldflags: string[] = [];
 
@@ -222,6 +223,7 @@ async function buildSqlCipherUnix(hakEnv: HakEnv, moduleInfo: DependencyInfo): P
     }
 
     if (ldflags.length) {
+        if (process.env.LDFLAGS) ldflags.unshift(process.env.LDFLAGS);
         args.push(`LDFLAGS=${ldflags.join(" ")}`);
     }
 
