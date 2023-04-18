@@ -160,7 +160,6 @@
     "directories": {
       "output": "dist"
     },
-    "afterPack": "scripts/electron_afterPack",
     "protocols": [
       {
         "name": "element",
