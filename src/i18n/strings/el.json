@@ -42,5 +42,6 @@
     "Save image as...": "Αποθήκευση εικόνας ως...",
     "Copy link address": "Αντιγραφή διεύθυνσης συνδέσμου",
     "Copy image address": "Αντιγραφή διεύθυνσης εικόνας",
-    "Copy image": "Αντιγραφή εικόνας"
+    "Copy image": "Αντιγραφή εικόνας",
+    "Close %(brand)s": "Κλείσιμο %(brand)s"
 }
