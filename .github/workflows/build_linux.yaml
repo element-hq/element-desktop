@@ -151,7 +151,7 @@ jobs:
                   echo "$LIBS"
 
                   if [ "$SQLCIPHER_BUNDLED" == "1" ]; then
-                      if ! grep -q "libcrypto.so.1.1" <<< "$LIBS" ; then
+                      if grep -q "libcrypto.so.1.1" <<< "$LIBS" ; then
                           exit 2
                       fi
                       if grep -q "libsqlcipher.so.0" <<< "$LIBS" ; then
