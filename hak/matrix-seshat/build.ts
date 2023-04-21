@@ -44,7 +44,7 @@ export default async function (hakEnv: HakEnv, moduleInfo: DependencyInfo): Prom
     });
 
     let buildTarget = "build-bundled";
-    if (!hakEnv.wantsDynamicSqlCipherLinux()) {
+    if (hakEnv.wantsDynamicSqlCipherLinux()) {
         buildTarget = "build";
     }
 
