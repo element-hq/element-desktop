@@ -3,6 +3,5 @@
         "check": "check.ts",
         "build": "build.ts"
     },
-    "prune": ".",
     "copy": "index.node"
 }
