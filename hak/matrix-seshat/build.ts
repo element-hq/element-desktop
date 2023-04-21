@@ -46,11 +46,16 @@ export default async function (hakEnv: HakEnv, moduleInfo: DependencyInfo): Prom
         });
     });
 
+    var buildTarget = "build-bundled";
+    if (!hakEnv.wantsDynamicSqlCipherLinux()) {
+        buildTarget = "build";
+    }
+
     console.log("Running yarn build");
     await new Promise<void>((resolve, reject) => {
         const proc = childProcess.spawn(
             "yarn" + (hakEnv.isWin() ? ".cmd" : ""),
-            ["run", "build-bundled"],
+            ["run", buildTarget],
             {
                 cwd: moduleInfo.moduleBuildDir,
                 env,

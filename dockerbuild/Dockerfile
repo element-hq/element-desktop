@@ -17,7 +17,7 @@ RUN apt-get -qq update && apt-get -qq dist-upgrade && \
   libopenjp2-tools \
   # Used by github actions \
   jq grep file \
-  # Used by seshat (when not SQLCIPHER_STATIC) \
+  # Used by seshat (when not SQLCIPHER_BUNDLED) \
   libsqlcipher-dev && \
   # git-lfs
   git lfs install && \
