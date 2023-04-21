@@ -14,10 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import path from "path";
 import childProcess from "child_process";
-import { mkdirp } from "mkdirp";
-import fsExtra from "fs-extra";
 
 import HakEnv from "../../scripts/hak/hakEnv";
 import { DependencyInfo } from "../../scripts/hak/dep";
@@ -46,7 +43,7 @@ export default async function (hakEnv: HakEnv, moduleInfo: DependencyInfo): Prom
         });
     });
 
-    var buildTarget = "build-bundled";
+    let buildTarget = "build-bundled";
     if (!hakEnv.wantsDynamicSqlCipherLinux()) {
         buildTarget = "build";
     }
