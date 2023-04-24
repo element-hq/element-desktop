@@ -50,12 +50,14 @@ interface PackageBuild extends DeepWriteable<Omit<Configuration, "extraMetadata"
         productName?: string;
         name?: string;
         version?: string;
+        description?: string;
     };
 }
 
 interface Package {
     build: PackageBuild;
     productName: string;
+    description: string;
 }
 
 async function main(): Promise<number | void> {
@@ -66,6 +68,7 @@ async function main(): Promise<number | void> {
         ...pkg.build,
         extraMetadata: {
             productName: pkg.productName,
+            description: pkg.description,
         },
     };
 
@@ -73,6 +76,7 @@ async function main(): Promise<number | void> {
         cfg.appId = NIGHTLY_APP_ID;
         cfg.extraMetadata!.productName += " Nightly";
         cfg.extraMetadata!.name = NIGHTLY_APP_NAME;
+        cfg.extraMetadata!.description += " (nightly unstable build)";
 
         let version = argv.nightly;
         if (os.platform() === "win32") {
@@ -87,7 +91,6 @@ async function main(): Promise<number | void> {
     }
 
     if (argv["signtool-thumbprint"] && argv["signtool-subject-name"]) {
-        cfg.win!.signingHashAlgorithms = ["sha256"];
         cfg.win!.certificateSubjectName = argv["signtool-subject-name"];
         cfg.win!.certificateSha1 = argv["signtool-thumbprint"];
     }
@@ -103,15 +106,11 @@ async function main(): Promise<number | void> {
         // https://github.com/vector-im/element-web/issues/13171
         cfg.extraMetadata!.productName = cfg.extraMetadata!.productName!.replace(/ /g, "-");
 
-        cfg.deb = {
-            fpm: [],
-        };
-
         if (argv["deb-custom-control"]) {
-            cfg.deb.fpm!.push(`--deb-custom-control=${argv["deb-custom-control"]}`);
+            cfg.deb!.fpm!.push(`--deb-custom-control=${argv["deb-custom-control"]}`);
         }
         if (argv["deb-changelog"]) {
-            cfg.deb.fpm!.push(`--deb-changelog=${argv["deb-changelog"]}`);
+            cfg.deb!.fpm!.push(`--deb-changelog=${argv["deb-changelog"]}`);
         }
     }
 
