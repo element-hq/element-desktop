@@ -1,13 +1,7 @@
 {
     "scripts": {
         "check": "check.ts",
-        "fetchDeps": "fetchDeps.ts",
         "build": "build.ts"
     },
-    "prune": "native",
-    "copy": "native/index.node",
-    "dependencies": {
-        "openssl": "1.1.1f",
-        "sqlcipher": "4.3.0"
-    }
+    "copy": "index.node"
 }
