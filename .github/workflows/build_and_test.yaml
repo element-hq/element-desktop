@@ -79,6 +79,11 @@ jobs:
             matrix:
                 sqlcipher: [system, static]
                 arch: [amd64, arm64]
+                exclude:
+                    # FIXME: This combination yields a broken Seshat at this time
+                    # Errors at launch with `undefined symbol: PKCS5_PBKDF2_HMAC
+                    - arch: arm64
+                      sqlcipher: static
         with:
             config: ${{ github.event.pull_request.base.ref == 'develop' && 'element.io/nightly' || 'element.io/release' }}
             sqlcipher: ${{ matrix.sqlcipher }}
