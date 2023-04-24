@@ -24,17 +24,17 @@ import { DependencyInfo } from "./dep";
 const GENERALCOMMANDS = ["target"];
 
 // These can only be run on specific modules
-const MODULECOMMANDS = ["check", "fetch", "link", "fetchDeps", "build", "copy", "clean"];
+const MODULECOMMANDS = ["check", "fetch", "link", "build", "copy", "clean"];
 
 // Shortcuts for multiple commands at once (useful for building universal binaries
 // because you can run the fetch/fetchDeps/build for each arch and then copy/link once)
 const METACOMMANDS: Record<string, string[]> = {
-    fetchandbuild: ["check", "fetch", "fetchDeps", "build"],
+    fetchandbuild: ["check", "fetch", "build"],
     copyandlink: ["copy", "link"],
 };
 
 // Scripts valid in a hak.json 'scripts' section
-const HAKSCRIPTS = ["check", "fetch", "fetchDeps", "build"];
+const HAKSCRIPTS = ["check", "fetch", "build"];
 
 async function main(): Promise<void> {
     const prefix = await findNpmPrefix(process.cwd());
@@ -113,7 +113,7 @@ async function main(): Promise<void> {
 
     let cmds: string[];
     if (process.argv.length < 3) {
-        cmds = ["check", "fetch", "fetchDeps", "build", "copy", "link"];
+        cmds = ["check", "fetch", "build", "copy", "link"];
     } else if (METACOMMANDS[process.argv[2]]) {
         cmds = METACOMMANDS[process.argv[2]];
     } else {

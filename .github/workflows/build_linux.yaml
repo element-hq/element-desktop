@@ -83,7 +83,7 @@ jobs:
             - name: Prepare for static sqlcipher build
               if: inputs.sqlcipher == 'static'
               run: |
-                  echo "SQLCIPHER_STATIC=1" >> $GITHUB_ENV
+                  echo "SQLCIPHER_BUNDLED=1" >> $GITHUB_ENV
 
             # Ideally the docker image would be ready for cross-compilation but libsqlcipher-dev is not Multi-Arch compatible
             # https://unix.stackexchange.com/a/349359
@@ -150,17 +150,13 @@ jobs:
                   LIBS=$(readelf -d dist/**/*.node | grep NEEDED)
                   echo "$LIBS"
 
-                  if [ "$SQLCIPHER_STATIC" == "1" ]; then
-                      if grep -q "libsqlcipher.so.0" <<< "$LIBS" ; then
-                          exit 2
-                      fi
+                  set +x
+                  assert_contains_string() { [[ "$1" == *"$2"* ]]; }
+                  ! assert_contains_string "$LIBS" "libcrypto.so.1.1"
+                  if [ "$SQLCIPHER_BUNDLED" == "1" ]; then
+                      ! assert_contains_string "$LIBS" "libsqlcipher.so.0"
                   else
-                      if grep -q "libcrypto.so.1.1" <<< "$LIBS" ; then
-                          exit 3
-                      fi
-                      if ! grep -q "libsqlcipher.so.0" <<< "$LIBS" ; then
-                          exit 4
-                      fi
+                      assert_contains_string "$LIBS" "libsqlcipher.so.0"
                   fi
               env:
                   ARCH: ${{ steps.config.outputs.arch }}
