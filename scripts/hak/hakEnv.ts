@@ -101,7 +101,7 @@ export default class HakEnv {
         });
     }
 
-    public wantsDynamicSqlCipherLinux(): boolean {
-        return this.isLinux() && process.env.SQLCIPHER_BUNDLED != "1";
+    public wantsStaticSqlCipher(): boolean {
+        return !this.isLinux() || process.env.SQLCIPHER_BUNDLED == "1";
     }
 }
