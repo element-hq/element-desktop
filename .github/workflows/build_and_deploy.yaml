@@ -89,15 +89,18 @@ jobs:
             base-url: https://packages.element.io/${{ inputs.mode == 'release' && 'desktop' || 'nightly' }}
             version: ${{ needs.prepare.outputs.macos-version }}
 
-    # We do not put this call into deploy-mode as we do not want it to add to the packages.element.io artifact
+    # We do not put these calls into deploy-mode as we do not want it to add to the packages.element.io artifact
     # We ship this build via reprepro only
     linux:
         if: github.event_name != 'workflow_dispatch' || inputs.linux
         needs: prepare
-        name: Linux (sqlcipher system)
+        name: Linux ${{ matrix.arch }} (sqlcipher system)
+        strategy:
+            matrix:
+                arch: [amd64, arm64]
         uses: ./.github/workflows/build_linux.yaml
         with:
-            arch: amd64
+            arch: ${{ matrix.arch }}
             config: element.io/${{ inputs.mode || 'nightly' }}
             sqlcipher: system
             version: ${{ needs.prepare.outputs.linux-version }}
@@ -156,9 +159,12 @@ jobs:
             - linux
             # We queue this after the other deploy stage as we want to abort if that fails
             - deploy
-        name: Run reprepro
+        name: Run reprepro ${{ matrix.arch }}
+        strategy:
+            matrix:
+                arch: [amd64, arm64]
         if: github.event_name != 'workflow_dispatch' || (inputs.deploy && inputs.linux)
         uses: ./.github/workflows/reprepro.yaml
         secrets: inherit
         with:
-            artifact-name: linux-amd64-sqlcipher-system
+            artifact-name: linux-${{ matrix.arch }}-sqlcipher-system
