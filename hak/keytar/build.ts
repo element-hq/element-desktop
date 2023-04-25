@@ -27,7 +27,7 @@ export default async function buildKeytar(hakEnv: HakEnv, moduleInfo: Dependency
     await new Promise<void>((resolve, reject) => {
         const proc = childProcess.spawn(
             path.join(moduleInfo.nodeModuleBinDir, "node-gyp" + (hakEnv.isWin() ? ".cmd" : "")),
-            ["rebuild"],
+            ["rebuild", "--arch", hakEnv.getTargetArch()],
             {
                 cwd: moduleInfo.moduleBuildDir,
                 env,
