@@ -4,6 +4,10 @@
 on:
     workflow_call:
         inputs:
+            arch:
+                type: string
+                required: true
+                description: "The architecture to build for, one of 'amd64' | 'arm64'"
             config:
                 type: string
                 required: true
@@ -33,6 +37,24 @@ jobs:
             run:
                 shell: bash
         steps:
+            - uses: kanga333/variable-mapper@master
+              id: config
+              with:
+                  key: "${{ inputs.arch }}"
+                  export_to: output
+                  map: |
+                      {
+                        "amd64": {
+                          "target": "x86_64-unknown-linux-gnu",
+                          "arch": "x86-64"
+                        },
+                        "arm64": {
+                          "target": "aarch64-unknown-linux-gnu",
+                          "arch": "aarch64",
+                          "build-args": "--arm64"
+                        }
+                      }
+
             - uses: actions/checkout@v3
 
             - uses: actions/download-artifact@v3
@@ -43,7 +65,7 @@ jobs:
               id: cache
               uses: actions/cache@v3
               with:
-                  key: ${{ runner.os }}-${{ inputs.docker-image || github.ref_name }}-${{ inputs.sqlcipher }}-${{ hashFiles('hakDependencies.json', 'electronVersion') }}
+                  key: ${{ runner.os }}-${{ inputs.docker-image || github.ref_name }}-${{ inputs.sqlcipher }}-${{ inputs.arch }}-${{ hashFiles('hakDependencies.json', 'electronVersion') }}
                   path: |
                       ./.hak
 
@@ -58,11 +80,30 @@ jobs:
             - name: Install Deps
               run: "yarn install --frozen-lockfile"
 
+            - name: Prepare for static sqlcipher build
+              if: inputs.sqlcipher == 'static'
+              run: |
+                  echo "SQLCIPHER_BUNDLED=1" >> $GITHUB_ENV
+
+            # Ideally the docker image would be ready for cross-compilation but libsqlcipher-dev is not Multi-Arch compatible
+            # https://unix.stackexchange.com/a/349359
+            - name: Prepare for cross compilation
+              if: steps.cache.outputs.cache-hit != 'true' && inputs.arch == 'arm64'
+              run: |
+                  set -x
+                  sed -i 's/deb http/deb [arch=amd64] http/g' /etc/apt/sources.list
+                  echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ bionic main multiverse restricted universe" | tee -a /etc/apt/sources.list
+                  echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ bionic-updates main multiverse restricted universe" | tee -a /etc/apt/sources.list
+                  dpkg --add-architecture arm64
+                  apt-get -qq update
+                  apt-get -qq install --no-install-recommends crossbuild-essential-arm64 libsqlcipher-dev:arm64 libssl-dev:arm64 libsecret-1-dev:arm64 libgnome-keyring-dev:arm64
+                  rustup target add aarch64-unknown-linux-gnu
+                  mv dockerbuild/aarch64/.cargo .
+                  cat dockerbuild/aarch64/.env >> $GITHUB_ENV
+
             - name: Build Natives
               if: steps.cache.outputs.cache-hit != 'true'
-              run: "yarn build:native"
-              env:
-                  SQLCIPHER_STATIC: ${{ inputs.sqlcipher == 'static' && '1' || '' }}
+              run: "yarn build:native --target ${{ steps.config.outputs.target }}"
 
             - name: "[Nightly] Resolve version"
               id: nightly
@@ -77,12 +118,14 @@ jobs:
                       echo "config-args=--deb-changelog changelog.Debian" >> $GITHUB_OUTPUT
                   fi
 
-                  cp "$DIR/control.template" debcontrol
+                  cat "$DIR/control.template" | grep -v "Architecture: " > debcontrol
+                  echo "Architecture: $ARCHITECTURE" >> debcontrol
                   VERSION=${INPUT_VERSION:-$(cat package.json | jq -r .version)}
                   echo "Version: $VERSION" >> debcontrol
               env:
                   DIR: ${{ inputs.config }}
                   INPUT_VERSION: ${{ inputs.version }}
+                  ARCHITECTURE: ${{ inputs.arch }}
 
             - name: Build App
               run: |
@@ -90,20 +133,33 @@ jobs:
                       ${{ steps.nightly.outputs.config-args }} \
                       ${{ steps.debian.outputs.config-args }} \
                       --deb-custom-control=debcontrol
-                  yarn build --publish never -l --config electron-builder.json
+                  yarn build --publish never -l --config electron-builder.json ${{ steps.config.outputs.build-args }}
 
-            - name: Check ldd
+            - name: Check native libraries
               run: |
-                  ldd dist/linux-unpacked/resources/app.asar.unpacked/node_modules/matrix-seshat/native/index.node
-                  if [ "$SQLCIPHER_STATIC" == "1" ]; then
-                      ldd dist/linux-unpacked/resources/app.asar.unpacked/node_modules/matrix-seshat/native/index.node | grep -v libsqlcipher.so.0
-                      ldd dist/linux-unpacked/resources/app.asar.unpacked/node_modules/matrix-seshat/native/index.node | grep libcrypto.so.1.1
+                  set -x
+                  shopt -s globstar
+
+                  FILES=$(file dist/**/*.node)
+                  echo "$FILES"
+
+                  if [ grep -v "$ARCH" ]; then
+                      exit 1
+                  fi
+
+                  LIBS=$(readelf -d dist/**/*.node | grep NEEDED)
+                  echo "$LIBS"
+
+                  set +x
+                  assert_contains_string() { [[ "$1" == *"$2"* ]]; }
+                  ! assert_contains_string "$LIBS" "libcrypto.so.1.1"
+                  if [ "$SQLCIPHER_BUNDLED" == "1" ]; then
+                      ! assert_contains_string "$LIBS" "libsqlcipher.so.0"
                   else
-                      ldd dist/linux-unpacked/resources/app.asar.unpacked/node_modules/matrix-seshat/native/index.node | grep libsqlcipher.so.0
-                      ldd dist/linux-unpacked/resources/app.asar.unpacked/node_modules/matrix-seshat/native/index.node | grep -v libcrypto.so.1.1
+                      assert_contains_string "$LIBS" "libsqlcipher.so.0"
                   fi
               env:
-                  SQLCIPHER_STATIC: ${{ inputs.sqlcipher == 'static' && '1' || '' }}
+                  ARCH: ${{ steps.config.outputs.arch }}
 
             - name: Stash deb package
               if: inputs.deploy-mode
@@ -133,9 +189,12 @@ jobs:
                   ln -s "$(find . -type f -iname "*.tar.gz" | xargs -0 -n1 -- basename)" "element-desktop.tar.gz"
               working-directory: "dist/install/linux/glibc-x86-64"
 
+            # We exclude *-unpacked as it loses permissions and the tarball contains it with correct permissions
             - name: Upload Artifacts
               uses: actions/upload-artifact@v3
               with:
-                  name: ${{ inputs.deploy-mode && 'packages.element.io' || format('linux-sqlcipher-{0}', inputs.sqlcipher) }}
-                  path: dist
+                  name: ${{ inputs.deploy-mode && 'packages.element.io' || format('linux-{0}-sqlcipher-{1}', inputs.arch, inputs.sqlcipher) }}
+                  path: |
+                      dist
+                      !dist/*-unpacked/**
                   retention-days: 1

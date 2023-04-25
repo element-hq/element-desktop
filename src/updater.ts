@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { autoUpdater, ipcMain } from "electron";
+import { app, autoUpdater, ipcMain } from "electron";
 
 const UPDATE_POLL_INTERVAL_MS = 60 * 60 * 1000;
 const INITIAL_UPDATE_DELAY_MS = 30 * 1000;
@@ -26,7 +26,37 @@ function installUpdate(): void {
     autoUpdater.quitAndInstall();
 }
 
-function pollForUpdates(): void {
+// Workaround for Squirrel.Mac wedging auto-restart if latest check for update failed
+// From https://github.com/vector-im/element-web/issues/12433#issuecomment-1508995119
+async function safeCheckForUpdate(): Promise<void> {
+    if (process.platform === "darwin") {
+        const feedUrl = autoUpdater.getFeedURL();
+        // On Mac if the user has already downloaded an update but not installed it and
+        // we check again and no additional new update is available the app ends up in a
+        // bad state and doesn't restart after installing any updates that are downloaded.
+        // To avoid this we check manually whether an update is available and call the
+        // autoUpdater.checkForUpdates() when something new is there.
+        try {
+            const res = await global.fetch(feedUrl);
+            const { currentRelease } = await res.json();
+            const latestVersionDownloaded = latestUpdateDownloaded.releaseName;
+            console.info(
+                `Latest version from release download: ${currentRelease} (current: ${app.getVersion()}, most recent downloaded ${latestVersionDownloaded}})`,
+            );
+            if (currentRelease === app.getVersion() || currentRelease === latestVersionDownloaded) {
+                ipcChannelSendUpdateStatus(false);
+                return;
+            }
+        } catch (err) {
+            console.error(`Error checking for updates ${feedUrl}`, err);
+            ipcChannelSendUpdateStatus(false);
+            return;
+        }
+    }
+    autoUpdater.checkForUpdates();
+}
+
+async function pollForUpdates(): Promise<void> {
     try {
         // If we've already got a new update downloaded, then stop trying to check for new ones, as according to the doc
         // at https://github.com/electron/electron/blob/main/docs/api/auto-updater.md#autoupdatercheckforupdates
@@ -34,7 +64,7 @@ function pollForUpdates(): void {
         // As a hunch, this might also be causing https://github.com/vector-im/element-web/issues/12433
         // due to the update checks colliding with the pending install somehow
         if (!latestUpdateDownloaded) {
-            autoUpdater.checkForUpdates();
+            await safeCheckForUpdate();
         } else {
             console.log("Skipping update check as download already present");
             global.mainWindow?.webContents.send("update-downloaded", latestUpdateDownloaded);

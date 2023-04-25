@@ -71,9 +71,9 @@ as usual using:
 
 On Windows & macOS we always statically link libsqlcipher for it is not generally available.
 On Linux by default we will use a system package, on debian & ubuntu this is `libsqlcipher0`,
-but this is problematic for some other packages.
-By including `SQLCIPHER_STATIC=1` in the build environment, the build scripts will statically link sqlcipher,
-note that this will want a `libcrypto1.1` shared library available in the system.
+but this is problematic for some other packages, and we found that it may crashes for unknown reasons.
+By including `SQLCIPHER_BUNDLED=1` in the build environment, the build scripts will fully statically
+link sqlcipher, including a static build of OpenSSL.
 
 More info can be found at https://github.com/matrix-org/seshat/issues/102
 and https://github.com/vector-im/element-web/issues/20926.

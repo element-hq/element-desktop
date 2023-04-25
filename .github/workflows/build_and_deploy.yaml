@@ -100,6 +100,7 @@ jobs:
         name: Linux (sqlcipher system)
         uses: ./.github/workflows/build_linux.yaml
         with:
+            arch: amd64
             config: element.io/${{ inputs.mode || (github.event_name == 'release' && 'release') || 'nightly' }}
             sqlcipher: system
             version: ${{ needs.prepare.outputs.linux-version }}
@@ -111,6 +112,7 @@ jobs:
         name: Linux (sqlcipher static)
         uses: ./.github/workflows/build_linux.yaml
         with:
+            arch: amd64
             deploy-mode: true
             config: element.io/${{ inputs.mode || (github.event_name == 'release' && 'release') || 'nightly' }}
             sqlcipher: static
@@ -162,4 +164,4 @@ jobs:
         uses: ./.github/workflows/reprepro.yaml
         secrets: inherit
         with:
-            artifact-name: linux-sqlcipher-system
+            artifact-name: linux-amd64-sqlcipher-system
