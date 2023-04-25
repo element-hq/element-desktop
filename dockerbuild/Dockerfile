@@ -16,7 +16,7 @@ RUN apt-get -qq update && apt-get -qq dist-upgrade && \
   libsecret-1-dev libgnome-keyring-dev \
   libopenjp2-tools \
   # Used by github actions \
-  jq grep \
+  jq grep file \
   # Used by seshat (when not SQLCIPHER_STATIC) \
   libsqlcipher-dev && \
   # git-lfs
