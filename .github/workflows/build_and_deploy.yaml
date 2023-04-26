@@ -89,7 +89,7 @@ jobs:
         with:
             sign: true
             deploy-mode: true
-            base-url: ${{ needs.prepare.outputs.base-url }}
+            base-url: https://packages.element.io/${{ needs.prepare.outputs.packages-dir }}
             version: ${{ needs.prepare.outputs.macos-version }}
 
     # We do not put this call into deploy-mode as we do not want it to add to the packages.element.io artifact
@@ -120,6 +120,7 @@ jobs:
     # Linux will be deployed via reprepro after it, but we list it as a dependency to abort if it fails.
     deploy:
         needs:
+            - prepare
             - macos
             - linux
             - linux_static
@@ -143,7 +144,7 @@ jobs:
                   AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
                   R2_URL: ${{ vars.CF_R2_S3_API }}
-                  DEPLOYMENT_DIR: ${{ (inputs.mode == 'release' || github.event_name == 'release') && 'desktop' || 'nightly' }}
+                  DEPLOYMENT_DIR: ${{ needs.prepare.outputs.packages-dir }}
 
             - name: Notify packages.element.io of new files
               uses: peter-evans/repository-dispatch@26b39ed245ab8f31526069329e112ab2fb224588 # v2
