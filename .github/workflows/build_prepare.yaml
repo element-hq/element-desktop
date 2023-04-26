@@ -23,6 +23,12 @@ on:
             CF_R2_TOKEN:
                 required: false
         outputs:
+            base-url:
+                description: "The non-debian packages.element.io base URL for this run"
+                value: ${{ jobs.prepare.outputs.base-url }}
+            config:
+                description: "The relative path to the config file for this run"
+                value: ${{ inputs.config }}
             macos-version:
                 description: "The version string the next macOS Nightly should use, only output for nightly"
                 value: ${{ jobs.prepare.outputs.macos-version }}
@@ -41,6 +47,7 @@ jobs:
         environment: ${{ inputs.nightly && 'packages.element.io' || '' }}
         runs-on: ubuntu-latest
         outputs:
+            base-url: ${{ steps.common.outputs.base-url }}
             macos-version: ${{ steps.versions.outputs.macos }}
             linux-version: ${{ steps.versions.outputs.linux }}
             win32-x64-version: ${{ steps.versions.outputs.win_x64 }}
@@ -63,6 +70,13 @@ jobs:
               run: |
                   yarn run --silent electron --version > electronVersion
                   cat package.json | jq -c .hakDependencies > hakDependencies.json
+
+            - name: Common outputs
+              id: common
+              run: |
+                  echo "base-url=https://packages.element.io/$DIR" >> $GITHUB_OUTPUT
+              env:
+                  DIR: ${{ inputs.nightly && 'nightly' || 'desktop' }}
 
             - name: "[Nightly] Calculate versions"
               id: versions

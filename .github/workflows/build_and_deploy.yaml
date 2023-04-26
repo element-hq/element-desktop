@@ -89,7 +89,7 @@ jobs:
         with:
             sign: true
             deploy-mode: true
-            base-url: https://packages.element.io/${{ (inputs.mode == 'release' || github.event_name == 'release') && 'desktop' || 'nightly' }}
+            base-url: ${{ needs.prepare.outputs.base-url }}
             version: ${{ needs.prepare.outputs.macos-version }}
 
     # We do not put this call into deploy-mode as we do not want it to add to the packages.element.io artifact
@@ -100,7 +100,7 @@ jobs:
         name: Linux (sqlcipher system)
         uses: ./.github/workflows/build_linux.yaml
         with:
-            config: element.io/${{ inputs.mode || (github.event_name == 'release' && 'release') || 'nightly' }}
+            config: ${{ needs.prepare.outputs.config }}
             sqlcipher: system
             version: ${{ needs.prepare.outputs.linux-version }}
 
@@ -112,7 +112,7 @@ jobs:
         uses: ./.github/workflows/build_linux.yaml
         with:
             deploy-mode: true
-            config: element.io/${{ inputs.mode || (github.event_name == 'release' && 'release') || 'nightly' }}
+            config: ${{ needs.prepare.outputs.config }}
             sqlcipher: static
             version: ${{ needs.prepare.outputs.linux-version }}
 
