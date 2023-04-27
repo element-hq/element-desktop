@@ -5,7 +5,7 @@
         "target": "es2016",
         "sourceMap": false,
         "strict": true,
-        "lib": ["es2019"]
+        "lib": ["es2020"]
     },
     "include": ["../scripts/@types/*.d.ts", "./**/*.ts"],
     "ts-node": {
