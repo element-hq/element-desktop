@@ -152,9 +152,22 @@
             "icon": "build/icons"
         },
         "deb": {
-            "fpm": [
-                "--deb-recommends=libsqlcipher0",
-                "--deb-recommends=element-io-archive-keyring"
+            "depends": [
+                "libgtk-3-0",
+                "libnotify4",
+                "libnss3",
+                "libxss1",
+                "libxtst6",
+                "xdg-utils",
+                "libatspi2.0-0",
+                "libuuid1",
+                "libsecret-1-0",
+                "libasound2",
+                "libgbm1"
+            ],
+            "recommends": [
+                "libsqlcipher0",
+                "element-io-archive-keyring"
             ]
         },
         "mac": {

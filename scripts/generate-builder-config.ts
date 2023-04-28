@@ -30,17 +30,9 @@ const argv = parseArgs<{
     "signtool-thumbprint"?: string;
     "signtool-subject-name"?: string;
     "notarytool-team-id"?: string;
-    "deb-custom-control"?: string;
     "deb-changelog"?: string;
 }>(process.argv.slice(2), {
-    string: [
-        "nightly",
-        "deb-custom-control",
-        "deb-changelog",
-        "signtool-thumbprint",
-        "signtool-subject-name",
-        "notarytool-team-id",
-    ],
+    string: ["nightly", "deb-changelog", "signtool-thumbprint", "signtool-subject-name", "notarytool-team-id"],
 });
 
 type DeepWriteable<T> = { -readonly [P in keyof T]: DeepWriteable<T[P]> };
@@ -88,6 +80,10 @@ async function main(): Promise<number | void> {
             version = "0.0.1-nightly." + version;
         }
         cfg.extraMetadata!.version = version;
+    } else {
+        if (!cfg.deb!.fpm) cfg.deb!.fpm = [];
+        cfg.deb!.fpm!.push("--deb-field", "Replaces: riot-desktop (<< 1.7.0), riot-web (<< 1.7.0)");
+        cfg.deb!.fpm!.push("--deb-field", "Breaks: riot-desktop (<< 1.7.0), riot-web (<< 1.7.0)");
     }
 
     if (argv["signtool-thumbprint"] && argv["signtool-subject-name"]) {
@@ -106,10 +102,8 @@ async function main(): Promise<number | void> {
         // https://github.com/vector-im/element-web/issues/13171
         cfg.extraMetadata!.productName = cfg.extraMetadata!.productName!.replace(/ /g, "-");
 
-        if (argv["deb-custom-control"]) {
-            cfg.deb!.fpm!.push(`--deb-custom-control=${argv["deb-custom-control"]}`);
-        }
         if (argv["deb-changelog"]) {
+            if (!cfg.deb!.fpm) cfg.deb!.fpm = [];
             cfg.deb!.fpm!.push(`--deb-changelog=${argv["deb-changelog"]}`);
         }
     }
