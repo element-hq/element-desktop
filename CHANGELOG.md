@@ -1,3 +1,10 @@
+Changes in [1.11.31-rc.2](https://github.com/vector-im/element-desktop/releases/tag/v1.11.31-rc.2) (2023-05-05)
+===============================================================================================================
+
+## 🐛 Bug Fixes
+ * Fix macos update check exploding ([\#944](https://github.com/vector-im/element-desktop/pull/944)). Fixes #668.
+ * Fix: reveal images when image previews are disabled ([\#10781](https://github.com/matrix-org/matrix-react-sdk/pull/10781)). Fixes vector-im/element-web#25271. Contributed by @kerryarchibald.
+
 Changes in [1.11.31-rc.1](https://github.com/vector-im/element-desktop/releases/tag/v1.11.31-rc.1) (2023-05-02)
 ===============================================================================================================
 
