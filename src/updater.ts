@@ -39,7 +39,7 @@ async function safeCheckForUpdate(): Promise<void> {
         try {
             const res = await global.fetch(feedUrl);
             const { currentRelease } = await res.json();
-            const latestVersionDownloaded = latestUpdateDownloaded.releaseName;
+            const latestVersionDownloaded = latestUpdateDownloaded?.releaseName;
             console.info(
                 `Latest version from release download: ${currentRelease} (current: ${app.getVersion()}, most recent downloaded ${latestVersionDownloaded}})`,
             );
@@ -131,7 +131,7 @@ interface ICachedUpdate {
 }
 
 // cache the latest update which has been downloaded as electron offers no api to read it
-let latestUpdateDownloaded: ICachedUpdate;
+let latestUpdateDownloaded: ICachedUpdate | undefined;
 autoUpdater
     .on("update-available", function () {
         ipcChannelSendUpdateStatus(true);
