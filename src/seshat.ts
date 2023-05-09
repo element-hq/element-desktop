@@ -304,14 +304,14 @@ ipcMain.on("seshat", async function (_ev: IpcMainEvent, payload): Promise<void> 
             break;
 
         default:
-            global.mainWindow.webContents.send("seshatReply", {
+            global.mainWindow?.webContents.send("seshatReply", {
                 id: payload.id,
                 error: "Unknown IPC Call: " + payload.name,
             });
             return;
     }
 
-    global.mainWindow.webContents.send("seshatReply", {
+    global.mainWindow?.webContents.send("seshatReply", {
         id: payload.id,
         reply: ret,
     });
