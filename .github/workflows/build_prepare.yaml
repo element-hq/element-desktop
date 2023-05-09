@@ -117,7 +117,6 @@ jobs:
             - name: "[Nightly] Write summary"
               if: inputs.nightly
               run: |
-                  WEBAPP_VERSION=$(cat webapp/version)
                   WEB_VERSION=${WEBAPP_VERSION:0:12}
                   REACT_VERSION=${WEBAPP_VERSION:19:12}
                   JS_VERSION=${WEBAPP_VERSION:35:12}
@@ -133,6 +132,8 @@ jobs:
                   echo "| Element Web | [$WEB_VERSION](https://github.com/vector-im/element-web/commit/$WEB_VERSION) |" >> $GITHUB_STEP_SUMMARY
                   echo "| React SDK   | [$REACT_VERSION](https://github.com/matrix-org/matrix-react-sdk/commit/$REACT_VERSION) |" >> $GITHUB_STEP_SUMMARY
                   echo "| JS SDK      | [$JS_VERSION](https://github.com/matrix-org/matrix-js-sdk/commit/$JS_VERSION) |" >> $GITHUB_STEP_SUMMARY
+              env:
+                  WEBAPP_VERSION: ${{ steps.package.outputs.version }}
 
             - uses: actions/upload-artifact@v3
               with:
