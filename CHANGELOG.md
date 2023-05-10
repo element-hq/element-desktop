@@ -1,12 +1,8 @@
-Changes in [1.11.31-rc.2](https://github.com/vector-im/element-desktop/releases/tag/v1.11.31-rc.2) (2023-05-05)
-===============================================================================================================
+Changes in [1.11.31](https://github.com/vector-im/element-desktop/releases/tag/v1.11.31) (2023-05-10)
+=====================================================================================================
 
-## 🐛 Bug Fixes
- * Fix macos update check exploding ([\#944](https://github.com/vector-im/element-desktop/pull/944)). Fixes #668.
- * Fix: reveal images when image previews are disabled ([\#10781](https://github.com/matrix-org/matrix-react-sdk/pull/10781)). Fixes vector-im/element-web#25271. Contributed by @kerryarchibald.
-
-Changes in [1.11.31-rc.1](https://github.com/vector-im/element-desktop/releases/tag/v1.11.31-rc.1) (2023-05-02)
-===============================================================================================================
+## 🚨 BREAKING CHANGES
+ * If you package Element Desktop with a static sqlcipher, you may need to tweak some build scripts: SQLCIPHER_STATIC became SQLCIPHER_BUNDLED, and OpenSSL is now included too.
 
 ## ✨ Features
  * Start packaging for Debian & Ubuntu aarch64 ([\#895](https://github.com/vector-im/element-desktop/pull/895)).
@@ -27,6 +23,8 @@ Changes in [1.11.31-rc.1](https://github.com/vector-im/element-desktop/releases/
  * Translate credits in help about section ([\#10676](https://github.com/matrix-org/matrix-react-sdk/pull/10676)).
 
 ## 🐛 Bug Fixes
+ * Fix macos update check exploding ([\#944](https://github.com/vector-im/element-desktop/pull/944)). Fixes #668.
+ * Fix: reveal images when image previews are disabled ([\#10781](https://github.com/matrix-org/matrix-react-sdk/pull/10781)). Fixes vector-im/element-web#25271. Contributed by @kerryarchibald.
  * Workaround Squirrel.Mac wedging app restart after failed update check ([\#629](https://github.com/vector-im/element-desktop/pull/629)).
  * Fix autocomplete not resetting properly on message send ([\#10741](https://github.com/matrix-org/matrix-react-sdk/pull/10741)). Fixes vector-im/element-web#25170.
  * Fix start_sso not working with guests disabled ([\#10720](https://github.com/matrix-org/matrix-react-sdk/pull/10720)). Fixes vector-im/element-web#16624.
