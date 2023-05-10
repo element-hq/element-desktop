@@ -117,7 +117,7 @@ jobs:
             - name: "[Nightly] Write summary"
               if: inputs.nightly
               run: |
-                  BUNDLE_HASH=$(npx asar l webapp.asar | grep /bundles/ | head -n 1 | sed 's|.*/||' )
+                  BUNDLE_HASH=$(npx asar l webapp.asar | grep /bundles/ | head -n 1 | sed 's|.*/||')
                   WEBAPP_VERSION=$(./scripts/get-version.ts)
                   WEB_VERSION=${WEBAPP_VERSION:0:12}
                   REACT_VERSION=${WEBAPP_VERSION:19:12}
