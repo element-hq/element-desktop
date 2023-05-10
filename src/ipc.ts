@@ -253,7 +253,7 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
             return;
     }
 
-    global.mainWindow.webContents.send("ipcReply", {
+    global.mainWindow?.webContents.send("ipcReply", {
         id: payload.id,
         reply: ret,
     });
