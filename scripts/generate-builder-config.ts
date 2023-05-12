@@ -13,6 +13,7 @@
  * On Linux:
  *  Replaces spaces in the product name with dashes as spaces in paths can cause issues
  *  Passes --deb-custom-control to build.deb.fpm if specified
+ *  Removes libsqlcipher0 recommended dependency if env SQLCIPHER_BUNDLED is asserted.
  */
 
 import parseArgs from "minimist";
@@ -105,6 +106,11 @@ async function main(): Promise<number | void> {
         if (argv["deb-changelog"]) {
             if (!cfg.deb!.fpm) cfg.deb!.fpm = [];
             cfg.deb!.fpm!.push(`--deb-changelog=${argv["deb-changelog"]}`);
+        }
+
+        if (process.env.SQLCIPHER_BUNDLED) {
+            // Remove sqlcipher dependency when using bundled
+            cfg.deb!.recommends = cfg.deb!.recommends?.filter((d) => d !== "libsqlcipher0");
         }
     }
 
