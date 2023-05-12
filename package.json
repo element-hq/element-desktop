@@ -169,7 +169,6 @@
                 "libsqlcipher0",
                 "element-io-archive-keyring"
             ]
-            "maintainer": "support@element.io"
         },
         "mac": {
             "category": "public.app-category.social-networking",
