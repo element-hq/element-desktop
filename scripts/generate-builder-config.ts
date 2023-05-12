@@ -82,6 +82,7 @@ async function main(): Promise<number | void> {
         }
         cfg.extraMetadata!.version = version;
     } else {
+        if (!cfg.deb!.fpm) cfg.deb!.fpm = [];
         cfg.deb!.fpm!.push("--deb-field", "Replaces: riot-desktop (<< 1.7.0), riot-web (<< 1.7.0)");
         cfg.deb!.fpm!.push("--deb-field", "Breaks: riot-desktop (<< 1.7.0), riot-web (<< 1.7.0)");
     }
@@ -103,6 +104,7 @@ async function main(): Promise<number | void> {
         cfg.extraMetadata!.productName = cfg.extraMetadata!.productName!.replace(/ /g, "-");
 
         if (argv["deb-changelog"]) {
+            if (!cfg.deb!.fpm) cfg.deb!.fpm = [];
             cfg.deb!.fpm!.push(`--deb-changelog=${argv["deb-changelog"]}`);
         }
 

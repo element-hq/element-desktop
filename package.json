@@ -150,10 +150,7 @@
             "icon": "build/icons"
         },
         "deb": {
-            "fpm": [
-                "--category",
-                "net"
-            ],
+            "packageCategory": "net",
             "depends": [
                 "libgtk-3-0",
                 "libnotify4",
