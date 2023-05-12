@@ -169,6 +169,7 @@
                 "libsqlcipher0",
                 "element-io-archive-keyring"
             ]
+            "maintainer": "support@element.io"
         },
         "mac": {
             "category": "public.app-category.social-networking",
@@ -176,8 +177,7 @@
             "hardenedRuntime": true,
             "gatekeeperAssess": true,
             "entitlements": "./build/entitlements.mac.plist",
-            "icon": "build/icons/icon.icns",
-            "singleArchFiles": "node_modules/@signalapp/{libsignal-client/prebuilds/**,ringrtc/build/**}"
+            "icon": "build/icons/icon.icns"
         },
         "win": {
             "target": [

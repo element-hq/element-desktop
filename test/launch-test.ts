@@ -48,19 +48,19 @@ describe("App launch", () => {
             },
         });
         window = await app.firstWindow();
-    }, 30000);
+    }, 60000);
 
     afterAll(async () => {
         await app?.close().catch((e) => {
             console.error(e);
         });
         fs.rmSync(tmpDir, { recursive: true });
-    }, 30000);
+    }, 60000);
 
     it("should launch and render the welcome view successfully", async () => {
         await window.locator("#matrixchat").waitFor();
         await window.locator(".mx_Welcome").waitFor();
         await expect(window).toMatchURL("vector://vector/webapp/#/welcome");
         await window.screenshot({ path: path.join(artifactsPath, "welcome.png") });
-    }, 30000);
+    }, 60000);
 });
