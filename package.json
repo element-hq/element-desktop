@@ -5,6 +5,7 @@
     "version": "1.11.31",
     "description": "A feature-rich client for Matrix.org",
     "author": "Element",
+    "homepage": "https://element.io",
     "repository": {
         "type": "git",
         "url": "https://github.com/vector-im/element-desktop"
@@ -145,17 +146,45 @@
                 "deb"
             ],
             "category": "Network;InstantMessaging;Chat",
-            "maintainer": "support@element.io"
+            "maintainer": "support@element.io",
+            "icon": "build/icons"
+        },
+        "deb": {
+            "packageCategory": "net",
+            "depends": [
+                "libgtk-3-0",
+                "libnotify4",
+                "libnss3",
+                "libxss1",
+                "libxtst6",
+                "xdg-utils",
+                "libatspi2.0-0",
+                "libuuid1",
+                "libsecret-1-0",
+                "libasound2",
+                "libgbm1"
+            ],
+            "recommends": [
+                "libsqlcipher0",
+                "element-io-archive-keyring"
+            ]
         },
         "mac": {
             "category": "public.app-category.social-networking",
             "darkModeSupport": true,
-            "gatekeeperAssess": true
+            "hardenedRuntime": true,
+            "gatekeeperAssess": true,
+            "entitlements": "./build/entitlements.mac.plist",
+            "icon": "build/icons/icon.icns"
         },
         "win": {
             "target": [
                 "squirrel"
-            ]
+            ],
+            "signingHashAlgorithms": [
+                "sha256"
+            ],
+            "icon": "build/icons/icon.ico"
         },
         "directories": {
             "output": "dist"
