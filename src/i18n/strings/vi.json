@@ -1,7 +1,7 @@
 {
     "Add to dictionary": "Thêm vào từ điển",
     "The image failed to save": "Ảnh không lưu được",
-    "Failed to save image": "Lưu ảnh thất bại",
+    "Failed to save image": "Không lưu được ảnh",
     "Save image as...": "Lưu ảnh…",
     "Copy link address": "Sao chép địa chỉ liên kết",
     "Copy email address": "Sao chép địa chỉ email",
@@ -17,12 +17,12 @@
     "Hide": "Ẩn",
     "Services": "Dịch vụ",
     "About": "Giới thiệu",
-    "Element Help": "Trợ giúp Element",
+    "Element Help": "Trợ giúp",
     "Help": "Hỗ trợ",
     "Close": "Đóng",
     "Minimize": "Thu nhỏ",
     "Window": "Cửa sổ",
-    "Toggle Developer Tools": "Công cụ cho Nhà phát triển",
+    "Toggle Developer Tools": "Công cụ phát triển",
     "Toggle Full Screen": "Toàn màn hình",
     "Preferences": "Tùy chọn",
     "Zoom Out": "Thu nhỏ",
@@ -39,8 +39,9 @@
     "Undo": "Hoàn tác",
     "Edit": "Chỉnh sửa",
     "Quit": "Thoát",
-    "Show/Hide": "Hiển thị/Ẩn",
+    "Show/Hide": "Hiện/Ẩn",
     "Are you sure you want to quit?": "Bạn có chắc chắn muốn thoát?",
     "Cancel": "Hủy bỏ",
-    "Copy image address": "Sao chép địa chỉ ảnh"
+    "Copy image address": "Sao chép địa chỉ ảnh",
+    "Close %(brand)s": "Đóng %(brand)s"
 }
