@@ -73,7 +73,7 @@ jobs:
                       ./.hak
 
             - name: Set up build tools
-              uses: ilammy/msvc-dev-cmd@cec98b9d092141f74527d0afa6feb2af698cfe89
+              uses: ilammy/msvc-dev-cmd@a742a854f54111d83b78e97091b5d85ccdaa3e89
               with:
                   arch: ${{ steps.config.outputs.arch || inputs.arch }}
 
