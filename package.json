@@ -97,7 +97,7 @@
         "eslint-config-prettier": "^8.5.0",
         "eslint-plugin-import": "^2.25.4",
         "eslint-plugin-matrix-org": "^1.0.0",
-        "eslint-plugin-unicorn": "^46.0.0",
+        "eslint-plugin-unicorn": "^47.0.0",
         "expect-playwright": "^0.8.0",
         "find-npm-prefix": "^1.0.2",
         "fs-extra": "^11.0.0",
