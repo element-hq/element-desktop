@@ -25,6 +25,7 @@ const ELECTRON_BUILDER_CFG_FILE = "electron-builder.json";
 
 const NIGHTLY_APP_ID = "im.riot.nightly";
 const NIGHTLY_APP_NAME = "element-desktop-nightly";
+const NIGHTLY_DEB_NAME = "element-nightly";
 
 const argv = parseArgs<{
     "nightly"?: string;
@@ -65,11 +66,14 @@ async function main(): Promise<number | void> {
         },
     };
 
+    if (!cfg.deb!.fpm) cfg.deb!.fpm = [];
+
     if (argv.nightly) {
         cfg.appId = NIGHTLY_APP_ID;
         cfg.extraMetadata!.productName += " Nightly";
         cfg.extraMetadata!.name = NIGHTLY_APP_NAME;
         cfg.extraMetadata!.description += " (nightly unstable build)";
+        cfg.deb!.fpm!.push("--name", NIGHTLY_DEB_NAME);
 
         let version = argv.nightly;
         if (os.platform() === "win32") {
@@ -82,7 +86,6 @@ async function main(): Promise<number | void> {
         }
         cfg.extraMetadata!.version = version;
     } else {
-        if (!cfg.deb!.fpm) cfg.deb!.fpm = [];
         cfg.deb!.fpm!.push("--deb-field", "Replaces: riot-desktop (<< 1.7.0), riot-web (<< 1.7.0)");
         cfg.deb!.fpm!.push("--deb-field", "Breaks: riot-desktop (<< 1.7.0), riot-web (<< 1.7.0)");
     }
@@ -104,7 +107,6 @@ async function main(): Promise<number | void> {
         cfg.extraMetadata!.productName = cfg.extraMetadata!.productName!.replace(/ /g, "-");
 
         if (argv["deb-changelog"]) {
-            if (!cfg.deb!.fpm) cfg.deb!.fpm = [];
             cfg.deb!.fpm!.push(`--deb-changelog=${argv["deb-changelog"]}`);
         }
 
