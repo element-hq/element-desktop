@@ -122,8 +122,7 @@ jobs:
               run: |
                   npx ts-node scripts/generate-builder-config.ts \
                       ${{ steps.nightly.outputs.config-args }} \
-                      ${{ steps.debian.outputs.config-args }} \
-                      --deb-custom-control=debcontrol
+                      ${{ steps.debian.outputs.config-args }}
                   yarn build --publish never -l --config electron-builder.json ${{ steps.config.outputs.build-args }}
 
             - name: Check native libraries
