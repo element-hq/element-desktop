@@ -62,7 +62,7 @@ export function create(config: IConfig): void {
 
     let lastFavicon: string | null = null;
     global.mainWindow?.webContents.on("page-favicon-updated", async function (ev, favicons) {
-        if (!favicons || favicons.length <= 0 || !favicons[0].startsWith("data:")) {
+        if (!favicons?.[0]?.startsWith("data:")) {
             if (lastFavicon !== null) {
                 global.mainWindow?.setIcon(defaultIcon);
                 trayIcon?.setImage(defaultIcon);
