@@ -15,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { app, Tray, Menu, nativeImage } from "electron";
+import { app, Tray, Menu, nativeImage, NativeImage } from "electron";
 import pngToIco from "png-to-ico";
 import path from "path";
 import fs from "fs";
@@ -50,6 +50,12 @@ interface IConfig {
     brand: string;
 }
 
+async function convertToIco(img: NativeImage): Promise<NativeImage> {
+    const icoPath = path.join(app.getPath("temp"), "win32_element_icon.ico");
+    fs.writeFileSync(icoPath, await pngToIco(img.toPNG()));
+    return nativeImage.createFromPath(icoPath);
+}
+
 export function create(config: IConfig): void {
     // no trays on darwin
     if (process.platform === "darwin" || trayIcon) return;
@@ -80,9 +86,7 @@ export function create(config: IConfig): void {
         // Windows likes ico's too much.
         if (process.platform === "win32") {
             try {
-                const icoPath = path.join(app.getPath("temp"), "win32_element_icon.ico");
-                fs.writeFileSync(icoPath, await pngToIco(newFavicon.toPNG()));
-                newFavicon = nativeImage.createFromPath(icoPath);
+                newFavicon = await convertToIco(newFavicon);
             } catch (e) {
                 console.error("Failed to make win32 ico", e);
             }
