@@ -89,7 +89,11 @@ export function create(config: IConfig): void {
         }
 
         trayIcon?.setImage(newFavicon);
-        global.mainWindow?.setIcon(newFavicon);
+
+        // Don't set the main window icon on Windows as we call Navigator::setAppBadge to do it for us
+        if (process.platform !== "win32") {
+            global.mainWindow?.setIcon(newFavicon);
+        }
     });
 
     global.mainWindow?.webContents.on("page-title-updated", function (ev, title) {
