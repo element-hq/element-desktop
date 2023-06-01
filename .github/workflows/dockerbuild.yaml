@@ -35,7 +35,7 @@ jobs:
                       type=ref,event=branch
 
             - name: Build and push Docker image
-              uses: docker/build-push-action@91df6b874e498451163feb47610c87c4a218c1ee
+              uses: docker/build-push-action@f9efed53cc1b0364ba947400ac02042bbbaac7fc
               with:
                   context: dockerbuild
                   push: true
