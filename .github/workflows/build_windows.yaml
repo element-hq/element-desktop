@@ -95,7 +95,7 @@ jobs:
 
             - name: Install Rust
               if: steps.cache.outputs.cache-hit != 'true'
-              uses: actions-rs/toolchain@b2417cde72dcf67f306c0ae8e0828a81bf0b189f
+              uses: actions-rs/toolchain@88dc2356392166efad76775c878094f4e83ff746
               with:
                   default: true
                   toolchain: stable
