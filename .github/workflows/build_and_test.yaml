@@ -41,7 +41,7 @@ jobs:
 
             - name: "Get modified files"
               id: changed_files
-              uses: tj-actions/changed-files@b2d17f51244a144849c6b37a3a6791b98a51d86f # v35
+              uses: tj-actions/changed-files@5978e5a2df95ef20cde627d4acb5edd1f87ba46a # v36
               with:
                   files: |
                       dockerbuild/*
