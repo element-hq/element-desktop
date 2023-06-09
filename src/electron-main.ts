@@ -19,7 +19,7 @@ limitations under the License.
 
 // Squirrel on windows starts the app with various flags as hooks to tell us when we've been installed/uninstalled etc.
 import "./squirrelhooks";
-import { app, BrowserWindow, Menu, autoUpdater, protocol, dialog, Input } from "electron";
+import { app, BrowserWindow, Menu, autoUpdater, protocol, dialog, Input, Event } from "electron";
 import * as Sentry from "@sentry/electron/main";
 import AutoLaunch from "auto-launch";
 import path from "path";
