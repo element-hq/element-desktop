@@ -28,6 +28,7 @@ import {
     DownloadItem,
     MenuItemConstructorOptions,
     IpcMainEvent,
+    Event,
 } from "electron";
 import url from "url";
 import fs from "fs";
