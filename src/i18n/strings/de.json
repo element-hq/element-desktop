@@ -42,5 +42,6 @@
     "Show/Hide": "Anzeigen/Ausblenden",
     "Cancel": "Abbrechen",
     "Copy image address": "Bild-Adresse kopieren",
-    "Close %(brand)s": "%(brand)s schließen"
+    "Close %(brand)s": "%(brand)s schließen",
+    "%(brand)s Help": "%(brand)s Hilfe"
 }
