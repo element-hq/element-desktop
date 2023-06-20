@@ -40,5 +40,7 @@
     "Edit": "Rediger",
     "Quit": "Avslutt",
     "Show/Hide": "Vis/Gøym",
-    "Cancel": "Avbryt"
+    "Cancel": "Avbryt",
+    "Copy image address": "Kopier bildeadresse",
+    "Close %(brand)s": "Lukk %(brand)s"
 }
