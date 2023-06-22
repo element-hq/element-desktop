@@ -1,5 +1,4 @@
 {
-    "Element Help": "Rakenduse Element abiteave",
     "About": "Rakenduse teave",
     "The image failed to save": "Seda pilti ei õnnestunud salvestada",
     "Add to dictionary": "Lisa sõnastikku",
@@ -43,5 +42,6 @@
     "Are you sure you want to quit?": "Kas sa kindlasti soovid rakendusest väljuda?",
     "Cancel": "Tühista",
     "Copy image address": "Kopeeri pildi aadress",
-    "Close %(brand)s": "Sulge %(brand)s"
+    "Close %(brand)s": "Sulge %(brand)s",
+    "%(brand)s Help": "%(brand)s abiteave"
 }

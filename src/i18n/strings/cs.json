@@ -18,7 +18,6 @@
     "Hide": "Skrýt",
     "Services": "Služby",
     "About": "O aplikaci",
-    "Element Help": "Nápověda aplikace Element",
     "Help": "Nápověda",
     "Close": "Zavřít",
     "Minimize": "Minimalizovat",
@@ -43,5 +42,6 @@
     "Show/Hide": "Zobrazit/Skrýt",
     "Are you sure you want to quit?": "Opravdu chcete ukončit aplikaci?",
     "Close %(brand)s": "Zavřít %(brand)s",
-    "Cancel": "Zrušit"
+    "Cancel": "Zrušit",
+    "%(brand)s Help": "%(brand)s nápověda"
 }
