@@ -21,7 +21,6 @@
     "Hide": "Gøym",
     "Services": "Tenester",
     "About": "Om",
-    "Element Help": "Hjelp med Element",
     "Help": "Hjelp",
     "Close": "Lat att",
     "Minimize": "Minimer",
@@ -41,5 +40,7 @@
     "Edit": "Rediger",
     "Quit": "Avslutt",
     "Show/Hide": "Vis/Gøym",
-    "Cancel": "Avbryt"
+    "Cancel": "Avbryt",
+    "Copy image address": "Kopier bildeadresse",
+    "Close %(brand)s": "Lukk %(brand)s"
 }
