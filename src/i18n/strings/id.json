@@ -17,7 +17,6 @@
     "Hide": "Sembunyikan",
     "Services": "Layanan",
     "About": "Tentang",
-    "Element Help": "Bantuan Element",
     "Help": "Bantuan",
     "Close": "Tutup",
     "Minimize": "Minimalkan",
@@ -43,5 +42,6 @@
     "Are you sure you want to quit?": "Apakah Anda yakin ingin keluar?",
     "Cancel": "Batal",
     "Copy image address": "Salin alamat gambar",
-    "Close %(brand)s": "Tutuo %(brand)s"
+    "Close %(brand)s": "Tutuo %(brand)s",
+    "%(brand)s Help": "Bantuan %(brand)s"
 }

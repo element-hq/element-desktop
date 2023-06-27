@@ -3,7 +3,6 @@
     "Stop Speaking": "Zastaviť nahrávanie hlasu",
     "Start Speaking": "Spustiť nahrávanie hlasu",
     "Speech": "Reč",
-    "Element Help": "Pomocník pre aplikáciu Element",
     "Paste and Match Style": "Vložiť a prispôsobiť štýl",
     "Add to dictionary": "Pridať do slovníka",
     "The image failed to save": "Obrázok sa nepodarilo uložiť",
@@ -43,5 +42,6 @@
     "Are you sure you want to quit?": "Naozaj chcete zavrieť aplikáciu?",
     "Cancel": "Zrušiť",
     "Copy image address": "Kopírovať adresu obrázka",
-    "Close %(brand)s": "Zatvoriť %(brand)s"
+    "Close %(brand)s": "Zatvoriť %(brand)s",
+    "%(brand)s Help": "%(brand)s Pomoc"
 }
