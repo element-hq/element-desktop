@@ -42,5 +42,6 @@
     "Are you sure you want to quit?": "Bạn có chắc chắn muốn thoát?",
     "Cancel": "Hủy bỏ",
     "Copy image address": "Sao chép địa chỉ ảnh",
-    "Close %(brand)s": "Đóng %(brand)s"
+    "Close %(brand)s": "Đóng %(brand)s",
+    "%(brand)s Help": "Hỗ trợ %(brand)s"
 }
