@@ -42,5 +42,6 @@
     "Hide Others": "Скрыть прочие",
     "Paste and Match Style": "Вставить с тем же стилем",
     "Copy image address": "Копировать адрес изображения",
-    "Close %(brand)s": "Закрыть %(brand)s"
+    "Close %(brand)s": "Закрыть %(brand)s",
+    "%(brand)s Help": "Помощь %(brand)s"
 }
