@@ -42,5 +42,6 @@
     "Copy link address": "Αντιγραφή διεύθυνσης συνδέσμου",
     "Copy image address": "Αντιγραφή διεύθυνσης εικόνας",
     "Copy image": "Αντιγραφή εικόνας",
-    "Close %(brand)s": "Κλείσιμο %(brand)s"
+    "Close %(brand)s": "Κλείσιμο %(brand)s",
+    "%(brand)s Help": "%(brand)s Υποστήριξη"
 }
