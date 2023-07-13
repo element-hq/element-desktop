@@ -1213,7 +1213,7 @@
     minimist "^1.2.6"
     plist "^3.0.5"
 
-"@electron/rebuild@^3.2.13":
+"@electron/rebuild@3.2.13", "@electron/rebuild@^3.2.13":
   version "3.2.13"
   resolved "https://registry.yarnpkg.com/@electron/rebuild/-/rebuild-3.2.13.tgz#98fbb98981b1a86162546a2ab91b2355569cca4c"
   integrity sha512-DH9Ol4JCnHDYVOD0fKWq+Qqbn/0WU1O6QR0mIpMXEVU4YFM4PlaqNC9K36mGShNBxxGFotZCMDrB1wl/iHM12g==
@@ -2495,6 +2495,41 @@ app-builder-lib@24.5.0:
     "@electron/notarize" "^1.2.3"
     "@electron/osx-sign" "^1.0.4"
     "@electron/rebuild" "^3.2.13"
+    "@electron/universal" "1.3.4"
+    "@malept/flatpak-bundler" "^0.4.0"
+    "@types/fs-extra" "9.0.13"
+    async-exit-hook "^2.0.1"
+    bluebird-lst "^1.0.9"
+    builder-util "24.5.0"
+    builder-util-runtime "9.2.1"
+    chromium-pickle-js "^0.2.0"
+    debug "^4.3.4"
+    ejs "^3.1.8"
+    electron-publish "24.5.0"
+    form-data "^4.0.0"
+    fs-extra "^10.1.0"
+    hosted-git-info "^4.1.0"
+    is-ci "^3.0.0"
+    isbinaryfile "^5.0.0"
+    js-yaml "^4.1.0"
+    lazy-val "^1.0.5"
+    minimatch "^5.1.1"
+    read-config-file "6.3.2"
+    sanitize-filename "^1.6.3"
+    semver "^7.3.8"
+    tar "^6.1.12"
+    temp-file "^3.4.0"
+
+app-builder-lib@24.5.2:
+  version "24.5.2"
+  resolved "https://registry.yarnpkg.com/app-builder-lib/-/app-builder-lib-24.5.2.tgz#f61ceb71c975b4d9278fcfe1e2f0a007fdb620db"
+  integrity sha512-fZbUrFl3FW7yw92KiDpXV3Nd84EW+D7/WU7MEjX2eHDWM45Qx4hYOZpL9PaT9ZzZbaNfNLmt2EOnoqHQXHLdKw==
+  dependencies:
+    "7zip-bin" "~5.1.1"
+    "@develar/schema-utils" "~2.6.5"
+    "@electron/notarize" "^1.2.3"
+    "@electron/osx-sign" "^1.0.4"
+    "@electron/rebuild" "3.2.13"
     "@electron/universal" "1.3.4"
     "@malept/flatpak-bundler" "^0.4.0"
     "@types/fs-extra" "9.0.13"
