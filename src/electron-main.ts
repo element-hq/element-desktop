@@ -19,7 +19,7 @@ limitations under the License.
 
 // Squirrel on windows starts the app with various flags as hooks to tell us when we've been installed/uninstalled etc.
 import "./squirrelhooks";
-import { app, BrowserWindow, Menu, autoUpdater, protocol, dialog, Input, Event } from "electron";
+import { app, BrowserWindow, Menu, autoUpdater, protocol, dialog, Input, Event, session } from "electron";
 import * as Sentry from "@sentry/electron/main";
 import AutoLaunch from "auto-launch";
 import path from "path";
@@ -39,6 +39,7 @@ import webContentsHandler from "./webcontents-handler";
 import * as updater from "./updater";
 import { getProfileFromDeeplink, protocolInit } from "./protocol";
 import { _t, AppLocalization } from "./language-helper";
+import { setDisplayMediaCallback } from "./displayMediaCallback";
 
 const argv = minimist(process.argv, {
     alias: { help: "h" },
@@ -531,6 +532,11 @@ app.on("ready", async () => {
     global.appLocalization = new AppLocalization({
         store: global.store,
         components: [(): void => tray.initApplicationMenu(), (): void => Menu.setApplicationMenu(buildMenuTemplate())],
+    });
+
+    session.defaultSession.setDisplayMediaRequestHandler((_, callback) => {
+        global.mainWindow?.webContents.send("openDesktopCapturerSourcePicker");
+        setDisplayMediaCallback(callback);
     });
 });
 
