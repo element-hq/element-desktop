@@ -19,6 +19,7 @@ import Store from "electron-store";
 import AutoLaunch from "auto-launch";
 
 import { AppLocalization } from "../language-helper";
+import { StoreData } from "../electron-main";
 
 // global type extensions need to use var for whatever reason
 /* eslint-disable no-var */
@@ -33,13 +34,6 @@ declare global {
         icon_path: string;
         brand: string;
     };
-    var store: Store<{
-        warnBeforeExit?: boolean;
-        minimizeToTray?: boolean;
-        spellCheckerEnabled?: boolean;
-        autoHideMenuBar?: boolean;
-        locale?: string | string[];
-        disableHardwareAcceleration?: boolean;
-    }>;
+    var store: Store<StoreData>;
 }
 /* eslint-enable no-var */

@@ -25,7 +25,7 @@ import type {
 } from "matrix-seshat"; // Hak dependency type
 import IpcMainEvent = Electron.IpcMainEvent;
 import { randomArray } from "./utils";
-import { keytar } from "./keytar";
+import { getPassword, setPassword } from "./safe-storage";
 
 let seshatSupported = false;
 let Seshat: typeof SeshatType;
@@ -51,19 +51,17 @@ let eventIndex: SeshatType | null = null;
 
 const seshatDefaultPassphrase = "DEFAULT_PASSPHRASE";
 async function getOrCreatePassphrase(key: string): Promise<string> {
-    if (keytar) {
-        try {
-            const storedPassphrase = await keytar.getPassword("element.io", key);
-            if (storedPassphrase !== null) {
-                return storedPassphrase;
-            } else {
-                const newPassphrase = await randomArray(32);
-                await keytar.setPassword("element.io", key, newPassphrase);
-                return newPassphrase;
-            }
-        } catch (e) {
-            console.log("Error getting the event index passphrase out of the secret store", e);
+    try {
+        const storedPassphrase = await getPassword(key);
+        if (storedPassphrase !== null) {
+            return storedPassphrase;
+        } else {
+            const newPassphrase = await randomArray(32);
+            await setPassword(key, newPassphrase);
+            return newPassphrase;
         }
+    } catch (e) {
+        console.log("Error getting the event index passphrase out of the secret store", e);
     }
     return seshatDefaultPassphrase;
 }

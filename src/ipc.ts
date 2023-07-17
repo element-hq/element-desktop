@@ -21,7 +21,7 @@ import IpcMainEvent = Electron.IpcMainEvent;
 import { recordSSOSession } from "./protocol";
 import { randomArray } from "./utils";
 import { Settings } from "./settings";
-import { keytar } from "./keytar";
+import { deletePassword, getPassword, setPassword } from "./safe-storage";
 import { getDisplayMediaCallback, setDisplayMediaCallback } from "./displayMediaCallback";
 
 ipcMain.on("setBadgeCount", function (_ev: IpcMainEvent, count: number): void {
@@ -125,7 +125,7 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
             break;
 
         case "getSpellCheckEnabled":
-            ret = global.store.get("spellCheckerEnabled", true);
+            ret = global.store.get("spellCheckerEnabled");
             break;
 
         case "setSpellCheckLanguages":
@@ -149,12 +149,7 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
 
         case "getPickleKey":
             try {
-                ret = await keytar?.getPassword("element.io", `${args[0]}|${args[1]}`);
-                // migrate from riot.im (remove once we think there will no longer be
-                // logins from the time of riot.im)
-                if (ret === null) {
-                    ret = await keytar?.getPassword("riot.im", `${args[0]}|${args[1]}`);
-                }
+                ret = await getPassword(`${args[0]}|${args[1]}`);
             } catch (e) {
                 // if an error is thrown (e.g. keytar can't connect to the keychain),
                 // then return null, which means the default pickle key will be used
@@ -165,7 +160,7 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
         case "createPickleKey":
             try {
                 const pickleKey = await randomArray(32);
-                await keytar?.setPassword("element.io", `${args[0]}|${args[1]}`, pickleKey);
+                await setPassword(`${args[0]}|${args[1]}`, pickleKey);
                 ret = pickleKey;
             } catch (e) {
                 ret = null;
@@ -174,10 +169,7 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
 
         case "destroyPickleKey":
             try {
-                await keytar?.deletePassword("element.io", `${args[0]}|${args[1]}`);
-                // migrate from riot.im (remove once we think there will no longer be
-                // logins from the time of riot.im)
-                await keytar?.deletePassword("riot.im", `${args[0]}|${args[1]}`);
+                await deletePassword(`${args[0]}|${args[1]}`);
             } catch (e) {}
             break;
         case "getDesktopCapturerSources":

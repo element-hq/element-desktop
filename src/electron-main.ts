@@ -30,10 +30,10 @@ import { URL } from "url";
 import minimist from "minimist";
 
 import "./ipc";
-import "./keytar";
 import "./seshat";
 import "./settings";
 import * as tray from "./tray";
+import { migrate as migrateSafeStorage } from "./safe-storage";
 import { buildMenuTemplate } from "./vectormenu";
 import webContentsHandler from "./webcontents-handler";
 import * as updater from "./updater";
@@ -252,7 +252,53 @@ async function moveAutoLauncher(): Promise<void> {
     }
 }
 
-global.store = new Store({ name: "electron-config" });
+export interface StoreData {
+    warnBeforeExit: boolean;
+    minimizeToTray: boolean;
+    spellCheckerEnabled: boolean;
+    autoHideMenuBar: boolean;
+    locale?: string | string[];
+    disableHardwareAcceleration: boolean;
+    migratedToSafeStorage: boolean;
+    safeStorage: Record<string, string>;
+}
+
+global.store = new Store({
+    name: "electron-config",
+    schema: {
+        warnBeforeExit: {
+            type: "boolean",
+            default: true,
+        },
+        minimizeToTray: {
+            type: "boolean",
+            default: true,
+        },
+        spellCheckerEnabled: {
+            type: "boolean",
+            default: true,
+        },
+        autoHideMenuBar: {
+            type: "boolean",
+            default: true,
+        },
+        locale: {
+            anyOf: [{ type: "string" }, { type: "array", items: { type: "string" } }],
+        },
+        disableHardwareAcceleration: {
+            type: "boolean",
+            default: false,
+        },
+        migratedToSafeStorage: {
+            type: "boolean",
+            default: false,
+        },
+        safeStorage: {
+            type: "object",
+            additionalProperties: { type: "string" },
+        },
+    },
+}) as Store<StoreData>;
 
 global.appQuitting = false;
 
@@ -345,12 +391,14 @@ app.enableSandbox();
 app.commandLine.appendSwitch("disable-features", "HardwareMediaKeyHandling,MediaSessionService");
 
 // Disable hardware acceleration if the setting has been set.
-if (global.store.get("disableHardwareAcceleration", false) === true) {
+if (global.store.get("disableHardwareAcceleration") === true) {
     console.log("Disabling hardware acceleration.");
     app.disableHardwareAcceleration();
 }
 
 app.on("ready", async () => {
+    await migrateSafeStorage();
+
     let asarPath: string;
 
     try {
@@ -456,7 +504,7 @@ app.on("ready", async () => {
 
         icon: global.trayConfig.icon_path,
         show: false,
-        autoHideMenuBar: global.store.get("autoHideMenuBar", true),
+        autoHideMenuBar: global.store.get("autoHideMenuBar"),
 
         x: mainWindowState.x,
         y: mainWindowState.y,
@@ -477,7 +525,7 @@ app.on("ready", async () => {
     global.mainWindow.webContents.session.setSpellCheckerEnabled(global.store.get("spellCheckerEnabled", true));
 
     // Create trayIcon icon
-    if (global.store.get("minimizeToTray", true)) tray.create(global.trayConfig);
+    if (global.store.get("minimizeToTray")) tray.create(global.trayConfig);
 
     global.mainWindow.once("ready-to-show", () => {
         if (!global.mainWindow) return;
