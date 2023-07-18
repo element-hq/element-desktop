@@ -6,10 +6,6 @@ index 70d6dd0..fb23a4e 100644
      @param key - The key of the item to delete.
      */
      delete<Key extends keyof T>(key: Key): void;
-+    // This overload is used for dot-notation access.
-+    // We exclude `keyof T` as an incorrect type for the default value should not fall through to this overload.
-+    delete<Key extends string>(key: Exclude<Key, keyof T>): void;
 +    delete(key: string): void;
      /**
      Delete all items.
- 
