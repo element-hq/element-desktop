@@ -1,11 +1,12 @@
 diff --git a/node_modules/conf/dist/source/index.d.ts b/node_modules/conf/dist/source/index.d.ts
-index 70d6dd0..fb23a4e 100644
+index 70d6dd0..6b552f3 100644
 --- a/node_modules/conf/dist/source/index.d.ts
 +++ b/node_modules/conf/dist/source/index.d.ts
-@@ -44,6 +44,10 @@ declare class Conf<T extends Record<string, any> = Record<string, unknown>> impl
+@@ -44,6 +44,7 @@ declare class Conf<T extends Record<string, any> = Record<string, unknown>> impl
      @param key - The key of the item to delete.
      */
      delete<Key extends keyof T>(key: Key): void;
 +    delete(key: string): void;
      /**
      Delete all items.
+ 
