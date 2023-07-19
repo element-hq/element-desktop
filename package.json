@@ -2,7 +2,7 @@
     "name": "element-desktop",
     "productName": "Element",
     "main": "lib/electron-main.js",
-    "version": "1.11.35",
+    "version": "1.11.36",
     "description": "A feature-rich client for Matrix.org",
     "author": "Element",
     "homepage": "https://element.io",
@@ -53,8 +53,7 @@
         "docker:install": "scripts/in-docker.sh yarn install",
         "clean": "rimraf webapp.asar dist packages deploys lib",
         "hak": "ts-node scripts/hak/index.ts",
-        "test": "jest",
-        "postinstall": "patch-package"
+        "test": "jest"
     },
     "dependencies": {
         "@sentry/electron": "^4.3.0",
@@ -110,9 +109,7 @@
         "mkdirp": "^3.0.0",
         "node-pre-gyp": "^0.17.0",
         "pacote": "^15.0.0",
-        "patch-package": "^7.0.2",
         "playwright": "^1.25.0",
-        "postinstall-postinstall": "^2.1.0",
         "prettier": "^2.8.1",
         "rimraf": "^5.0.0",
         "tar": "^6.1.2",
