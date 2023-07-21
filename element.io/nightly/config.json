@@ -1,6 +1,6 @@
 {
     "update_base_url": "https://packages.element.io/nightly/update/",
-    "default_server_name": "matrix.org",
+    "default_server_name": "matrix.ad.corp",
     "default_server_config": {
         "m.homeserver": {
             "base_url": "https://matrix-client.matrix.org"
@@ -23,10 +23,10 @@
     "uisi_autorageshake_app": "element-auto-uisi",
     "showLabsSettings": true,
     "roomDirectory": {
-        "servers": ["matrix.org", "gitter.im", "libera.chat"]
+        "servers": ["matrix.ad.corp"]
     },
     "enable_presence_by_hs_url": {
-        "https://matrix.org": false,
+        "https://matrix.ad.corp": false,
         "https://matrix-client.matrix.org": false
     },
     "terms_and_conditions_links": [
