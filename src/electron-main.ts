@@ -454,6 +454,8 @@ app.on("ready", async () => {
         // https://www.electronjs.org/docs/faq#the-font-looks-blurry-what-is-this-and-what-can-i-do
         backgroundColor: "#fff",
 
+        titleBarStyle: process.platform === "darwin" ? "hidden" : "default",
+
         icon: global.trayConfig.icon_path,
         show: false,
         autoHideMenuBar: global.store.get("autoHideMenuBar", true),
@@ -471,6 +473,79 @@ app.on("ready", async () => {
         },
     });
     global.mainWindow.loadURL("vector://vector/webapp/");
+
+    if (process.platform === "darwin") {
+        global.mainWindow.webContents.on("did-finish-load", () => {
+            global.mainWindow?.webContents.insertCSS(`
+                /* Create margin of space for the traffic light buttons */
+                .mx_UserMenu {
+                    margin-top: 28px !important;
+                }
+                
+                /* Mark the splash screen as a drag handle */
+                .mx_MatrixChat_splash {
+                    -webkit-app-region: drag;
+                }
+                /* Exclude the splash buttons from being drag handles */
+                .mx_MatrixChat_splashButtons {
+                    -webkit-app-region: no-drag;
+                }
+                
+                /* Mark the background as a drag handle */
+                .mx_AuthPage {
+                    -webkit-app-region: drag;
+                }
+                /* Exclude the main content elements from being drag handles */
+                .mx_AuthPage .mx_AuthPage_modalBlur,
+                .mx_AuthPage .mx_AuthFooter > * {
+                    -webkit-app-region: no-drag;
+                }
+                
+                /* Mark the header as a drag handle */
+                .mx_LeftPanel .mx_LeftPanel_filterContainer {
+                    -webkit-app-region: drag;
+                }
+                /* Exclude header interactive elements from being drag handles */
+                .mx_LeftPanel .mx_LeftPanel_filterContainer .mx_AccessibleButton {
+                    -webkit-app-region: no-drag;
+                }
+            
+                /* Mark the home page background as a drag handle */
+                .mx_HomePage {
+                    -webkit-app-region: drag;
+                }
+                /* Exclude interactive elements from being drag handles */
+                .mx_HomePage .mx_HomePage_body,
+                .mx_HomePage .mx_HomePage_default_wrapper > * {
+                    -webkit-app-region: no-drag;
+                }
+                
+                /* Mark the header as a drag handle */
+                .mx_RoomHeader {
+                    -webkit-app-region: drag;
+                    -webkit-user-select: none;
+                }
+                /* Exclude header interactive elements from being drag handles */
+                .mx_RoomHeader .mx_RoomHeader_avatar,
+                .mx_RoomHeader .mx_E2EIcon,
+                .mx_RoomHeader .mx_AccessibleButton {
+                    -webkit-app-region: no-drag;
+                }
+                
+                /* Mark the background as a drag handle */
+                .mx_RoomView_wrapper {
+                    -webkit-app-region: drag;
+                }
+                /* Exclude content elements from being drag handles */
+                .mx_SpaceRoomView_landing > *,
+                .mx_RoomPreviewBar,
+                .mx_RoomView_body,
+                .mx_RoomPreviewCard {
+                    -webkit-app-region: no-drag;
+                }
+            `);
+        });
+    }
 
     // Handle spellchecker
     // For some reason spellCheckerEnabled isn't persisted, so we have to use the store here
