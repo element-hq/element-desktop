@@ -475,13 +475,32 @@ app.on("ready", async () => {
     global.mainWindow.loadURL("vector://vector/webapp/");
 
     if (process.platform === "darwin") {
-        global.mainWindow.webContents.on("did-finish-load", () => {
-            global.mainWindow?.webContents.insertCSS(`
+        let userMenuCssKey: string | undefined;
+
+        // eslint-disable-next-line no-inner-declarations
+        async function makeSpaceForTrafficLight(): Promise<void> {
+            userMenuCssKey = await global.mainWindow?.webContents.insertCSS(`
                 /* Create margin of space for the traffic light buttons */
                 .mx_UserMenu {
                     margin-top: 28px !important;
                 }
-                
+            `);
+        }
+
+        global.mainWindow.on("enter-full-screen", () => {
+            if (userMenuCssKey !== undefined) {
+                global.mainWindow?.webContents.removeInsertedCSS(userMenuCssKey);
+            }
+        });
+        global.mainWindow.on("leave-full-screen", () => {
+            makeSpaceForTrafficLight();
+        });
+
+        global.mainWindow.webContents.on("did-finish-load", () => {
+            if (!global.mainWindow?.isFullScreen()) {
+                makeSpaceForTrafficLight();
+            }
+            global.mainWindow?.webContents.insertCSS(`
                 /* Mark the splash screen as a drag handle */
                 .mx_MatrixChat_splash {
                     -webkit-app-region: drag;
