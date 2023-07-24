@@ -485,6 +485,11 @@ app.on("ready", async () => {
                 .mx_UserMenu {
                     margin-top: 28px !important;
                 }
+                /* Maintain alignment of the toggle space panel button */
+                .mx_SpacePanel_toggleCollapse {
+                    /* 19px original top value, 28px margin-top above, 12px original margin-top value */
+                    top: calc(19px + 28px - 12px) !important;
+                }
             `);
         }
 
