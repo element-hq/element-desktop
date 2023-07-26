@@ -25,12 +25,12 @@ export function setupMacosTitleBar(window: BrowserWindow): void {
         userMenuCssKey = await window.webContents.insertCSS(`
             /* Create margin of space for the traffic light buttons */
             .mx_UserMenu {
-                margin-top: 28px !important;
+                margin-top: 32px !important;
             }
             /* Maintain alignment of the toggle space panel button */
             .mx_SpacePanel_toggleCollapse {
-                /* 19px original top value, 28px margin-top above, 12px original margin-top value */
-                top: calc(19px + 28px - 12px) !important;
+                /* 19px original top value, 32px margin-top above, 12px original margin-top value */
+                top: calc(19px + 32px - 12px) !important;
             }
         `);
     }
