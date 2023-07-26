@@ -40,6 +40,7 @@ import * as updater from "./updater";
 import { getProfileFromDeeplink, protocolInit } from "./protocol";
 import { _t, AppLocalization } from "./language-helper";
 import { setDisplayMediaCallback } from "./displayMediaCallback";
+import { setupMacosTitleBar } from "./macos-titlebar";
 
 const argv = minimist(process.argv, {
     alias: { help: "h" },
@@ -476,100 +477,7 @@ app.on("ready", async () => {
     global.mainWindow.loadURL("vector://vector/webapp/");
 
     if (process.platform === "darwin") {
-        let userMenuCssKey: string | undefined;
-
-        // eslint-disable-next-line no-inner-declarations
-        async function makeSpaceForTrafficLight(): Promise<void> {
-            userMenuCssKey = await global.mainWindow?.webContents.insertCSS(`
-                /* Create margin of space for the traffic light buttons */
-                .mx_UserMenu {
-                    margin-top: 28px !important;
-                }
-                /* Maintain alignment of the toggle space panel button */
-                .mx_SpacePanel_toggleCollapse {
-                    /* 19px original top value, 28px margin-top above, 12px original margin-top value */
-                    top: calc(19px + 28px - 12px) !important;
-                }
-            `);
-        }
-
-        global.mainWindow.on("enter-full-screen", () => {
-            if (userMenuCssKey !== undefined) {
-                global.mainWindow?.webContents.removeInsertedCSS(userMenuCssKey);
-            }
-        });
-        global.mainWindow.on("leave-full-screen", () => {
-            makeSpaceForTrafficLight();
-        });
-
-        global.mainWindow.webContents.on("did-finish-load", () => {
-            if (!global.mainWindow?.isFullScreen()) {
-                makeSpaceForTrafficLight();
-            }
-            global.mainWindow?.webContents.insertCSS(`
-                /* Mark the splash screen as a drag handle */
-                .mx_MatrixChat_splash {
-                    -webkit-app-region: drag;
-                }
-                /* Exclude the splash buttons from being drag handles */
-                .mx_MatrixChat_splashButtons {
-                    -webkit-app-region: no-drag;
-                }
-                
-                /* Mark the background as a drag handle */
-                .mx_AuthPage {
-                    -webkit-app-region: drag;
-                }
-                /* Exclude the main content elements from being drag handles */
-                .mx_AuthPage .mx_AuthPage_modalBlur,
-                .mx_AuthPage .mx_AuthFooter > * {
-                    -webkit-app-region: no-drag;
-                }
-                
-                /* Mark the header as a drag handle */
-                .mx_LeftPanel .mx_LeftPanel_filterContainer {
-                    -webkit-app-region: drag;
-                }
-                /* Exclude header interactive elements from being drag handles */
-                .mx_LeftPanel .mx_LeftPanel_filterContainer .mx_AccessibleButton {
-                    -webkit-app-region: no-drag;
-                }
-            
-                /* Mark the home page background as a drag handle */
-                .mx_HomePage {
-                    -webkit-app-region: drag;
-                }
-                /* Exclude interactive elements from being drag handles */
-                .mx_HomePage .mx_HomePage_body,
-                .mx_HomePage .mx_HomePage_default_wrapper > * {
-                    -webkit-app-region: no-drag;
-                }
-                
-                /* Mark the header as a drag handle */
-                .mx_RoomHeader {
-                    -webkit-app-region: drag;
-                    -webkit-user-select: none;
-                }
-                /* Exclude header interactive elements from being drag handles */
-                .mx_RoomHeader .mx_RoomHeader_avatar,
-                .mx_RoomHeader .mx_E2EIcon,
-                .mx_RoomHeader .mx_AccessibleButton {
-                    -webkit-app-region: no-drag;
-                }
-                
-                /* Mark the background as a drag handle */
-                .mx_RoomView_wrapper {
-                    -webkit-app-region: drag;
-                }
-                /* Exclude content elements from being drag handles */
-                .mx_SpaceRoomView_landing > *,
-                .mx_RoomPreviewBar,
-                .mx_RoomView_body,
-                .mx_RoomPreviewCard {
-                    -webkit-app-region: no-drag;
-                }
-            `);
-        });
+        setupMacosTitleBar(global.mainWindow);
     }
 
     // Handle spellchecker
