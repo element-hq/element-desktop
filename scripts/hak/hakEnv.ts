@@ -101,11 +101,7 @@ export default class HakEnv {
         });
     }
 
-    public wantsStaticSqlCipherUnix(): boolean {
-        return this.isMac() || process.env.SQLCIPHER_STATIC == "1";
-    }
-
     public wantsStaticSqlCipher(): boolean {
-        return this.isWin() || this.wantsStaticSqlCipherUnix();
+        return !this.isLinux() || process.env.SQLCIPHER_BUNDLED == "1";
     }
 }

@@ -34,6 +34,7 @@ on:
                 required: true
                 type: boolean
                 default: true
+run-name: Element ${{ inputs.mode == 'release' && 'Desktop' || 'Nightly' }}
 concurrency: ${{ github.workflow }}
 env:
     R2_BUCKET: ${{ vars.R2_BUCKET }}
@@ -42,7 +43,7 @@ jobs:
         uses: ./.github/workflows/build_prepare.yaml
         with:
             config: element.io/${{ inputs.mode || 'nightly' }}
-            version: ${{ inputs.mode == 'release' && '' || 'develop' }}
+            version: ${{ inputs.mode != 'release' && 'develop' || '' }}
             nightly: ${{ inputs.mode != 'release' }}
         secrets:
             CF_R2_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}

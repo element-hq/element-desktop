@@ -1,9 +1,0 @@
-Package: riot-desktop
-Version: 1.7.0
-Depends: element-desktop
-Maintainer: packages@element.io
-Architecture: all
-Priority: optional
-Section: oldlibs
-Description: transitional package
- This is a transitional package. It can safely be removed.

@@ -15,7 +15,6 @@
     "Hide": "Απόκρυψη",
     "Services": "Υπηρεσίες",
     "About": "Σχετικά με",
-    "Element Help": "Βοήθεια για το Element",
     "Help": "Βοήθεια",
     "Close": "Κλείσιμο",
     "Minimize": "Ελαχιστοποίηση",
@@ -42,5 +41,7 @@
     "Save image as...": "Αποθήκευση εικόνας ως...",
     "Copy link address": "Αντιγραφή διεύθυνσης συνδέσμου",
     "Copy image address": "Αντιγραφή διεύθυνσης εικόνας",
-    "Copy image": "Αντιγραφή εικόνας"
+    "Copy image": "Αντιγραφή εικόνας",
+    "Close %(brand)s": "Κλείσιμο %(brand)s",
+    "%(brand)s Help": "%(brand)s Υποστήριξη"
 }

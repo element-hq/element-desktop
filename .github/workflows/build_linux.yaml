@@ -65,7 +65,7 @@ jobs:
               id: cache
               uses: actions/cache@v3
               with:
-                  key: ${{ runner.os }}-${{ inputs.docker-image || github.ref_name }}-${{ inputs.sqlcipher }}-${{ inputs.arch }}-${{ hashFiles('hakDependencies.json', 'electronVersion') }}
+                  key: ${{ runner.os }}-${{ inputs.docker-image || github.ref_name }}-${{ inputs.sqlcipher }}-${{ inputs.arch }}-${{ hashFiles('hakHash', 'electronVersion') }}
                   path: |
                       ./.hak
 
@@ -83,7 +83,7 @@ jobs:
             - name: Prepare for static sqlcipher build
               if: inputs.sqlcipher == 'static'
               run: |
-                  echo "SQLCIPHER_STATIC=1" >> $GITHUB_ENV
+                  echo "SQLCIPHER_BUNDLED=1" >> $GITHUB_ENV
 
             # Ideally the docker image would be ready for cross-compilation but libsqlcipher-dev is not Multi-Arch compatible
             # https://unix.stackexchange.com/a/349359
@@ -118,21 +118,11 @@ jobs:
                       echo "config-args=--deb-changelog changelog.Debian" >> $GITHUB_OUTPUT
                   fi
 
-                  cat "$DIR/control.template" | grep -v "Architecture: " > debcontrol
-                  echo "Architecture: $ARCHITECTURE" >> debcontrol
-                  VERSION=${INPUT_VERSION:-$(cat package.json | jq -r .version)}
-                  echo "Version: $VERSION" >> debcontrol
-              env:
-                  DIR: ${{ inputs.config }}
-                  INPUT_VERSION: ${{ inputs.version }}
-                  ARCHITECTURE: ${{ inputs.arch }}
-
             - name: Build App
               run: |
                   npx ts-node scripts/generate-builder-config.ts \
                       ${{ steps.nightly.outputs.config-args }} \
-                      ${{ steps.debian.outputs.config-args }} \
-                      --deb-custom-control=debcontrol
+                      ${{ steps.debian.outputs.config-args }}
                   yarn build --publish never -l --config electron-builder.json ${{ steps.config.outputs.build-args }}
 
             - name: Check native libraries
@@ -150,17 +140,13 @@ jobs:
                   LIBS=$(readelf -d dist/**/*.node | grep NEEDED)
                   echo "$LIBS"
 
-                  if [ "$SQLCIPHER_STATIC" == "1" ]; then
-                      if grep -q "libsqlcipher.so.0" <<< "$LIBS" ; then
-                          exit 2
-                      fi
+                  set +x
+                  assert_contains_string() { [[ "$1" == *"$2"* ]]; }
+                  ! assert_contains_string "$LIBS" "libcrypto.so.1.1"
+                  if [ "$SQLCIPHER_BUNDLED" == "1" ]; then
+                      ! assert_contains_string "$LIBS" "libsqlcipher.so.0"
                   else
-                      if grep -q "libcrypto.so.1.1" <<< "$LIBS" ; then
-                          exit 3
-                      fi
-                      if ! grep -q "libsqlcipher.so.0" <<< "$LIBS" ; then
-                          exit 4
-                      fi
+                      assert_contains_string "$LIBS" "libsqlcipher.so.0"
                   fi
               env:
                   ARCH: ${{ steps.config.outputs.arch }}
@@ -193,9 +179,12 @@ jobs:
                   ln -s "$(find . -type f -iname "*.tar.gz" | xargs -0 -n1 -- basename)" "element-desktop.tar.gz"
               working-directory: "dist/install/linux/glibc-x86-64"
 
+            # We exclude *-unpacked as it loses permissions and the tarball contains it with correct permissions
             - name: Upload Artifacts
               uses: actions/upload-artifact@v3
               with:
                   name: ${{ inputs.deploy-mode && 'packages.element.io' || format('linux-{0}-sqlcipher-{1}', inputs.arch, inputs.sqlcipher) }}
-                  path: dist
+                  path: |
+                      dist
+                      !dist/*-unpacked/**
                   retention-days: 1

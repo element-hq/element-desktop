@@ -50,7 +50,9 @@ jobs:
             - name: Generate cache hash files
               run: |
                   yarn run --silent electron --version > electronVersion
-                  cat package.json | jq -c .hakDependencies > hakDependencies.json
+                  cat package.json | jq -c .hakDependencies | sha1sum > hakHash
+                  find hak -type f -print0 | xargs -0 sha1sum >> hakHash
+                  find scripts/hak -type f -print0 | xargs -0 sha1sum >> hakHash
 
             - name: "[Nightly] Calculate version"
               id: versions
@@ -101,6 +103,28 @@ jobs:
                   BODY: ${{ steps.release.outputs.body }}
                   PUBLISHED_AT: ${{ steps.release.outputs.published_at }}
 
+            - name: "[Nightly] Write summary"
+              if: inputs.nightly
+              run: |
+                  BUNDLE_HASH=$(npx asar l webapp.asar | grep /bundles/ | head -n 1 | sed 's|.*/||')
+                  WEBAPP_VERSION=$(./scripts/get-version.ts)
+                  WEB_VERSION=${WEBAPP_VERSION:0:12}
+                  REACT_VERSION=${WEBAPP_VERSION:19:12}
+                  JS_VERSION=${WEBAPP_VERSION:35:12}
+
+                  echo "### Nightly build" >> $GITHUB_STEP_SUMMARY
+                  echo "" >> $GITHUB_STEP_SUMMARY
+                  echo "| Component   | Version |" >> $GITHUB_STEP_SUMMARY
+                  echo "| ----------- | ------- |" >> $GITHUB_STEP_SUMMARY
+                  echo "| macOS       | ${{ steps.versions.outputs.macos }} |" >> $GITHUB_STEP_SUMMARY
+                  echo "| Linux       | ${{ steps.versions.outputs.linux }} |" >> $GITHUB_STEP_SUMMARY
+                  echo "| Windows x64 | ${{ steps.versions.outputs.win_x64 }} |" >> $GITHUB_STEP_SUMMARY
+                  echo "| Windows x86 | ${{ steps.versions.outputs.win_x86 }} |" >> $GITHUB_STEP_SUMMARY
+                  echo "| Bundle Hash | $BUNDLE_HASH |" >> $GITHUB_STEP_SUMMARY
+                  echo "| Element Web | [$WEB_VERSION](https://github.com/vector-im/element-web/commit/$WEB_VERSION) |" >> $GITHUB_STEP_SUMMARY
+                  echo "| React SDK   | [$REACT_VERSION](https://github.com/matrix-org/matrix-react-sdk/commit/$REACT_VERSION) |" >> $GITHUB_STEP_SUMMARY
+                  echo "| JS SDK      | [$JS_VERSION](https://github.com/matrix-org/matrix-js-sdk/commit/$JS_VERSION) |" >> $GITHUB_STEP_SUMMARY
+
             - uses: actions/upload-artifact@v3
               with:
                   name: webapp
@@ -109,5 +133,5 @@ jobs:
                       webapp.asar
                       package.json
                       electronVersion
-                      hakDependencies.json
+                      hakHash
                       changelog.Debian

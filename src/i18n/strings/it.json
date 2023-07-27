@@ -15,7 +15,6 @@
     "Hide": "Nascondi",
     "Services": "Servizi",
     "About": "Informazioni su",
-    "Element Help": "Aiuto di Element",
     "Help": "Aiuto",
     "Close": "Chiudi",
     "Minimize": "Riduci",
@@ -43,5 +42,6 @@
     "Stop Speaking": "Smetti di parlare",
     "Speech": "Dettatura",
     "Copy image address": "Copia indirizzo immagine",
-    "Close %(brand)s": "Chiudi %(brand)s"
+    "Close %(brand)s": "Chiudi %(brand)s",
+    "%(brand)s Help": "Aiuto per %(brand)s"
 }

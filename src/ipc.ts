@@ -22,6 +22,7 @@ import { recordSSOSession } from "./protocol";
 import { randomArray } from "./utils";
 import { Settings } from "./settings";
 import { keytar } from "./keytar";
+import { getDisplayMediaCallback, setDisplayMediaCallback } from "./displayMediaCallback";
 
 ipcMain.on("setBadgeCount", function (_ev: IpcMainEvent, count: number): void {
     if (process.platform !== "win32") {
@@ -186,6 +187,11 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
                 thumbnailURL: source.thumbnail.toDataURL(),
             }));
             break;
+        case "callDisplayMediaCallback":
+            await getDisplayMediaCallback()?.({ video: args[0] });
+            setDisplayMediaCallback(null);
+            ret = null;
+            break;
 
         case "clearStorage":
             global.store.clear();
@@ -253,7 +259,7 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
             return;
     }
 
-    global.mainWindow.webContents.send("ipcReply", {
+    global.mainWindow?.webContents.send("ipcReply", {
         id: payload.id,
         reply: ret,
     });

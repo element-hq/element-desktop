@@ -19,6 +19,7 @@ import { app, Tray, Menu, nativeImage } from "electron";
 import pngToIco from "png-to-ico";
 import path from "path";
 import fs from "fs";
+import { v5 as uuidv5 } from "uuid";
 
 import { _t } from "./language-helper";
 
@@ -50,12 +51,28 @@ interface IConfig {
     brand: string;
 }
 
+function getUuid(): string {
+    // The uuid field is optional and only needed on unsigned Windows packages where the executable path changes
+    // The hardcoded uuid is an arbitrary v4 uuid generated on https://www.uuidgenerator.net/version4
+    return global.vectorConfig["uuid"] || "eba84003-e499-4563-8e9d-166e34b5cc25";
+}
+
 export function create(config: IConfig): void {
     // no trays on darwin
     if (process.platform === "darwin" || trayIcon) return;
     const defaultIcon = nativeImage.createFromPath(config.icon_path);
 
-    trayIcon = new Tray(defaultIcon);
+    let guid: string | undefined;
+    if (process.platform === "win32" && app.isPackaged) {
+        // Providing a GUID lets Windows be smarter about maintaining user's tray preferences
+        // https://github.com/electron/electron/pull/21891
+        // Ideally we would only specify it for signed packages but determining whether the app is signed sufficiently
+        // is non-trivial. So instead we have an escape hatch that unsigned packages can iterate the `uuid` in
+        // config.json to prevent Windows refusing GUID-reuse if their executable path changes.
+        guid = uuidv5(`${app.getName()}-${app.getPath("userData")}`, getUuid());
+    }
+
+    trayIcon = new Tray(defaultIcon, guid);
     trayIcon.setToolTip(config.brand);
     initApplicationMenu();
     trayIcon.on("click", toggleWin);
