@@ -17,7 +17,6 @@
     "Hide": "隱藏",
     "Services": "服務",
     "About": "關於",
-    "Element Help": "Element 說明",
     "Help": "說明",
     "Close": "關閉",
     "Minimize": "最小化",
@@ -43,5 +42,6 @@
     "Are you sure you want to quit?": "您確定要離開嗎？",
     "Cancel": "取消",
     "Copy image address": "複製圖片地址",
-    "Close %(brand)s": "關閉 %(brand)s"
+    "Close %(brand)s": "關閉 %(brand)s",
+    "%(brand)s Help": "%(brand)s 說明"
 }

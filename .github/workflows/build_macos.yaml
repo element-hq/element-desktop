@@ -46,13 +46,13 @@ jobs:
               id: cache
               uses: actions/cache@v3
               with:
-                  key: ${{ runner.os }}-${{ hashFiles('hakDependencies.json', 'electronVersion') }}
+                  key: ${{ runner.os }}-${{ hashFiles('hakHash', 'electronVersion') }}
                   path: |
                       ./.hak
 
             - name: Install Rust
               if: steps.cache.outputs.cache-hit != 'true'
-              uses: actions-rs/toolchain@v1
+              uses: actions-rs/toolchain@88dc2356392166efad76775c878094f4e83ff746
               with:
                   default: true
                   toolchain: stable
@@ -147,9 +147,12 @@ jobs:
                   ln -s "$(find . -type f -iname "*.dmg" | xargs -0 -n1 -- basename)" "Element.dmg"
               working-directory: "dist/install/macos"
 
+            # We exclude mac-universal as the unpacked app takes forever to upload and zip and dmg already contain it
             - name: Upload Artifacts
               uses: actions/upload-artifact@v3
               with:
                   name: ${{ inputs.deploy-mode && 'packages.element.io' || 'macos' }}
-                  path: dist
+                  path: |
+                      dist
+                      !dist/mac-universal/**
                   retention-days: 1

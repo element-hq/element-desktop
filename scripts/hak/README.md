@@ -62,7 +62,6 @@ Hak is divided into lifecycle stages, in order:
 
 -   fetch - Download and extract the source of the dependency
 -   link - Link the copy of the dependency into your node_modules directory
--   fetchDeps - Fetch & extract any native dependencies required to build the module.
 -   build - The Good Stuff. Configure and build any native dependencies, then the module itself.
 -   copy - Copy the built artifact from the module build directory to the module output directory.
 
