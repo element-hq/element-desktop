@@ -32,10 +32,7 @@ jobs:
         environment: ${{ inputs.nightly && 'packages.element.io' || '' }}
         runs-on: ubuntu-latest
         outputs:
-            macos-version: ${{ steps.versions.outputs.macos }}
-            linux-version: ${{ steps.versions.outputs.linux }}
-            win32-x64-version: ${{ steps.versions.outputs.win_x64 }}
-            win32-x86-version: ${{ steps.versions.outputs.win_x86 }}
+            nightly-version: ${{ steps.versions.outputs.nightly }}
         steps:
             - uses: actions/checkout@v3
 
