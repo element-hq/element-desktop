@@ -107,6 +107,8 @@ export function setupMacosTitleBar(window: BrowserWindow): void {
             .mx_SpaceRoomView_landing > *,
             .mx_RoomPreviewBar,
             .mx_RoomView_body,
+            .mx_AutoHideScrollbar,
+            .mx_RightPanel_ResizeWrapper,
             .mx_RoomPreviewCard {
                 -webkit-app-region: no-drag;
             }
