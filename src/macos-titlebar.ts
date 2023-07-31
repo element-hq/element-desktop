@@ -19,10 +19,10 @@ import { BrowserWindow } from "electron";
 export function setupMacosTitleBar(window: BrowserWindow): void {
     if (process.platform !== "darwin") return;
 
-    let userMenuCssKey: string | undefined;
+    let cssKey: string | undefined;
 
-    async function makeSpaceForTrafficLight(): Promise<void> {
-        userMenuCssKey = await window.webContents.insertCSS(`
+    async function applyStyling(): Promise<void> {
+        cssKey = await window.webContents.insertCSS(`
             /* Create margin of space for the traffic light buttons */
             .mx_UserMenu {
                 margin-top: 32px !important;
@@ -32,23 +32,7 @@ export function setupMacosTitleBar(window: BrowserWindow): void {
                 /* 19px original top value, 32px margin-top above, 12px original margin-top value */
                 top: calc(19px + 32px - 12px) !important;
             }
-        `);
-    }
-
-    window.on("enter-full-screen", () => {
-        if (userMenuCssKey !== undefined) {
-            window.webContents.removeInsertedCSS(userMenuCssKey);
-        }
-    });
-    window.on("leave-full-screen", () => {
-        makeSpaceForTrafficLight();
-    });
-
-    window.webContents.on("did-finish-load", () => {
-        if (!window.isFullScreen()) {
-            makeSpaceForTrafficLight();
-        }
-        window.webContents.insertCSS(`
+            
             /* Mark the splash screen as a drag handle */
             .mx_MatrixChat_splash {
                 -webkit-app-region: drag;
@@ -95,6 +79,7 @@ export function setupMacosTitleBar(window: BrowserWindow): void {
             /* Exclude header interactive elements from being drag handles */
             .mx_RoomHeader .mx_RoomHeader_avatar,
             .mx_RoomHeader .mx_E2EIcon,
+            .mx_RoomHeader .mx_RoomTopic,
             .mx_RoomHeader .mx_AccessibleButton {
                 -webkit-app-region: no-drag;
             }
@@ -113,5 +98,19 @@ export function setupMacosTitleBar(window: BrowserWindow): void {
                 -webkit-app-region: no-drag;
             }
         `);
+    }
+
+    window.on("enter-full-screen", () => {
+        if (cssKey !== undefined) {
+            window.webContents.removeInsertedCSS(cssKey);
+        }
+    });
+    window.on("leave-full-screen", () => {
+        applyStyling();
+    });
+    window.webContents.on("did-finish-load", () => {
+        if (!window.isFullScreen()) {
+            applyStyling();
+        }
     });
 }
