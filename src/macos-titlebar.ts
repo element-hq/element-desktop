@@ -79,6 +79,7 @@ export function setupMacosTitleBar(window: BrowserWindow): void {
             /* Exclude header interactive elements from being drag handles */
             .mx_RoomHeader .mx_RoomHeader_avatar,
             .mx_RoomHeader .mx_E2EIcon,
+            .mx_RoomHeader .mx_RoomTopic,
             .mx_RoomHeader .mx_AccessibleButton {
                 -webkit-app-region: no-drag;
             }
