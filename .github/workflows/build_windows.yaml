@@ -95,11 +95,10 @@ jobs:
 
             - name: Install Rust
               if: steps.cache.outputs.cache-hit != 'true'
-              uses: actions-rs/toolchain@88dc2356392166efad76775c878094f4e83ff746
-              with:
-                  default: true
-                  toolchain: stable
-                  target: ${{ steps.config.outputs.target }}
+              run: |
+                  rustup toolchain install stable --profile minimal --no-self-update
+                  rustup default stable
+                  rustup target add ${{ steps.config.outputs.target }}
 
             - uses: actions/setup-node@v3
               with:
