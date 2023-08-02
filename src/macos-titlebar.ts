@@ -72,15 +72,18 @@ export function setupMacosTitleBar(window: BrowserWindow): void {
             }
             
             /* Mark the header as a drag handle */
+            .mx_LegacyRoomHeader,
             .mx_RoomHeader {
                 -webkit-app-region: drag;
                 -webkit-user-select: none;
             }
             /* Exclude header interactive elements from being drag handles */
-            .mx_RoomHeader .mx_RoomHeader_avatar,
-            .mx_RoomHeader .mx_E2EIcon,
-            .mx_RoomHeader .mx_RoomTopic,
-            .mx_RoomHeader .mx_AccessibleButton {
+            .mx_RoomHeader .mx_DecoratedRoomAvatar,
+            .mx_RoomHeader_name,
+            .mx_LegacyRoomHeader .mx_LegacyRoomHeader_avatar,
+            .mx_LegacyRoomHeader .mx_E2EIcon,
+            .mx_LegacyRoomHeader .mx_RoomTopic,
+            .mx_LegacyRoomHeader .mx_AccessibleButton {
                 -webkit-app-region: no-drag;
             }
             
