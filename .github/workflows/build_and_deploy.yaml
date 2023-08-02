@@ -130,7 +130,11 @@ jobs:
             - windows_64bit
         runs-on: ubuntu-latest
         name: Deploy
-        if: github.event_name != 'workflow_dispatch' || (inputs.deploy && (inputs.macos || inputs.windows_32bit || inputs.windows_64bit))
+        if: |
+            github.event_name != 'workflow_dispatch' || (
+                always() && !failure() !cancelled() && inputs.deploy &&
+                (inputs.macos || inputs.windows_32bit || inputs.windows_64bit)
+            )
         environment: packages.element.io
         steps:
             - name: Download artifacts
@@ -164,7 +168,10 @@ jobs:
         strategy:
             matrix:
                 arch: [amd64, arm64]
-        if: github.event_name != 'workflow_dispatch' || (inputs.deploy && inputs.linux)
+        if: |
+            github.event_name != 'workflow_dispatch' || (
+                always() && !failure() !cancelled() && inputs.deploy && inputs.linux
+            )
         uses: ./.github/workflows/reprepro.yaml
         secrets: inherit
         with:
