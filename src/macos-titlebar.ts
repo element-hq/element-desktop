@@ -79,6 +79,7 @@ export function setupMacosTitleBar(window: BrowserWindow): void {
             }
             /* Exclude header interactive elements from being drag handles */
             .mx_RoomHeader .mx_DecoratedRoomAvatar,
+            .mx_RoomHeader_name,
             .mx_LegacyRoomHeader .mx_LegacyRoomHeader_avatar,
             .mx_LegacyRoomHeader .mx_E2EIcon,
             .mx_LegacyRoomHeader .mx_RoomTopic,
