@@ -132,7 +132,7 @@ jobs:
         name: Deploy
         if: |
             github.event_name != 'workflow_dispatch' || (
-                always() && !failure() !cancelled() && inputs.deploy &&
+                always() && !failure() && !cancelled() && inputs.deploy &&
                 (inputs.macos || inputs.windows_32bit || inputs.windows_64bit)
             )
         environment: packages.element.io
@@ -170,7 +170,7 @@ jobs:
                 arch: [amd64, arm64]
         if: |
             github.event_name != 'workflow_dispatch' || (
-                always() && !failure() !cancelled() && inputs.deploy && inputs.linux
+                always() && !failure() && !cancelled() && inputs.deploy && inputs.linux
             )
         uses: ./.github/workflows/reprepro.yaml
         secrets: inherit
