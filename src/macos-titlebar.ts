@@ -32,6 +32,10 @@ export function setupMacosTitleBar(window: BrowserWindow): void {
                 /* 19px original top value, 32px margin-top above, 12px original margin-top value */
                 top: calc(19px + 32px - 12px) !important;
             }
+            /* Prevent the media lightbox sender info from clipping into the traffic light buttons */
+            .mx_ImageView_info_wrapper {
+                margin-top: 32px;
+            }
             
             /* Mark the splash screen as a drag handle */
             .mx_MatrixChat_splash {
