@@ -19,7 +19,7 @@ limitations under the License.
 
 // Squirrel on windows starts the app with various flags as hooks to tell us when we've been installed/uninstalled etc.
 import "./squirrelhooks";
-import { app, BrowserWindow, Menu, autoUpdater, protocol, dialog, Input } from "electron";
+import { app, BrowserWindow, Menu, autoUpdater, protocol, dialog, Input, Event, session } from "electron";
 import * as Sentry from "@sentry/electron/main";
 import AutoLaunch from "auto-launch";
 import path from "path";
@@ -39,6 +39,8 @@ import webContentsHandler from "./webcontents-handler";
 import * as updater from "./updater";
 import { getProfileFromDeeplink, protocolInit } from "./protocol";
 import { _t, AppLocalization } from "./language-helper";
+import { setDisplayMediaCallback } from "./displayMediaCallback";
+import { setupMacosTitleBar } from "./macos-titlebar";
 
 const argv = minimist(process.argv, {
     alias: { help: "h" },
@@ -453,6 +455,9 @@ app.on("ready", async () => {
         // https://www.electronjs.org/docs/faq#the-font-looks-blurry-what-is-this-and-what-can-i-do
         backgroundColor: "#fff",
 
+        titleBarStyle: process.platform === "darwin" ? "hidden" : "default",
+        trafficLightPosition: { x: 9, y: 8 },
+
         icon: global.trayConfig.icon_path,
         show: false,
         autoHideMenuBar: global.store.get("autoHideMenuBar", true),
@@ -470,6 +475,10 @@ app.on("ready", async () => {
         },
     });
     global.mainWindow.loadURL("vector://vector/webapp/");
+
+    if (process.platform === "darwin") {
+        setupMacosTitleBar(global.mainWindow);
+    }
 
     // Handle spellchecker
     // For some reason spellCheckerEnabled isn't persisted, so we have to use the store here
@@ -531,6 +540,11 @@ app.on("ready", async () => {
     global.appLocalization = new AppLocalization({
         store: global.store,
         components: [(): void => tray.initApplicationMenu(), (): void => Menu.setApplicationMenu(buildMenuTemplate())],
+    });
+
+    session.defaultSession.setDisplayMediaRequestHandler((_, callback) => {
+        global.mainWindow?.webContents.send("openDesktopCapturerSourcePicker");
+        setDisplayMediaCallback(callback);
     });
 });
 

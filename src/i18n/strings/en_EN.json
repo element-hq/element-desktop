@@ -24,7 +24,7 @@
     "Minimize": "Minimize",
     "Close": "Close",
     "Help": "Help",
-    "Element Help": "Element Help",
+    "%(brand)s Help": "%(brand)s Help",
     "About": "About",
     "Services": "Services",
     "Hide": "Hide",

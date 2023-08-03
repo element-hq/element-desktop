@@ -137,9 +137,10 @@ export function buildMenuTemplate(): Menu {
             role: "help",
             submenu: [
                 {
-                    label: _t("Element Help"),
+                    // XXX: vectorConfig won't have defaults applied to it so we need to duplicate them here
+                    label: _t("%(brand)s Help", { brand: global.vectorConfig?.brand || "Element" }),
                     click(): void {
-                        shell.openExternal("https://element.io/help");
+                        shell.openExternal(global.vectorConfig?.help_url || "https://element.io/help");
                     },
                 },
             ],

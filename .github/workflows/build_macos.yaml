@@ -46,17 +46,16 @@ jobs:
               id: cache
               uses: actions/cache@v3
               with:
-                  key: ${{ runner.os }}-${{ hashFiles('hakDependencies.json', 'electronVersion') }}
+                  key: ${{ runner.os }}-${{ hashFiles('hakHash', 'electronVersion') }}
                   path: |
                       ./.hak
 
             - name: Install Rust
               if: steps.cache.outputs.cache-hit != 'true'
-              uses: actions-rs/toolchain@v1
-              with:
-                  default: true
-                  toolchain: stable
-                  target: aarch64-apple-darwin
+              run: |
+                  rustup toolchain install stable --profile minimal --no-self-update
+                  rustup default stable
+                  rustup target add aarch64-apple-darwin
 
             - uses: actions/setup-node@v3
               with:

@@ -22,13 +22,8 @@ on:
                 required: true
                 type: boolean
                 default: true
-            windows_32bit:
-                description: Build Windows 32-bit
-                required: true
-                type: boolean
-                default: true
-            windows_64bit:
-                description: Build Windows 64-bit
+            windows:
+                description: Build Windows
                 required: true
                 type: boolean
                 default: true
@@ -42,6 +37,7 @@ on:
                 required: true
                 type: boolean
                 default: true
+run-name: Element ${{ inputs.mode == 'release' && 'Desktop' || 'Nightly' }}
 concurrency: ${{ github.workflow }}
 env:
     R2_BUCKET: ${{ vars.R2_BUCKET }}
@@ -50,35 +46,26 @@ jobs:
         uses: ./.github/workflows/build_prepare.yaml
         with:
             config: element.io/${{ inputs.mode || (github.event_name == 'release' && 'release') || 'nightly' }}
-            version: ${{ (inputs.mode == 'release' || github.event_name == 'release') && '' || 'develop' }}
+            version: ${{ (inputs.mode != 'release' || github.event_name == 'release') && 'develop' || '' }}
             nightly: ${{ inputs.mode != 'release' && github.event_name != 'release' }}
         secrets:
             CF_R2_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
             CF_R2_TOKEN: ${{ secrets.CF_R2_TOKEN }}
 
-    windows_32bit:
-        if: github.event_name != 'workflow_dispatch' || inputs.windows_32bit
+    windows:
+        if: github.event_name != 'workflow_dispatch' || inputs.windows
         needs: prepare
-        name: Windows 32-bit
+        name: Windows ${{ matrix.arch }}
+        strategy:
+            matrix:
+                arch: [x86, x64]
         uses: ./.github/workflows/build_windows.yaml
         secrets: inherit
         with:
             sign: true
             deploy-mode: true
-            arch: x86
-            version: ${{ needs.prepare.outputs.win32-x86-version }}
-
-    windows_64bit:
-        if: github.event_name != 'workflow_dispatch' || inputs.windows_64bit
-        needs: prepare
-        name: Windows 64-bit
-        uses: ./.github/workflows/build_windows.yaml
-        secrets: inherit
-        with:
-            sign: true
-            deploy-mode: true
-            arch: x64
-            version: ${{ needs.prepare.outputs.win32-x64-version }}
+            arch: ${{ matrix.arch }}
+            version: ${{ needs.prepare.outputs.nightly-version }}
 
     macos:
         if: github.event_name != 'workflow_dispatch' || inputs.macos
@@ -90,20 +77,23 @@ jobs:
             sign: true
             deploy-mode: true
             base-url: https://packages.element.io/${{ needs.prepare.outputs.packages-dir }}
-            version: ${{ needs.prepare.outputs.macos-version }}
+            version: ${{ needs.prepare.outputs.nightly-version }}
 
-    # We do not put this call into deploy-mode as we do not want it to add to the packages.element.io artifact
+    # We do not put these calls into deploy-mode as we do not want it to add to the packages.element.io artifact
     # We ship this build via reprepro only
     linux:
         if: github.event_name != 'workflow_dispatch' || inputs.linux
         needs: prepare
-        name: Linux (sqlcipher system)
+        name: Linux ${{ matrix.arch }} (sqlcipher system)
+        strategy:
+            matrix:
+                arch: [amd64, arm64]
         uses: ./.github/workflows/build_linux.yaml
         with:
-            arch: amd64
+            arch: ${{ matrix.arch }}
             config: ${{ needs.prepare.outputs.config }}
             sqlcipher: system
-            version: ${{ needs.prepare.outputs.linux-version }}
+            version: ${{ needs.prepare.outputs.nightly-version }}
 
     # We ship the static build via static tarball only
     linux_static:
@@ -116,7 +106,7 @@ jobs:
             deploy-mode: true
             config: ${{ needs.prepare.outputs.config }}
             sqlcipher: static
-            version: ${{ needs.prepare.outputs.linux-version }}
+            version: ${{ needs.prepare.outputs.nightly-version }}
 
     # This deploy job only handles Windows, macOS & linux_static as those are stateless and static.
     # Linux will be deployed via reprepro after it, but we list it as a dependency to abort if it fails.
@@ -126,11 +116,17 @@ jobs:
             - macos
             - linux
             - linux_static
-            - windows_32bit
-            - windows_64bit
+            - windows
         runs-on: ubuntu-latest
         name: Deploy
-        if: (github.event_name != 'workflow_dispatch' && github.event.release.prerelease != true) || (inputs.deploy && (inputs.macos || inputs.windows_32bit || inputs.windows_64bit))
+        if: |
+            (
+                github.event_name != 'workflow_dispatch' &&
+                github.event.release.prerelease != true
+            ) || (
+                always() && !failure() && !cancelled() && inputs.deploy &&
+                (inputs.macos || inputs.windows || inputs.linux)
+            )
         environment: packages.element.io
         steps:
             - name: Download artifacts
@@ -160,9 +156,18 @@ jobs:
             - linux
             # We queue this after the other deploy stage as we want to abort if that fails
             - deploy
-        name: Run reprepro
-        if: (github.event_name != 'workflow_dispatch' && github.event.release.prerelease != true) || (inputs.deploy && inputs.linux)
+        name: Run reprepro ${{ matrix.arch }}
+        strategy:
+            matrix:
+                arch: [amd64, arm64]
+        if: |
+            (
+                github.event_name != 'workflow_dispatch' &&
+                github.event.release.prerelease != true
+            ) || (
+                always() && !failure() && !cancelled() && inputs.deploy && inputs.linux
+            )
         uses: ./.github/workflows/reprepro.yaml
         secrets: inherit
         with:
-            artifact-name: linux-amd64-sqlcipher-system
+            artifact-name: linux-${{ matrix.arch }}-sqlcipher-system
