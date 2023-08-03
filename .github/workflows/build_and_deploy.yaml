@@ -19,13 +19,8 @@ on:
                 required: true
                 type: boolean
                 default: true
-            windows_32bit:
-                description: Build Windows 32-bit
-                required: true
-                type: boolean
-                default: true
-            windows_64bit:
-                description: Build Windows 64-bit
+            windows:
+                description: Build Windows
                 required: true
                 type: boolean
                 default: true
@@ -54,29 +49,20 @@ jobs:
             CF_R2_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
             CF_R2_TOKEN: ${{ secrets.CF_R2_TOKEN }}
 
-    windows_32bit:
-        if: github.event_name != 'workflow_dispatch' || inputs.windows_32bit
+    windows:
+        if: github.event_name != 'workflow_dispatch' || inputs.windows
         needs: prepare
-        name: Windows 32-bit
+        name: Windows ${{ matrix.arch }}
+        strategy:
+            matrix:
+                arch: [x86, x64]
         uses: ./.github/workflows/build_windows.yaml
         secrets: inherit
         with:
             sign: true
             deploy-mode: true
-            arch: x86
-            version: ${{ needs.prepare.outputs.win32-x86-version }}
-
-    windows_64bit:
-        if: github.event_name != 'workflow_dispatch' || inputs.windows_64bit
-        needs: prepare
-        name: Windows 64-bit
-        uses: ./.github/workflows/build_windows.yaml
-        secrets: inherit
-        with:
-            sign: true
-            deploy-mode: true
-            arch: x64
-            version: ${{ needs.prepare.outputs.win32-x64-version }}
+            arch: ${{ matrix.arch }}
+            version: ${{ needs.prepare.outputs.nightly-version }}
 
     macos:
         if: github.event_name != 'workflow_dispatch' || inputs.macos
@@ -88,7 +74,7 @@ jobs:
             sign: true
             deploy-mode: true
             base-url: https://packages.element.io/${{ inputs.mode == 'release' && 'desktop' || 'nightly' }}
-            version: ${{ needs.prepare.outputs.macos-version }}
+            version: ${{ needs.prepare.outputs.nightly-version }}
 
     # We do not put these calls into deploy-mode as we do not want it to add to the packages.element.io artifact
     # We ship this build via reprepro only
@@ -104,7 +90,7 @@ jobs:
             arch: ${{ matrix.arch }}
             config: element.io/${{ inputs.mode || 'nightly' }}
             sqlcipher: system
-            version: ${{ needs.prepare.outputs.linux-version }}
+            version: ${{ needs.prepare.outputs.nightly-version }}
 
     # We ship the static build via static tarball only
     linux_static:
@@ -117,7 +103,7 @@ jobs:
             deploy-mode: true
             config: element.io/${{ inputs.mode || 'nightly' }}
             sqlcipher: static
-            version: ${{ needs.prepare.outputs.linux-version }}
+            version: ${{ needs.prepare.outputs.nightly-version }}
 
     # This deploy job only handles Windows, macOS & linux_static as those are stateless and static.
     # Linux will be deployed via reprepro after it, but we list it as a dependency to abort if it fails.
@@ -126,14 +112,13 @@ jobs:
             - macos
             - linux
             - linux_static
-            - windows_32bit
-            - windows_64bit
+            - windows
         runs-on: ubuntu-latest
         name: Deploy
         if: |
             github.event_name != 'workflow_dispatch' || (
                 always() && !failure() && !cancelled() && inputs.deploy &&
-                (inputs.macos || inputs.windows_32bit || inputs.windows_64bit)
+                (inputs.macos || inputs.windows || inputs.linux)
             )
         environment: packages.element.io
         steps:

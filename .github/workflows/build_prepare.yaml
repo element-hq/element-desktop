@@ -23,28 +23,16 @@ on:
             CF_R2_TOKEN:
                 required: false
         outputs:
-            macos-version:
-                description: "The version string the next macOS Nightly should use, only output for nightly"
-                value: ${{ jobs.prepare.outputs.macos-version }}
-            linux-version:
-                description: "The version string the next Linux Nightly should use, only output for nightly"
-                value: ${{ jobs.prepare.outputs.linux-version }}
-            win32-x64-version:
-                description: "The version string the next Windows x64 Nightly should use, only output for nightly"
-                value: ${{ jobs.prepare.outputs.win32-x64-version }}
-            win32-x86-version:
-                description: "The version string the next Windows x86 Nightly should use, only output for nightly"
-                value: ${{ jobs.prepare.outputs.win32-x86-version }}
+            nightly-version:
+                description: "The version string the next Nightly should use, only output for nightly"
+                value: ${{ jobs.prepare.outputs.nightly-version }}
 jobs:
     prepare:
         name: Prepare
         environment: ${{ inputs.nightly && 'packages.element.io' || '' }}
         runs-on: ubuntu-latest
         outputs:
-            macos-version: ${{ steps.versions.outputs.macos }}
-            linux-version: ${{ steps.versions.outputs.linux }}
-            win32-x64-version: ${{ steps.versions.outputs.win_x64 }}
-            win32-x86-version: ${{ steps.versions.outputs.win_x86 }}
+            nightly-version: ${{ steps.versions.outputs.nightly }}
         steps:
             - uses: actions/checkout@v3
 
@@ -66,20 +54,21 @@ jobs:
                   find hak -type f -print0 | xargs -0 sha1sum >> hakHash
                   find scripts/hak -type f -print0 | xargs -0 sha1sum >> hakHash
 
-            - name: "[Nightly] Calculate versions"
+            - name: "[Nightly] Calculate version"
               id: versions
               if: inputs.nightly
               run: |
-                  MACOS=$(aws s3 cp s3://$R2_BUCKET/nightly/update/macos/releases.json - --endpoint-url $R2_URL --region auto | jq -r .currentRelease)
-                  echo "macos=$(scripts/generate-nightly-version.ts --latest $MACOS)" >> $GITHUB_OUTPUT
+                  # Find all latest Nightly versions
+                  aws s3 cp s3://$R2_BUCKET/nightly/update/macos/releases.json - --endpoint-url $R2_URL --region auto | jq -r .currentRelease >> VERSIONS
+                  aws s3 cp s3://$R2_BUCKET/debian/dists/default/main/binary-amd64/Packages - --endpoint-url $R2_URL --region auto | grep "Package: element-nightly" -A 50 | grep Version -m1 | sed -n 's/Version: //p' >> VERSIONS
+                  aws s3 cp s3://$R2_BUCKET/debian/dists/default/main/binary-arm64/Packages - --endpoint-url $R2_URL --region auto | grep "Package: element-nightly" -A 50 | grep Version -m1 | sed -n 's/Version: //p' >> VERSIONS
+                  aws s3 cp s3://$R2_BUCKET/nightly/update/win32/x64/RELEASES - --endpoint-url $R2_URL --region auto | awk '{print $2}' | cut -d "-" -f 5 | cut -c 8- >> VERSIONS
+                  aws s3 cp s3://$R2_BUCKET/nightly/update/win32/ia32/RELEASES - --endpoint-url $R2_URL --region auto | awk '{print $2}' | cut -d "-" -f 5 | cut -c 8- >> VERSIONS
 
-                  LINUX=$(aws s3 cp s3://$R2_BUCKET/debian/dists/default/main/binary-amd64/Packages - --endpoint-url $R2_URL --region auto | grep "Package: element-nightly" -A 50 | grep Version -m1 | sed -n 's/Version: //p')
-                  echo "linux=$(scripts/generate-nightly-version.ts --latest $LINUX)" >> $GITHUB_OUTPUT
-
-                  WINx64=$(aws s3 cp s3://$R2_BUCKET/nightly/update/win32/x64/RELEASES - --endpoint-url $R2_URL --region auto | awk '{print $2}' | cut -d "-" -f 5 | cut -c 8-)
-                  echo "win_x64=$(scripts/generate-nightly-version.ts --latest $WINx64)" >> $GITHUB_OUTPUT
-                  WINx86=$(aws s3 cp s3://$R2_BUCKET/nightly/update/win32/ia32/RELEASES - --endpoint-url $R2_URL --region auto | awk '{print $2}' | cut -d "-" -f 5 | cut -c 8-)
-                  echo "win_x86=$(scripts/generate-nightly-version.ts --latest $WINx86)" >> $GITHUB_OUTPUT
+                  # Pick the greatest one
+                  VERSION=$(cat VERSIONS | sort -uf | tail -n1)
+                  # Increment it
+                  echo "nightly=$(scripts/generate-nightly-version.ts --latest $VERSION)" >> $GITHUB_OUTPUT
               env:
                   AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
@@ -123,14 +112,10 @@ jobs:
                   REACT_VERSION=${WEBAPP_VERSION:19:12}
                   JS_VERSION=${WEBAPP_VERSION:35:12}
 
-                  echo "### Nightly build" >> $GITHUB_STEP_SUMMARY
+                  echo "### Nightly build ${{ steps.versions.outputs.nightly }}" >> $GITHUB_STEP_SUMMARY
                   echo "" >> $GITHUB_STEP_SUMMARY
                   echo "| Component   | Version |" >> $GITHUB_STEP_SUMMARY
                   echo "| ----------- | ------- |" >> $GITHUB_STEP_SUMMARY
-                  echo "| macOS       | ${{ steps.versions.outputs.macos }} |" >> $GITHUB_STEP_SUMMARY
-                  echo "| Linux       | ${{ steps.versions.outputs.linux }} |" >> $GITHUB_STEP_SUMMARY
-                  echo "| Windows x64 | ${{ steps.versions.outputs.win_x64 }} |" >> $GITHUB_STEP_SUMMARY
-                  echo "| Windows x86 | ${{ steps.versions.outputs.win_x86 }} |" >> $GITHUB_STEP_SUMMARY
                   echo "| Bundle Hash | $BUNDLE_HASH |" >> $GITHUB_STEP_SUMMARY
                   echo "| Element Web | [$WEB_VERSION](https://github.com/vector-im/element-web/commit/$WEB_VERSION) |" >> $GITHUB_STEP_SUMMARY
                   echo "| React SDK   | [$REACT_VERSION](https://github.com/matrix-org/matrix-react-sdk/commit/$REACT_VERSION) |" >> $GITHUB_STEP_SUMMARY
