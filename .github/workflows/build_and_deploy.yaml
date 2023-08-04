@@ -46,7 +46,7 @@ jobs:
         uses: ./.github/workflows/build_prepare.yaml
         with:
             config: element.io/${{ inputs.mode || (github.event_name == 'release' && 'release') || 'nightly' }}
-            version: ${{ (inputs.mode != 'release' || github.event_name == 'release') && 'develop' || '' }}
+            version: ${{ (inputs.mode != 'release' && github.event_name != 'release') && 'develop' || '' }}
             nightly: ${{ inputs.mode != 'release' && github.event_name != 'release' }}
         secrets:
             CF_R2_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
