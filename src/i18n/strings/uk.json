@@ -42,5 +42,6 @@
     "Show/Hide": "Показати/Сховати",
     "Are you sure you want to quit?": "Ви впевнені, що хочете вийти?",
     "Close %(brand)s": "Закрити %(brand)s",
-    "Cancel": "Скасувати"
+    "Cancel": "Скасувати",
+    "%(brand)s Help": "Довідка %(brand)s"
 }
