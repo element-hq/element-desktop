@@ -37,7 +37,7 @@ on:
                 required: true
                 type: boolean
                 default: true
-run-name: Element ${{ inputs.mode == 'release' && 'Desktop' || 'Nightly' }}
+run-name: Element ${{ inputs.mode != 'release' && github.event_name != 'release' && 'Nightly' || 'Desktop' }}
 concurrency: ${{ github.workflow }}
 env:
     R2_BUCKET: ${{ vars.R2_BUCKET }}
