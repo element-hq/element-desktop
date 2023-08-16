@@ -28,11 +28,11 @@ fs.mkdirSync("lib/i18n/strings", { recursive: true });
 type Translations = Record<string, Record<string, string> | string>;
 
 function genLangFile(file: string, dest: string): void {
-    const inTrs: Record<string, string> = {};
+    const translations: Translations = {};
     [file].forEach(function (f) {
         if (fs.existsSync(f)) {
             try {
-                Object.assign(inTrs, JSON.parse(fs.readFileSync(f).toString()));
+                Object.assign(translations, JSON.parse(fs.readFileSync(f).toString()));
             } catch (e) {
                 console.error("Failed: " + f, e);
                 throw e;
@@ -40,7 +40,6 @@ function genLangFile(file: string, dest: string): void {
         }
     });
 
-    const translations = weblateToCounterpart(inTrs);
     const json = JSON.stringify(translations, null, 4);
     const filename = path.basename(file);
 
@@ -48,46 +47,6 @@ function genLangFile(file: string, dest: string): void {
     if (verbose) {
         console.log("Generated language file: " + filename);
     }
-}
-
-/*
- * Convert translation key from weblate format
- * (which only supports a single level) to counterpart
- * which requires object values for 'count' translations.
- *
- * eg.
- *     "there are %(count)s badgers|one": "a badger",
- *     "there are %(count)s badgers|other": "%(count)s badgers"
- *   becomes
- *     "there are %(count)s badgers": {
- *         "one": "a badger",
- *         "other": "%(count)s badgers"
- *     }
- */
-function weblateToCounterpart(inTrs: Record<string, string>): Translations {
-    const outTrs: Translations = {};
-
-    for (const key of Object.keys(inTrs)) {
-        const keyParts = key.split("|", 2);
-        if (keyParts.length === 2) {
-            let obj = outTrs[keyParts[0]];
-            if (obj === undefined) {
-                obj = outTrs[keyParts[0]] = {};
-            } else if (typeof obj === "string") {
-                // This is a transitional edge case if a string went from singular to pluralised and both still remain
-                // in the translation json file. Use the singular translation as `other` and merge pluralisation atop.
-                obj = outTrs[keyParts[0]] = {
-                    other: inTrs[key],
-                };
-                console.warn("Found entry in i18n file in both singular and pluralised form", keyParts[0]);
-            }
-            obj[keyParts[1]] = inTrs[key];
-        } else {
-            outTrs[key] = inTrs[key];
-        }
-    }
-
-    return outTrs;
 }
 
 /*
