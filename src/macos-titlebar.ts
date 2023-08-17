@@ -81,18 +81,24 @@ export function setupMacosTitleBar(window: BrowserWindow): void {
                 -webkit-app-region: drag;
                 -webkit-user-select: none;
             }
+            .mx_ImageView_panel {
+                -webkit-app-region: drag;
+            }
             /* Exclude header interactive elements from being drag handles */
             .mx_RoomHeader .mx_DecoratedRoomAvatar,
             .mx_RoomHeader_name,
             .mx_LegacyRoomHeader .mx_LegacyRoomHeader_avatar,
             .mx_LegacyRoomHeader .mx_E2EIcon,
             .mx_LegacyRoomHeader .mx_RoomTopic,
-            .mx_LegacyRoomHeader .mx_AccessibleButton {
+            .mx_LegacyRoomHeader .mx_AccessibleButton,
+            .mx_ImageView_panel > .mx_ImageView_info_wrapper,
+            .mx_ImageView_panel > .mx_ImageView_title,
+            .mx_ImageView_panel > .mx_ImageView_toolbar > * {
                 -webkit-app-region: no-drag;
             }
             
-            /* Mark the background as a drag handle */
-            .mx_RoomView_wrapper {
+            /* Mark the background as a drag handle only if no modal is open */
+            .mx_MatrixChat_wrapper[aria-hidden="false"] .mx_RoomView_wrapper {
                 -webkit-app-region: drag;
             }
             /* Exclude content elements from being drag handles */
