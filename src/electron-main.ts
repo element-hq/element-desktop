@@ -260,7 +260,7 @@ global.appQuitting = false;
 const exitShortcuts: Array<(input: Input, platform: string) => boolean> = [
     (input, platform): boolean => platform !== "darwin" && input.alt && input.key.toUpperCase() === "F4",
     (input, platform): boolean => platform !== "darwin" && input.control && input.key.toUpperCase() === "Q",
-    (input, platform): boolean => platform === "darwin" && input.meta && input.key.toUpperCase() === "Q",
+    (input, platform): boolean => platform === "darwin" && input.meta && !input.control && input.key.toUpperCase() === "Q",
 ];
 
 const warnBeforeExit = (event: Event, input: Input): void => {
