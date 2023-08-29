@@ -1,5 +1,5 @@
-Changes in [1.11.40-rc.1](https://github.com/vector-im/element-desktop/releases/tag/v1.11.40-rc.1) (2023-08-23)
-===============================================================================================================
+Changes in [1.11.40](https://github.com/vector-im/element-desktop/releases/tag/v1.11.40) (2023-08-29)
+=====================================================================================================
 
 ## ✨ Features
  * Add FreeBSD support ([\#1163](https://github.com/vector-im/element-desktop/pull/1163)). Contributed by @lwhsu.
