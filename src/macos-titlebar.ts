@@ -85,8 +85,10 @@ export function setupMacosTitleBar(window: BrowserWindow): void {
                 -webkit-app-region: drag;
             }
             /* Exclude header interactive elements from being drag handles */
-            .mx_RoomHeader .mx_DecoratedRoomAvatar,
-            .mx_RoomHeader_name,
+            .mx_RoomHeader .mx_BaseAvatar,
+            .mx_RoomHeader_heading,
+            .mx_RoomHeader button,
+            .mx_RoomHeader .mx_FacePile,
             .mx_LegacyRoomHeader .mx_LegacyRoomHeader_avatar,
             .mx_LegacyRoomHeader .mx_E2EIcon,
             .mx_LegacyRoomHeader .mx_RoomTopic,
