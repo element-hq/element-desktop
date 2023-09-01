@@ -23,7 +23,12 @@
     },
 
     "download": {
-        "files": "src/i18n/strings/${langLsrUnderscore}.json",
-        "includeSourceLang": true
+        "files": [
+            {
+                "conditions": "equals: ${file}, element-desktop.json",
+                "output": "src/i18n/strings/${langLsrUnderscore}.json"
+            }
+        ],
+        "includeSourceLang": "${includeSourceLang|false}"
     }
 }
