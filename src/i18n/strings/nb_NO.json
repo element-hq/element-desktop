@@ -1,37 +1,53 @@
 {
-    "Toggle Developer Tools": "Veksle Utvikleralternativer",
-    "Add to dictionary": "Legg til i ordbok",
-    "The image failed to save": "Bildet kunne ikke lagres",
-    "Failed to save image": "Kunne ikke lagre bildet",
-    "Save image as...": "Lagre bildet som...",
-    "Copy email address": "Kopier e-postadressen",
-    "Copy image": "Kopier bildet",
-    "File": "Fil",
-    "Stop Speaking": "Slutt å snakke",
-    "Start Speaking": "Begynn å snakke",
-    "Speech": "Tale",
-    "Hide": "Skjul",
-    "About": "Om",
-    "Help": "Hjelp",
-    "Close": "Lukk",
-    "Minimize": "Minimere",
-    "Window": "Vindu",
-    "Zoom Out": "Zoom ut",
-    "Zoom In": "Zoom inn",
-    "Actual Size": "Faktisk størrelse",
-    "View": "Se",
-    "Select All": "Velg alle",
-    "Delete": "Slett",
-    "Paste": "Lim inn",
-    "Copy": "Kopier",
-    "Undo": "Angre",
-    "Edit": "Rediger",
-    "Quit": "Avslutt",
-    "Show/Hide": "Vis/Skjul",
-    "Are you sure you want to quit?": "Er du sikker på at du vil slutte?",
-    "Cancel": "Avbryt",
-    "Services": "Tjenester",
-    "Hide Others": "Skjul Andre",
-    "Bring All to Front": "Flytt Alt Frem",
-    "Toggle Full Screen": "Veksle Fullskjerm"
+    "action": {
+        "cancel": "Avbryt",
+        "show_hide": "Vis/Skjul",
+        "quit": "Avslutt",
+        "edit": "Rediger",
+        "undo": "Angre",
+        "copy": "Kopier",
+        "paste": "Lim inn",
+        "delete": "Slett",
+        "select_all": "Velg alle",
+        "zoom_in": "Zoom inn",
+        "zoom_out": "Zoom ut",
+        "minimise": "Minimere",
+        "close": "Lukk"
+    },
+    "confirm_quit": "Er du sikker på at du vil slutte?",
+    "common": {
+        "help": "Hjelp",
+        "about": "Om"
+    },
+    "window_menu": {
+        "label": "Vindu",
+        "bring_all_to_front": "Flytt Alt Frem"
+    },
+    "view_menu": {
+        "view": "Se",
+        "actual_size": "Faktisk størrelse",
+        "toggle_full_screen": "Veksle Fullskjerm",
+        "toggle_developer_tools": "Veksle Utvikleralternativer"
+    },
+    "menu": {
+        "services": "Tjenester",
+        "hide": "Skjul",
+        "hide_others": "Skjul Andre"
+    },
+    "edit_menu": {
+        "speech": "Tale",
+        "speech_start_speaking": "Begynn å snakke",
+        "speech_stop_speaking": "Slutt å snakke"
+    },
+    "file_menu": {
+        "label": "Fil"
+    },
+    "right_click_menu": {
+        "copy_image": "Kopier bildet",
+        "copy_email": "Kopier e-postadressen",
+        "save_image_as": "Lagre bildet som...",
+        "save_image_as_error_title": "Kunne ikke lagre bildet",
+        "save_image_as_error_description": "Bildet kunne ikke lagres",
+        "add_to_dictionary": "Legg til i ordbok"
+    }
 }

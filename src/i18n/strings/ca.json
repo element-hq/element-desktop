@@ -1,44 +1,60 @@
 {
-    "Add to dictionary": "Afegeix al diccionari",
-    "The image failed to save": "S'ha fallat en desar la imatge",
-    "Failed to save image": "S'ha fallat en desar la imatge",
-    "Save image as...": "Anomena i desa la imatge...",
-    "Copy link address": "Copia l'adreça de l'enllaç",
-    "Copy email address": "Copia l'adreça de correu electrònic",
-    "Copy image": "Copia la imatge",
-    "File": "Fitxer",
-    "Bring All to Front": "Porta-ho tot al davant",
-    "Zoom": "Escala",
-    "Stop Speaking": "Para la veu",
-    "Start Speaking": "Comença la veu",
-    "Speech": "Veu",
-    "Unhide": "Deixa d'amagar",
-    "Hide Others": "Amaga les altres",
-    "Hide": "Amaga",
-    "Services": "Serveis",
-    "About": "Quant a",
-    "Help": "Ajuda",
-    "Close": "Tanca",
-    "Minimize": "Minimitza",
-    "Window": "Finestra",
-    "Toggle Developer Tools": "Commuta les eines per a desenvolupadors",
-    "Toggle Full Screen": "Commuta la pantalla completa",
-    "Preferences": "Preferències",
-    "Zoom Out": "Allunya",
-    "Zoom In": "Apropia",
-    "Actual Size": "Mida real",
-    "View": "Visualitza",
-    "Select All": "Selecciona-ho tot",
-    "Delete": "Suprimeix",
-    "Paste and Match Style": "Enganxa i fes coincidir l'estil",
-    "Paste": "Enganxa",
-    "Copy": "Copia",
-    "Cut": "Retalla",
-    "Redo": "Refés",
-    "Undo": "Desfés",
-    "Edit": "Edita",
-    "Quit": "Surt",
-    "Show/Hide": "Mostra/Amaga",
-    "Are you sure you want to quit?": "Esteu segur que voleu sortir?",
-    "Cancel": "Cancel·la"
+    "action": {
+        "cancel": "Cancel·la",
+        "show_hide": "Mostra/Amaga",
+        "quit": "Surt",
+        "edit": "Edita",
+        "undo": "Desfés",
+        "redo": "Refés",
+        "copy": "Copia",
+        "paste": "Enganxa",
+        "paste_match_style": "Enganxa i fes coincidir l'estil",
+        "delete": "Suprimeix",
+        "select_all": "Selecciona-ho tot",
+        "zoom_in": "Apropia",
+        "zoom_out": "Allunya",
+        "minimise": "Minimitza",
+        "close": "Tanca",
+        "cut": "Retalla"
+    },
+    "confirm_quit": "Esteu segur que voleu sortir?",
+    "common": {
+        "help": "Ajuda",
+        "about": "Quant a",
+        "preferences": "Preferències"
+    },
+    "window_menu": {
+        "zoom": "Escala",
+        "label": "Finestra",
+        "bring_all_to_front": "Porta-ho tot al davant"
+    },
+    "view_menu": {
+        "view": "Visualitza",
+        "actual_size": "Mida real",
+        "toggle_full_screen": "Commuta la pantalla completa",
+        "toggle_developer_tools": "Commuta les eines per a desenvolupadors"
+    },
+    "menu": {
+        "services": "Serveis",
+        "hide": "Amaga",
+        "unhide": "Deixa d'amagar",
+        "hide_others": "Amaga les altres"
+    },
+    "edit_menu": {
+        "speech": "Veu",
+        "speech_start_speaking": "Comença la veu",
+        "speech_stop_speaking": "Para la veu"
+    },
+    "file_menu": {
+        "label": "Fitxer"
+    },
+    "right_click_menu": {
+        "copy_image": "Copia la imatge",
+        "copy_email": "Copia l'adreça de correu electrònic",
+        "copy_link_url": "Copia l'adreça de l'enllaç",
+        "save_image_as": "Anomena i desa la imatge...",
+        "save_image_as_error_title": "S'ha fallat en desar la imatge",
+        "save_image_as_error_description": "S'ha fallat en desar la imatge",
+        "add_to_dictionary": "Afegeix al diccionari"
+    }
 }

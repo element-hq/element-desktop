@@ -1,46 +1,62 @@
 {
-    "File": "ملف",
-    "Close": "أغلِق",
-    "Actual Size": "المقاس الفعلي",
-    "View": "منظور",
-    "Select All": "حدّد الكل",
-    "Delete": "احذف",
-    "Copy": "انسخ",
-    "Edit": "تحرير",
-    "Cancel": "ألغِ",
-    "Bring All to Front": "ضَع الكل في المقدّمة",
-    "Speech": "نطق",
-    "Add to dictionary": "أضِف إلى القاموس",
-    "The image failed to save": "فشل حفظ الصورة",
-    "Failed to save image": "فشل حفظ الصورة",
-    "Save image as...": "احفظ الصورة كَ‍...",
-    "Copy link address": "انسخ عنوان الرابط",
-    "Copy email address": "انسخ عنوان البريد الإلكتروني",
-    "Copy image": "انسخ الصورة",
-    "Zoom": "تقريب",
-    "Stop Speaking": "أوقِف النطق",
-    "Start Speaking": "ابدأ النطق",
-    "Unhide": "اعرض",
-    "Hide Others": "أخفِ البقية",
-    "Hide": "أخفِ",
-    "Services": "الخدمات",
-    "About": "عن",
-    "Help": "مساعدة",
-    "Minimize": "صغّر",
-    "Window": "نافذة",
-    "Toggle Developer Tools": "فعّل/عطّل أدوات المطوّرين",
-    "Toggle Full Screen": "فعّل/عطّل ملء الشاشة",
-    "Preferences": "التفضيلات",
-    "Zoom In": "قرّب",
-    "Zoom Out": "بعّد",
-    "Paste and Match Style": "ألصِق وطابِق النمط",
-    "Paste": "ألصِق",
-    "Cut": "قصّ",
-    "Redo": "أعِد",
-    "Undo": "تراجَع",
-    "Quit": "غادِر",
-    "Show/Hide": "اعرض/أخفِ",
-    "Are you sure you want to quit?": "أمتأكّد من الإغلاق؟",
-    "Copy image address": "انسخ عنوان (رابط) الصورة",
-    "Close %(brand)s": "اغلاق %(brand)s"
+    "action": {
+        "cancel": "ألغِ",
+        "close_brand": "اغلاق %(brand)s",
+        "show_hide": "اعرض/أخفِ",
+        "quit": "غادِر",
+        "edit": "تحرير",
+        "undo": "تراجَع",
+        "redo": "أعِد",
+        "copy": "انسخ",
+        "paste": "ألصِق",
+        "paste_match_style": "ألصِق وطابِق النمط",
+        "delete": "احذف",
+        "select_all": "حدّد الكل",
+        "zoom_in": "قرّب",
+        "zoom_out": "بعّد",
+        "minimise": "صغّر",
+        "close": "أغلِق",
+        "cut": "قصّ"
+    },
+    "confirm_quit": "أمتأكّد من الإغلاق؟",
+    "common": {
+        "help": "مساعدة",
+        "about": "عن",
+        "preferences": "التفضيلات"
+    },
+    "window_menu": {
+        "zoom": "تقريب",
+        "label": "نافذة",
+        "bring_all_to_front": "ضَع الكل في المقدّمة"
+    },
+    "view_menu": {
+        "view": "منظور",
+        "actual_size": "المقاس الفعلي",
+        "toggle_full_screen": "فعّل/عطّل ملء الشاشة",
+        "toggle_developer_tools": "فعّل/عطّل أدوات المطوّرين"
+    },
+    "menu": {
+        "services": "الخدمات",
+        "hide": "أخفِ",
+        "unhide": "اعرض",
+        "hide_others": "أخفِ البقية"
+    },
+    "edit_menu": {
+        "speech": "نطق",
+        "speech_start_speaking": "ابدأ النطق",
+        "speech_stop_speaking": "أوقِف النطق"
+    },
+    "file_menu": {
+        "label": "ملف"
+    },
+    "right_click_menu": {
+        "copy_image": "انسخ الصورة",
+        "copy_email": "انسخ عنوان البريد الإلكتروني",
+        "copy_image_url": "انسخ عنوان (رابط) الصورة",
+        "copy_link_url": "انسخ عنوان الرابط",
+        "save_image_as": "احفظ الصورة كَ‍...",
+        "save_image_as_error_title": "فشل حفظ الصورة",
+        "save_image_as_error_description": "فشل حفظ الصورة",
+        "add_to_dictionary": "أضِف إلى القاموس"
+    }
 }

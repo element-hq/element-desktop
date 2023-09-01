@@ -1,46 +1,62 @@
 {
-    "Zoom": "பெரிதாக்குதல்",
-    "Minimize": "சிறிதாக்கு",
-    "Toggle Developer Tools": "உருவாக்குநர் கருவிகளை நிலைமாற்று",
-    "Toggle Full Screen": "முழு திரையை நிலைமாற்று",
-    "Paste and Match Style": "ஒட்டு மற்றும் நடையை பொருத்து",
-    "Add to dictionary": "அகராதியில் சேர்",
-    "The image failed to save": "படம் சேமிக்கத் தவறிவிட்டது",
-    "Failed to save image": "படத்தைச் சேமிப்பதில் தோல்வி",
-    "Save image as...": "படத்தை இவ்வாறு சேமி...",
-    "Copy link address": "இணைப்பு முகவரியை நகலெடு",
-    "Copy email address": "மின்னஞ்சல் முகவரியை நகலெடு",
-    "Copy image": "படத்தை நகலெடு",
-    "File": "கோப்பு",
-    "Bring All to Front": "அனைத்தையும் முன்னால் கொண்டுவா",
-    "Stop Speaking": "பேசுவதை நிறுத்து",
-    "Start Speaking": "பேசத் துவங்கு",
-    "Speech": "பேச்சு",
-    "Unhide": "மறைநீக்கு",
-    "Hide Others": "மற்றவற்றை மறை",
-    "Hide": "மறை",
-    "Services": "சேவைகள்",
-    "About": "இதனைப் பற்றி",
-    "Help": "உதவி",
-    "Close": "மூடு",
-    "Window": "சாளரம்",
-    "Preferences": "விருப்பத்தேர்வுகள்",
-    "Zoom Out": "சிறிதாக்கு",
-    "Zoom In": "பெரிதாக்கு",
-    "Actual Size": "உண்மையான அளவு",
-    "View": "காட்டு",
-    "Select All": "அனைத்தையும் தேர்ந்தெடு",
-    "Delete": "அழி",
-    "Paste": "ஒட்டு",
-    "Copy": "நகலெடு",
-    "Cut": "வெட்டு",
-    "Redo": "மீண்டும் செய்",
-    "Undo": "செயல்தவிர்",
-    "Edit": "திருத்து",
-    "Quit": "வெளியேறு",
-    "Show/Hide": "காட்டு/மறை",
-    "Are you sure you want to quit?": "நீங்கள் நிச்சயம் வெளியேற விரும்புகிறீர்களா?",
-    "Cancel": "விலக்கிக்கொள்",
-    "Copy image address": "பட முகவரியை நகலெடு",
-    "Close %(brand)s": "%(brand)s ஐ மூடு"
+    "action": {
+        "cancel": "விலக்கிக்கொள்",
+        "close_brand": "%(brand)s ஐ மூடு",
+        "show_hide": "காட்டு/மறை",
+        "quit": "வெளியேறு",
+        "edit": "திருத்து",
+        "undo": "செயல்தவிர்",
+        "redo": "மீண்டும் செய்",
+        "copy": "நகலெடு",
+        "paste": "ஒட்டு",
+        "paste_match_style": "ஒட்டு மற்றும் நடையை பொருத்து",
+        "delete": "அழி",
+        "select_all": "அனைத்தையும் தேர்ந்தெடு",
+        "zoom_in": "பெரிதாக்கு",
+        "zoom_out": "சிறிதாக்கு",
+        "minimise": "சிறிதாக்கு",
+        "close": "மூடு",
+        "cut": "வெட்டு"
+    },
+    "confirm_quit": "நீங்கள் நிச்சயம் வெளியேற விரும்புகிறீர்களா?",
+    "common": {
+        "help": "உதவி",
+        "about": "இதனைப் பற்றி",
+        "preferences": "விருப்பத்தேர்வுகள்"
+    },
+    "window_menu": {
+        "zoom": "பெரிதாக்குதல்",
+        "label": "சாளரம்",
+        "bring_all_to_front": "அனைத்தையும் முன்னால் கொண்டுவா"
+    },
+    "view_menu": {
+        "view": "காட்டு",
+        "actual_size": "உண்மையான அளவு",
+        "toggle_full_screen": "முழு திரையை நிலைமாற்று",
+        "toggle_developer_tools": "உருவாக்குநர் கருவிகளை நிலைமாற்று"
+    },
+    "menu": {
+        "services": "சேவைகள்",
+        "hide": "மறை",
+        "unhide": "மறைநீக்கு",
+        "hide_others": "மற்றவற்றை மறை"
+    },
+    "edit_menu": {
+        "speech": "பேச்சு",
+        "speech_start_speaking": "பேசத் துவங்கு",
+        "speech_stop_speaking": "பேசுவதை நிறுத்து"
+    },
+    "file_menu": {
+        "label": "கோப்பு"
+    },
+    "right_click_menu": {
+        "copy_image": "படத்தை நகலெடு",
+        "copy_email": "மின்னஞ்சல் முகவரியை நகலெடு",
+        "copy_image_url": "பட முகவரியை நகலெடு",
+        "copy_link_url": "இணைப்பு முகவரியை நகலெடு",
+        "save_image_as": "படத்தை இவ்வாறு சேமி...",
+        "save_image_as_error_title": "படத்தைச் சேமிப்பதில் தோல்வி",
+        "save_image_as_error_description": "படம் சேமிக்கத் தவறிவிட்டது",
+        "add_to_dictionary": "அகராதியில் சேர்"
+    }
 }

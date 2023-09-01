@@ -1,45 +1,61 @@
 {
-    "Actual Size": "גודל ממשי",
-    "Add to dictionary": "הוסף למילון",
-    "The image failed to save": "שמירת התמונה נכשלה",
-    "Failed to save image": "נכשל בשמירת התמונה",
-    "Save image as...": "שמור תמונה בשם...",
-    "Copy link address": "העתק קישור",
-    "Copy email address": "העתק כתובת אימייל",
-    "Copy image": "העתק תמונה",
-    "File": "קובץ",
-    "Bring All to Front": "הבא הכל לחזית",
-    "Zoom": "גודל תצוגה",
-    "Stop Speaking": "הפסק לדבר",
-    "Start Speaking": "התחל לדבר",
-    "Speech": "דיבור",
-    "Unhide": "בטל הסתרה",
-    "Hide Others": "הסתר אחרים",
-    "Hide": "הסתר",
-    "Services": "שרותים",
-    "About": "אודות",
-    "Help": "עזרה",
-    "Close": "סגור",
-    "Minimize": "מזער",
-    "Window": "חלון",
-    "Toggle Developer Tools": "הפעל כלי מפתחים",
-    "Toggle Full Screen": "הפעל מצב מסך מלא",
-    "Preferences": "העדפות",
-    "Zoom Out": "התרחק",
-    "Zoom In": "התקרב",
-    "View": "צפה",
-    "Select All": "בחר הכל",
-    "Delete": "מחק",
-    "Paste": "הדבק",
-    "Copy": "העתק",
-    "Cut": "גזור",
-    "Undo": "בטל ביצוע",
-    "Redo": "בצע שוב",
-    "Edit": "עריכה",
-    "Quit": "יציאה",
-    "Show/Hide": "הצג\\הסתר",
-    "Are you sure you want to quit?": "האם אתה בטוח שברצונך לצאת?",
-    "Cancel": "ביטול",
-    "Paste and Match Style": "הדבק והתאם סגנון",
-    "Copy image address": "העתקת כתובת התמונה"
+    "action": {
+        "cancel": "ביטול",
+        "show_hide": "הצג\\הסתר",
+        "quit": "יציאה",
+        "edit": "עריכה",
+        "undo": "בטל ביצוע",
+        "redo": "בצע שוב",
+        "copy": "העתק",
+        "paste": "הדבק",
+        "paste_match_style": "הדבק והתאם סגנון",
+        "delete": "מחק",
+        "select_all": "בחר הכל",
+        "zoom_in": "התקרב",
+        "zoom_out": "התרחק",
+        "minimise": "מזער",
+        "close": "סגור",
+        "cut": "גזור"
+    },
+    "confirm_quit": "האם אתה בטוח שברצונך לצאת?",
+    "common": {
+        "help": "עזרה",
+        "about": "אודות",
+        "preferences": "העדפות"
+    },
+    "window_menu": {
+        "zoom": "גודל תצוגה",
+        "label": "חלון",
+        "bring_all_to_front": "הבא הכל לחזית"
+    },
+    "view_menu": {
+        "view": "צפה",
+        "actual_size": "גודל ממשי",
+        "toggle_full_screen": "הפעל מצב מסך מלא",
+        "toggle_developer_tools": "הפעל כלי מפתחים"
+    },
+    "menu": {
+        "services": "שרותים",
+        "hide": "הסתר",
+        "unhide": "בטל הסתרה",
+        "hide_others": "הסתר אחרים"
+    },
+    "edit_menu": {
+        "speech": "דיבור",
+        "speech_start_speaking": "התחל לדבר",
+        "speech_stop_speaking": "הפסק לדבר"
+    },
+    "file_menu": {
+        "label": "קובץ"
+    },
+    "right_click_menu": {
+        "copy_image": "העתק תמונה",
+        "copy_email": "העתק כתובת אימייל",
+        "copy_image_url": "העתקת כתובת התמונה",
+        "copy_link_url": "העתק קישור",
+        "save_image_as": "שמור תמונה בשם...",
+        "save_image_as_error_title": "נכשל בשמירת התמונה",
+        "save_image_as_error_description": "שמירת התמונה נכשלה",
+        "add_to_dictionary": "הוסף למילון"
+    }
 }

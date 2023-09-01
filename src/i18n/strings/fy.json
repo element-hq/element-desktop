@@ -1,44 +1,60 @@
 {
-    "Copy image": "Ofbylding kopiearje",
-    "Speech": "Spraak",
-    "View": "Byld",
-    "Paste and Match Style": "Plakke en lit stilen oerienkomme",
-    "Add to dictionary": "Oan wurdlist tafoegje",
-    "The image failed to save": "It is net slagge de ôfbylding te bewarjen",
-    "Failed to save image": "Ofbylding bewarjen mislearre",
-    "Save image as...": "Ofbylding bewarje as…",
-    "Copy link address": "Keppeling kopiearje",
-    "Copy email address": "E-mailadres kopiearje",
-    "File": "Bestân",
-    "Bring All to Front": "Alles nei foaren bringe",
-    "Zoom": "Zoom",
-    "Stop Speaking": "Stopje mei praten",
-    "Start Speaking": "Begjin mei praten",
-    "Unhide": "Wer toane",
-    "Hide Others": "Oare ferbergje",
-    "Hide": "Ferbergje",
-    "Services": "Tsjinsten",
-    "About": "Oer",
-    "Help": "Help",
-    "Close": "Slute",
-    "Minimize": "Minimalisearje",
-    "Window": "Finster",
-    "Toggle Developer Tools": "Untwikkelersark yn-/útskeakelje",
-    "Toggle Full Screen": "Folslein skerm yn-/útskeakelje",
-    "Preferences": "Foarkarren",
-    "Zoom Out": "Utzoome",
-    "Zoom In": "Ynzoome",
-    "Actual Size": "Werklike grutte",
-    "Select All": "Alles selektearje",
-    "Delete": "Fuortsmite",
-    "Paste": "Plakke",
-    "Copy": "Kopiearje",
-    "Cut": "Knippe",
-    "Redo": "Opnij útfiere",
-    "Undo": "Ungedien meitsje",
-    "Edit": "Bewurkje",
-    "Quit": "Ofslute",
-    "Show/Hide": "Toane/Ferbergje",
-    "Are you sure you want to quit?": "Binne jo der wis fan dat jo ôfslute wolle?",
-    "Cancel": "Annulearje"
+    "action": {
+        "cancel": "Annulearje",
+        "show_hide": "Toane/Ferbergje",
+        "quit": "Ofslute",
+        "edit": "Bewurkje",
+        "undo": "Ungedien meitsje",
+        "redo": "Opnij útfiere",
+        "copy": "Kopiearje",
+        "paste": "Plakke",
+        "paste_match_style": "Plakke en lit stilen oerienkomme",
+        "delete": "Fuortsmite",
+        "select_all": "Alles selektearje",
+        "zoom_in": "Ynzoome",
+        "zoom_out": "Utzoome",
+        "minimise": "Minimalisearje",
+        "close": "Slute",
+        "cut": "Knippe"
+    },
+    "confirm_quit": "Binne jo der wis fan dat jo ôfslute wolle?",
+    "common": {
+        "help": "Help",
+        "about": "Oer",
+        "preferences": "Foarkarren"
+    },
+    "window_menu": {
+        "zoom": "Zoom",
+        "label": "Finster",
+        "bring_all_to_front": "Alles nei foaren bringe"
+    },
+    "view_menu": {
+        "view": "Byld",
+        "actual_size": "Werklike grutte",
+        "toggle_full_screen": "Folslein skerm yn-/útskeakelje",
+        "toggle_developer_tools": "Untwikkelersark yn-/útskeakelje"
+    },
+    "menu": {
+        "services": "Tsjinsten",
+        "hide": "Ferbergje",
+        "unhide": "Wer toane",
+        "hide_others": "Oare ferbergje"
+    },
+    "edit_menu": {
+        "speech": "Spraak",
+        "speech_start_speaking": "Begjin mei praten",
+        "speech_stop_speaking": "Stopje mei praten"
+    },
+    "file_menu": {
+        "label": "Bestân"
+    },
+    "right_click_menu": {
+        "copy_image": "Ofbylding kopiearje",
+        "copy_email": "E-mailadres kopiearje",
+        "copy_link_url": "Keppeling kopiearje",
+        "save_image_as": "Ofbylding bewarje as…",
+        "save_image_as_error_title": "Ofbylding bewarjen mislearre",
+        "save_image_as_error_description": "It is net slagge de ôfbylding te bewarjen",
+        "add_to_dictionary": "Oan wurdlist tafoegje"
+    }
 }

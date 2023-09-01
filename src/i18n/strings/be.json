@@ -1,44 +1,60 @@
 {
-    "Add to dictionary": "Дадаць у слоўнік",
-    "The image failed to save": "Не атрымалася захаваць малюнак",
-    "Failed to save image": "Не атрымалася захаваць малюнак",
-    "Save image as...": "Захаваць малюнак як...",
-    "Copy link address": "Скапіраваць спасылку",
-    "Copy email address": "Скапіраваць адрас пошты",
-    "Copy image": "Скапіраваць малюнак",
-    "File": "Файл",
-    "Bring All to Front": "Вынесці ўсё наперад",
-    "Zoom": "Маштаб",
-    "Stop Speaking": "Перастаць гаварыць",
-    "Start Speaking": "Гаварыць",
-    "Speech": "Голас",
-    "Unhide": "Паказаць",
-    "Hide Others": "Схаваць іншыя",
-    "Hide": "Схаваць",
-    "Services": "Сервісы",
-    "About": "Аб праграме",
-    "Help": "Даведка",
-    "Close": "Зачыніць",
-    "Minimize": "Згарнуць",
-    "Window": "Акно",
-    "Toggle Developer Tools": "Пераключэнне інструментаў распрацоўніка",
-    "Toggle Full Screen": "Пераключэнне на ўвесь экран",
-    "Preferences": "Параметры",
-    "Zoom Out": "Паменшыць",
-    "Zoom In": "Павялічыць",
-    "Actual Size": "Фактычны Памер",
-    "View": "Прагляд",
-    "Select All": "Выбраць усё",
-    "Delete": "Выдаліць",
-    "Paste and Match Style": "Уставіць і супаставіць стыль",
-    "Paste": "Уставіць",
-    "Copy": "Капіяваць",
-    "Cut": "Выразаць",
-    "Redo": "Паўтарыць",
-    "Undo": "Адмяніць",
-    "Edit": "Змяніць",
-    "Quit": "Выйсці",
-    "Show/Hide": "Паказаць / схаваць",
-    "Are you sure you want to quit?": "Вы ўпэўненыя, што хочаце выйсці?",
-    "Cancel": "Адмена"
+    "action": {
+        "cancel": "Адмена",
+        "show_hide": "Паказаць / схаваць",
+        "quit": "Выйсці",
+        "edit": "Змяніць",
+        "undo": "Адмяніць",
+        "redo": "Паўтарыць",
+        "copy": "Капіяваць",
+        "paste": "Уставіць",
+        "paste_match_style": "Уставіць і супаставіць стыль",
+        "delete": "Выдаліць",
+        "select_all": "Выбраць усё",
+        "zoom_in": "Павялічыць",
+        "zoom_out": "Паменшыць",
+        "minimise": "Згарнуць",
+        "close": "Зачыніць",
+        "cut": "Выразаць"
+    },
+    "confirm_quit": "Вы ўпэўненыя, што хочаце выйсці?",
+    "common": {
+        "help": "Даведка",
+        "about": "Аб праграме",
+        "preferences": "Параметры"
+    },
+    "window_menu": {
+        "zoom": "Маштаб",
+        "label": "Акно",
+        "bring_all_to_front": "Вынесці ўсё наперад"
+    },
+    "view_menu": {
+        "view": "Прагляд",
+        "actual_size": "Фактычны Памер",
+        "toggle_full_screen": "Пераключэнне на ўвесь экран",
+        "toggle_developer_tools": "Пераключэнне інструментаў распрацоўніка"
+    },
+    "menu": {
+        "services": "Сервісы",
+        "hide": "Схаваць",
+        "unhide": "Паказаць",
+        "hide_others": "Схаваць іншыя"
+    },
+    "edit_menu": {
+        "speech": "Голас",
+        "speech_start_speaking": "Гаварыць",
+        "speech_stop_speaking": "Перастаць гаварыць"
+    },
+    "file_menu": {
+        "label": "Файл"
+    },
+    "right_click_menu": {
+        "copy_image": "Скапіраваць малюнак",
+        "copy_email": "Скапіраваць адрас пошты",
+        "copy_link_url": "Скапіраваць спасылку",
+        "save_image_as": "Захаваць малюнак як...",
+        "save_image_as_error_title": "Не атрымалася захаваць малюнак",
+        "save_image_as_error_description": "Не атрымалася захаваць малюнак",
+        "add_to_dictionary": "Дадаць у слоўнік"
+    }
 }

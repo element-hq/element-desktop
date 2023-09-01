@@ -1,47 +1,63 @@
 {
-    "Edit": "Изменить",
-    "Quit": "Выйти",
-    "Cancel": "Отмена",
-    "Show/Hide": "Показать/скрыть",
-    "Are you sure you want to quit?": "Вы уверены, что хотите выйти?",
-    "Copy email address": "Копировать адрес почты",
-    "Copy image": "Копировать изображение",
-    "File": "Файл",
-    "Zoom": "Масштаб",
-    "Unhide": "Показать",
-    "Hide": "Скрыть",
-    "Services": "Службы",
-    "About": "О программе",
-    "Help": "Помощь",
-    "Close": "Закрыть",
-    "Minimize": "Свернуть",
-    "Window": "Окно",
-    "Toggle Developer Tools": "Переключить инструменты разработчика",
-    "Toggle Full Screen": "Переключить полноэкранный режим",
-    "Preferences": "Предпочтения",
-    "Zoom Out": "Уменьшить",
-    "Zoom In": "Увеличить",
-    "Actual Size": "Фактический размер",
-    "View": "Просмотр",
-    "Select All": "Выбрать все",
-    "Delete": "Удалить",
-    "Paste": "Вставить",
-    "Copy": "Копировать",
-    "Cut": "Вырезать",
-    "Redo": "Повторить",
-    "Undo": "Отменить",
-    "Save image as...": "Сохранить изображение как...",
-    "Copy link address": "Копировать ссылку",
-    "Add to dictionary": "Добавить в словарь",
-    "The image failed to save": "Не удалось сохранить изображение",
-    "Failed to save image": "Не удалось сохранить изображение",
-    "Bring All to Front": "Вынести всё вперёд",
-    "Stop Speaking": "Перестаньте говорить",
-    "Start Speaking": "Говорите",
-    "Speech": "Речь",
-    "Hide Others": "Скрыть прочие",
-    "Paste and Match Style": "Вставить с тем же стилем",
-    "Copy image address": "Копировать адрес изображения",
-    "Close %(brand)s": "Закрыть %(brand)s",
-    "%(brand)s Help": "Помощь %(brand)s"
+    "action": {
+        "cancel": "Отмена",
+        "close_brand": "Закрыть %(brand)s",
+        "show_hide": "Показать/скрыть",
+        "quit": "Выйти",
+        "edit": "Изменить",
+        "undo": "Отменить",
+        "redo": "Повторить",
+        "copy": "Копировать",
+        "paste": "Вставить",
+        "paste_match_style": "Вставить с тем же стилем",
+        "delete": "Удалить",
+        "select_all": "Выбрать все",
+        "zoom_in": "Увеличить",
+        "zoom_out": "Уменьшить",
+        "minimise": "Свернуть",
+        "close": "Закрыть",
+        "cut": "Вырезать"
+    },
+    "confirm_quit": "Вы уверены, что хотите выйти?",
+    "common": {
+        "help": "Помощь",
+        "brand_help": "Помощь %(brand)s",
+        "about": "О программе",
+        "preferences": "Предпочтения"
+    },
+    "window_menu": {
+        "zoom": "Масштаб",
+        "label": "Окно",
+        "bring_all_to_front": "Вынести всё вперёд"
+    },
+    "view_menu": {
+        "view": "Просмотр",
+        "actual_size": "Фактический размер",
+        "toggle_full_screen": "Переключить полноэкранный режим",
+        "toggle_developer_tools": "Переключить инструменты разработчика"
+    },
+    "menu": {
+        "services": "Службы",
+        "hide": "Скрыть",
+        "unhide": "Показать",
+        "hide_others": "Скрыть прочие"
+    },
+    "edit_menu": {
+        "speech": "Речь",
+        "speech_start_speaking": "Говорите",
+        "speech_stop_speaking": "Перестаньте говорить"
+    },
+    "file_menu": {
+        "label": "Файл"
+    },
+    "right_click_menu": {
+        "copy_image": "Копировать изображение",
+        "copy_email": "Копировать адрес почты",
+        "copy_image_url": "Копировать адрес изображения",
+        "copy_link_url": "Копировать ссылку",
+        "save_image_as": "Сохранить изображение как...",
+        "save_image_as_error_title": "Не удалось сохранить изображение",
+        "save_image_as_error_description": "Не удалось сохранить изображение",
+        "add_to_dictionary": "Добавить в словарь"
+    }
 }

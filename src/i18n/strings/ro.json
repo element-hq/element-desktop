@@ -1,43 +1,59 @@
 {
-    "Add to dictionary": "Adăugați la dicționar",
-    "Failed to save image": "Eroare în salvarea imaginii",
-    "Save image as...": "Salvează imagine ca ...",
-    "Copy link address": "Copiază link",
-    "Copy email address": "Copiază adresă de email",
-    "Copy image": "Copiază imagine",
-    "File": "Fișier",
-    "Bring All to Front": "Aduce-ți totul in față",
-    "Zoom": "Zoom",
-    "Stop Speaking": "Oprire Voce",
-    "Start Speaking": "Pornire Voce",
-    "Speech": "Voce",
-    "Hide Others": "Ascunde restul",
-    "Hide": "Ascunde",
-    "Services": "Servicii",
-    "About": "Despre",
-    "Help": "Ajutor",
-    "Close": "Inchide",
-    "Minimize": "Minimizare",
-    "Window": "Fereastră",
-    "Toggle Developer Tools": "Comutare unelte dezvoltator",
-    "Toggle Full Screen": "Comutare pe tot ecranul",
-    "Preferences": "Preferințe",
-    "Zoom Out": "Micșorează",
-    "Zoom In": "Mărește",
-    "Actual Size": "Mărime reală",
-    "View": "Vizualizează",
-    "Select All": "Selectează tot",
-    "Delete": "Șterge",
-    "Paste and Match Style": "Lipește si potrivește stilul",
-    "Paste": "Lipește",
-    "Copy": "Copiază",
-    "Redo": "Refă",
-    "Undo": "Anulare",
-    "Edit": "Editare",
-    "Quit": "Închid",
-    "Show/Hide": "Arată/Ascunde",
-    "Are you sure you want to quit?": "Sigur vrei să ieși din cont?",
-    "Cancel": "Anulare",
-    "Close %(brand)s": "Închide %(brand)s",
-    "Cut": "Taie"
+    "action": {
+        "cancel": "Anulare",
+        "close_brand": "Închide %(brand)s",
+        "show_hide": "Arată/Ascunde",
+        "quit": "Închid",
+        "edit": "Editare",
+        "undo": "Anulare",
+        "redo": "Refă",
+        "copy": "Copiază",
+        "paste": "Lipește",
+        "paste_match_style": "Lipește si potrivește stilul",
+        "delete": "Șterge",
+        "select_all": "Selectează tot",
+        "zoom_in": "Mărește",
+        "zoom_out": "Micșorează",
+        "minimise": "Minimizare",
+        "close": "Inchide",
+        "cut": "Taie"
+    },
+    "confirm_quit": "Sigur vrei să ieși din cont?",
+    "common": {
+        "help": "Ajutor",
+        "about": "Despre",
+        "preferences": "Preferințe"
+    },
+    "window_menu": {
+        "zoom": "Zoom",
+        "label": "Fereastră",
+        "bring_all_to_front": "Aduce-ți totul in față"
+    },
+    "view_menu": {
+        "view": "Vizualizează",
+        "actual_size": "Mărime reală",
+        "toggle_full_screen": "Comutare pe tot ecranul",
+        "toggle_developer_tools": "Comutare unelte dezvoltator"
+    },
+    "menu": {
+        "services": "Servicii",
+        "hide": "Ascunde",
+        "hide_others": "Ascunde restul"
+    },
+    "edit_menu": {
+        "speech": "Voce",
+        "speech_start_speaking": "Pornire Voce",
+        "speech_stop_speaking": "Oprire Voce"
+    },
+    "file_menu": {
+        "label": "Fișier"
+    },
+    "right_click_menu": {
+        "copy_image": "Copiază imagine",
+        "copy_email": "Copiază adresă de email",
+        "copy_link_url": "Copiază link",
+        "save_image_as": "Salvează imagine ca ...",
+        "save_image_as_error_title": "Eroare în salvarea imaginii",
+        "add_to_dictionary": "Adăugați la dicționar"
+    }
 }

@@ -1,45 +1,61 @@
 {
-    "Show/Hide": "පෙන්වන්න/සඟවන්න",
-    "Are you sure you want to quit?": "ඔබට ඉවත් වීමට අවශ්‍ය බව විශ්වාස ද?",
-    "Cancel": "අවලංගු කරන්න",
-    "Add to dictionary": "ශබ්ද කෝෂයට එකතු කරන්න",
-    "Copy link address": "සබැඳියේ ලිපිනය පිටපත් කරන්න",
-    "Copy email address": "වි-තැපෑල පිටපත් කරන්න",
-    "File": "ගොනුව",
-    "Zoom": "විශාල කරන්න",
-    "Hide Others": "වෙනත් දෑ සඟවන්න",
-    "Hide": "සඟවන්න",
-    "Services": "සේවා",
-    "About": "පිළිබඳව",
-    "Help": "උපකාර",
-    "Close": "වසන්න",
-    "Minimize": "හකුලන්න",
-    "Window": "කවුළුව",
-    "Zoom Out": "කුඩාලනය කරන්න",
-    "Zoom In": "විශාලනය කරන්න",
-    "Actual Size": "සැබෑ ප්‍රමාණය",
-    "Select All": "සියල්ල තෝරන්න",
-    "Paste": "අලවන්න",
-    "Copy": "පිටපත්",
-    "Cut": "කපන්න",
-    "Redo": "පසුසේ",
-    "Undo": "පෙරසේ",
-    "Edit": "සංස්කරණය",
-    "Quit": "ඉවත් වන්න",
-    "Paste and Match Style": "අලවා ශෛලිය ගැළපුම",
-    "Delete": "මකන්න",
-    "The image failed to save": "රූපය සුරැකීමට අසමත්",
-    "Failed to save image": "රූපය සුරැකීමට අසමත්",
-    "Save image as...": "...ලෙස රූපය සුරකින්න",
-    "Copy image address": "රූපයේ ලිපිනයේ පිටපතක්",
-    "Copy image": "රූපයෙහි පිටපතක්",
-    "Bring All to Front": "සියල්ල ඉදිරිපසට",
-    "Stop Speaking": "කථාව නිමාව",
-    "Start Speaking": "කථාව ආරම්භය",
-    "Speech": "කථාව",
-    "Unhide": "නොසඟවන්න",
-    "Toggle Developer Tools": "සංවර්ධක මෙවලම්",
-    "Toggle Full Screen": "පූර්ණ තිරයට",
-    "Preferences": "පෙනුම",
-    "View": "දකින්න"
+    "action": {
+        "cancel": "අවලංගු කරන්න",
+        "show_hide": "පෙන්වන්න/සඟවන්න",
+        "quit": "ඉවත් වන්න",
+        "edit": "සංස්කරණය",
+        "undo": "පෙරසේ",
+        "redo": "පසුසේ",
+        "copy": "පිටපත්",
+        "paste": "අලවන්න",
+        "paste_match_style": "අලවා ශෛලිය ගැළපුම",
+        "delete": "මකන්න",
+        "select_all": "සියල්ල තෝරන්න",
+        "zoom_in": "විශාලනය කරන්න",
+        "zoom_out": "කුඩාලනය කරන්න",
+        "minimise": "හකුලන්න",
+        "close": "වසන්න",
+        "cut": "කපන්න"
+    },
+    "confirm_quit": "ඔබට ඉවත් වීමට අවශ්‍ය බව විශ්වාස ද?",
+    "common": {
+        "help": "උපකාර",
+        "about": "පිළිබඳව",
+        "preferences": "පෙනුම"
+    },
+    "window_menu": {
+        "zoom": "විශාල කරන්න",
+        "label": "කවුළුව",
+        "bring_all_to_front": "සියල්ල ඉදිරිපසට"
+    },
+    "view_menu": {
+        "view": "දකින්න",
+        "actual_size": "සැබෑ ප්‍රමාණය",
+        "toggle_full_screen": "පූර්ණ තිරයට",
+        "toggle_developer_tools": "සංවර්ධක මෙවලම්"
+    },
+    "menu": {
+        "services": "සේවා",
+        "hide": "සඟවන්න",
+        "unhide": "නොසඟවන්න",
+        "hide_others": "වෙනත් දෑ සඟවන්න"
+    },
+    "edit_menu": {
+        "speech": "කථාව",
+        "speech_start_speaking": "කථාව ආරම්භය",
+        "speech_stop_speaking": "කථාව නිමාව"
+    },
+    "file_menu": {
+        "label": "ගොනුව"
+    },
+    "right_click_menu": {
+        "copy_image": "රූපයෙහි පිටපතක්",
+        "copy_email": "වි-තැපෑල පිටපත් කරන්න",
+        "copy_image_url": "රූපයේ ලිපිනයේ පිටපතක්",
+        "copy_link_url": "සබැඳියේ ලිපිනය පිටපත් කරන්න",
+        "save_image_as": "...ලෙස රූපය සුරකින්න",
+        "save_image_as_error_title": "රූපය සුරැකීමට අසමත්",
+        "save_image_as_error_description": "රූපය සුරැකීමට අසමත්",
+        "add_to_dictionary": "ශබ්ද කෝෂයට එකතු කරන්න"
+    }
 }

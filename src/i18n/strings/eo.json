@@ -1,33 +1,49 @@
 {
-    "The image failed to save": "La bildo malsukcesis elŝutiĝi",
-    "Failed to save image": "Malsukcesis elŝuti bildon",
-    "Stop Speaking": "Ĉesi Paroli",
-    "Start Speaking": "Ekparoli",
-    "Unhide": "Malkaŝi",
-    "Hide Others": "Kaŝi Aliajn",
-    "Hide": "Kaŝi",
-    "About": "Informilo",
-    "Help": "Helpo",
-    "Toggle Developer Tools": "Baskuligi Programistajn Ilojn",
-    "Preferences": "Preferoj",
-    "View": "Vidi",
-    "Delete": "Forigi",
-    "Redo": "Refari",
-    "Undo": "Malfari",
-    "Edit": "Redakti",
-    "Show/Hide": "Montri/Kaŝi",
-    "Cancel": "Nuligi",
-    "Copy link address": "Kopiu ligilon de la bildo",
-    "Copy image address": "Kopiu adreson de la bildo",
-    "Copy email address": "Kopiu retadreson",
-    "Copy image": "Kopiu bildon",
-    "File": "Dosiero",
-    "Minimize": "Minimumigi",
-    "Window": "Fenestro",
-    "Select All": "Elekti Ĉiujn",
-    "Paste": "Enmeti",
-    "Copy": "Kopiu",
-    "Cut": "Tranĉi",
-    "Are you sure you want to quit?": "Ĉu vi certas, ke vi volas ĉesi?",
-    "Close %(brand)s": "Fermu %(brand)s"
+    "action": {
+        "cancel": "Nuligi",
+        "close_brand": "Fermu %(brand)s",
+        "show_hide": "Montri/Kaŝi",
+        "edit": "Redakti",
+        "undo": "Malfari",
+        "redo": "Refari",
+        "copy": "Kopiu",
+        "paste": "Enmeti",
+        "delete": "Forigi",
+        "select_all": "Elekti Ĉiujn",
+        "minimise": "Minimumigi",
+        "cut": "Tranĉi"
+    },
+    "confirm_quit": "Ĉu vi certas, ke vi volas ĉesi?",
+    "common": {
+        "help": "Helpo",
+        "about": "Informilo",
+        "preferences": "Preferoj"
+    },
+    "window_menu": {
+        "label": "Fenestro"
+    },
+    "view_menu": {
+        "view": "Vidi",
+        "toggle_developer_tools": "Baskuligi Programistajn Ilojn"
+    },
+    "menu": {
+        "hide": "Kaŝi",
+        "unhide": "Malkaŝi",
+        "hide_others": "Kaŝi Aliajn"
+    },
+    "edit_menu": {
+        "speech_start_speaking": "Ekparoli",
+        "speech_stop_speaking": "Ĉesi Paroli"
+    },
+    "file_menu": {
+        "label": "Dosiero"
+    },
+    "right_click_menu": {
+        "copy_image": "Kopiu bildon",
+        "copy_email": "Kopiu retadreson",
+        "copy_image_url": "Kopiu adreson de la bildo",
+        "copy_link_url": "Kopiu ligilon de la bildo",
+        "save_image_as_error_title": "Malsukcesis elŝuti bildon",
+        "save_image_as_error_description": "La bildo malsukcesis elŝutiĝi"
+    }
 }

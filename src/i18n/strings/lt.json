@@ -1,46 +1,62 @@
 {
-    "Failed to save image": "Nepavyko įrašyti paveikslėlio",
-    "Save image as...": "Įrašyti paveikslėlį kaip...",
-    "Copy image address": "Kopijuoti paveikslėlio adresą",
-    "Copy image": "Kopijuoti paveikslėlį",
-    "The image failed to save": "Paveikslėlio nepavyko išsaugoti",
-    "Bring All to Front": "Viską iškelti į priekį",
-    "Speech": "Kalba",
-    "Actual Size": "Tikrasis dydis",
-    "Toggle Developer Tools": "Perjungti kūrėjo įrankius",
-    "Toggle Full Screen": "Perjungti viso ekrano režimą",
-    "Paste and Match Style": "Įklijuoti ir suderinti stilių",
-    "Redo": "Sugrąžinti veiksmą",
-    "Undo": "Atšaukti veiksmą",
-    "Select All": "Pasirinkti visus",
-    "Delete": "Ištrinti",
-    "Paste": "Įklijuoti",
-    "Copy": "Kopijuoti",
-    "Cut": "Iškirpti",
-    "Add to dictionary": "Pridėti prie žodyno",
-    "Copy link address": "Kopijuoti nuorodos adresą",
-    "Copy email address": "Kopijuoti el. pašto adresą",
-    "File": "Failas",
-    "Zoom": "Priartinti",
-    "Stop Speaking": "Nustoti kalbėti",
-    "Start Speaking": "Pradėti kalbėti",
-    "Unhide": "Nebeslėpti",
-    "Hide Others": "Slėpti kitus",
-    "Hide": "Slėpti",
-    "Services": "Paslaugos",
-    "About": "Apie",
-    "Help": "Pagalba",
-    "Close": "Uždaryti",
-    "Minimize": "Sumažinti",
-    "Window": "Langas",
-    "Preferences": "Nuostatos",
-    "Zoom Out": "Atitolinti",
-    "Zoom In": "Priartinti",
-    "View": "Peržiūrėti",
-    "Edit": "Redaguoti",
-    "Quit": "Išeiti",
-    "Show/Hide": "Rodyti/Slėpti",
-    "Are you sure you want to quit?": "Ar tikrai norite išeiti?",
-    "Cancel": "Atšaukti",
-    "Close %(brand)s": "Uždaryti %(brand)s"
+    "action": {
+        "cancel": "Atšaukti",
+        "close_brand": "Uždaryti %(brand)s",
+        "show_hide": "Rodyti/Slėpti",
+        "quit": "Išeiti",
+        "edit": "Redaguoti",
+        "undo": "Atšaukti veiksmą",
+        "redo": "Sugrąžinti veiksmą",
+        "copy": "Kopijuoti",
+        "paste": "Įklijuoti",
+        "paste_match_style": "Įklijuoti ir suderinti stilių",
+        "delete": "Ištrinti",
+        "select_all": "Pasirinkti visus",
+        "zoom_in": "Priartinti",
+        "zoom_out": "Atitolinti",
+        "minimise": "Sumažinti",
+        "close": "Uždaryti",
+        "cut": "Iškirpti"
+    },
+    "confirm_quit": "Ar tikrai norite išeiti?",
+    "common": {
+        "help": "Pagalba",
+        "about": "Apie",
+        "preferences": "Nuostatos"
+    },
+    "window_menu": {
+        "zoom": "Priartinti",
+        "label": "Langas",
+        "bring_all_to_front": "Viską iškelti į priekį"
+    },
+    "view_menu": {
+        "view": "Peržiūrėti",
+        "actual_size": "Tikrasis dydis",
+        "toggle_full_screen": "Perjungti viso ekrano režimą",
+        "toggle_developer_tools": "Perjungti kūrėjo įrankius"
+    },
+    "menu": {
+        "services": "Paslaugos",
+        "hide": "Slėpti",
+        "unhide": "Nebeslėpti",
+        "hide_others": "Slėpti kitus"
+    },
+    "edit_menu": {
+        "speech": "Kalba",
+        "speech_start_speaking": "Pradėti kalbėti",
+        "speech_stop_speaking": "Nustoti kalbėti"
+    },
+    "file_menu": {
+        "label": "Failas"
+    },
+    "right_click_menu": {
+        "copy_image": "Kopijuoti paveikslėlį",
+        "copy_email": "Kopijuoti el. pašto adresą",
+        "copy_image_url": "Kopijuoti paveikslėlio adresą",
+        "copy_link_url": "Kopijuoti nuorodos adresą",
+        "save_image_as": "Įrašyti paveikslėlį kaip...",
+        "save_image_as_error_title": "Nepavyko įrašyti paveikslėlio",
+        "save_image_as_error_description": "Paveikslėlio nepavyko išsaugoti",
+        "add_to_dictionary": "Pridėti prie žodyno"
+    }
 }

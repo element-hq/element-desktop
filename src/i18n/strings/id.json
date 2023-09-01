@@ -1,47 +1,63 @@
 {
-    "Add to dictionary": "Tambah ke kamus",
-    "The image failed to save": "Gambar gagal disimpan",
-    "Failed to save image": "Gagal menyimpan gambar",
-    "Save image as...": "Simpan gambar sebagai...",
-    "Copy link address": "Salin alamat tautan",
-    "Copy email address": "Salin surel",
-    "Copy image": "Salin gambar",
-    "File": "File",
-    "Hide Others": "Sembunyikan yang Lain",
-    "Bring All to Front": "Bawa Semua ke Depan",
-    "Zoom": "Perbesar",
-    "Stop Speaking": "Berhenti Berbicara",
-    "Start Speaking": "Mulai Berbicara",
-    "Speech": "Dikte",
-    "Unhide": "Tampilkan",
-    "Hide": "Sembunyikan",
-    "Services": "Layanan",
-    "About": "Tentang",
-    "Help": "Bantuan",
-    "Close": "Tutup",
-    "Minimize": "Minimalkan",
-    "Window": "Jendela",
-    "Toggle Developer Tools": "Beralih Alat Pengembang",
-    "Toggle Full Screen": "Beralih Layar Penuh",
-    "Preferences": "Pengaturan",
-    "Zoom Out": "Perkecil",
-    "Zoom In": "Perbesar",
-    "Cut": "Potong",
-    "Redo": "Ulangi",
-    "Undo": "Urungkan",
-    "Actual Size": "Ukuran Sebenarnya",
-    "View": "Tampilan",
-    "Select All": "Pilih Semua",
-    "Delete": "Hapus",
-    "Paste and Match Style": "Tempel dan Cocokkan Gaya",
-    "Paste": "Tempel",
-    "Copy": "Salin",
-    "Edit": "Edit",
-    "Quit": "Keluar",
-    "Show/Hide": "Tampilkan/Sembunyikan",
-    "Are you sure you want to quit?": "Apakah Anda yakin ingin keluar?",
-    "Cancel": "Batal",
-    "Copy image address": "Salin alamat gambar",
-    "Close %(brand)s": "Tutuo %(brand)s",
-    "%(brand)s Help": "Bantuan %(brand)s"
+    "action": {
+        "cancel": "Batal",
+        "close_brand": "Tutuo %(brand)s",
+        "show_hide": "Tampilkan/Sembunyikan",
+        "quit": "Keluar",
+        "edit": "Edit",
+        "undo": "Urungkan",
+        "redo": "Ulangi",
+        "copy": "Salin",
+        "paste": "Tempel",
+        "paste_match_style": "Tempel dan Cocokkan Gaya",
+        "delete": "Hapus",
+        "select_all": "Pilih Semua",
+        "zoom_in": "Perbesar",
+        "zoom_out": "Perkecil",
+        "minimise": "Minimalkan",
+        "close": "Tutup",
+        "cut": "Potong"
+    },
+    "confirm_quit": "Apakah Anda yakin ingin keluar?",
+    "common": {
+        "help": "Bantuan",
+        "brand_help": "Bantuan %(brand)s",
+        "about": "Tentang",
+        "preferences": "Pengaturan"
+    },
+    "window_menu": {
+        "zoom": "Perbesar",
+        "label": "Jendela",
+        "bring_all_to_front": "Bawa Semua ke Depan"
+    },
+    "view_menu": {
+        "view": "Tampilan",
+        "actual_size": "Ukuran Sebenarnya",
+        "toggle_full_screen": "Beralih Layar Penuh",
+        "toggle_developer_tools": "Beralih Alat Pengembang"
+    },
+    "menu": {
+        "services": "Layanan",
+        "hide": "Sembunyikan",
+        "unhide": "Tampilkan",
+        "hide_others": "Sembunyikan yang Lain"
+    },
+    "edit_menu": {
+        "speech": "Dikte",
+        "speech_start_speaking": "Mulai Berbicara",
+        "speech_stop_speaking": "Berhenti Berbicara"
+    },
+    "file_menu": {
+        "label": "File"
+    },
+    "right_click_menu": {
+        "copy_image": "Salin gambar",
+        "copy_email": "Salin surel",
+        "copy_image_url": "Salin alamat gambar",
+        "copy_link_url": "Salin alamat tautan",
+        "save_image_as": "Simpan gambar sebagai...",
+        "save_image_as_error_title": "Gagal menyimpan gambar",
+        "save_image_as_error_description": "Gambar gagal disimpan",
+        "add_to_dictionary": "Tambah ke kamus"
+    }
 }

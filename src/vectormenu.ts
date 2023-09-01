@@ -24,46 +24,46 @@ export function buildMenuTemplate(): Menu {
     // Menu template from http://electron.atom.io/docs/api/menu/, edited
     const template: Array<MenuItemConstructorOptions | MenuItem> = [
         {
-            label: _t("Edit"),
+            label: _t("action|edit"),
             accelerator: "e",
             submenu: [
                 {
                     role: "undo",
-                    label: _t("Undo"),
+                    label: _t("action|undo"),
                 },
                 {
                     role: "redo",
-                    label: _t("Redo"),
+                    label: _t("action|redo"),
                 },
                 { type: "separator" },
                 {
                     role: "cut",
-                    label: _t("Cut"),
+                    label: _t("action|cut"),
                 },
                 {
                     role: "copy",
-                    label: _t("Copy"),
+                    label: _t("action|copy"),
                 },
                 {
                     role: "paste",
-                    label: _t("Paste"),
+                    label: _t("action|paste"),
                 },
                 {
                     role: "pasteAndMatchStyle",
-                    label: _t("Paste and Match Style"),
+                    label: _t("action|paste_match_style"),
                 },
                 {
                     role: "delete",
-                    label: _t("Delete"),
+                    label: _t("action|delete"),
                 },
                 {
                     role: "selectAll",
-                    label: _t("Select All"),
+                    label: _t("action|select_all"),
                 },
             ],
         },
         {
-            label: _t("View"),
+            label: _t("view_menu|view"),
             accelerator: "V",
             submenu: [
                 { type: "separator" },
@@ -84,22 +84,22 @@ export function buildMenuTemplate(): Menu {
                 },
                 {
                     role: "resetZoom",
-                    label: _t("Actual Size"),
+                    label: _t("view_menu|actual_size"),
                 },
                 {
                     role: "zoomIn",
-                    label: _t("Zoom In"),
+                    label: _t("action|zoom_in"),
                 },
                 {
                     role: "zoomOut",
-                    label: _t("Zoom Out"),
+                    label: _t("action|zoom_out"),
                 },
                 { type: "separator" },
                 // in macOS the Preferences menu item goes in the first menu
                 ...(!isMac
                     ? [
                           {
-                              label: _t("Preferences"),
+                              label: _t("common|preferences"),
                               click(): void {
                                   global.mainWindow?.webContents.send("preferences");
                               },
@@ -108,37 +108,37 @@ export function buildMenuTemplate(): Menu {
                     : []),
                 {
                     role: "togglefullscreen",
-                    label: _t("Toggle Full Screen"),
+                    label: _t("view_menu|toggle_full_screen"),
                 },
                 {
                     role: "toggleDevTools",
-                    label: _t("Toggle Developer Tools"),
+                    label: _t("view_menu|toggle_developer_tools"),
                 },
             ],
         },
         {
-            label: _t("Window"),
+            label: _t("window_menu|label"),
             accelerator: "w",
             role: "window",
             submenu: [
                 {
                     role: "minimize",
-                    label: _t("Minimize"),
+                    label: _t("action|minimise"),
                 },
                 {
                     role: "close",
-                    label: _t("Close"),
+                    label: _t("action|close"),
                 },
             ],
         },
         {
-            label: _t("Help"),
+            label: _t("common|help"),
             accelerator: "h",
             role: "help",
             submenu: [
                 {
                     // XXX: vectorConfig won't have defaults applied to it so we need to duplicate them here
-                    label: _t("%(brand)s Help", { brand: global.vectorConfig?.brand || "Element" }),
+                    label: _t("common|brand_help", { brand: global.vectorConfig?.brand || "Element" }),
                     click(): void {
                         shell.openExternal(global.vectorConfig?.help_url || "https://element.io/help");
                     },
@@ -156,11 +156,11 @@ export function buildMenuTemplate(): Menu {
             submenu: [
                 {
                     role: "about",
-                    label: _t("About") + " " + app.name,
+                    label: _t("common|about") + " " + app.name,
                 },
                 { type: "separator" },
                 {
-                    label: _t("Preferences") + "…",
+                    label: _t("common|preferences") + "…",
                     accelerator: "Command+,", // Mac-only accelerator
                     click(): void {
                         global.mainWindow?.webContents.send("preferences");
@@ -169,26 +169,26 @@ export function buildMenuTemplate(): Menu {
                 { type: "separator" },
                 {
                     role: "services",
-                    label: _t("Services"),
+                    label: _t("menu|services"),
                     submenu: [],
                 },
                 { type: "separator" },
                 {
                     role: "hide",
-                    label: _t("Hide"),
+                    label: _t("menu|hide"),
                 },
                 {
                     role: "hideOthers",
-                    label: _t("Hide Others"),
+                    label: _t("menu|hide_others"),
                 },
                 {
                     role: "unhide",
-                    label: _t("Unhide"),
+                    label: _t("menu|unhide"),
                 },
                 { type: "separator" },
                 {
                     role: "quit",
-                    label: _t("Quit"),
+                    label: _t("action|quit"),
                 },
             ],
         });
@@ -197,15 +197,15 @@ export function buildMenuTemplate(): Menu {
         (template[1].submenu as MenuItemConstructorOptions[]).push(
             { type: "separator" },
             {
-                label: _t("Speech"),
+                label: _t("edit_menu|speech"),
                 submenu: [
                     {
                         role: "startSpeaking",
-                        label: _t("Start Speaking"),
+                        label: _t("edit_menu|speech_start_speaking"),
                     },
                     {
                         role: "stopSpeaking",
-                        label: _t("Stop Speaking"),
+                        label: _t("edit_menu|speech_stop_speaking"),
                     },
                 ],
             },
@@ -215,30 +215,30 @@ export function buildMenuTemplate(): Menu {
         // This also has specific functionality on macOS
         template[3].submenu = [
             {
-                label: _t("Close"),
+                label: _t("action|close"),
                 accelerator: "CmdOrCtrl+W",
                 role: "close",
             },
             {
-                label: _t("Minimize"),
+                label: _t("action|minimise"),
                 accelerator: "CmdOrCtrl+M",
                 role: "minimize",
             },
             {
-                label: _t("Zoom"),
+                label: _t("window_menu|zoom"),
                 role: "zoom",
             },
             {
                 type: "separator",
             },
             {
-                label: _t("Bring All to Front"),
+                label: _t("window_menu|bring_all_to_front"),
                 role: "front",
             },
         ];
     } else {
         template.unshift({
-            label: _t("File"),
+            label: _t("file_menu|label"),
             accelerator: "f",
             submenu: [
                 // For some reason, 'about' does not seem to work on windows.
@@ -248,7 +248,7 @@ export function buildMenuTemplate(): Menu {
                 },*/
                 {
                     role: "quit",
-                    label: _t("Quit"),
+                    label: _t("action|quit"),
                 },
             ],
         });

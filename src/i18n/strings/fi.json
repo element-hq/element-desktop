@@ -1,46 +1,62 @@
 {
-    "Paste": "Liitä",
-    "Paste and Match Style": "Liitä ja sovita tyyli",
-    "Add to dictionary": "Lisää sanakirjaan",
-    "The image failed to save": "Kuvan tallennus epäonnistui",
-    "Failed to save image": "Kuvan tallennus epäonnistui",
-    "Save image as...": "Tallenna kuva nimellä...",
-    "Copy link address": "Kopioi linkin osoite",
-    "Copy email address": "Kopioi sähköpostiosoite",
-    "Copy image": "Kopioi kuva",
-    "File": "Tiedosto",
-    "Bring All to Front": "Tuo kaikki eteen",
-    "Zoom": "Suurennus",
-    "Stop Speaking": "Lopeta puhe",
-    "Start Speaking": "Aloita puhe",
-    "Speech": "Puhe",
-    "Unhide": "Palauta näkyviin",
-    "Hide Others": "Piilota muut",
-    "Hide": "Piilota",
-    "Services": "Palvelut",
-    "About": "Tietoja",
-    "Help": "Apua",
-    "Close": "Sulje",
-    "Minimize": "Pienennä",
-    "Window": "Ikkuna",
-    "Toggle Developer Tools": "Näytä tai piilota kehittäjätyökalut",
-    "Toggle Full Screen": "Vaihda koko näytön tilaa",
-    "Preferences": "Asetukset",
-    "Zoom Out": "Pienennä",
-    "Zoom In": "Suurenna",
-    "Actual Size": "Alkuperäinen koko",
-    "View": "Näytä",
-    "Select All": "Valitse kaikki",
-    "Delete": "Poista",
-    "Copy": "Kopioi",
-    "Cut": "Leikkaa",
-    "Redo": "Tee uudestaan",
-    "Undo": "Peru",
-    "Edit": "Muokkaa",
-    "Quit": "Lopeta",
-    "Show/Hide": "Näytä/piilota",
-    "Are you sure you want to quit?": "Haluatko varmasti poistua?",
-    "Cancel": "Peruuta",
-    "Copy image address": "Kopioi kuvan osoite",
-    "Close %(brand)s": "Sulje %(brand)s"
+    "action": {
+        "cancel": "Peruuta",
+        "close_brand": "Sulje %(brand)s",
+        "show_hide": "Näytä/piilota",
+        "quit": "Lopeta",
+        "edit": "Muokkaa",
+        "undo": "Peru",
+        "redo": "Tee uudestaan",
+        "copy": "Kopioi",
+        "paste": "Liitä",
+        "paste_match_style": "Liitä ja sovita tyyli",
+        "delete": "Poista",
+        "select_all": "Valitse kaikki",
+        "zoom_in": "Suurenna",
+        "zoom_out": "Pienennä",
+        "minimise": "Pienennä",
+        "close": "Sulje",
+        "cut": "Leikkaa"
+    },
+    "confirm_quit": "Haluatko varmasti poistua?",
+    "common": {
+        "help": "Apua",
+        "about": "Tietoja",
+        "preferences": "Asetukset"
+    },
+    "window_menu": {
+        "zoom": "Suurennus",
+        "label": "Ikkuna",
+        "bring_all_to_front": "Tuo kaikki eteen"
+    },
+    "view_menu": {
+        "view": "Näytä",
+        "actual_size": "Alkuperäinen koko",
+        "toggle_full_screen": "Vaihda koko näytön tilaa",
+        "toggle_developer_tools": "Näytä tai piilota kehittäjätyökalut"
+    },
+    "menu": {
+        "services": "Palvelut",
+        "hide": "Piilota",
+        "unhide": "Palauta näkyviin",
+        "hide_others": "Piilota muut"
+    },
+    "edit_menu": {
+        "speech": "Puhe",
+        "speech_start_speaking": "Aloita puhe",
+        "speech_stop_speaking": "Lopeta puhe"
+    },
+    "file_menu": {
+        "label": "Tiedosto"
+    },
+    "right_click_menu": {
+        "copy_image": "Kopioi kuva",
+        "copy_email": "Kopioi sähköpostiosoite",
+        "copy_image_url": "Kopioi kuvan osoite",
+        "copy_link_url": "Kopioi linkin osoite",
+        "save_image_as": "Tallenna kuva nimellä...",
+        "save_image_as_error_title": "Kuvan tallennus epäonnistui",
+        "save_image_as_error_description": "Kuvan tallennus epäonnistui",
+        "add_to_dictionary": "Lisää sanakirjaan"
+    }
 }
