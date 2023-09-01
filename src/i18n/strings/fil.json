@@ -1,47 +1,47 @@
 {
     "action": {
-        "cancel": "취소",
+        "cancel": "Kanselahin",
         "close": "Close",
-        "close_brand": "%(brand)s 닫기",
-        "copy": "복사하기",
-        "cut": "잘라내기",
-        "delete": "삭제",
-        "edit": "수정",
+        "close_brand": "Isara ang %(brand)s",
+        "copy": "I-copy",
+        "cut": "I-cut",
+        "delete": "Alisin",
+        "edit": "I-edit",
         "minimise": "Minimize",
-        "paste": "붙여넣기",
-        "paste_match_style": "붙여넣고 스타일 일치",
-        "quit": "종료",
-        "redo": "되돌리기",
-        "select_all": "전체 선택",
-        "show_hide": "보이기/숨기기",
-        "undo": "실행 취소",
-        "zoom_in": "확대",
-        "zoom_out": "축소"
+        "paste": "I-paste",
+        "paste_match_style": "I-paste at Tumugma ng Style",
+        "quit": "Magsara",
+        "redo": "Redo",
+        "select_all": "Select All",
+        "show_hide": "Ipakita/itago",
+        "undo": "Undo",
+        "zoom_in": "Zoom In",
+        "zoom_out": "Zoom Out"
     },
     "common": {
         "about": "About",
         "brand_help": "%(brand)s Help",
         "help": "Help",
-        "preferences": "환경설정"
+        "preferences": "Preferences"
     },
-    "confirm_quit": "종료하시겠습니까?",
+    "confirm_quit": "Sigurado ka ba na gusto mong magsara?",
     "edit_menu": {
         "speech": "Speech",
         "speech_start_speaking": "Start Speaking",
         "speech_stop_speaking": "Stop Speaking"
     },
     "file_menu": {
-        "label": "파일"
+        "label": "File"
     },
     "menu": {
-        "hide": "숨기기",
+        "hide": "Itago",
         "hide_others": "Hide Others",
         "services": "Services",
         "unhide": "Unhide"
     },
     "right_click_menu": {
         "add_to_dictionary": "Add to dictionary",
-        "copy_email": "이메일 주소 복사",
+        "copy_email": "Copy email address",
         "copy_image": "Copy image",
         "copy_image_url": "Copy image address",
         "copy_link_url": "Copy link address",
@@ -50,10 +50,10 @@
         "save_image_as_error_title": "Failed to save image"
     },
     "view_menu": {
-        "actual_size": "실제 크기",
+        "actual_size": "Actual Size",
         "toggle_developer_tools": "Toggle Developer Tools",
         "toggle_full_screen": "Toggle Full Screen",
-        "view": "보기"
+        "view": "View"
     },
     "window_menu": {
         "bring_all_to_front": "Bring All to Front",

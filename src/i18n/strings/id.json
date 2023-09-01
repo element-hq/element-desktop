@@ -1,47 +1,30 @@
 {
     "action": {
         "cancel": "Batal",
+        "close": "Tutup",
         "close_brand": "Tutuo %(brand)s",
-        "show_hide": "Tampilkan/Sembunyikan",
-        "quit": "Keluar",
-        "edit": "Edit",
-        "undo": "Urungkan",
-        "redo": "Ulangi",
         "copy": "Salin",
+        "cut": "Potong",
+        "delete": "Hapus",
+        "edit": "Edit",
+        "minimise": "Minimalkan",
         "paste": "Tempel",
         "paste_match_style": "Tempel dan Cocokkan Gaya",
-        "delete": "Hapus",
+        "quit": "Keluar",
+        "redo": "Ulangi",
         "select_all": "Pilih Semua",
+        "show_hide": "Tampilkan/Sembunyikan",
+        "undo": "Urungkan",
         "zoom_in": "Perbesar",
-        "zoom_out": "Perkecil",
-        "minimise": "Minimalkan",
-        "close": "Tutup",
-        "cut": "Potong"
+        "zoom_out": "Perkecil"
     },
-    "confirm_quit": "Apakah Anda yakin ingin keluar?",
     "common": {
-        "help": "Bantuan",
-        "brand_help": "Bantuan %(brand)s",
         "about": "Tentang",
+        "brand_help": "Bantuan %(brand)s",
+        "help": "Bantuan",
         "preferences": "Pengaturan"
     },
-    "window_menu": {
-        "zoom": "Perbesar",
-        "label": "Jendela",
-        "bring_all_to_front": "Bawa Semua ke Depan"
-    },
-    "view_menu": {
-        "view": "Tampilan",
-        "actual_size": "Ukuran Sebenarnya",
-        "toggle_full_screen": "Beralih Layar Penuh",
-        "toggle_developer_tools": "Beralih Alat Pengembang"
-    },
-    "menu": {
-        "services": "Layanan",
-        "hide": "Sembunyikan",
-        "unhide": "Tampilkan",
-        "hide_others": "Sembunyikan yang Lain"
-    },
+    "confirm_quit": "Apakah Anda yakin ingin keluar?",
     "edit_menu": {
         "speech": "Dikte",
         "speech_start_speaking": "Mulai Berbicara",
@@ -50,14 +33,31 @@
     "file_menu": {
         "label": "File"
     },
+    "menu": {
+        "hide": "Sembunyikan",
+        "hide_others": "Sembunyikan yang Lain",
+        "services": "Layanan",
+        "unhide": "Tampilkan"
+    },
     "right_click_menu": {
-        "copy_image": "Salin gambar",
+        "add_to_dictionary": "Tambah ke kamus",
         "copy_email": "Salin surel",
+        "copy_image": "Salin gambar",
         "copy_image_url": "Salin alamat gambar",
         "copy_link_url": "Salin alamat tautan",
         "save_image_as": "Simpan gambar sebagai...",
-        "save_image_as_error_title": "Gagal menyimpan gambar",
         "save_image_as_error_description": "Gambar gagal disimpan",
-        "add_to_dictionary": "Tambah ke kamus"
+        "save_image_as_error_title": "Gagal menyimpan gambar"
+    },
+    "view_menu": {
+        "actual_size": "Ukuran Sebenarnya",
+        "toggle_developer_tools": "Beralih Alat Pengembang",
+        "toggle_full_screen": "Beralih Layar Penuh",
+        "view": "Tampilan"
+    },
+    "window_menu": {
+        "bring_all_to_front": "Bawa Semua ke Depan",
+        "label": "Jendela",
+        "zoom": "Perbesar"
     }
 }

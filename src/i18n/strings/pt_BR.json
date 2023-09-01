@@ -1,46 +1,30 @@
 {
     "action": {
         "cancel": "Cancelar",
+        "close": "Fechar",
         "close_brand": "Fechar %(brand)s",
-        "show_hide": "Mostrar/Esconder",
-        "quit": "Sair",
-        "edit": "Editar",
-        "undo": "Desfazer",
-        "redo": "Refazer",
         "copy": "Copiar",
+        "cut": "Cortar",
+        "delete": "Deletar",
+        "edit": "Editar",
+        "minimise": "Minimizar",
         "paste": "Colar",
         "paste_match_style": "Colar e Adequar Estilo",
-        "delete": "Deletar",
+        "quit": "Sair",
+        "redo": "Refazer",
         "select_all": "Selecionar Todas",
+        "show_hide": "Mostrar/Esconder",
+        "undo": "Desfazer",
         "zoom_in": "Dar Zoom In",
-        "zoom_out": "Dar Zoom Out",
-        "minimise": "Minimizar",
-        "close": "Fechar",
-        "cut": "Cortar"
+        "zoom_out": "Dar Zoom Out"
     },
-    "confirm_quit": "Você tem certeza que você quer sair?",
     "common": {
-        "help": "Ajuda",
         "about": "Sobre",
+        "brand_help": "%(brand)s Help",
+        "help": "Ajuda",
         "preferences": "Preferências"
     },
-    "window_menu": {
-        "zoom": "Zoom",
-        "label": "Janela",
-        "bring_all_to_front": "Trazer Todas Para Frente"
-    },
-    "view_menu": {
-        "view": "Visualizar",
-        "actual_size": "Tamanho de Verdade",
-        "toggle_full_screen": "Pôr em/Tirar de Tela Cheia",
-        "toggle_developer_tools": "Ativar/Desativar Ferramentas de Desenvolvimento"
-    },
-    "menu": {
-        "services": "Serviços",
-        "hide": "Esconder",
-        "unhide": "Desesconder",
-        "hide_others": "Esconder Outras(os)"
-    },
+    "confirm_quit": "Você tem certeza que você quer sair?",
     "edit_menu": {
         "speech": "Fala",
         "speech_start_speaking": "Começar a Falar",
@@ -49,14 +33,31 @@
     "file_menu": {
         "label": "Arquivo"
     },
+    "menu": {
+        "hide": "Esconder",
+        "hide_others": "Esconder Outras(os)",
+        "services": "Serviços",
+        "unhide": "Desesconder"
+    },
     "right_click_menu": {
-        "copy_image": "Copiar imagem",
+        "add_to_dictionary": "Adicionar a dicionário",
         "copy_email": "Copiar endereço de email",
+        "copy_image": "Copiar imagem",
         "copy_image_url": "Copiar endereço de imagem",
         "copy_link_url": "Copiar endereço de link",
         "save_image_as": "Salvar imagem como...",
-        "save_image_as_error_title": "Falha para salvar imagem",
         "save_image_as_error_description": "A imagem falhou para salvar",
-        "add_to_dictionary": "Adicionar a dicionário"
+        "save_image_as_error_title": "Falha para salvar imagem"
+    },
+    "view_menu": {
+        "actual_size": "Tamanho de Verdade",
+        "toggle_developer_tools": "Ativar/Desativar Ferramentas de Desenvolvimento",
+        "toggle_full_screen": "Pôr em/Tirar de Tela Cheia",
+        "view": "Visualizar"
+    },
+    "window_menu": {
+        "bring_all_to_front": "Trazer Todas Para Frente",
+        "label": "Janela",
+        "zoom": "Zoom"
     }
 }

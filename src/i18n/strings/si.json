@@ -1,45 +1,30 @@
 {
     "action": {
         "cancel": "අවලංගු කරන්න",
-        "show_hide": "පෙන්වන්න/සඟවන්න",
-        "quit": "ඉවත් වන්න",
-        "edit": "සංස්කරණය",
-        "undo": "පෙරසේ",
-        "redo": "පසුසේ",
+        "close": "වසන්න",
+        "close_brand": "Close %(brand)s",
         "copy": "පිටපත්",
+        "cut": "කපන්න",
+        "delete": "මකන්න",
+        "edit": "සංස්කරණය",
+        "minimise": "හකුලන්න",
         "paste": "අලවන්න",
         "paste_match_style": "අලවා ශෛලිය ගැළපුම",
-        "delete": "මකන්න",
+        "quit": "ඉවත් වන්න",
+        "redo": "පසුසේ",
         "select_all": "සියල්ල තෝරන්න",
+        "show_hide": "පෙන්වන්න/සඟවන්න",
+        "undo": "පෙරසේ",
         "zoom_in": "විශාලනය කරන්න",
-        "zoom_out": "කුඩාලනය කරන්න",
-        "minimise": "හකුලන්න",
-        "close": "වසන්න",
-        "cut": "කපන්න"
+        "zoom_out": "කුඩාලනය කරන්න"
     },
-    "confirm_quit": "ඔබට ඉවත් වීමට අවශ්‍ය බව විශ්වාස ද?",
     "common": {
-        "help": "උපකාර",
         "about": "පිළිබඳව",
+        "brand_help": "%(brand)s Help",
+        "help": "උපකාර",
         "preferences": "පෙනුම"
     },
-    "window_menu": {
-        "zoom": "විශාල කරන්න",
-        "label": "කවුළුව",
-        "bring_all_to_front": "සියල්ල ඉදිරිපසට"
-    },
-    "view_menu": {
-        "view": "දකින්න",
-        "actual_size": "සැබෑ ප්‍රමාණය",
-        "toggle_full_screen": "පූර්ණ තිරයට",
-        "toggle_developer_tools": "සංවර්ධක මෙවලම්"
-    },
-    "menu": {
-        "services": "සේවා",
-        "hide": "සඟවන්න",
-        "unhide": "නොසඟවන්න",
-        "hide_others": "වෙනත් දෑ සඟවන්න"
-    },
+    "confirm_quit": "ඔබට ඉවත් වීමට අවශ්‍ය බව විශ්වාස ද?",
     "edit_menu": {
         "speech": "කථාව",
         "speech_start_speaking": "කථාව ආරම්භය",
@@ -48,14 +33,31 @@
     "file_menu": {
         "label": "ගොනුව"
     },
+    "menu": {
+        "hide": "සඟවන්න",
+        "hide_others": "වෙනත් දෑ සඟවන්න",
+        "services": "සේවා",
+        "unhide": "නොසඟවන්න"
+    },
     "right_click_menu": {
-        "copy_image": "රූපයෙහි පිටපතක්",
+        "add_to_dictionary": "ශබ්ද කෝෂයට එකතු කරන්න",
         "copy_email": "වි-තැපෑල පිටපත් කරන්න",
+        "copy_image": "රූපයෙහි පිටපතක්",
         "copy_image_url": "රූපයේ ලිපිනයේ පිටපතක්",
         "copy_link_url": "සබැඳියේ ලිපිනය පිටපත් කරන්න",
         "save_image_as": "...ලෙස රූපය සුරකින්න",
-        "save_image_as_error_title": "රූපය සුරැකීමට අසමත්",
         "save_image_as_error_description": "රූපය සුරැකීමට අසමත්",
-        "add_to_dictionary": "ශබ්ද කෝෂයට එකතු කරන්න"
+        "save_image_as_error_title": "රූපය සුරැකීමට අසමත්"
+    },
+    "view_menu": {
+        "actual_size": "සැබෑ ප්‍රමාණය",
+        "toggle_developer_tools": "සංවර්ධක මෙවලම්",
+        "toggle_full_screen": "පූර්ණ තිරයට",
+        "view": "දකින්න"
+    },
+    "window_menu": {
+        "bring_all_to_front": "සියල්ල ඉදිරිපසට",
+        "label": "කවුළුව",
+        "zoom": "විශාල කරන්න"
     }
 }

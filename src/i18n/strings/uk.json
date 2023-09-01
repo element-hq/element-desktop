@@ -1,47 +1,30 @@
 {
     "action": {
         "cancel": "Скасувати",
+        "close": "Закрити",
         "close_brand": "Закрити %(brand)s",
-        "show_hide": "Показати/Сховати",
-        "quit": "Вийти",
-        "edit": "Змінити",
-        "undo": "Скасувати дію",
-        "redo": "Повторити дію",
         "copy": "Копіювати",
+        "cut": "Вирізати",
+        "delete": "Видалити",
+        "edit": "Змінити",
+        "minimise": "Згорнути",
         "paste": "Вставити",
         "paste_match_style": "Вставити з таким же стилем",
-        "delete": "Видалити",
+        "quit": "Вийти",
+        "redo": "Повторити дію",
         "select_all": "Вибрати все",
+        "show_hide": "Показати/Сховати",
+        "undo": "Скасувати дію",
         "zoom_in": "Збільшити",
-        "zoom_out": "Зменшити",
-        "minimise": "Згорнути",
-        "close": "Закрити",
-        "cut": "Вирізати"
+        "zoom_out": "Зменшити"
     },
-    "confirm_quit": "Ви впевнені, що хочете вийти?",
     "common": {
-        "help": "Довідка",
-        "brand_help": "Довідка %(brand)s",
         "about": "Про застосунок",
+        "brand_help": "Довідка %(brand)s",
+        "help": "Довідка",
         "preferences": "Параметри"
     },
-    "window_menu": {
-        "zoom": "Масштаб",
-        "label": "Вікно",
-        "bring_all_to_front": "Винести все вперед"
-    },
-    "view_menu": {
-        "view": "Перегляд",
-        "actual_size": "Фактичний розмір",
-        "toggle_full_screen": "Перемкнути повноекранний режим",
-        "toggle_developer_tools": "Перемкнути інструменти розробника"
-    },
-    "menu": {
-        "services": "Служби",
-        "hide": "Сховати",
-        "unhide": "Показати",
-        "hide_others": "Сховати інші"
-    },
+    "confirm_quit": "Ви впевнені, що хочете вийти?",
     "edit_menu": {
         "speech": "Мовлення",
         "speech_start_speaking": "Почати говорити",
@@ -50,14 +33,31 @@
     "file_menu": {
         "label": "Файл"
     },
+    "menu": {
+        "hide": "Сховати",
+        "hide_others": "Сховати інші",
+        "services": "Служби",
+        "unhide": "Показати"
+    },
     "right_click_menu": {
-        "copy_image": "Копіювати зображення",
+        "add_to_dictionary": "Додати до словника",
         "copy_email": "Копіювати адресу е-пошти",
+        "copy_image": "Копіювати зображення",
         "copy_image_url": "Копіювати адресу зображення",
         "copy_link_url": "Копіювати адресу посилання",
         "save_image_as": "Зберегти зображення як...",
-        "save_image_as_error_title": "Не вдалося зберегти зображення",
         "save_image_as_error_description": "Не вдалося зберегти зображення",
-        "add_to_dictionary": "Додати до словника"
+        "save_image_as_error_title": "Не вдалося зберегти зображення"
+    },
+    "view_menu": {
+        "actual_size": "Фактичний розмір",
+        "toggle_developer_tools": "Перемкнути інструменти розробника",
+        "toggle_full_screen": "Перемкнути повноекранний режим",
+        "view": "Перегляд"
+    },
+    "window_menu": {
+        "bring_all_to_front": "Винести все вперед",
+        "label": "Вікно",
+        "zoom": "Масштаб"
     }
 }

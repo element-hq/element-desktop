@@ -1,47 +1,30 @@
 {
     "action": {
         "cancel": "Zrušit",
+        "close": "Zavřít",
         "close_brand": "Zavřít %(brand)s",
-        "show_hide": "Zobrazit/Skrýt",
-        "quit": "Ukončit",
-        "edit": "Úpravy",
-        "undo": "Zpět",
-        "redo": "Znovu",
         "copy": "Kopírovat",
+        "cut": "Vyjmout",
+        "delete": "Smazat",
+        "edit": "Úpravy",
+        "minimise": "Minimalizovat",
         "paste": "Vložit",
         "paste_match_style": "Vložit a přizpůsobit styl",
-        "delete": "Smazat",
+        "quit": "Ukončit",
+        "redo": "Znovu",
         "select_all": "Vybrat vše",
+        "show_hide": "Zobrazit/Skrýt",
+        "undo": "Zpět",
         "zoom_in": "Přiblížit",
-        "zoom_out": "Oddálit",
-        "minimise": "Minimalizovat",
-        "close": "Zavřít",
-        "cut": "Vyjmout"
+        "zoom_out": "Oddálit"
     },
-    "confirm_quit": "Opravdu chcete ukončit aplikaci?",
     "common": {
-        "help": "Nápověda",
-        "brand_help": "%(brand)s nápověda",
         "about": "O aplikaci",
+        "brand_help": "%(brand)s nápověda",
+        "help": "Nápověda",
         "preferences": "Předvolby"
     },
-    "window_menu": {
-        "zoom": "Lupa",
-        "label": "Okno",
-        "bring_all_to_front": "Přenést vše do popředí"
-    },
-    "view_menu": {
-        "view": "Zobrazit",
-        "actual_size": "Aktuální velikost",
-        "toggle_full_screen": "Přepnout zobrazení celé obrazovky",
-        "toggle_developer_tools": "Přepnout zobrazení nástrojů pro vývojáře"
-    },
-    "menu": {
-        "services": "Služby",
-        "hide": "Skrýt",
-        "unhide": "Zrušit skrytí",
-        "hide_others": "Skrýt ostatní"
-    },
+    "confirm_quit": "Opravdu chcete ukončit aplikaci?",
     "edit_menu": {
         "speech": "Řeč",
         "speech_start_speaking": "Spustit nahrávání hlasu",
@@ -50,14 +33,31 @@
     "file_menu": {
         "label": "Soubor"
     },
+    "menu": {
+        "hide": "Skrýt",
+        "hide_others": "Skrýt ostatní",
+        "services": "Služby",
+        "unhide": "Zrušit skrytí"
+    },
     "right_click_menu": {
-        "copy_image": "Kopírovat obrázek",
+        "add_to_dictionary": "Přidat do slovníku",
         "copy_email": "Kopírovat e-mailovou adresu",
+        "copy_image": "Kopírovat obrázek",
         "copy_image_url": "Kopírovat adresu obrázku",
         "copy_link_url": "Kopírovat adresu odkazu",
         "save_image_as": "Uložit obrázek jako...",
-        "save_image_as_error_title": "Chyba při ukládání obrázku",
         "save_image_as_error_description": "Obrázek se nepodařilo uložit",
-        "add_to_dictionary": "Přidat do slovníku"
+        "save_image_as_error_title": "Chyba při ukládání obrázku"
+    },
+    "view_menu": {
+        "actual_size": "Aktuální velikost",
+        "toggle_developer_tools": "Přepnout zobrazení nástrojů pro vývojáře",
+        "toggle_full_screen": "Přepnout zobrazení celé obrazovky",
+        "view": "Zobrazit"
+    },
+    "window_menu": {
+        "bring_all_to_front": "Přenést vše do popředí",
+        "label": "Okno",
+        "zoom": "Lupa"
     }
 }

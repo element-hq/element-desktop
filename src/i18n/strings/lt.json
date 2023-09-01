@@ -1,46 +1,30 @@
 {
     "action": {
         "cancel": "Atšaukti",
+        "close": "Uždaryti",
         "close_brand": "Uždaryti %(brand)s",
-        "show_hide": "Rodyti/Slėpti",
-        "quit": "Išeiti",
-        "edit": "Redaguoti",
-        "undo": "Atšaukti veiksmą",
-        "redo": "Sugrąžinti veiksmą",
         "copy": "Kopijuoti",
+        "cut": "Iškirpti",
+        "delete": "Ištrinti",
+        "edit": "Redaguoti",
+        "minimise": "Sumažinti",
         "paste": "Įklijuoti",
         "paste_match_style": "Įklijuoti ir suderinti stilių",
-        "delete": "Ištrinti",
+        "quit": "Išeiti",
+        "redo": "Sugrąžinti veiksmą",
         "select_all": "Pasirinkti visus",
+        "show_hide": "Rodyti/Slėpti",
+        "undo": "Atšaukti veiksmą",
         "zoom_in": "Priartinti",
-        "zoom_out": "Atitolinti",
-        "minimise": "Sumažinti",
-        "close": "Uždaryti",
-        "cut": "Iškirpti"
+        "zoom_out": "Atitolinti"
     },
-    "confirm_quit": "Ar tikrai norite išeiti?",
     "common": {
-        "help": "Pagalba",
         "about": "Apie",
+        "brand_help": "%(brand)s Help",
+        "help": "Pagalba",
         "preferences": "Nuostatos"
     },
-    "window_menu": {
-        "zoom": "Priartinti",
-        "label": "Langas",
-        "bring_all_to_front": "Viską iškelti į priekį"
-    },
-    "view_menu": {
-        "view": "Peržiūrėti",
-        "actual_size": "Tikrasis dydis",
-        "toggle_full_screen": "Perjungti viso ekrano režimą",
-        "toggle_developer_tools": "Perjungti kūrėjo įrankius"
-    },
-    "menu": {
-        "services": "Paslaugos",
-        "hide": "Slėpti",
-        "unhide": "Nebeslėpti",
-        "hide_others": "Slėpti kitus"
-    },
+    "confirm_quit": "Ar tikrai norite išeiti?",
     "edit_menu": {
         "speech": "Kalba",
         "speech_start_speaking": "Pradėti kalbėti",
@@ -49,14 +33,31 @@
     "file_menu": {
         "label": "Failas"
     },
+    "menu": {
+        "hide": "Slėpti",
+        "hide_others": "Slėpti kitus",
+        "services": "Paslaugos",
+        "unhide": "Nebeslėpti"
+    },
     "right_click_menu": {
-        "copy_image": "Kopijuoti paveikslėlį",
+        "add_to_dictionary": "Pridėti prie žodyno",
         "copy_email": "Kopijuoti el. pašto adresą",
+        "copy_image": "Kopijuoti paveikslėlį",
         "copy_image_url": "Kopijuoti paveikslėlio adresą",
         "copy_link_url": "Kopijuoti nuorodos adresą",
         "save_image_as": "Įrašyti paveikslėlį kaip...",
-        "save_image_as_error_title": "Nepavyko įrašyti paveikslėlio",
         "save_image_as_error_description": "Paveikslėlio nepavyko išsaugoti",
-        "add_to_dictionary": "Pridėti prie žodyno"
+        "save_image_as_error_title": "Nepavyko įrašyti paveikslėlio"
+    },
+    "view_menu": {
+        "actual_size": "Tikrasis dydis",
+        "toggle_developer_tools": "Perjungti kūrėjo įrankius",
+        "toggle_full_screen": "Perjungti viso ekrano režimą",
+        "view": "Peržiūrėti"
+    },
+    "window_menu": {
+        "bring_all_to_front": "Viską iškelti į priekį",
+        "label": "Langas",
+        "zoom": "Priartinti"
     }
 }

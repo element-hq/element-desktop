@@ -1,47 +1,30 @@
 {
     "action": {
         "cancel": "Tühista",
+        "close": "Sulge",
         "close_brand": "Sulge %(brand)s",
-        "show_hide": "Näita/peida",
-        "quit": "Välju",
-        "edit": "Muuda",
-        "undo": "Võta tagasi",
-        "redo": "Tee uuesti",
         "copy": "Kopeeri",
+        "cut": "Lõika",
+        "delete": "Kustuta",
+        "edit": "Muuda",
+        "minimise": "Vähenda",
         "paste": "Aseta",
         "paste_match_style": "Aseta kasutades sama stiili",
-        "delete": "Kustuta",
+        "quit": "Välju",
+        "redo": "Tee uuesti",
         "select_all": "Vali kõik",
+        "show_hide": "Näita/peida",
+        "undo": "Võta tagasi",
         "zoom_in": "Suurenda",
-        "zoom_out": "Vähenda",
-        "minimise": "Vähenda",
-        "close": "Sulge",
-        "cut": "Lõika"
+        "zoom_out": "Vähenda"
     },
-    "confirm_quit": "Kas sa kindlasti soovid rakendusest väljuda?",
     "common": {
-        "help": "Abiteave",
-        "brand_help": "%(brand)s abiteave",
         "about": "Rakenduse teave",
+        "brand_help": "%(brand)s abiteave",
+        "help": "Abiteave",
         "preferences": "Seadistused"
     },
-    "window_menu": {
-        "zoom": "Suumi",
-        "label": "Aken",
-        "bring_all_to_front": "Too kõik esiplaanile"
-    },
-    "view_menu": {
-        "view": "Vaata",
-        "actual_size": "Näita tavasuuruses",
-        "toggle_full_screen": "Täisekraanivaade sisse/välja",
-        "toggle_developer_tools": "Arendaja töövahendid sisse/välja"
-    },
-    "menu": {
-        "services": "Teenused",
-        "hide": "Peida",
-        "unhide": "Näita uuesti",
-        "hide_others": "Peida muud"
-    },
+    "confirm_quit": "Kas sa kindlasti soovid rakendusest väljuda?",
     "edit_menu": {
         "speech": "Kõne",
         "speech_start_speaking": "Alusta rääkimist",
@@ -50,14 +33,31 @@
     "file_menu": {
         "label": "Fail"
     },
+    "menu": {
+        "hide": "Peida",
+        "hide_others": "Peida muud",
+        "services": "Teenused",
+        "unhide": "Näita uuesti"
+    },
     "right_click_menu": {
-        "copy_image": "Kopeeri pilt",
+        "add_to_dictionary": "Lisa sõnastikku",
         "copy_email": "Kopeeri e-posti aadress",
+        "copy_image": "Kopeeri pilt",
         "copy_image_url": "Kopeeri pildi aadress",
         "copy_link_url": "Kopeeri lingi aadress",
         "save_image_as": "Salvesta pilt kui...",
-        "save_image_as_error_title": "Pildi salvestamine ei õnnestunud",
         "save_image_as_error_description": "Seda pilti ei õnnestunud salvestada",
-        "add_to_dictionary": "Lisa sõnastikku"
+        "save_image_as_error_title": "Pildi salvestamine ei õnnestunud"
+    },
+    "view_menu": {
+        "actual_size": "Näita tavasuuruses",
+        "toggle_developer_tools": "Arendaja töövahendid sisse/välja",
+        "toggle_full_screen": "Täisekraanivaade sisse/välja",
+        "view": "Vaata"
+    },
+    "window_menu": {
+        "bring_all_to_front": "Too kõik esiplaanile",
+        "label": "Aken",
+        "zoom": "Suumi"
     }
 }

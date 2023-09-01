@@ -1,13 +1,63 @@
 {
     "action": {
         "cancel": "ఆపు",
+        "close": "Close",
+        "close_brand": "Close %(brand)s",
         "copy": "కాపీ",
+        "cut": "కట్",
+        "delete": "Delete",
+        "edit": "Edit",
+        "minimise": "Minimize",
         "paste": "పేస్ట్",
         "paste_match_style": "మునుపటి వంటి అతికించండి",
-        "cut": "కట్"
+        "quit": "Quit",
+        "redo": "Redo",
+        "select_all": "Select All",
+        "show_hide": "Show/Hide",
+        "undo": "Undo",
+        "zoom_in": "Zoom In",
+        "zoom_out": "Zoom Out"
+    },
+    "common": {
+        "about": "గ్రెంచ్",
+        "brand_help": "%(brand)s Help",
+        "help": "Help",
+        "preferences": "Preferences"
     },
     "confirm_quit": "మీరు వెళ్ళిపోవాలని అనుకుంటున్నారా?",
-    "common": {
-        "about": "గ్రెంచ్"
+    "edit_menu": {
+        "speech": "Speech",
+        "speech_start_speaking": "Start Speaking",
+        "speech_stop_speaking": "Stop Speaking"
+    },
+    "file_menu": {
+        "label": "File"
+    },
+    "menu": {
+        "hide": "Hide",
+        "hide_others": "Hide Others",
+        "services": "Services",
+        "unhide": "Unhide"
+    },
+    "right_click_menu": {
+        "add_to_dictionary": "Add to dictionary",
+        "copy_email": "Copy email address",
+        "copy_image": "Copy image",
+        "copy_image_url": "Copy image address",
+        "copy_link_url": "Copy link address",
+        "save_image_as": "Save image as...",
+        "save_image_as_error_description": "The image failed to save",
+        "save_image_as_error_title": "Failed to save image"
+    },
+    "view_menu": {
+        "actual_size": "Actual Size",
+        "toggle_developer_tools": "Toggle Developer Tools",
+        "toggle_full_screen": "Toggle Full Screen",
+        "view": "View"
+    },
+    "window_menu": {
+        "bring_all_to_front": "Bring All to Front",
+        "label": "Window",
+        "zoom": "Zoom"
     }
 }

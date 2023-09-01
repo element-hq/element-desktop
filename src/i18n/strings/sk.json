@@ -1,47 +1,30 @@
 {
     "action": {
         "cancel": "Zrušiť",
+        "close": "Zavrieť",
         "close_brand": "Zatvoriť %(brand)s",
-        "show_hide": "Zobraziť/Skryť",
-        "quit": "Ukončiť",
-        "edit": "Úpravy",
-        "undo": "Späť",
-        "redo": "Opakovať",
         "copy": "Kopírovať",
+        "cut": "Vystrihnúť",
+        "delete": "Odstrániť",
+        "edit": "Úpravy",
+        "minimise": "Minimalizovať",
         "paste": "Vložiť",
         "paste_match_style": "Vložiť a prispôsobiť štýl",
-        "delete": "Odstrániť",
+        "quit": "Ukončiť",
+        "redo": "Opakovať",
         "select_all": "Vybrať všetko",
+        "show_hide": "Zobraziť/Skryť",
+        "undo": "Späť",
         "zoom_in": "Priblížiť",
-        "zoom_out": "Oddialiť",
-        "minimise": "Minimalizovať",
-        "close": "Zavrieť",
-        "cut": "Vystrihnúť"
+        "zoom_out": "Oddialiť"
     },
-    "confirm_quit": "Naozaj chcete zavrieť aplikáciu?",
     "common": {
-        "help": "Pomocník",
-        "brand_help": "%(brand)s Pomoc",
         "about": "O aplikácii",
+        "brand_help": "%(brand)s Pomoc",
+        "help": "Pomocník",
         "preferences": "Vlastnosti"
     },
-    "window_menu": {
-        "zoom": "Lupa",
-        "label": "Okno",
-        "bring_all_to_front": "Preniesť všetky do popredia"
-    },
-    "view_menu": {
-        "view": "Zobraziť",
-        "actual_size": "Aktuálna veľkosť",
-        "toggle_full_screen": "Celá obrazovka",
-        "toggle_developer_tools": "Nástroje pre vývojárov"
-    },
-    "menu": {
-        "services": "Služby",
-        "hide": "Skryť",
-        "unhide": "Odkryť",
-        "hide_others": "Skryť ostatné"
-    },
+    "confirm_quit": "Naozaj chcete zavrieť aplikáciu?",
     "edit_menu": {
         "speech": "Reč",
         "speech_start_speaking": "Spustiť nahrávanie hlasu",
@@ -50,14 +33,31 @@
     "file_menu": {
         "label": "Súbor"
     },
+    "menu": {
+        "hide": "Skryť",
+        "hide_others": "Skryť ostatné",
+        "services": "Služby",
+        "unhide": "Odkryť"
+    },
     "right_click_menu": {
-        "copy_image": "Kopírovať obrázok",
+        "add_to_dictionary": "Pridať do slovníka",
         "copy_email": "Kopírovať e-mailovú adresu",
+        "copy_image": "Kopírovať obrázok",
         "copy_image_url": "Kopírovať adresu obrázka",
         "copy_link_url": "Kopírovať adresu odkazu",
         "save_image_as": "Uložiť obrázok ako...",
-        "save_image_as_error_title": "Chyba pri ukladaní obrázka",
         "save_image_as_error_description": "Obrázok sa nepodarilo uložiť",
-        "add_to_dictionary": "Pridať do slovníka"
+        "save_image_as_error_title": "Chyba pri ukladaní obrázka"
+    },
+    "view_menu": {
+        "actual_size": "Aktuálna veľkosť",
+        "toggle_developer_tools": "Nástroje pre vývojárov",
+        "toggle_full_screen": "Celá obrazovka",
+        "view": "Zobraziť"
+    },
+    "window_menu": {
+        "bring_all_to_front": "Preniesť všetky do popredia",
+        "label": "Okno",
+        "zoom": "Lupa"
     }
 }

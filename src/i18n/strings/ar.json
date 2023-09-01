@@ -1,46 +1,30 @@
 {
     "action": {
         "cancel": "ألغِ",
+        "close": "أغلِق",
         "close_brand": "اغلاق %(brand)s",
-        "show_hide": "اعرض/أخفِ",
-        "quit": "غادِر",
-        "edit": "تحرير",
-        "undo": "تراجَع",
-        "redo": "أعِد",
         "copy": "انسخ",
+        "cut": "قصّ",
+        "delete": "احذف",
+        "edit": "تحرير",
+        "minimise": "صغّر",
         "paste": "ألصِق",
         "paste_match_style": "ألصِق وطابِق النمط",
-        "delete": "احذف",
+        "quit": "غادِر",
+        "redo": "أعِد",
         "select_all": "حدّد الكل",
+        "show_hide": "اعرض/أخفِ",
+        "undo": "تراجَع",
         "zoom_in": "قرّب",
-        "zoom_out": "بعّد",
-        "minimise": "صغّر",
-        "close": "أغلِق",
-        "cut": "قصّ"
+        "zoom_out": "بعّد"
     },
-    "confirm_quit": "أمتأكّد من الإغلاق؟",
     "common": {
-        "help": "مساعدة",
         "about": "عن",
+        "brand_help": "%(brand)s Help",
+        "help": "مساعدة",
         "preferences": "التفضيلات"
     },
-    "window_menu": {
-        "zoom": "تقريب",
-        "label": "نافذة",
-        "bring_all_to_front": "ضَع الكل في المقدّمة"
-    },
-    "view_menu": {
-        "view": "منظور",
-        "actual_size": "المقاس الفعلي",
-        "toggle_full_screen": "فعّل/عطّل ملء الشاشة",
-        "toggle_developer_tools": "فعّل/عطّل أدوات المطوّرين"
-    },
-    "menu": {
-        "services": "الخدمات",
-        "hide": "أخفِ",
-        "unhide": "اعرض",
-        "hide_others": "أخفِ البقية"
-    },
+    "confirm_quit": "أمتأكّد من الإغلاق؟",
     "edit_menu": {
         "speech": "نطق",
         "speech_start_speaking": "ابدأ النطق",
@@ -49,14 +33,31 @@
     "file_menu": {
         "label": "ملف"
     },
+    "menu": {
+        "hide": "أخفِ",
+        "hide_others": "أخفِ البقية",
+        "services": "الخدمات",
+        "unhide": "اعرض"
+    },
     "right_click_menu": {
-        "copy_image": "انسخ الصورة",
+        "add_to_dictionary": "أضِف إلى القاموس",
         "copy_email": "انسخ عنوان البريد الإلكتروني",
+        "copy_image": "انسخ الصورة",
         "copy_image_url": "انسخ عنوان (رابط) الصورة",
         "copy_link_url": "انسخ عنوان الرابط",
         "save_image_as": "احفظ الصورة كَ‍...",
-        "save_image_as_error_title": "فشل حفظ الصورة",
         "save_image_as_error_description": "فشل حفظ الصورة",
-        "add_to_dictionary": "أضِف إلى القاموس"
+        "save_image_as_error_title": "فشل حفظ الصورة"
+    },
+    "view_menu": {
+        "actual_size": "المقاس الفعلي",
+        "toggle_developer_tools": "فعّل/عطّل أدوات المطوّرين",
+        "toggle_full_screen": "فعّل/عطّل ملء الشاشة",
+        "view": "منظور"
+    },
+    "window_menu": {
+        "bring_all_to_front": "ضَع الكل في المقدّمة",
+        "label": "نافذة",
+        "zoom": "تقريب"
     }
 }

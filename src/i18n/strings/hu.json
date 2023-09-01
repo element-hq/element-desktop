@@ -1,46 +1,30 @@
 {
     "action": {
         "cancel": "Mégsem",
+        "close": "Bezár",
         "close_brand": "%(brand)s bezárása",
-        "show_hide": "Megmutat/Elrejt",
-        "quit": "Kilép",
-        "edit": "Szerkeszt",
-        "undo": "Visszavon",
-        "redo": "Újra",
         "copy": "Másol",
+        "cut": "Kivág",
+        "delete": "Töröl",
+        "edit": "Szerkeszt",
+        "minimise": "Lecsukás",
         "paste": "Beillesztés",
         "paste_match_style": "Beillesztés formázással",
-        "delete": "Töröl",
+        "quit": "Kilép",
+        "redo": "Újra",
         "select_all": "Összes kijelölése",
+        "show_hide": "Megmutat/Elrejt",
+        "undo": "Visszavon",
         "zoom_in": "Nagyít",
-        "zoom_out": "Kicsinyít",
-        "minimise": "Lecsukás",
-        "close": "Bezár",
-        "cut": "Kivág"
+        "zoom_out": "Kicsinyít"
     },
-    "confirm_quit": "Biztos, hogy kilép?",
     "common": {
-        "help": "Segítség",
         "about": "Névjegy",
+        "brand_help": "%(brand)s Help",
+        "help": "Segítség",
         "preferences": "Beállítások"
     },
-    "window_menu": {
-        "zoom": "Nagyítás",
-        "label": "Ablak",
-        "bring_all_to_front": "Mindent előtérbe hoz"
-    },
-    "view_menu": {
-        "view": "Nézet",
-        "actual_size": "Jelenlegi méret",
-        "toggle_full_screen": "Teljes képernyő",
-        "toggle_developer_tools": "Fejlesztői eszközök"
-    },
-    "menu": {
-        "services": "Szolgáltatás",
-        "hide": "Eltakar",
-        "unhide": "Felfed",
-        "hide_others": "Minden mást eltakar"
-    },
+    "confirm_quit": "Biztos, hogy kilép?",
     "edit_menu": {
         "speech": "Beszéd",
         "speech_start_speaking": "Kezdjen beszélni",
@@ -49,14 +33,31 @@
     "file_menu": {
         "label": "Fájl"
     },
+    "menu": {
+        "hide": "Eltakar",
+        "hide_others": "Minden mást eltakar",
+        "services": "Szolgáltatás",
+        "unhide": "Felfed"
+    },
     "right_click_menu": {
-        "copy_image": "Kép másolása",
+        "add_to_dictionary": "Hozzáadás a szótárhoz",
         "copy_email": "E-mail cím másolása",
+        "copy_image": "Kép másolása",
         "copy_image_url": "Kép címének másolása",
         "copy_link_url": "Hivatkozás másolása",
         "save_image_as": "Kép mentése másként...",
-        "save_image_as_error_title": "Kép mentése sikertelen",
         "save_image_as_error_description": "A kép mentése sikertelen",
-        "add_to_dictionary": "Hozzáadás a szótárhoz"
+        "save_image_as_error_title": "Kép mentése sikertelen"
+    },
+    "view_menu": {
+        "actual_size": "Jelenlegi méret",
+        "toggle_developer_tools": "Fejlesztői eszközök",
+        "toggle_full_screen": "Teljes képernyő",
+        "view": "Nézet"
+    },
+    "window_menu": {
+        "bring_all_to_front": "Mindent előtérbe hoz",
+        "label": "Ablak",
+        "zoom": "Nagyítás"
     }
 }

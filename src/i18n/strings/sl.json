@@ -1,47 +1,30 @@
 {
     "action": {
         "cancel": "Prekliči",
+        "close": "Zapri",
         "close_brand": "Zapri %(brand)s",
-        "show_hide": "Prikaži/Skrij",
-        "quit": "Končaj",
-        "edit": "Uredi",
-        "undo": "Razveljavi",
-        "redo": "Uveljavi",
         "copy": "Kopiraj",
+        "cut": "Izreži",
+        "delete": "Izbriši",
+        "edit": "Uredi",
+        "minimise": "Zmanjšaj",
         "paste": "Prilepi",
         "paste_match_style": "Prilepi ter obdrži oblikovanje",
-        "delete": "Izbriši",
+        "quit": "Končaj",
+        "redo": "Uveljavi",
         "select_all": "Izberi vse",
+        "show_hide": "Prikaži/Skrij",
+        "undo": "Razveljavi",
         "zoom_in": "Približaj",
-        "zoom_out": "Oddalji",
-        "minimise": "Zmanjšaj",
-        "close": "Zapri",
-        "cut": "Izreži"
+        "zoom_out": "Oddalji"
     },
-    "confirm_quit": "Ste prepričani, da želite zapreti program?",
     "common": {
-        "help": "Pomoč",
-        "brand_help": "%(brand)s pomoč",
         "about": "O programu",
+        "brand_help": "%(brand)s pomoč",
+        "help": "Pomoč",
         "preferences": "Nastavitve"
     },
-    "window_menu": {
-        "zoom": "Povečaj",
-        "label": "Okno",
-        "bring_all_to_front": "Postavi vse v ospredje"
-    },
-    "view_menu": {
-        "view": "Poglej",
-        "actual_size": "Dejanska velikost",
-        "toggle_full_screen": "Preklopi čez cel zaslon",
-        "toggle_developer_tools": "Preklopi na orodja za razvijalce"
-    },
-    "menu": {
-        "services": "Storitve",
-        "hide": "Skrij",
-        "unhide": "Razkrij",
-        "hide_others": "Skrij ostalo"
-    },
+    "confirm_quit": "Ste prepričani, da želite zapreti program?",
     "edit_menu": {
         "speech": "Govor",
         "speech_start_speaking": "Začnite govoriti",
@@ -50,14 +33,31 @@
     "file_menu": {
         "label": "Datoteka"
     },
+    "menu": {
+        "hide": "Skrij",
+        "hide_others": "Skrij ostalo",
+        "services": "Storitve",
+        "unhide": "Razkrij"
+    },
     "right_click_menu": {
-        "copy_image": "Kopiraj sliko",
+        "add_to_dictionary": "Dodaj v slovar",
         "copy_email": "Kopiraj e-poštni naslov",
+        "copy_image": "Kopiraj sliko",
         "copy_image_url": "Kopiraj naslov slike",
         "copy_link_url": "Kopiraj naslov povezave",
         "save_image_as": "Shrani sliko kot...",
-        "save_image_as_error_title": "Shranjevanje slike ni uspelo",
         "save_image_as_error_description": "Slike ni bilo mogoče shraniti",
-        "add_to_dictionary": "Dodaj v slovar"
+        "save_image_as_error_title": "Shranjevanje slike ni uspelo"
+    },
+    "view_menu": {
+        "actual_size": "Dejanska velikost",
+        "toggle_developer_tools": "Preklopi na orodja za razvijalce",
+        "toggle_full_screen": "Preklopi čez cel zaslon",
+        "view": "Poglej"
+    },
+    "window_menu": {
+        "bring_all_to_front": "Postavi vse v ospredje",
+        "label": "Okno",
+        "zoom": "Povečaj"
     }
 }

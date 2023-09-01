@@ -1,47 +1,30 @@
 {
     "action": {
         "cancel": "Hủy bỏ",
+        "close": "Đóng",
         "close_brand": "Đóng %(brand)s",
-        "show_hide": "Hiện/Ẩn",
-        "quit": "Thoát",
-        "edit": "Chỉnh sửa",
-        "undo": "Hoàn tác",
-        "redo": "Làm lại",
         "copy": "Sao chép",
+        "cut": "Cắt",
+        "delete": "Xóa",
+        "edit": "Chỉnh sửa",
+        "minimise": "Thu nhỏ",
         "paste": "Dán",
         "paste_match_style": "Dán và khớp kiểu",
-        "delete": "Xóa",
+        "quit": "Thoát",
+        "redo": "Làm lại",
         "select_all": "Chọn tất cả",
+        "show_hide": "Hiện/Ẩn",
+        "undo": "Hoàn tác",
         "zoom_in": "Phóng to",
-        "zoom_out": "Thu nhỏ",
-        "minimise": "Thu nhỏ",
-        "close": "Đóng",
-        "cut": "Cắt"
+        "zoom_out": "Thu nhỏ"
     },
-    "confirm_quit": "Bạn có chắc chắn muốn thoát?",
     "common": {
-        "help": "Hỗ trợ",
-        "brand_help": "Hỗ trợ %(brand)s",
         "about": "Giới thiệu",
+        "brand_help": "Hỗ trợ %(brand)s",
+        "help": "Hỗ trợ",
         "preferences": "Tùy chọn"
     },
-    "window_menu": {
-        "zoom": "Thu phóng",
-        "label": "Cửa sổ",
-        "bring_all_to_front": "Đưa tất cả lên trước"
-    },
-    "view_menu": {
-        "view": "Xem",
-        "actual_size": "Kích thước thực",
-        "toggle_full_screen": "Toàn màn hình",
-        "toggle_developer_tools": "Công cụ phát triển"
-    },
-    "menu": {
-        "services": "Dịch vụ",
-        "hide": "Ẩn",
-        "unhide": "Bỏ ẩn",
-        "hide_others": "Ẩn cái khác"
-    },
+    "confirm_quit": "Bạn có chắc chắn muốn thoát?",
     "edit_menu": {
         "speech": "Đọc màn hình",
         "speech_start_speaking": "Bắt đầu nói",
@@ -50,14 +33,31 @@
     "file_menu": {
         "label": "Tệp"
     },
+    "menu": {
+        "hide": "Ẩn",
+        "hide_others": "Ẩn cái khác",
+        "services": "Dịch vụ",
+        "unhide": "Bỏ ẩn"
+    },
     "right_click_menu": {
-        "copy_image": "Sao chép ảnh",
+        "add_to_dictionary": "Thêm vào từ điển",
         "copy_email": "Sao chép địa chỉ email",
+        "copy_image": "Sao chép ảnh",
         "copy_image_url": "Sao chép địa chỉ ảnh",
         "copy_link_url": "Sao chép địa chỉ liên kết",
         "save_image_as": "Lưu ảnh…",
-        "save_image_as_error_title": "Không lưu được ảnh",
         "save_image_as_error_description": "Ảnh không lưu được",
-        "add_to_dictionary": "Thêm vào từ điển"
+        "save_image_as_error_title": "Không lưu được ảnh"
+    },
+    "view_menu": {
+        "actual_size": "Kích thước thực",
+        "toggle_developer_tools": "Công cụ phát triển",
+        "toggle_full_screen": "Toàn màn hình",
+        "view": "Xem"
+    },
+    "window_menu": {
+        "bring_all_to_front": "Đưa tất cả lên trước",
+        "label": "Cửa sổ",
+        "zoom": "Thu phóng"
     }
 }

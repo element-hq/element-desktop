@@ -1,45 +1,30 @@
 {
     "action": {
         "cancel": "Anulare",
+        "close": "Inchide",
         "close_brand": "Închide %(brand)s",
-        "show_hide": "Arată/Ascunde",
-        "quit": "Închid",
-        "edit": "Editare",
-        "undo": "Anulare",
-        "redo": "Refă",
         "copy": "Copiază",
+        "cut": "Taie",
+        "delete": "Șterge",
+        "edit": "Editare",
+        "minimise": "Minimizare",
         "paste": "Lipește",
         "paste_match_style": "Lipește si potrivește stilul",
-        "delete": "Șterge",
+        "quit": "Închid",
+        "redo": "Refă",
         "select_all": "Selectează tot",
+        "show_hide": "Arată/Ascunde",
+        "undo": "Anulare",
         "zoom_in": "Mărește",
-        "zoom_out": "Micșorează",
-        "minimise": "Minimizare",
-        "close": "Inchide",
-        "cut": "Taie"
+        "zoom_out": "Micșorează"
     },
-    "confirm_quit": "Sigur vrei să ieși din cont?",
     "common": {
-        "help": "Ajutor",
         "about": "Despre",
+        "brand_help": "%(brand)s Help",
+        "help": "Ajutor",
         "preferences": "Preferințe"
     },
-    "window_menu": {
-        "zoom": "Zoom",
-        "label": "Fereastră",
-        "bring_all_to_front": "Aduce-ți totul in față"
-    },
-    "view_menu": {
-        "view": "Vizualizează",
-        "actual_size": "Mărime reală",
-        "toggle_full_screen": "Comutare pe tot ecranul",
-        "toggle_developer_tools": "Comutare unelte dezvoltator"
-    },
-    "menu": {
-        "services": "Servicii",
-        "hide": "Ascunde",
-        "hide_others": "Ascunde restul"
-    },
+    "confirm_quit": "Sigur vrei să ieși din cont?",
     "edit_menu": {
         "speech": "Voce",
         "speech_start_speaking": "Pornire Voce",
@@ -48,12 +33,31 @@
     "file_menu": {
         "label": "Fișier"
     },
+    "menu": {
+        "hide": "Ascunde",
+        "hide_others": "Ascunde restul",
+        "services": "Servicii",
+        "unhide": "Unhide"
+    },
     "right_click_menu": {
-        "copy_image": "Copiază imagine",
+        "add_to_dictionary": "Adăugați la dicționar",
         "copy_email": "Copiază adresă de email",
+        "copy_image": "Copiază imagine",
+        "copy_image_url": "Copy image address",
         "copy_link_url": "Copiază link",
         "save_image_as": "Salvează imagine ca ...",
-        "save_image_as_error_title": "Eroare în salvarea imaginii",
-        "add_to_dictionary": "Adăugați la dicționar"
+        "save_image_as_error_description": "The image failed to save",
+        "save_image_as_error_title": "Eroare în salvarea imaginii"
+    },
+    "view_menu": {
+        "actual_size": "Mărime reală",
+        "toggle_developer_tools": "Comutare unelte dezvoltator",
+        "toggle_full_screen": "Comutare pe tot ecranul",
+        "view": "Vizualizează"
+    },
+    "window_menu": {
+        "bring_all_to_front": "Aduce-ți totul in față",
+        "label": "Fereastră",
+        "zoom": "Zoom"
     }
 }

@@ -1,49 +1,63 @@
 {
     "action": {
         "cancel": "Nuligi",
+        "close": "Close",
         "close_brand": "Fermu %(brand)s",
-        "show_hide": "Montri/Kaŝi",
-        "edit": "Redakti",
-        "undo": "Malfari",
-        "redo": "Refari",
         "copy": "Kopiu",
-        "paste": "Enmeti",
+        "cut": "Tranĉi",
         "delete": "Forigi",
-        "select_all": "Elekti Ĉiujn",
+        "edit": "Redakti",
         "minimise": "Minimumigi",
-        "cut": "Tranĉi"
+        "paste": "Enmeti",
+        "paste_match_style": "Paste and Match Style",
+        "quit": "Quit",
+        "redo": "Refari",
+        "select_all": "Elekti Ĉiujn",
+        "show_hide": "Montri/Kaŝi",
+        "undo": "Malfari",
+        "zoom_in": "Zoom In",
+        "zoom_out": "Zoom Out"
     },
-    "confirm_quit": "Ĉu vi certas, ke vi volas ĉesi?",
     "common": {
-        "help": "Helpo",
         "about": "Informilo",
+        "brand_help": "%(brand)s Help",
+        "help": "Helpo",
         "preferences": "Preferoj"
     },
-    "window_menu": {
-        "label": "Fenestro"
-    },
-    "view_menu": {
-        "view": "Vidi",
-        "toggle_developer_tools": "Baskuligi Programistajn Ilojn"
-    },
-    "menu": {
-        "hide": "Kaŝi",
-        "unhide": "Malkaŝi",
-        "hide_others": "Kaŝi Aliajn"
-    },
+    "confirm_quit": "Ĉu vi certas, ke vi volas ĉesi?",
     "edit_menu": {
+        "speech": "Speech",
         "speech_start_speaking": "Ekparoli",
         "speech_stop_speaking": "Ĉesi Paroli"
     },
     "file_menu": {
         "label": "Dosiero"
     },
+    "menu": {
+        "hide": "Kaŝi",
+        "hide_others": "Kaŝi Aliajn",
+        "services": "Services",
+        "unhide": "Malkaŝi"
+    },
     "right_click_menu": {
-        "copy_image": "Kopiu bildon",
+        "add_to_dictionary": "Add to dictionary",
         "copy_email": "Kopiu retadreson",
+        "copy_image": "Kopiu bildon",
         "copy_image_url": "Kopiu adreson de la bildo",
         "copy_link_url": "Kopiu ligilon de la bildo",
-        "save_image_as_error_title": "Malsukcesis elŝuti bildon",
-        "save_image_as_error_description": "La bildo malsukcesis elŝutiĝi"
+        "save_image_as": "Save image as...",
+        "save_image_as_error_description": "La bildo malsukcesis elŝutiĝi",
+        "save_image_as_error_title": "Malsukcesis elŝuti bildon"
+    },
+    "view_menu": {
+        "actual_size": "Actual Size",
+        "toggle_developer_tools": "Baskuligi Programistajn Ilojn",
+        "toggle_full_screen": "Toggle Full Screen",
+        "view": "Vidi"
+    },
+    "window_menu": {
+        "bring_all_to_front": "Bring All to Front",
+        "label": "Fenestro",
+        "zoom": "Zoom"
     }
 }

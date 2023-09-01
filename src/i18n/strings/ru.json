@@ -1,47 +1,30 @@
 {
     "action": {
         "cancel": "Отмена",
+        "close": "Закрыть",
         "close_brand": "Закрыть %(brand)s",
-        "show_hide": "Показать/скрыть",
-        "quit": "Выйти",
-        "edit": "Изменить",
-        "undo": "Отменить",
-        "redo": "Повторить",
         "copy": "Копировать",
+        "cut": "Вырезать",
+        "delete": "Удалить",
+        "edit": "Изменить",
+        "minimise": "Свернуть",
         "paste": "Вставить",
         "paste_match_style": "Вставить с тем же стилем",
-        "delete": "Удалить",
+        "quit": "Выйти",
+        "redo": "Повторить",
         "select_all": "Выбрать все",
+        "show_hide": "Показать/скрыть",
+        "undo": "Отменить",
         "zoom_in": "Увеличить",
-        "zoom_out": "Уменьшить",
-        "minimise": "Свернуть",
-        "close": "Закрыть",
-        "cut": "Вырезать"
+        "zoom_out": "Уменьшить"
     },
-    "confirm_quit": "Вы уверены, что хотите выйти?",
     "common": {
-        "help": "Помощь",
-        "brand_help": "Помощь %(brand)s",
         "about": "О программе",
+        "brand_help": "Помощь %(brand)s",
+        "help": "Помощь",
         "preferences": "Предпочтения"
     },
-    "window_menu": {
-        "zoom": "Масштаб",
-        "label": "Окно",
-        "bring_all_to_front": "Вынести всё вперёд"
-    },
-    "view_menu": {
-        "view": "Просмотр",
-        "actual_size": "Фактический размер",
-        "toggle_full_screen": "Переключить полноэкранный режим",
-        "toggle_developer_tools": "Переключить инструменты разработчика"
-    },
-    "menu": {
-        "services": "Службы",
-        "hide": "Скрыть",
-        "unhide": "Показать",
-        "hide_others": "Скрыть прочие"
-    },
+    "confirm_quit": "Вы уверены, что хотите выйти?",
     "edit_menu": {
         "speech": "Речь",
         "speech_start_speaking": "Говорите",
@@ -50,14 +33,31 @@
     "file_menu": {
         "label": "Файл"
     },
+    "menu": {
+        "hide": "Скрыть",
+        "hide_others": "Скрыть прочие",
+        "services": "Службы",
+        "unhide": "Показать"
+    },
     "right_click_menu": {
-        "copy_image": "Копировать изображение",
+        "add_to_dictionary": "Добавить в словарь",
         "copy_email": "Копировать адрес почты",
+        "copy_image": "Копировать изображение",
         "copy_image_url": "Копировать адрес изображения",
         "copy_link_url": "Копировать ссылку",
         "save_image_as": "Сохранить изображение как...",
-        "save_image_as_error_title": "Не удалось сохранить изображение",
         "save_image_as_error_description": "Не удалось сохранить изображение",
-        "add_to_dictionary": "Добавить в словарь"
+        "save_image_as_error_title": "Не удалось сохранить изображение"
+    },
+    "view_menu": {
+        "actual_size": "Фактический размер",
+        "toggle_developer_tools": "Переключить инструменты разработчика",
+        "toggle_full_screen": "Переключить полноэкранный режим",
+        "view": "Просмотр"
+    },
+    "window_menu": {
+        "bring_all_to_front": "Вынести всё вперёд",
+        "label": "Окно",
+        "zoom": "Масштаб"
     }
 }

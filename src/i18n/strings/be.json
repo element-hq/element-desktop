@@ -1,45 +1,30 @@
 {
     "action": {
         "cancel": "Адмена",
-        "show_hide": "Паказаць / схаваць",
-        "quit": "Выйсці",
-        "edit": "Змяніць",
-        "undo": "Адмяніць",
-        "redo": "Паўтарыць",
+        "close": "Зачыніць",
+        "close_brand": "Close %(brand)s",
         "copy": "Капіяваць",
+        "cut": "Выразаць",
+        "delete": "Выдаліць",
+        "edit": "Змяніць",
+        "minimise": "Згарнуць",
         "paste": "Уставіць",
         "paste_match_style": "Уставіць і супаставіць стыль",
-        "delete": "Выдаліць",
+        "quit": "Выйсці",
+        "redo": "Паўтарыць",
         "select_all": "Выбраць усё",
+        "show_hide": "Паказаць / схаваць",
+        "undo": "Адмяніць",
         "zoom_in": "Павялічыць",
-        "zoom_out": "Паменшыць",
-        "minimise": "Згарнуць",
-        "close": "Зачыніць",
-        "cut": "Выразаць"
+        "zoom_out": "Паменшыць"
     },
-    "confirm_quit": "Вы ўпэўненыя, што хочаце выйсці?",
     "common": {
-        "help": "Даведка",
         "about": "Аб праграме",
+        "brand_help": "%(brand)s Help",
+        "help": "Даведка",
         "preferences": "Параметры"
     },
-    "window_menu": {
-        "zoom": "Маштаб",
-        "label": "Акно",
-        "bring_all_to_front": "Вынесці ўсё наперад"
-    },
-    "view_menu": {
-        "view": "Прагляд",
-        "actual_size": "Фактычны Памер",
-        "toggle_full_screen": "Пераключэнне на ўвесь экран",
-        "toggle_developer_tools": "Пераключэнне інструментаў распрацоўніка"
-    },
-    "menu": {
-        "services": "Сервісы",
-        "hide": "Схаваць",
-        "unhide": "Паказаць",
-        "hide_others": "Схаваць іншыя"
-    },
+    "confirm_quit": "Вы ўпэўненыя, што хочаце выйсці?",
     "edit_menu": {
         "speech": "Голас",
         "speech_start_speaking": "Гаварыць",
@@ -48,13 +33,31 @@
     "file_menu": {
         "label": "Файл"
     },
+    "menu": {
+        "hide": "Схаваць",
+        "hide_others": "Схаваць іншыя",
+        "services": "Сервісы",
+        "unhide": "Паказаць"
+    },
     "right_click_menu": {
-        "copy_image": "Скапіраваць малюнак",
+        "add_to_dictionary": "Дадаць у слоўнік",
         "copy_email": "Скапіраваць адрас пошты",
+        "copy_image": "Скапіраваць малюнак",
+        "copy_image_url": "Copy image address",
         "copy_link_url": "Скапіраваць спасылку",
         "save_image_as": "Захаваць малюнак як...",
-        "save_image_as_error_title": "Не атрымалася захаваць малюнак",
         "save_image_as_error_description": "Не атрымалася захаваць малюнак",
-        "add_to_dictionary": "Дадаць у слоўнік"
+        "save_image_as_error_title": "Не атрымалася захаваць малюнак"
+    },
+    "view_menu": {
+        "actual_size": "Фактычны Памер",
+        "toggle_developer_tools": "Пераключэнне інструментаў распрацоўніка",
+        "toggle_full_screen": "Пераключэнне на ўвесь экран",
+        "view": "Прагляд"
+    },
+    "window_menu": {
+        "bring_all_to_front": "Вынесці ўсё наперад",
+        "label": "Акно",
+        "zoom": "Маштаб"
     }
 }

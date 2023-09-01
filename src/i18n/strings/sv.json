@@ -1,47 +1,30 @@
 {
     "action": {
         "cancel": "Avbryt",
+        "close": "Stäng",
         "close_brand": "Stäng %(brand)s",
-        "show_hide": "Visa/dölj",
-        "quit": "Avsluta",
-        "edit": "Redigera",
-        "undo": "Ångra",
-        "redo": "Gör om",
         "copy": "Kopiera",
+        "cut": "Klipp ut",
+        "delete": "Radera",
+        "edit": "Redigera",
+        "minimise": "Minimera",
         "paste": "Klistra in",
         "paste_match_style": "Klistra in och matcha stilen",
-        "delete": "Radera",
+        "quit": "Avsluta",
+        "redo": "Gör om",
         "select_all": "Markera allt",
+        "show_hide": "Visa/dölj",
+        "undo": "Ångra",
         "zoom_in": "Zooma in",
-        "zoom_out": "Zooma ut",
-        "minimise": "Minimera",
-        "close": "Stäng",
-        "cut": "Klipp ut"
+        "zoom_out": "Zooma ut"
     },
-    "confirm_quit": "Är du säker att du vill avsluta?",
     "common": {
-        "help": "Hjälp",
-        "brand_help": "%(brand)s-hjälp",
         "about": "Om",
+        "brand_help": "%(brand)s-hjälp",
+        "help": "Hjälp",
         "preferences": "Inställningar"
     },
-    "window_menu": {
-        "zoom": "Zooma",
-        "label": "Fönster",
-        "bring_all_to_front": "Lägg alla överst"
-    },
-    "view_menu": {
-        "view": "Visa",
-        "actual_size": "Verklig storlek",
-        "toggle_full_screen": "Växla helskärm",
-        "toggle_developer_tools": "Växla utvecklarverktyg"
-    },
-    "menu": {
-        "services": "Tjänster",
-        "hide": "Göm",
-        "unhide": "Sluta gömma",
-        "hide_others": "Göm övriga"
-    },
+    "confirm_quit": "Är du säker att du vill avsluta?",
     "edit_menu": {
         "speech": "Tal",
         "speech_start_speaking": "Börja tala",
@@ -50,14 +33,31 @@
     "file_menu": {
         "label": "Arkiv"
     },
+    "menu": {
+        "hide": "Göm",
+        "hide_others": "Göm övriga",
+        "services": "Tjänster",
+        "unhide": "Sluta gömma"
+    },
     "right_click_menu": {
-        "copy_image": "Kopiera bild",
+        "add_to_dictionary": "Lägg till i ordlistan",
         "copy_email": "Kopiera e-postadress",
+        "copy_image": "Kopiera bild",
         "copy_image_url": "Kopiera bildadress",
         "copy_link_url": "Kopiera länkadress",
         "save_image_as": "Spara bild som…",
-        "save_image_as_error_title": "Misslyckades med att spara bilden",
         "save_image_as_error_description": "Bilden sparades inte",
-        "add_to_dictionary": "Lägg till i ordlistan"
+        "save_image_as_error_title": "Misslyckades med att spara bilden"
+    },
+    "view_menu": {
+        "actual_size": "Verklig storlek",
+        "toggle_developer_tools": "Växla utvecklarverktyg",
+        "toggle_full_screen": "Växla helskärm",
+        "view": "Visa"
+    },
+    "window_menu": {
+        "bring_all_to_front": "Lägg alla överst",
+        "label": "Fönster",
+        "zoom": "Zooma"
     }
 }

@@ -1,45 +1,30 @@
 {
     "action": {
         "cancel": "Annulearje",
-        "show_hide": "Toane/Ferbergje",
-        "quit": "Ofslute",
-        "edit": "Bewurkje",
-        "undo": "Ungedien meitsje",
-        "redo": "Opnij útfiere",
+        "close": "Slute",
+        "close_brand": "Close %(brand)s",
         "copy": "Kopiearje",
+        "cut": "Knippe",
+        "delete": "Fuortsmite",
+        "edit": "Bewurkje",
+        "minimise": "Minimalisearje",
         "paste": "Plakke",
         "paste_match_style": "Plakke en lit stilen oerienkomme",
-        "delete": "Fuortsmite",
+        "quit": "Ofslute",
+        "redo": "Opnij útfiere",
         "select_all": "Alles selektearje",
+        "show_hide": "Toane/Ferbergje",
+        "undo": "Ungedien meitsje",
         "zoom_in": "Ynzoome",
-        "zoom_out": "Utzoome",
-        "minimise": "Minimalisearje",
-        "close": "Slute",
-        "cut": "Knippe"
+        "zoom_out": "Utzoome"
     },
-    "confirm_quit": "Binne jo der wis fan dat jo ôfslute wolle?",
     "common": {
-        "help": "Help",
         "about": "Oer",
+        "brand_help": "%(brand)s Help",
+        "help": "Help",
         "preferences": "Foarkarren"
     },
-    "window_menu": {
-        "zoom": "Zoom",
-        "label": "Finster",
-        "bring_all_to_front": "Alles nei foaren bringe"
-    },
-    "view_menu": {
-        "view": "Byld",
-        "actual_size": "Werklike grutte",
-        "toggle_full_screen": "Folslein skerm yn-/útskeakelje",
-        "toggle_developer_tools": "Untwikkelersark yn-/útskeakelje"
-    },
-    "menu": {
-        "services": "Tsjinsten",
-        "hide": "Ferbergje",
-        "unhide": "Wer toane",
-        "hide_others": "Oare ferbergje"
-    },
+    "confirm_quit": "Binne jo der wis fan dat jo ôfslute wolle?",
     "edit_menu": {
         "speech": "Spraak",
         "speech_start_speaking": "Begjin mei praten",
@@ -48,13 +33,31 @@
     "file_menu": {
         "label": "Bestân"
     },
+    "menu": {
+        "hide": "Ferbergje",
+        "hide_others": "Oare ferbergje",
+        "services": "Tsjinsten",
+        "unhide": "Wer toane"
+    },
     "right_click_menu": {
-        "copy_image": "Ofbylding kopiearje",
+        "add_to_dictionary": "Oan wurdlist tafoegje",
         "copy_email": "E-mailadres kopiearje",
+        "copy_image": "Ofbylding kopiearje",
+        "copy_image_url": "Copy image address",
         "copy_link_url": "Keppeling kopiearje",
         "save_image_as": "Ofbylding bewarje as…",
-        "save_image_as_error_title": "Ofbylding bewarjen mislearre",
         "save_image_as_error_description": "It is net slagge de ôfbylding te bewarjen",
-        "add_to_dictionary": "Oan wurdlist tafoegje"
+        "save_image_as_error_title": "Ofbylding bewarjen mislearre"
+    },
+    "view_menu": {
+        "actual_size": "Werklike grutte",
+        "toggle_developer_tools": "Untwikkelersark yn-/útskeakelje",
+        "toggle_full_screen": "Folslein skerm yn-/útskeakelje",
+        "view": "Byld"
+    },
+    "window_menu": {
+        "bring_all_to_front": "Alles nei foaren bringe",
+        "label": "Finster",
+        "zoom": "Zoom"
     }
 }

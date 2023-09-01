@@ -1,45 +1,30 @@
 {
     "action": {
         "cancel": "Отказ",
-        "show_hide": "Покажи/Скрий",
-        "quit": "Напусни",
-        "edit": "Редактирай",
-        "undo": "Отмени",
-        "redo": "Върни",
+        "close": "Затвори",
+        "close_brand": "Close %(brand)s",
         "copy": "Копирай",
+        "cut": "Изрежи",
+        "delete": "Изтрий",
+        "edit": "Редактирай",
+        "minimise": "Минимизирай",
         "paste": "Постави",
         "paste_match_style": "Постави и Използвай текущия стил",
-        "delete": "Изтрий",
+        "quit": "Напусни",
+        "redo": "Върни",
         "select_all": "Избери Всичко",
+        "show_hide": "Покажи/Скрий",
+        "undo": "Отмени",
         "zoom_in": "Увеличи",
-        "zoom_out": "Намали",
-        "minimise": "Минимизирай",
-        "close": "Затвори",
-        "cut": "Изрежи"
+        "zoom_out": "Намали"
     },
-    "confirm_quit": "Сигурен ли си че искаш да напуснеш?",
     "common": {
-        "help": "Помощ",
         "about": "Относно",
+        "brand_help": "%(brand)s Help",
+        "help": "Помощ",
         "preferences": "Предпочитания"
     },
-    "window_menu": {
-        "zoom": "Мащабирай",
-        "label": "Прозорец",
-        "bring_all_to_front": "Покажи всички най-отгоре"
-    },
-    "view_menu": {
-        "view": "Преглед",
-        "actual_size": "Действителен Размер",
-        "toggle_full_screen": "Превключи на Цял екран",
-        "toggle_developer_tools": "Превключи инструментите за разработчици"
-    },
-    "menu": {
-        "services": "Услуги",
-        "hide": "Скрий",
-        "unhide": "Покажи",
-        "hide_others": "Скрий Останалите"
-    },
+    "confirm_quit": "Сигурен ли си че искаш да напуснеш?",
     "edit_menu": {
         "speech": "Говор",
         "speech_start_speaking": "Започни да говориш",
@@ -48,14 +33,31 @@
     "file_menu": {
         "label": "Файл"
     },
+    "menu": {
+        "hide": "Скрий",
+        "hide_others": "Скрий Останалите",
+        "services": "Услуги",
+        "unhide": "Покажи"
+    },
     "right_click_menu": {
-        "copy_image": "Копирай изображение",
+        "add_to_dictionary": "Добави към речника",
         "copy_email": "Копирай имейл адрес",
+        "copy_image": "Копирай изображение",
         "copy_image_url": "Копирай адреса на изображението",
         "copy_link_url": "Копирай линка",
         "save_image_as": "Запази изображението като...",
-        "save_image_as_error_title": "Неуспешно запазване на изображението",
         "save_image_as_error_description": "Изображението не успя да се запази",
-        "add_to_dictionary": "Добави към речника"
+        "save_image_as_error_title": "Неуспешно запазване на изображението"
+    },
+    "view_menu": {
+        "actual_size": "Действителен Размер",
+        "toggle_developer_tools": "Превключи инструментите за разработчици",
+        "toggle_full_screen": "Превключи на Цял екран",
+        "view": "Преглед"
+    },
+    "window_menu": {
+        "bring_all_to_front": "Покажи всички най-отгоре",
+        "label": "Прозорец",
+        "zoom": "Мащабирай"
     }
 }

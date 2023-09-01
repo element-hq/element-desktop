@@ -1,45 +1,30 @@
 {
     "action": {
         "cancel": "İptal",
-        "show_hide": "Göster/Gizle",
-        "quit": "Çık",
-        "edit": "Düzenle",
-        "undo": "Geri al",
-        "redo": "Yinele",
+        "close": "Kapat",
+        "close_brand": "Close %(brand)s",
         "copy": "Kopyala",
+        "cut": "Kes",
+        "delete": "Sil",
+        "edit": "Düzenle",
+        "minimise": "Küçült",
         "paste": "Yapıştır",
         "paste_match_style": "Biçimiyle bir yapıştır",
-        "delete": "Sil",
+        "quit": "Çık",
+        "redo": "Yinele",
         "select_all": "Tümünü seç",
+        "show_hide": "Göster/Gizle",
+        "undo": "Geri al",
         "zoom_in": "Yaklaştır",
-        "zoom_out": "Uzaklaştır",
-        "minimise": "Küçült",
-        "close": "Kapat",
-        "cut": "Kes"
+        "zoom_out": "Uzaklaştır"
     },
-    "confirm_quit": "Çıkmak istediğinize emin misiniz?",
     "common": {
-        "help": "Yardım",
         "about": "Hakkında",
+        "brand_help": "%(brand)s Help",
+        "help": "Yardım",
         "preferences": "Tercihler"
     },
-    "window_menu": {
-        "zoom": "Yaklaştır",
-        "label": "Pencere",
-        "bring_all_to_front": "Hepsini öne getir"
-    },
-    "view_menu": {
-        "view": "Görünüm",
-        "actual_size": "Gerçek boyut",
-        "toggle_full_screen": "Tam ekran",
-        "toggle_developer_tools": "Geliştirici araçları"
-    },
-    "menu": {
-        "services": "Hizmetler",
-        "hide": "Gizle",
-        "unhide": "Gizlemeyi bırak",
-        "hide_others": "Diğerlerini gizle"
-    },
+    "confirm_quit": "Çıkmak istediğinize emin misiniz?",
     "edit_menu": {
         "speech": "Konuşma",
         "speech_start_speaking": "Konuşmaya başla",
@@ -48,14 +33,31 @@
     "file_menu": {
         "label": "Dosya"
     },
+    "menu": {
+        "hide": "Gizle",
+        "hide_others": "Diğerlerini gizle",
+        "services": "Hizmetler",
+        "unhide": "Gizlemeyi bırak"
+    },
     "right_click_menu": {
-        "copy_image": "Resmi kopyala",
+        "add_to_dictionary": "Sözlüğe ekle",
         "copy_email": "E-posta adresini kopyala",
+        "copy_image": "Resmi kopyala",
         "copy_image_url": "Görsel adresini kopyala",
         "copy_link_url": "Bağlantılı adresi kopyala",
         "save_image_as": "Resmi ... olarak farklı kaydet",
-        "save_image_as_error_title": "Resim kaydedilemedi",
         "save_image_as_error_description": "Bu resim kaydedilemedi",
-        "add_to_dictionary": "Sözlüğe ekle"
+        "save_image_as_error_title": "Resim kaydedilemedi"
+    },
+    "view_menu": {
+        "actual_size": "Gerçek boyut",
+        "toggle_developer_tools": "Geliştirici araçları",
+        "toggle_full_screen": "Tam ekran",
+        "view": "Görünüm"
+    },
+    "window_menu": {
+        "bring_all_to_front": "Hepsini öne getir",
+        "label": "Pencere",
+        "zoom": "Yaklaştır"
     }
 }

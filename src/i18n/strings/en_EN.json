@@ -7,6 +7,7 @@
         "edit": "Edit",
         "undo": "Undo",
         "redo": "Redo",
+        "cut": "Cut",
         "copy": "Copy",
         "paste": "Paste",
         "paste_match_style": "Paste and Match Style",
@@ -15,32 +16,31 @@
         "zoom_in": "Zoom In",
         "zoom_out": "Zoom Out",
         "minimise": "Minimize",
-        "close": "Close",
-        "cut": "Cut"
+        "close": "Close"
     },
     "confirm_quit": "Are you sure you want to quit?",
-    "common": {
-        "help": "Help",
-        "brand_help": "%(brand)s Help",
-        "about": "About",
-        "preferences": "Preferences"
-    },
-    "window_menu": {
-        "zoom": "Zoom",
-        "label": "Window",
-        "bring_all_to_front": "Bring All to Front"
-    },
     "view_menu": {
         "view": "View",
         "actual_size": "Actual Size",
         "toggle_full_screen": "Toggle Full Screen",
         "toggle_developer_tools": "Toggle Developer Tools"
     },
+    "common": {
+        "preferences": "Preferences",
+        "help": "Help",
+        "brand_help": "%(brand)s Help",
+        "about": "About"
+    },
+    "window_menu": {
+        "label": "Window",
+        "zoom": "Zoom",
+        "bring_all_to_front": "Bring All to Front"
+    },
     "menu": {
         "services": "Services",
         "hide": "Hide",
-        "unhide": "Unhide",
-        "hide_others": "Hide Others"
+        "hide_others": "Hide Others",
+        "unhide": "Unhide"
     },
     "edit_menu": {
         "speech": "Speech",

@@ -1,47 +1,30 @@
 {
     "action": {
         "cancel": "Anuluj",
+        "close": "Zamknij",
         "close_brand": "Zamknij %(brand)s",
-        "show_hide": "Pokaż/Ukryj",
-        "quit": "Zamknij",
-        "edit": "Edytuj",
-        "undo": "Cofnij",
-        "redo": "Ponów",
         "copy": "Kopiuj",
+        "cut": "Wytnij",
+        "delete": "Usuń",
+        "edit": "Edytuj",
+        "minimise": "Minimalizuj",
         "paste": "Wklej",
         "paste_match_style": "Wklej i dopasuj styl",
-        "delete": "Usuń",
+        "quit": "Zamknij",
+        "redo": "Ponów",
         "select_all": "Zaznacz wszystko",
+        "show_hide": "Pokaż/Ukryj",
+        "undo": "Cofnij",
         "zoom_in": "Powiększ",
-        "zoom_out": "Pomniejsz",
-        "minimise": "Minimalizuj",
-        "close": "Zamknij",
-        "cut": "Wytnij"
+        "zoom_out": "Pomniejsz"
     },
-    "confirm_quit": "Czy na pewno chcesz zamknąć?",
     "common": {
-        "help": "Pomoc",
-        "brand_help": "Pomoc %(brand)s",
         "about": "O nas",
+        "brand_help": "Pomoc %(brand)s",
+        "help": "Pomoc",
         "preferences": "Preferencje"
     },
-    "window_menu": {
-        "zoom": "Powiększenie",
-        "label": "Okno",
-        "bring_all_to_front": "Wyciągnij wszystko do przodu"
-    },
-    "view_menu": {
-        "view": "Pokaż",
-        "actual_size": "Rozmiar rzeczywisty",
-        "toggle_full_screen": "Przełącz na pełny ekran",
-        "toggle_developer_tools": "Przełącz na narzędzia deweloperskie"
-    },
-    "menu": {
-        "services": "Usługi",
-        "hide": "Ukryj",
-        "unhide": "Odkryj",
-        "hide_others": "Ukryj inne"
-    },
+    "confirm_quit": "Czy na pewno chcesz zamknąć?",
     "edit_menu": {
         "speech": "Mowa",
         "speech_start_speaking": "Zacznij mówić",
@@ -50,14 +33,31 @@
     "file_menu": {
         "label": "Plik"
     },
+    "menu": {
+        "hide": "Ukryj",
+        "hide_others": "Ukryj inne",
+        "services": "Usługi",
+        "unhide": "Odkryj"
+    },
     "right_click_menu": {
-        "copy_image": "Kopiuj obraz",
+        "add_to_dictionary": "Dodaj do słownika",
         "copy_email": "Kopiuj adres e-mail",
+        "copy_image": "Kopiuj obraz",
         "copy_image_url": "Kopiuj adres obrazu",
         "copy_link_url": "Kopiuj adres odnośnika",
         "save_image_as": "Zapisz obraz jako...",
-        "save_image_as_error_title": "Nie udało się zapisać obrazu",
         "save_image_as_error_description": "Obraz nie został zapisany",
-        "add_to_dictionary": "Dodaj do słownika"
+        "save_image_as_error_title": "Nie udało się zapisać obrazu"
+    },
+    "view_menu": {
+        "actual_size": "Rozmiar rzeczywisty",
+        "toggle_developer_tools": "Przełącz na narzędzia deweloperskie",
+        "toggle_full_screen": "Przełącz na pełny ekran",
+        "view": "Pokaż"
+    },
+    "window_menu": {
+        "bring_all_to_front": "Wyciągnij wszystko do przodu",
+        "label": "Okno",
+        "zoom": "Powiększenie"
     }
 }
