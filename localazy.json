@@ -29,6 +29,9 @@
                 "output": "src/i18n/strings/${langLsrUnderscore}.json"
             }
         ],
-        "includeSourceLang": "${includeSourceLang|false}"
+        "includeSourceLang": "${includeSourceLang|false}",
+        "langAliases": {
+            "en": "en-EN"
+        }
     }
 }
