@@ -1,12 +1,14 @@
 {
-    "Paste": "Zalijepiti",
-    "Copy": "Kopirati",
-    "Cut": "Izrezati",
-    "Redo": "Preurediti",
-    "Undo": "Poništi",
-    "Edit": "Uredi",
-    "Quit": "Prestati",
-    "Show/Hide": "Pokaži/sakrij",
-    "Are you sure you want to quit?": "Jesi li siguran da želiš odustati?",
-    "Cancel": "Otkazati"
+    "action": {
+        "cancel": "Otkazati",
+        "copy": "Kopirati",
+        "cut": "Izrezati",
+        "edit": "Uredi",
+        "paste": "Zalijepiti",
+        "quit": "Prestati",
+        "redo": "Preurediti",
+        "show_hide": "Pokaži/sakrij",
+        "undo": "Poništi"
+    },
+    "confirm_quit": "Jesi li siguran da želiš odustati?"
 }

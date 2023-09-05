@@ -1,9 +1,13 @@
 {
-    "About": "గ్రెంచ్",
-    "Paste and Match Style": "మునుపటి వంటి అతికించండి",
-    "Paste": "పేస్ట్",
-    "Cut": "కట్",
-    "Copy": "కాపీ",
-    "Are you sure you want to quit?": "మీరు వెళ్ళిపోవాలని అనుకుంటున్నారా?",
-    "Cancel": "ఆపు"
+    "action": {
+        "cancel": "ఆపు",
+        "copy": "కాపీ",
+        "cut": "కట్",
+        "paste": "పేస్ట్",
+        "paste_match_style": "మునుపటి వంటి అతికించండి"
+    },
+    "common": {
+        "about": "గ్రెంచ్"
+    },
+    "confirm_quit": "మీరు వెళ్ళిపోవాలని అనుకుంటున్నారా?"
 }

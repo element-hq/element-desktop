@@ -1,47 +1,63 @@
 {
-    "Bring All to Front": "全部移至最前",
-    "Add to dictionary": "新增到字典",
-    "The image failed to save": "儲存圖片失敗",
-    "Failed to save image": "儲存圖片失敗",
-    "Save image as...": "另存圖片為...",
-    "Copy link address": "複製連結",
-    "Copy email address": "複製電子郵件地址",
-    "Copy image": "複製圖片",
-    "File": "檔案",
-    "Zoom": "縮放",
-    "Stop Speaking": "停止說話",
-    "Start Speaking": "開始說話",
-    "Speech": "語音",
-    "Unhide": "取消隱藏",
-    "Hide Others": "隱藏其他",
-    "Hide": "隱藏",
-    "Services": "服務",
-    "About": "關於",
-    "Help": "說明",
-    "Close": "關閉",
-    "Minimize": "最小化",
-    "Window": "視窗",
-    "Toggle Developer Tools": "切換開發工具",
-    "Toggle Full Screen": "切換全螢幕",
-    "Preferences": "偏好設定",
-    "Zoom Out": "縮小",
-    "Zoom In": "放大",
-    "Actual Size": "實際大小",
-    "View": "檢視",
-    "Select All": "全選",
-    "Delete": "刪除",
-    "Paste and Match Style": "貼上並保留格式",
-    "Paste": "貼上",
-    "Copy": "複製",
-    "Cut": "剪下",
-    "Redo": "取消復原",
-    "Undo": "復原",
-    "Edit": "編輯",
-    "Quit": "離開",
-    "Show/Hide": "顯示/隱藏",
-    "Are you sure you want to quit?": "您確定要離開嗎？",
-    "Cancel": "取消",
-    "Copy image address": "複製圖片地址",
-    "Close %(brand)s": "關閉 %(brand)s",
-    "%(brand)s Help": "%(brand)s 說明"
+    "action": {
+        "cancel": "取消",
+        "close": "關閉",
+        "close_brand": "關閉 %(brand)s",
+        "copy": "複製",
+        "cut": "剪下",
+        "delete": "刪除",
+        "edit": "編輯",
+        "minimise": "最小化",
+        "paste": "貼上",
+        "paste_match_style": "貼上並保留格式",
+        "quit": "離開",
+        "redo": "取消復原",
+        "select_all": "全選",
+        "show_hide": "顯示/隱藏",
+        "undo": "復原",
+        "zoom_in": "放大",
+        "zoom_out": "縮小"
+    },
+    "common": {
+        "about": "關於",
+        "brand_help": "%(brand)s 說明",
+        "help": "說明",
+        "preferences": "偏好設定"
+    },
+    "confirm_quit": "您確定要離開嗎？",
+    "edit_menu": {
+        "speech": "語音",
+        "speech_start_speaking": "開始說話",
+        "speech_stop_speaking": "停止說話"
+    },
+    "file_menu": {
+        "label": "檔案"
+    },
+    "menu": {
+        "hide": "隱藏",
+        "hide_others": "隱藏其他",
+        "services": "服務",
+        "unhide": "取消隱藏"
+    },
+    "right_click_menu": {
+        "add_to_dictionary": "新增到字典",
+        "copy_email": "複製電子郵件地址",
+        "copy_image": "複製圖片",
+        "copy_image_url": "複製圖片地址",
+        "copy_link_url": "複製連結",
+        "save_image_as": "另存圖片為...",
+        "save_image_as_error_description": "儲存圖片失敗",
+        "save_image_as_error_title": "儲存圖片失敗"
+    },
+    "view_menu": {
+        "actual_size": "實際大小",
+        "toggle_developer_tools": "切換開發工具",
+        "toggle_full_screen": "切換全螢幕",
+        "view": "檢視"
+    },
+    "window_menu": {
+        "bring_all_to_front": "全部移至最前",
+        "label": "視窗",
+        "zoom": "縮放"
+    }
 }

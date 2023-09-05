@@ -1,46 +1,61 @@
 {
-    "Add to dictionary": "Adicionar a dicionário",
-    "The image failed to save": "A imagem falhou para salvar",
-    "Failed to save image": "Falha para salvar imagem",
-    "Save image as...": "Salvar imagem como...",
-    "Copy link address": "Copiar endereço de link",
-    "Copy email address": "Copiar endereço de email",
-    "Copy image": "Copiar imagem",
-    "File": "Arquivo",
-    "Zoom": "Zoom",
-    "Stop Speaking": "Parar de Falar",
-    "Start Speaking": "Começar a Falar",
-    "Speech": "Fala",
-    "Unhide": "Desesconder",
-    "Hide": "Esconder",
-    "Services": "Serviços",
-    "About": "Sobre",
-    "Help": "Ajuda",
-    "Close": "Fechar",
-    "Minimize": "Minimizar",
-    "Window": "Janela",
-    "Toggle Developer Tools": "Ativar/Desativar Ferramentas de Desenvolvimento",
-    "Toggle Full Screen": "Pôr em/Tirar de Tela Cheia",
-    "Preferences": "Preferências",
-    "Zoom Out": "Dar Zoom Out",
-    "Zoom In": "Dar Zoom In",
-    "Actual Size": "Tamanho de Verdade",
-    "View": "Visualizar",
-    "Select All": "Selecionar Todas",
-    "Delete": "Deletar",
-    "Paste and Match Style": "Colar e Adequar Estilo",
-    "Paste": "Colar",
-    "Copy": "Copiar",
-    "Cut": "Cortar",
-    "Redo": "Refazer",
-    "Undo": "Desfazer",
-    "Edit": "Editar",
-    "Quit": "Sair",
-    "Show/Hide": "Mostrar/Esconder",
-    "Are you sure you want to quit?": "Você tem certeza que você quer sair?",
-    "Cancel": "Cancelar",
-    "Bring All to Front": "Trazer Todas Para Frente",
-    "Hide Others": "Esconder Outras(os)",
-    "Copy image address": "Copiar endereço de imagem",
-    "Close %(brand)s": "Fechar %(brand)s"
+    "action": {
+        "cancel": "Cancelar",
+        "close": "Fechar",
+        "close_brand": "Fechar %(brand)s",
+        "copy": "Copiar",
+        "cut": "Cortar",
+        "delete": "Deletar",
+        "edit": "Editar",
+        "minimise": "Minimizar",
+        "paste": "Colar",
+        "paste_match_style": "Colar e Adequar Estilo",
+        "quit": "Sair",
+        "redo": "Refazer",
+        "select_all": "Selecionar Todas",
+        "show_hide": "Mostrar/Esconder",
+        "undo": "Desfazer",
+        "zoom_in": "Dar Zoom In",
+        "zoom_out": "Dar Zoom Out"
+    },
+    "common": {
+        "about": "Sobre",
+        "help": "Ajuda",
+        "preferences": "Preferências"
+    },
+    "confirm_quit": "Você tem certeza que você quer sair?",
+    "edit_menu": {
+        "speech": "Fala",
+        "speech_start_speaking": "Começar a Falar",
+        "speech_stop_speaking": "Parar de Falar"
+    },
+    "file_menu": {
+        "label": "Arquivo"
+    },
+    "menu": {
+        "hide": "Esconder",
+        "hide_others": "Esconder Outras(os)",
+        "services": "Serviços",
+        "unhide": "Desesconder"
+    },
+    "right_click_menu": {
+        "add_to_dictionary": "Adicionar a dicionário",
+        "copy_email": "Copiar endereço de email",
+        "copy_image": "Copiar imagem",
+        "copy_image_url": "Copiar endereço de imagem",
+        "copy_link_url": "Copiar endereço de link",
+        "save_image_as": "Salvar imagem como...",
+        "save_image_as_error_description": "A imagem falhou para salvar",
+        "save_image_as_error_title": "Falha para salvar imagem"
+    },
+    "view_menu": {
+        "actual_size": "Tamanho de Verdade",
+        "toggle_developer_tools": "Ativar/Desativar Ferramentas de Desenvolvimento",
+        "toggle_full_screen": "Pôr em/Tirar de Tela Cheia",
+        "view": "Visualizar"
+    },
+    "window_menu": {
+        "bring_all_to_front": "Trazer Todas Para Frente",
+        "label": "Janela"
+    }
 }

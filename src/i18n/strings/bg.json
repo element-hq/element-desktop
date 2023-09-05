@@ -1,45 +1,61 @@
 {
-    "Add to dictionary": "Добави към речника",
-    "The image failed to save": "Изображението не успя да се запази",
-    "Failed to save image": "Неуспешно запазване на изображението",
-    "Save image as...": "Запази изображението като...",
-    "Copy link address": "Копирай линка",
-    "Copy image address": "Копирай адреса на изображението",
-    "Copy email address": "Копирай имейл адрес",
-    "Copy image": "Копирай изображение",
-    "File": "Файл",
-    "Bring All to Front": "Покажи всички най-отгоре",
-    "Zoom": "Мащабирай",
-    "Stop Speaking": "Спри да говориш",
-    "Start Speaking": "Започни да говориш",
-    "Speech": "Говор",
-    "Unhide": "Покажи",
-    "Hide Others": "Скрий Останалите",
-    "Hide": "Скрий",
-    "Services": "Услуги",
-    "About": "Относно",
-    "Help": "Помощ",
-    "Close": "Затвори",
-    "Minimize": "Минимизирай",
-    "Window": "Прозорец",
-    "Toggle Developer Tools": "Превключи инструментите за разработчици",
-    "Toggle Full Screen": "Превключи на Цял екран",
-    "Preferences": "Предпочитания",
-    "Zoom Out": "Намали",
-    "Zoom In": "Увеличи",
-    "Actual Size": "Действителен Размер",
-    "View": "Преглед",
-    "Select All": "Избери Всичко",
-    "Delete": "Изтрий",
-    "Paste and Match Style": "Постави и Използвай текущия стил",
-    "Paste": "Постави",
-    "Copy": "Копирай",
-    "Cut": "Изрежи",
-    "Redo": "Върни",
-    "Undo": "Отмени",
-    "Edit": "Редактирай",
-    "Quit": "Напусни",
-    "Show/Hide": "Покажи/Скрий",
-    "Are you sure you want to quit?": "Сигурен ли си че искаш да напуснеш?",
-    "Cancel": "Отказ"
+    "action": {
+        "cancel": "Отказ",
+        "close": "Затвори",
+        "copy": "Копирай",
+        "cut": "Изрежи",
+        "delete": "Изтрий",
+        "edit": "Редактирай",
+        "minimise": "Минимизирай",
+        "paste": "Постави",
+        "paste_match_style": "Постави и Използвай текущия стил",
+        "quit": "Напусни",
+        "redo": "Върни",
+        "select_all": "Избери Всичко",
+        "show_hide": "Покажи/Скрий",
+        "undo": "Отмени",
+        "zoom_in": "Увеличи",
+        "zoom_out": "Намали"
+    },
+    "common": {
+        "about": "Относно",
+        "help": "Помощ",
+        "preferences": "Предпочитания"
+    },
+    "confirm_quit": "Сигурен ли си че искаш да напуснеш?",
+    "edit_menu": {
+        "speech": "Говор",
+        "speech_start_speaking": "Започни да говориш",
+        "speech_stop_speaking": "Спри да говориш"
+    },
+    "file_menu": {
+        "label": "Файл"
+    },
+    "menu": {
+        "hide": "Скрий",
+        "hide_others": "Скрий Останалите",
+        "services": "Услуги",
+        "unhide": "Покажи"
+    },
+    "right_click_menu": {
+        "add_to_dictionary": "Добави към речника",
+        "copy_email": "Копирай имейл адрес",
+        "copy_image": "Копирай изображение",
+        "copy_image_url": "Копирай адреса на изображението",
+        "copy_link_url": "Копирай линка",
+        "save_image_as": "Запази изображението като...",
+        "save_image_as_error_description": "Изображението не успя да се запази",
+        "save_image_as_error_title": "Неуспешно запазване на изображението"
+    },
+    "view_menu": {
+        "actual_size": "Действителен Размер",
+        "toggle_developer_tools": "Превключи инструментите за разработчици",
+        "toggle_full_screen": "Превключи на Цял екран",
+        "view": "Преглед"
+    },
+    "window_menu": {
+        "bring_all_to_front": "Покажи всички най-отгоре",
+        "label": "Прозорец",
+        "zoom": "Мащабирай"
+    }
 }
