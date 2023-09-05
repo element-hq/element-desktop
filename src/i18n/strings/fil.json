@@ -2,16 +2,14 @@
     "action": {
         "cancel": "Kanselahin",
         "close_brand": "Isara ang %(brand)s",
-        "show_hide": "Ipakita/itago",
-        "quit": "Magsara",
-        "edit": "I-edit",
-        "undo": "Undo",
-        "redo": "Redo",
         "copy": "I-copy",
+        "cut": "I-cut",
+        "delete": "Alisin",
+        "edit": "I-edit",
         "paste": "I-paste",
         "paste_match_style": "I-paste at Tumugma ng Style",
-        "delete": "Alisin",
-        "cut": "I-cut"
+        "quit": "Magsara",
+        "show_hide": "Ipakita/itago"
     },
     "confirm_quit": "Sigurado ka ba na gusto mong magsara?",
     "menu": {

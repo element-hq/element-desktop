@@ -121,12 +121,12 @@ export function initApplicationMenu(): void {
 
     const contextMenu = Menu.buildFromTemplate([
         {
-            label: _t("Show/Hide"),
+            label: _t("action|show_hide"),
             click: toggleWin,
         },
         { type: "separator" },
         {
-            label: _t("Quit"),
+            label: _t("action|quit"),
             click: function (): void {
                 app.quit();
             },

@@ -16,9 +16,10 @@
         "node": ">=16.0.0"
     },
     "scripts": {
-        "i18n": "matrix-gen-i18n",
-        "prunei18n": "matrix-prune-i18n",
-        "diff-i18n": "cp src/i18n/strings/en_EN.json src/i18n/strings/en_EN_orig.json && matrix-gen-i18n && matrix-compare-i18n-files src/i18n/strings/en_EN_orig.json src/i18n/strings/en_EN.json",
+        "i18n": "matrix-gen-i18n && yarn i18n:sort && yarn i18n:lint",
+        "i18n:sort": "jq --sort-keys '.' src/i18n/strings/en_EN.json > src/i18n/strings/en_EN.json.tmp && mv src/i18n/strings/en_EN.json.tmp src/i18n/strings/en_EN.json",
+        "i18n:lint": "prettier --loglevel silent --write src/i18n/strings/ --ignore-path /dev/null",
+        "i18n:diff": "cp src/i18n/strings/en_EN.json src/i18n/strings/en_EN_orig.json && yarn i18n && matrix-compare-i18n-files src/i18n/strings/en_EN_orig.json src/i18n/strings/en_EN.json",
         "mkdirs": "mkdirp packages deploys",
         "fetch": "yarn run mkdirs && ts-node scripts/fetch-package.ts",
         "asar-webapp": "asar p webapp webapp.asar",
@@ -105,7 +106,7 @@
         "fs-extra": "^11.0.0",
         "glob": "^10.0.0",
         "jest": "^29.0.0",
-        "matrix-web-i18n": "^2.0.0",
+        "matrix-web-i18n": "^3.1.1",
         "mkdirp": "^3.0.0",
         "node-pre-gyp": "^0.17.0",
         "pacote": "^15.0.0",

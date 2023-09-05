@@ -1,47 +1,63 @@
 {
-    "Add to dictionary": "Додати до словника",
-    "The image failed to save": "Не вдалося зберегти зображення",
-    "Failed to save image": "Не вдалося зберегти зображення",
-    "Save image as...": "Зберегти зображення як...",
-    "Copy link address": "Копіювати адресу посилання",
-    "Copy image address": "Копіювати адресу зображення",
-    "Copy email address": "Копіювати адресу е-пошти",
-    "Copy image": "Копіювати зображення",
-    "File": "Файл",
-    "Bring All to Front": "Винести все вперед",
-    "Zoom": "Масштаб",
-    "Stop Speaking": "Припинити говорити",
-    "Start Speaking": "Почати говорити",
-    "Speech": "Мовлення",
-    "Unhide": "Показати",
-    "Hide Others": "Сховати інші",
-    "Hide": "Сховати",
-    "Services": "Служби",
-    "About": "Про застосунок",
-    "Help": "Довідка",
-    "Close": "Закрити",
-    "Minimize": "Згорнути",
-    "Window": "Вікно",
-    "Toggle Developer Tools": "Перемкнути інструменти розробника",
-    "Toggle Full Screen": "Перемкнути повноекранний режим",
-    "Preferences": "Параметри",
-    "Zoom Out": "Зменшити",
-    "Zoom In": "Збільшити",
-    "Actual Size": "Фактичний розмір",
-    "View": "Перегляд",
-    "Select All": "Вибрати все",
-    "Delete": "Видалити",
-    "Paste and Match Style": "Вставити з таким же стилем",
-    "Paste": "Вставити",
-    "Copy": "Копіювати",
-    "Cut": "Вирізати",
-    "Redo": "Повторити дію",
-    "Undo": "Скасувати дію",
-    "Edit": "Змінити",
-    "Quit": "Вийти",
-    "Show/Hide": "Показати/Сховати",
-    "Are you sure you want to quit?": "Ви впевнені, що хочете вийти?",
-    "Close %(brand)s": "Закрити %(brand)s",
-    "Cancel": "Скасувати",
-    "%(brand)s Help": "Довідка %(brand)s"
+    "action": {
+        "cancel": "Скасувати",
+        "close": "Закрити",
+        "close_brand": "Закрити %(brand)s",
+        "copy": "Копіювати",
+        "cut": "Вирізати",
+        "delete": "Видалити",
+        "edit": "Змінити",
+        "minimise": "Згорнути",
+        "paste": "Вставити",
+        "paste_match_style": "Вставити з таким же стилем",
+        "quit": "Вийти",
+        "redo": "Повторити дію",
+        "select_all": "Вибрати все",
+        "show_hide": "Показати/Сховати",
+        "undo": "Скасувати дію",
+        "zoom_in": "Збільшити",
+        "zoom_out": "Зменшити"
+    },
+    "common": {
+        "about": "Про застосунок",
+        "brand_help": "Довідка %(brand)s",
+        "help": "Довідка",
+        "preferences": "Параметри"
+    },
+    "confirm_quit": "Ви впевнені, що хочете вийти?",
+    "edit_menu": {
+        "speech": "Мовлення",
+        "speech_start_speaking": "Почати говорити",
+        "speech_stop_speaking": "Припинити говорити"
+    },
+    "file_menu": {
+        "label": "Файл"
+    },
+    "menu": {
+        "hide": "Сховати",
+        "hide_others": "Сховати інші",
+        "services": "Служби",
+        "unhide": "Показати"
+    },
+    "right_click_menu": {
+        "add_to_dictionary": "Додати до словника",
+        "copy_email": "Копіювати адресу е-пошти",
+        "copy_image": "Копіювати зображення",
+        "copy_image_url": "Копіювати адресу зображення",
+        "copy_link_url": "Копіювати адресу посилання",
+        "save_image_as": "Зберегти зображення як...",
+        "save_image_as_error_description": "Не вдалося зберегти зображення",
+        "save_image_as_error_title": "Не вдалося зберегти зображення"
+    },
+    "view_menu": {
+        "actual_size": "Фактичний розмір",
+        "toggle_developer_tools": "Перемкнути інструменти розробника",
+        "toggle_full_screen": "Перемкнути повноекранний режим",
+        "view": "Перегляд"
+    },
+    "window_menu": {
+        "bring_all_to_front": "Винести все вперед",
+        "label": "Вікно",
+        "zoom": "Масштаб"
+    }
 }

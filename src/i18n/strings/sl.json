@@ -1,47 +1,63 @@
 {
-    "Undo": "Razveljavi",
-    "Redo": "Uveljavi",
-    "Copy": "Kopiraj",
-    "Paste": "Prilepi",
-    "Actual Size": "Dejanska velikost",
-    "Zoom Out": "Oddalji",
-    "Window": "Okno",
-    "Minimize": "Zmanjšaj",
-    "Help": "Pomoč",
-    "About": "O programu",
-    "Services": "Storitve",
-    "Hide Others": "Skrij ostalo",
-    "Unhide": "Razkrij",
-    "Speech": "Govor",
-    "Copy link address": "Kopiraj naslov povezave",
-    "Add to dictionary": "Dodaj v slovar",
-    "Cancel": "Prekliči",
-    "Close %(brand)s": "Zapri %(brand)s",
-    "Are you sure you want to quit?": "Ste prepričani, da želite zapreti program?",
-    "Show/Hide": "Prikaži/Skrij",
-    "Quit": "Končaj",
-    "Edit": "Uredi",
-    "Cut": "Izreži",
-    "Paste and Match Style": "Prilepi ter obdrži oblikovanje",
-    "Delete": "Izbriši",
-    "Select All": "Izberi vse",
-    "View": "Poglej",
-    "Zoom In": "Približaj",
-    "Preferences": "Nastavitve",
-    "Toggle Full Screen": "Preklopi čez cel zaslon",
-    "Toggle Developer Tools": "Preklopi na orodja za razvijalce",
-    "Close": "Zapri",
-    "%(brand)s Help": "%(brand)s pomoč",
-    "Hide": "Skrij",
-    "Start Speaking": "Začnite govoriti",
-    "Stop Speaking": "Prenehajte govoriti",
-    "Zoom": "Povečaj",
-    "Bring All to Front": "Postavi vse v ospredje",
-    "File": "Datoteka",
-    "Copy image": "Kopiraj sliko",
-    "Copy email address": "Kopiraj e-poštni naslov",
-    "Copy image address": "Kopiraj naslov slike",
-    "Save image as...": "Shrani sliko kot...",
-    "Failed to save image": "Shranjevanje slike ni uspelo",
-    "The image failed to save": "Slike ni bilo mogoče shraniti"
+    "action": {
+        "cancel": "Prekliči",
+        "close": "Zapri",
+        "close_brand": "Zapri %(brand)s",
+        "copy": "Kopiraj",
+        "cut": "Izreži",
+        "delete": "Izbriši",
+        "edit": "Uredi",
+        "minimise": "Zmanjšaj",
+        "paste": "Prilepi",
+        "paste_match_style": "Prilepi ter obdrži oblikovanje",
+        "quit": "Končaj",
+        "redo": "Uveljavi",
+        "select_all": "Izberi vse",
+        "show_hide": "Prikaži/Skrij",
+        "undo": "Razveljavi",
+        "zoom_in": "Približaj",
+        "zoom_out": "Oddalji"
+    },
+    "common": {
+        "about": "O programu",
+        "brand_help": "%(brand)s pomoč",
+        "help": "Pomoč",
+        "preferences": "Nastavitve"
+    },
+    "confirm_quit": "Ste prepričani, da želite zapreti program?",
+    "edit_menu": {
+        "speech": "Govor",
+        "speech_start_speaking": "Začnite govoriti",
+        "speech_stop_speaking": "Prenehajte govoriti"
+    },
+    "file_menu": {
+        "label": "Datoteka"
+    },
+    "menu": {
+        "hide": "Skrij",
+        "hide_others": "Skrij ostalo",
+        "services": "Storitve",
+        "unhide": "Razkrij"
+    },
+    "right_click_menu": {
+        "add_to_dictionary": "Dodaj v slovar",
+        "copy_email": "Kopiraj e-poštni naslov",
+        "copy_image": "Kopiraj sliko",
+        "copy_image_url": "Kopiraj naslov slike",
+        "copy_link_url": "Kopiraj naslov povezave",
+        "save_image_as": "Shrani sliko kot...",
+        "save_image_as_error_description": "Slike ni bilo mogoče shraniti",
+        "save_image_as_error_title": "Shranjevanje slike ni uspelo"
+    },
+    "view_menu": {
+        "actual_size": "Dejanska velikost",
+        "toggle_developer_tools": "Preklopi na orodja za razvijalce",
+        "toggle_full_screen": "Preklopi čez cel zaslon",
+        "view": "Poglej"
+    },
+    "window_menu": {
+        "bring_all_to_front": "Postavi vse v ospredje",
+        "label": "Okno",
+        "zoom": "Povečaj"
+    }
 }

@@ -260,7 +260,8 @@ global.appQuitting = false;
 const exitShortcuts: Array<(input: Input, platform: string) => boolean> = [
     (input, platform): boolean => platform !== "darwin" && input.alt && input.key.toUpperCase() === "F4",
     (input, platform): boolean => platform !== "darwin" && input.control && input.key.toUpperCase() === "Q",
-    (input, platform): boolean => platform === "darwin" && input.meta && !input.control && input.key.toUpperCase() === "Q",
+    (input, platform): boolean =>
+        platform === "darwin" && input.meta && !input.control && input.key.toUpperCase() === "Q",
 ];
 
 const warnBeforeExit = (event: Event, input: Input): void => {
@@ -273,12 +274,12 @@ const warnBeforeExit = (event: Event, input: Input): void => {
             dialog.showMessageBoxSync(global.mainWindow, {
                 type: "question",
                 buttons: [
-                    _t("Cancel"),
-                    _t("Close %(brand)s", {
+                    _t("action|cancel"),
+                    _t("action|close_brand", {
                         brand: global.vectorConfig.brand || "Element",
                     }),
                 ],
-                message: _t("Are you sure you want to quit?"),
+                message: _t("confirm_quit"),
                 defaultId: 1,
                 cancelId: 0,
             }) === 0;

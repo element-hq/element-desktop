@@ -1,45 +1,61 @@
 {
-    "Are you sure you want to quit?": "তুমি কি আসলেই বের হতে চাও?",
-    "Cancel": "বাতিল",
-    "Save image as...": "ছবি সংরক্ষণের ধরন...",
-    "Failed to save image": "ছবি সংরক্ষণ ব্যর্থ",
-    "The image failed to save": "ছবি সংরক্ষণ ব্যর্থ",
-    "Add to dictionary": "অভিধানে যোগ করি",
-    "Copy link address": "সংযোগের ঠিকানা অনুলিপি করো",
-    "Copy image address": "ছবির ঠিকানা অনুলিপি করো",
-    "Copy email address": "ইমেইল ঠিকানা অনুলিপি করো",
-    "Copy image": "ছবি অনুলিপি করো",
-    "File": "নথি",
-    "Bring All to Front": "সবকিছু সামনে আনো",
-    "Zoom": "বড় করা",
-    "Stop Speaking": "কথা বন্ধ করো",
-    "Start Speaking": "কথা শুরু করো",
-    "Speech": "বাচন",
-    "Unhide": "দেখাও",
-    "Hide Others": "অন্যগুলো লুকাও",
-    "Hide": "লুকাও",
-    "Services": "সেবা",
-    "About": "আমাদের সম্পর্কে",
-    "Help": "সাহায্য",
-    "Close": "বন্ধ",
-    "Minimize": "সংকোচন",
-    "Window": "জানালা",
-    "Toggle Developer Tools": "ডেভেলপার সরঞ্জামাদি",
-    "Toggle Full Screen": "পূর্ণ পর্দা করো/বের হও",
-    "Preferences": "পছন্দসমূহ",
-    "Zoom Out": "ছোট করো",
-    "Zoom In": "বড়ো করো",
-    "Actual Size": "আসল আকার",
-    "View": "দেখো",
-    "Select All": "সব নির্বাচন",
-    "Delete": "অপসারণ",
-    "Paste and Match Style": "লেপন ও একই ধরনে",
-    "Paste": "লেপন",
-    "Copy": "অনুলিপি",
-    "Cut": "কাটো",
-    "Redo": "পুন",
-    "Undo": "ফিরত",
-    "Edit": "সম্পাদনা",
-    "Quit": "প্রস্থান",
-    "Show/Hide": "দেখাও/লুকাও"
+    "action": {
+        "cancel": "বাতিল",
+        "close": "বন্ধ",
+        "copy": "অনুলিপি",
+        "cut": "কাটো",
+        "delete": "অপসারণ",
+        "edit": "সম্পাদনা",
+        "minimise": "সংকোচন",
+        "paste": "লেপন",
+        "paste_match_style": "লেপন ও একই ধরনে",
+        "quit": "প্রস্থান",
+        "redo": "পুন",
+        "select_all": "সব নির্বাচন",
+        "show_hide": "দেখাও/লুকাও",
+        "undo": "ফিরত",
+        "zoom_in": "বড়ো করো",
+        "zoom_out": "ছোট করো"
+    },
+    "common": {
+        "about": "আমাদের সম্পর্কে",
+        "help": "সাহায্য",
+        "preferences": "পছন্দসমূহ"
+    },
+    "confirm_quit": "তুমি কি আসলেই বের হতে চাও?",
+    "edit_menu": {
+        "speech": "বাচন",
+        "speech_start_speaking": "কথা শুরু করো",
+        "speech_stop_speaking": "কথা বন্ধ করো"
+    },
+    "file_menu": {
+        "label": "নথি"
+    },
+    "menu": {
+        "hide": "লুকাও",
+        "hide_others": "অন্যগুলো লুকাও",
+        "services": "সেবা",
+        "unhide": "দেখাও"
+    },
+    "right_click_menu": {
+        "add_to_dictionary": "অভিধানে যোগ করি",
+        "copy_email": "ইমেইল ঠিকানা অনুলিপি করো",
+        "copy_image": "ছবি অনুলিপি করো",
+        "copy_image_url": "ছবির ঠিকানা অনুলিপি করো",
+        "copy_link_url": "সংযোগের ঠিকানা অনুলিপি করো",
+        "save_image_as": "ছবি সংরক্ষণের ধরন...",
+        "save_image_as_error_description": "ছবি সংরক্ষণ ব্যর্থ",
+        "save_image_as_error_title": "ছবি সংরক্ষণ ব্যর্থ"
+    },
+    "view_menu": {
+        "actual_size": "আসল আকার",
+        "toggle_developer_tools": "ডেভেলপার সরঞ্জামাদি",
+        "toggle_full_screen": "পূর্ণ পর্দা করো/বের হও",
+        "view": "দেখো"
+    },
+    "window_menu": {
+        "bring_all_to_front": "সবকিছু সামনে আনো",
+        "label": "জানালা",
+        "zoom": "বড় করা"
+    }
 }

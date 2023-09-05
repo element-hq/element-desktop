@@ -1,46 +1,61 @@
 {
-    "The image failed to save": "Biletet vart ikkje lagra",
-    "Paste and Match Style": "Lim inn og tilpass stil",
-    "Redo": "Gjer om",
-    "Undo": "Angre",
-    "Are you sure you want to quit?": "Er du sikker på at du vil avslutta?",
-    "Add to dictionary": "Legg til i ordlista",
-    "Failed to save image": "Klarte ikkje å lagra biletet",
-    "Save image as...": "Lagre bilete som…",
-    "Copy link address": "Kopier lenkjeadresse",
-    "Copy email address": "Kopier e-postadresse",
-    "Copy image": "Kopier bilete",
-    "File": "Fil",
-    "Bring All to Front": "Plasser lengst fram",
-    "Zoom": "Zoom",
-    "Stop Speaking": "Stopp snakka",
-    "Start Speaking": "Byrja snakka",
-    "Speech": "Tale",
-    "Unhide": "Ikkje gøym",
-    "Hide Others": "Gøym andre",
-    "Hide": "Gøym",
-    "Services": "Tenester",
-    "About": "Om",
-    "Help": "Hjelp",
-    "Close": "Lat att",
-    "Minimize": "Minimer",
-    "Window": "Vindauga",
-    "Toggle Developer Tools": "Developer Tools av/på",
-    "Toggle Full Screen": "Fullskjerm av/på",
-    "Preferences": "Innstillingar",
-    "Zoom Out": "Zoom ut",
-    "Zoom In": "Zoom inn",
-    "Actual Size": "Faktisk storleik",
-    "View": "Vis",
-    "Select All": "Marker alt",
-    "Delete": "Slett",
-    "Paste": "Lim inn",
-    "Copy": "Lim inn",
-    "Cut": "Klipp ut",
-    "Edit": "Rediger",
-    "Quit": "Avslutt",
-    "Show/Hide": "Vis/Gøym",
-    "Cancel": "Avbryt",
-    "Copy image address": "Kopier bildeadresse",
-    "Close %(brand)s": "Lukk %(brand)s"
+    "action": {
+        "cancel": "Avbryt",
+        "close": "Lat att",
+        "close_brand": "Lukk %(brand)s",
+        "copy": "Lim inn",
+        "cut": "Klipp ut",
+        "delete": "Slett",
+        "edit": "Rediger",
+        "minimise": "Minimer",
+        "paste": "Lim inn",
+        "paste_match_style": "Lim inn og tilpass stil",
+        "quit": "Avslutt",
+        "redo": "Gjer om",
+        "select_all": "Marker alt",
+        "show_hide": "Vis/Gøym",
+        "undo": "Angre",
+        "zoom_in": "Zoom inn",
+        "zoom_out": "Zoom ut"
+    },
+    "common": {
+        "about": "Om",
+        "help": "Hjelp",
+        "preferences": "Innstillingar"
+    },
+    "confirm_quit": "Er du sikker på at du vil avslutta?",
+    "edit_menu": {
+        "speech": "Tale",
+        "speech_start_speaking": "Byrja snakka",
+        "speech_stop_speaking": "Stopp snakka"
+    },
+    "file_menu": {
+        "label": "Fil"
+    },
+    "menu": {
+        "hide": "Gøym",
+        "hide_others": "Gøym andre",
+        "services": "Tenester",
+        "unhide": "Ikkje gøym"
+    },
+    "right_click_menu": {
+        "add_to_dictionary": "Legg til i ordlista",
+        "copy_email": "Kopier e-postadresse",
+        "copy_image": "Kopier bilete",
+        "copy_image_url": "Kopier bildeadresse",
+        "copy_link_url": "Kopier lenkjeadresse",
+        "save_image_as": "Lagre bilete som…",
+        "save_image_as_error_description": "Biletet vart ikkje lagra",
+        "save_image_as_error_title": "Klarte ikkje å lagra biletet"
+    },
+    "view_menu": {
+        "actual_size": "Faktisk storleik",
+        "toggle_developer_tools": "Developer Tools av/på",
+        "toggle_full_screen": "Fullskjerm av/på",
+        "view": "Vis"
+    },
+    "window_menu": {
+        "bring_all_to_front": "Plasser lengst fram",
+        "label": "Vindauga"
+    }
 }

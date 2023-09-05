@@ -1,21 +1,34 @@
 {
-    "Paste": "پیسٹ",
-    "Redo": "دوبارہ کریں",
-    "Preferences": "ترجیحات",
-    "Hide Others": "",
-    "Show/Hide": "دکھائیں/چھپائیں",
-    "Quit": "چھوڑو",
-    "Hide": "چھپائیں",
-    "Unhide": "دکھائیں",
-    "Zoom": "زوم",
-    "Close": "بند",
-    "Window": "کھڑکی",
-    "Cut": "کٹ",
-    "Delete": "مٹاؤ",
-    "File": "فائل",
-    "Help": "مدد",
-    "Copy": "کاپی",
-    "Add to dictionary": "لغت میں شامل کریں",
-    "Copy image": "تصویر کاپی کریں",
-    "Start Speaking": "بولنا شروع کریں"
+    "action": {
+        "close": "بند",
+        "copy": "کاپی",
+        "cut": "کٹ",
+        "delete": "مٹاؤ",
+        "paste": "پیسٹ",
+        "quit": "چھوڑو",
+        "redo": "دوبارہ کریں",
+        "show_hide": "دکھائیں/چھپائیں"
+    },
+    "common": {
+        "help": "مدد",
+        "preferences": "ترجیحات"
+    },
+    "edit_menu": {
+        "speech_start_speaking": "بولنا شروع کریں"
+    },
+    "file_menu": {
+        "label": "فائل"
+    },
+    "menu": {
+        "hide": "چھپائیں",
+        "unhide": "دکھائیں"
+    },
+    "right_click_menu": {
+        "add_to_dictionary": "لغت میں شامل کریں",
+        "copy_image": "تصویر کاپی کریں"
+    },
+    "window_menu": {
+        "label": "کھڑکی",
+        "zoom": "زوم"
+    }
 }
