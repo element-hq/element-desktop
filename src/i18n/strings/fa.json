@@ -20,7 +20,6 @@
     },
     "common": {
         "about": "درباره",
-        "brand_help": "%(brand)s Help",
         "help": "راهنما",
         "preferences": "ترجیحات"
     },

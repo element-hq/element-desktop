@@ -57,7 +57,6 @@
     },
     "window_menu": {
         "bring_all_to_front": "Alles in den Vordergrund",
-        "label": "Fenster",
-        "zoom": "Zoom"
+        "label": "Fenster"
     }
 }

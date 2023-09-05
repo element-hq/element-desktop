@@ -20,7 +20,6 @@
     },
     "common": {
         "about": "Sobre",
-        "brand_help": "%(brand)s Help",
         "help": "Ajuda",
         "preferences": "Preferências"
     },
@@ -57,7 +56,6 @@
     },
     "window_menu": {
         "bring_all_to_front": "Trazer Todas Para Frente",
-        "label": "Janela",
-        "zoom": "Zoom"
+        "label": "Janela"
     }
 }

@@ -2,7 +2,6 @@
     "action": {
         "cancel": "Отказ",
         "close": "Затвори",
-        "close_brand": "Close %(brand)s",
         "copy": "Копирай",
         "cut": "Изрежи",
         "delete": "Изтрий",
@@ -20,7 +19,6 @@
     },
     "common": {
         "about": "Относно",
-        "brand_help": "%(brand)s Help",
         "help": "Помощ",
         "preferences": "Предпочитания"
     },

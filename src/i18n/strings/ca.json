@@ -2,7 +2,6 @@
     "action": {
         "cancel": "Cancel·la",
         "close": "Tanca",
-        "close_brand": "Close %(brand)s",
         "copy": "Copia",
         "cut": "Retalla",
         "delete": "Suprimeix",
@@ -20,7 +19,6 @@
     },
     "common": {
         "about": "Quant a",
-        "brand_help": "%(brand)s Help",
         "help": "Ajuda",
         "preferences": "Preferències"
     },
@@ -43,7 +41,6 @@
         "add_to_dictionary": "Afegeix al diccionari",
         "copy_email": "Copia l'adreça de correu electrònic",
         "copy_image": "Copia la imatge",
-        "copy_image_url": "Copy image address",
         "copy_link_url": "Copia l'adreça de l'enllaç",
         "save_image_as": "Anomena i desa la imatge...",
         "save_image_as_error_description": "S'ha fallat en desar la imatge",

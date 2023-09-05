@@ -2,7 +2,6 @@
     "action": {
         "cancel": "Адмена",
         "close": "Зачыніць",
-        "close_brand": "Close %(brand)s",
         "copy": "Капіяваць",
         "cut": "Выразаць",
         "delete": "Выдаліць",
@@ -20,7 +19,6 @@
     },
     "common": {
         "about": "Аб праграме",
-        "brand_help": "%(brand)s Help",
         "help": "Даведка",
         "preferences": "Параметры"
     },
@@ -43,7 +41,6 @@
         "add_to_dictionary": "Дадаць у слоўнік",
         "copy_email": "Скапіраваць адрас пошты",
         "copy_image": "Скапіраваць малюнак",
-        "copy_image_url": "Copy image address",
         "copy_link_url": "Скапіраваць спасылку",
         "save_image_as": "Захаваць малюнак як...",
         "save_image_as_error_description": "Не атрымалася захаваць малюнак",

@@ -20,7 +20,6 @@
     },
     "common": {
         "about": "概要",
-        "brand_help": "%(brand)s Help",
         "help": "ヘルプ",
         "preferences": "環境設定"
     },

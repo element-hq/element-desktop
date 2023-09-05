@@ -2,7 +2,6 @@
     "action": {
         "cancel": "Annulearje",
         "close": "Slute",
-        "close_brand": "Close %(brand)s",
         "copy": "Kopiearje",
         "cut": "Knippe",
         "delete": "Fuortsmite",
@@ -20,8 +19,6 @@
     },
     "common": {
         "about": "Oer",
-        "brand_help": "%(brand)s Help",
-        "help": "Help",
         "preferences": "Foarkarren"
     },
     "confirm_quit": "Binne jo der wis fan dat jo ôfslute wolle?",
@@ -43,7 +40,6 @@
         "add_to_dictionary": "Oan wurdlist tafoegje",
         "copy_email": "E-mailadres kopiearje",
         "copy_image": "Ofbylding kopiearje",
-        "copy_image_url": "Copy image address",
         "copy_link_url": "Keppeling kopiearje",
         "save_image_as": "Ofbylding bewarje as…",
         "save_image_as_error_description": "It is net slagge de ôfbylding te bewarjen",
@@ -57,7 +53,6 @@
     },
     "window_menu": {
         "bring_all_to_front": "Alles nei foaren bringe",
-        "label": "Finster",
-        "zoom": "Zoom"
+        "label": "Finster"
     }
 }

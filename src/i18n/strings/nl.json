@@ -20,8 +20,6 @@
     },
     "common": {
         "about": "Over",
-        "brand_help": "%(brand)s Help",
-        "help": "Help",
         "preferences": "Voorkeuren"
     },
     "confirm_quit": "Weet u zeker dat u wilt stoppen?",
@@ -57,7 +55,6 @@
     },
     "window_menu": {
         "bring_all_to_front": "Alles naar voren brengen",
-        "label": "Venster",
-        "zoom": "Zoom"
+        "label": "Venster"
     }
 }

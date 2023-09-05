@@ -2,7 +2,6 @@
     "action": {
         "cancel": "İptal",
         "close": "Kapat",
-        "close_brand": "Close %(brand)s",
         "copy": "Kopyala",
         "cut": "Kes",
         "delete": "Sil",
@@ -20,7 +19,6 @@
     },
     "common": {
         "about": "Hakkında",
-        "brand_help": "%(brand)s Help",
         "help": "Yardım",
         "preferences": "Tercihler"
     },

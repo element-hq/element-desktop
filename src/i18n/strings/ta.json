@@ -20,7 +20,6 @@
     },
     "common": {
         "about": "இதனைப் பற்றி",
-        "brand_help": "%(brand)s Help",
         "help": "உதவி",
         "preferences": "விருப்பத்தேர்வுகள்"
     },

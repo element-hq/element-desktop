@@ -1,13 +1,11 @@
 {
     "action": {
         "cancel": "취소",
-        "close": "Close",
         "close_brand": "%(brand)s 닫기",
         "copy": "복사하기",
         "cut": "잘라내기",
         "delete": "삭제",
         "edit": "수정",
-        "minimise": "Minimize",
         "paste": "붙여넣기",
         "paste_match_style": "붙여넣고 스타일 일치",
         "quit": "종료",
@@ -19,45 +17,20 @@
         "zoom_out": "축소"
     },
     "common": {
-        "about": "About",
-        "brand_help": "%(brand)s Help",
-        "help": "Help",
         "preferences": "환경설정"
     },
     "confirm_quit": "종료하시겠습니까?",
-    "edit_menu": {
-        "speech": "Speech",
-        "speech_start_speaking": "Start Speaking",
-        "speech_stop_speaking": "Stop Speaking"
-    },
     "file_menu": {
         "label": "파일"
     },
     "menu": {
-        "hide": "숨기기",
-        "hide_others": "Hide Others",
-        "services": "Services",
-        "unhide": "Unhide"
+        "hide": "숨기기"
     },
     "right_click_menu": {
-        "add_to_dictionary": "Add to dictionary",
-        "copy_email": "이메일 주소 복사",
-        "copy_image": "Copy image",
-        "copy_image_url": "Copy image address",
-        "copy_link_url": "Copy link address",
-        "save_image_as": "Save image as...",
-        "save_image_as_error_description": "The image failed to save",
-        "save_image_as_error_title": "Failed to save image"
+        "copy_email": "이메일 주소 복사"
     },
     "view_menu": {
         "actual_size": "실제 크기",
-        "toggle_developer_tools": "Toggle Developer Tools",
-        "toggle_full_screen": "Toggle Full Screen",
         "view": "보기"
-    },
-    "window_menu": {
-        "bring_all_to_front": "Bring All to Front",
-        "label": "Window",
-        "zoom": "Zoom"
     }
 }

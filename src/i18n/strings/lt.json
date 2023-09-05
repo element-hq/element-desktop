@@ -20,7 +20,6 @@
     },
     "common": {
         "about": "Apie",
-        "brand_help": "%(brand)s Help",
         "help": "Pagalba",
         "preferences": "Nuostatos"
     },

@@ -2,7 +2,6 @@
     "action": {
         "cancel": "ຍົກເລີກ",
         "close": "ປິດ",
-        "close_brand": "Close %(brand)s",
         "copy": "ສຳເນົາ",
         "cut": "ຕັດ",
         "delete": "ລຶບ",
@@ -20,7 +19,6 @@
     },
     "common": {
         "about": "ກ່ຽວກັບ",
-        "brand_help": "%(brand)s Help",
         "help": "ຊ່ວຍເຫຼືອ",
         "preferences": "ການຕັ້ງຄ່າ"
     },

@@ -36,7 +36,6 @@
     "menu": {
         "hide": "Masquer",
         "hide_others": "Masquer les autres",
-        "services": "Services",
         "unhide": "Dé-masquer"
     },
     "right_click_menu": {
@@ -57,7 +56,6 @@
     },
     "window_menu": {
         "bring_all_to_front": "Tout amener au premier plan",
-        "label": "Fenêtre",
-        "zoom": "Zoom"
+        "label": "Fenêtre"
     }
 }

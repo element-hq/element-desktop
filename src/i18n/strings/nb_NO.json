@@ -2,16 +2,12 @@
     "action": {
         "cancel": "Avbryt",
         "close": "Lukk",
-        "close_brand": "Close %(brand)s",
         "copy": "Kopier",
-        "cut": "Cut",
         "delete": "Slett",
         "edit": "Rediger",
         "minimise": "Minimere",
         "paste": "Lim inn",
-        "paste_match_style": "Paste and Match Style",
         "quit": "Avslutt",
-        "redo": "Redo",
         "select_all": "Velg alle",
         "show_hide": "Vis/Skjul",
         "undo": "Angre",
@@ -20,9 +16,7 @@
     },
     "common": {
         "about": "Om",
-        "brand_help": "%(brand)s Help",
-        "help": "Hjelp",
-        "preferences": "Preferences"
+        "help": "Hjelp"
     },
     "confirm_quit": "Er du sikker på at du vil slutte?",
     "edit_menu": {
@@ -36,15 +30,12 @@
     "menu": {
         "hide": "Skjul",
         "hide_others": "Skjul Andre",
-        "services": "Tjenester",
-        "unhide": "Unhide"
+        "services": "Tjenester"
     },
     "right_click_menu": {
         "add_to_dictionary": "Legg til i ordbok",
         "copy_email": "Kopier e-postadressen",
         "copy_image": "Kopier bildet",
-        "copy_image_url": "Copy image address",
-        "copy_link_url": "Copy link address",
         "save_image_as": "Lagre bildet som...",
         "save_image_as_error_description": "Bildet kunne ikke lagres",
         "save_image_as_error_title": "Kunne ikke lagre bildet"
@@ -57,7 +48,6 @@
     },
     "window_menu": {
         "bring_all_to_front": "Flytt Alt Frem",
-        "label": "Vindu",
-        "zoom": "Zoom"
+        "label": "Vindu"
     }
 }

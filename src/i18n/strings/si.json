@@ -2,7 +2,6 @@
     "action": {
         "cancel": "අවලංගු කරන්න",
         "close": "වසන්න",
-        "close_brand": "Close %(brand)s",
         "copy": "පිටපත්",
         "cut": "කපන්න",
         "delete": "මකන්න",
@@ -20,7 +19,6 @@
     },
     "common": {
         "about": "පිළිබඳව",
-        "brand_help": "%(brand)s Help",
         "help": "උපකාර",
         "preferences": "පෙනුම"
     },

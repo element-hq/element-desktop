@@ -20,7 +20,6 @@
     },
     "common": {
         "about": "Despre",
-        "brand_help": "%(brand)s Help",
         "help": "Ajutor",
         "preferences": "Preferințe"
     },
@@ -36,17 +35,14 @@
     "menu": {
         "hide": "Ascunde",
         "hide_others": "Ascunde restul",
-        "services": "Servicii",
-        "unhide": "Unhide"
+        "services": "Servicii"
     },
     "right_click_menu": {
         "add_to_dictionary": "Adăugați la dicționar",
         "copy_email": "Copiază adresă de email",
         "copy_image": "Copiază imagine",
-        "copy_image_url": "Copy image address",
         "copy_link_url": "Copiază link",
         "save_image_as": "Salvează imagine ca ...",
-        "save_image_as_error_description": "The image failed to save",
         "save_image_as_error_title": "Eroare în salvarea imaginii"
     },
     "view_menu": {
@@ -57,7 +53,6 @@
     },
     "window_menu": {
         "bring_all_to_front": "Aduce-ți totul in față",
-        "label": "Fereastră",
-        "zoom": "Zoom"
+        "label": "Fereastră"
     }
 }

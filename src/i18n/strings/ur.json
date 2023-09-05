@@ -1,62 +1,33 @@
 {
     "action": {
-        "cancel": "Cancel",
         "close": "بند",
-        "close_brand": "Close %(brand)s",
         "copy": "کاپی",
         "cut": "کٹ",
         "delete": "مٹاؤ",
-        "edit": "Edit",
-        "minimise": "Minimize",
         "paste": "پیسٹ",
-        "paste_match_style": "Paste and Match Style",
         "quit": "چھوڑو",
         "redo": "دوبارہ کریں",
-        "select_all": "Select All",
-        "show_hide": "دکھائیں/چھپائیں",
-        "undo": "Undo",
-        "zoom_in": "Zoom In",
-        "zoom_out": "Zoom Out"
+        "show_hide": "دکھائیں/چھپائیں"
     },
     "common": {
-        "about": "About",
-        "brand_help": "%(brand)s Help",
         "help": "مدد",
         "preferences": "ترجیحات"
     },
-    "confirm_quit": "Are you sure you want to quit?",
     "edit_menu": {
-        "speech": "Speech",
-        "speech_start_speaking": "بولنا شروع کریں",
-        "speech_stop_speaking": "Stop Speaking"
+        "speech_start_speaking": "بولنا شروع کریں"
     },
     "file_menu": {
         "label": "فائل"
     },
     "menu": {
         "hide": "چھپائیں",
-        "hide_others": "Hide Others",
-        "services": "Services",
         "unhide": "دکھائیں"
     },
     "right_click_menu": {
         "add_to_dictionary": "لغت میں شامل کریں",
-        "copy_email": "Copy email address",
-        "copy_image": "تصویر کاپی کریں",
-        "copy_image_url": "Copy image address",
-        "copy_link_url": "Copy link address",
-        "save_image_as": "Save image as...",
-        "save_image_as_error_description": "The image failed to save",
-        "save_image_as_error_title": "Failed to save image"
-    },
-    "view_menu": {
-        "actual_size": "Actual Size",
-        "toggle_developer_tools": "Toggle Developer Tools",
-        "toggle_full_screen": "Toggle Full Screen",
-        "view": "View"
+        "copy_image": "تصویر کاپی کریں"
     },
     "window_menu": {
-        "bring_all_to_front": "Bring All to Front",
         "label": "کھڑکی",
         "zoom": "زوم"
     }

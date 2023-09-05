@@ -2,7 +2,6 @@
     "action": {
         "cancel": "বাতিল",
         "close": "বন্ধ",
-        "close_brand": "Close %(brand)s",
         "copy": "অনুলিপি",
         "cut": "কাটো",
         "delete": "অপসারণ",
@@ -20,7 +19,6 @@
     },
     "common": {
         "about": "আমাদের সম্পর্কে",
-        "brand_help": "%(brand)s Help",
         "help": "সাহায্য",
         "preferences": "পছন্দসমূহ"
     },

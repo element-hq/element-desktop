@@ -2,7 +2,6 @@
     "action": {
         "cancel": "Cancelar",
         "close": "Pechar",
-        "close_brand": "Close %(brand)s",
         "copy": "Copiar",
         "cut": "Cortar",
         "delete": "Eliminar",
@@ -20,7 +19,6 @@
     },
     "common": {
         "about": "Acerca de",
-        "brand_help": "%(brand)s Help",
         "help": "Axuda",
         "preferences": "Preferencias"
     },
@@ -43,7 +41,6 @@
         "add_to_dictionary": "Engadir ao dicionario",
         "copy_email": "Copiar enderezo de email",
         "copy_image": "Copiar imaxe",
-        "copy_image_url": "Copy image address",
         "copy_link_url": "Copiar enderezo da ligazón",
         "save_image_as": "Gardar imaxe como...",
         "save_image_as_error_description": "Non se gardou a imaxe",
