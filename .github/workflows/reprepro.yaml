@@ -41,7 +41,7 @@ jobs:
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
 
             - name: Notify packages.element.io of incoming deb
-              uses: peter-evans/repository-dispatch@26b39ed245ab8f31526069329e112ab2fb224588 # v2
+              uses: peter-evans/repository-dispatch@bf47d102fdb849e755b0b0023ea3e81a44b6f570 # v2
               with:
                   token: ${{ secrets.ELEMENT_BOT_TOKEN }}
                   repository: vector-im/packages.element.io
