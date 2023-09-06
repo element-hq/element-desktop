@@ -1,0 +1,10 @@
+{
+    "action": {
+        "cancel": "Annuleern",
+        "close": "Sluutn",
+        "edit": "Bewerkn"
+    },
+    "common": {
+        "preferences": "Instelliengn"
+    }
+}

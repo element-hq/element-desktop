@@ -1,6 +1,7 @@
 {
     "action": {
         "cancel": "Nuligi",
+        "close": "Fermi",
         "close_brand": "Fermu %(brand)s",
         "copy": "Kopiu",
         "cut": "Tranĉi",

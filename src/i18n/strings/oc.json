@@ -1,0 +1,14 @@
+{
+    "action": {
+        "cancel": "Anullar",
+        "close": "Tampar",
+        "copy": "Copiar",
+        "edit": "Editar"
+    },
+    "common": {
+        "preferences": "Preferéncias"
+    },
+    "view_menu": {
+        "view": "Visualizacion"
+    }
+}

@@ -1,6 +1,7 @@
 {
     "action": {
         "cancel": "취소",
+        "close": "닫기",
         "close_brand": "%(brand)s 닫기",
         "copy": "복사하기",
         "cut": "잘라내기",

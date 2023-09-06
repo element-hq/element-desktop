@@ -16,7 +16,8 @@
     },
     "common": {
         "about": "Om",
-        "help": "Hjelp"
+        "help": "Hjelp",
+        "preferences": "Brukervalg"
     },
     "confirm_quit": "Er du sikker på at du vil slutte?",
     "edit_menu": {

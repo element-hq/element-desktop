@@ -1,0 +1,16 @@
+{
+    "action": {
+        "cancel": "Cuir ar ceal",
+        "close": "Dún",
+        "copy": "Cóipeáil",
+        "delete": "Bain amach",
+        "edit": "Cuir in eagar"
+    },
+    "common": {
+        "about": "Faoi",
+        "preferences": "Roghanna"
+    },
+    "view_menu": {
+        "view": "Amharc"
+    }
+}

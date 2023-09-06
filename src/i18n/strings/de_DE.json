@@ -1,0 +1,17 @@
+{
+    "action": {
+        "cancel": "Abbrechen",
+        "close": "Schließen",
+        "copy": "Kopieren",
+        "delete": "Löschen",
+        "edit": "Bearbeiten"
+    },
+    "common": {
+        "about": "Über",
+        "help": "Hilfe",
+        "preferences": "Optionen"
+    },
+    "view_menu": {
+        "view": "Öffnen"
+    }
+}

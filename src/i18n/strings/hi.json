@@ -1,0 +1,9 @@
+{
+    "action": {
+        "cancel": "रद्द",
+        "close": "बंद"
+    },
+    "common": {
+        "preferences": "अधिमान"
+    }
+}

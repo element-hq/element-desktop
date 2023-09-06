@@ -1,0 +1,14 @@
+{
+    "action": {
+        "cancel": "Utzi",
+        "close": "Itxi",
+        "copy": "Kopiatu",
+        "edit": "Editatu"
+    },
+    "common": {
+        "preferences": "Hobespenak"
+    },
+    "view_menu": {
+        "view": "Ikusi"
+    }
+}

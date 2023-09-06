@@ -1,0 +1,15 @@
+{
+    "action": {
+        "cancel": "Sefsex",
+        "close": "Mdel",
+        "copy": "Nɣel",
+        "edit": "Ẓreg"
+    },
+    "common": {
+        "about": "Ɣef",
+        "preferences": "Ismenyifen"
+    },
+    "view_menu": {
+        "view": "Sken"
+    }
+}
