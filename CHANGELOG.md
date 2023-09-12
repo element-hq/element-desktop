@@ -1,13 +1,5 @@
-Changes in [1.11.41-rc.2](https://github.com/vector-im/element-desktop/releases/tag/v1.11.41-rc.2) (2023-09-08)
-===============================================================================================================
-
-## 🐛 Bug Fixes
- * Fix vertical alignment of default avatar font ([\#11582](https://github.com/matrix-org/matrix-react-sdk/pull/11582)). Fixes vector-im/element-web#26081.
- * Fix avatars in public room & space search being flex shrunk ([\#11580](https://github.com/matrix-org/matrix-react-sdk/pull/11580)). Fixes vector-im/element-web#26133.
- * Fix EventTile avatars being rendered with a size of 0 instead of hidden ([\#11558](https://github.com/matrix-org/matrix-react-sdk/pull/11558)). Fixes vector-im/element-web#26075.
-
-Changes in [1.11.41-rc.1](https://github.com/vector-im/element-desktop/releases/tag/v1.11.41-rc.1) (2023-09-05)
-===============================================================================================================
+Changes in [1.11.41](https://github.com/vector-im/element-desktop/releases/tag/v1.11.41) (2023-09-12)
+=====================================================================================================
 
 ## ✨ Features
  * Make SVGR icons use forward ref ([\#26082](https://github.com/vector-im/element-web/pull/26082)).
@@ -24,6 +16,9 @@ Changes in [1.11.41-rc.1](https://github.com/vector-im/element-desktop/releases/
  * Change avatar to use Compound implementation ([\#11448](https://github.com/matrix-org/matrix-react-sdk/pull/11448)).
 
 ## 🐛 Bug Fixes
+ * Fix vertical alignment of default avatar font ([\#11582](https://github.com/matrix-org/matrix-react-sdk/pull/11582)). Fixes vector-im/element-web#26081.
+ * Fix avatars in public room & space search being flex shrunk ([\#11580](https://github.com/matrix-org/matrix-react-sdk/pull/11580)). Fixes vector-im/element-web#26133.
+ * Fix EventTile avatars being rendered with a size of 0 instead of hidden ([\#11558](https://github.com/matrix-org/matrix-react-sdk/pull/11558)). Fixes vector-im/element-web#26075.
  * Updated no drag zones ([\#1193](https://github.com/vector-im/element-desktop/pull/1193)).
  * Fix compound external assets path in bundle ([\#26069](https://github.com/vector-im/element-web/pull/26069)).
  * Use RoomStateEvent.Update for knocks ([\#11516](https://github.com/matrix-org/matrix-react-sdk/pull/11516)). Contributed by @charlynguyen.
