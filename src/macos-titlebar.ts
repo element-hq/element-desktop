@@ -118,6 +118,10 @@ export function setupMacosTitleBar(window: BrowserWindow): void {
             .mx_RoomPreviewCard {
                 -webkit-app-region: no-drag;
             }
+            /* Exclude context menus and their backgrounds */
+            .mx_ContextualMenu, .mx_ContextualMenu_background {
+                -webkit-app-region: no-drag;
+            }
         `);
     }
 
