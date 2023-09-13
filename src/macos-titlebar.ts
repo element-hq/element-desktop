@@ -122,6 +122,10 @@ export function setupMacosTitleBar(window: BrowserWindow): void {
             .mx_ContextualMenu, .mx_ContextualMenu_background {
                 -webkit-app-region: no-drag;
             }
+            /* Exclude iframes, such as recaptcha */
+            iframe {
+                -webkit-app-region: no-drag;
+            }
         `);
     }
 
