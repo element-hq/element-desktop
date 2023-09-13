@@ -25,7 +25,11 @@ export function setupMacosTitleBar(window: BrowserWindow): void {
         cssKey = await window.webContents.insertCSS(`
             /* Create margin of space for the traffic light buttons */
             .mx_UserMenu {
-                margin-top: 32px !important;
+                /* We zero the margin and use padding as we want to use it as a drag handle */ 
+                margin-top: 0 !important;
+                margin-left: 0 !important;
+                padding-top: 32px !important;
+                padding-left: 20px !important;
                 -webkit-app-region: drag;
                 -webkit-user-select: none;
             }
