@@ -26,6 +26,12 @@ export function setupMacosTitleBar(window: BrowserWindow): void {
             /* Create margin of space for the traffic light buttons */
             .mx_UserMenu {
                 margin-top: 32px !important;
+                -webkit-app-region: drag;
+                -webkit-user-select: none;
+            }
+            /* Exclude the button from being a drag handle and not working */
+            .mx_UserMenu > * {
+                -webkit-app-region: no-drag;            
             }
             /* Maintain alignment of the toggle space panel button */
             .mx_SpacePanel_toggleCollapse {
