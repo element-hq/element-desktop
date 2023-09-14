@@ -25,7 +25,17 @@ export function setupMacosTitleBar(window: BrowserWindow): void {
         cssKey = await window.webContents.insertCSS(`
             /* Create margin of space for the traffic light buttons */
             .mx_UserMenu {
-                margin-top: 32px !important;
+                /* We zero the margin and use padding as we want to use it as a drag handle */ 
+                margin-top: 0 !important;
+                margin-left: 0 !important;
+                padding-top: 32px !important;
+                padding-left: 20px !important;
+                -webkit-app-region: drag;
+                -webkit-user-select: none;
+            }
+            /* Exclude the button from being a drag handle and not working */
+            .mx_UserMenu > * {
+                -webkit-app-region: no-drag;            
             }
             /* Maintain alignment of the toggle space panel button */
             .mx_SpacePanel_toggleCollapse {
@@ -110,6 +120,14 @@ export function setupMacosTitleBar(window: BrowserWindow): void {
             .mx_AutoHideScrollbar,
             .mx_RightPanel_ResizeWrapper,
             .mx_RoomPreviewCard {
+                -webkit-app-region: no-drag;
+            }
+            /* Exclude context menus and their backgrounds */
+            .mx_ContextualMenu, .mx_ContextualMenu_background {
+                -webkit-app-region: no-drag;
+            }
+            /* Exclude iframes, such as recaptcha */
+            iframe {
                 -webkit-app-region: no-drag;
             }
         `);
