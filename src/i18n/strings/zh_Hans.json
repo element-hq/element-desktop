@@ -1,46 +1,63 @@
 {
-    "Add to dictionary": "添加到字典",
-    "The image failed to save": "图片保存失败",
-    "Failed to save image": "图片保存失败",
-    "Save image as...": "保存图片为……",
-    "Copy link address": "复制链接地址",
-    "Copy email address": "复制邮箱地址",
-    "Copy image": "复制图片",
-    "File": "文件",
-    "Bring All to Front": "全部置前",
-    "Zoom": "放大",
-    "Stop Speaking": "停止讲话",
-    "Start Speaking": "开始讲话",
-    "Speech": "讲话",
-    "Unhide": "显示",
-    "Hide Others": "隐藏其他",
-    "Hide": "隐藏",
-    "Services": "服务",
-    "About": "关于",
-    "Help": "帮助",
-    "Close": "关闭",
-    "Minimize": "最小化",
-    "Window": "窗口",
-    "Toggle Developer Tools": "切换开发者工具",
-    "Toggle Full Screen": "切换全屏",
-    "Preferences": "偏好",
-    "Zoom Out": "缩小",
-    "Zoom In": "放大",
-    "Actual Size": "实际大小",
-    "View": "查看",
-    "Select All": "选中全部",
-    "Delete": "删除",
-    "Paste and Match Style": "粘贴并匹配样式",
-    "Paste": "粘贴",
-    "Copy": "复制",
-    "Cut": "剪切",
-    "Redo": "重做",
-    "Undo": "撤销",
-    "Edit": "编辑",
-    "Quit": "退出",
-    "Show/Hide": "显示/隐藏",
-    "Are you sure you want to quit?": "你确定要退出吗？",
-    "Cancel": "取消",
-    "Copy image address": "复制图片地址",
-    "Close %(brand)s": "关闭 %(brand)s"
+    "action": {
+        "cancel": "取消",
+        "close": "关闭",
+        "close_brand": "关闭 %(brand)s",
+        "copy": "复制",
+        "cut": "剪切",
+        "delete": "删除",
+        "edit": "编辑",
+        "minimise": "最小化",
+        "paste": "粘贴",
+        "paste_match_style": "粘贴并匹配样式",
+        "quit": "退出",
+        "redo": "重做",
+        "select_all": "选中全部",
+        "show_hide": "显示/隐藏",
+        "undo": "撤销",
+        "zoom_in": "放大",
+        "zoom_out": "缩小"
+    },
+    "common": {
+        "about": "关于",
+        "brand_help": "%(brand)s帮助",
+        "help": "帮助",
+        "preferences": "偏好"
+    },
+    "confirm_quit": "你确定要退出吗？",
+    "edit_menu": {
+        "speech": "讲话",
+        "speech_start_speaking": "开始讲话",
+        "speech_stop_speaking": "停止讲话"
+    },
+    "file_menu": {
+        "label": "文件"
+    },
+    "menu": {
+        "hide": "隐藏",
+        "hide_others": "隐藏其他",
+        "services": "服务",
+        "unhide": "显示"
+    },
+    "right_click_menu": {
+        "add_to_dictionary": "添加到字典",
+        "copy_email": "复制邮箱地址",
+        "copy_image": "复制图片",
+        "copy_image_url": "复制图片地址",
+        "copy_link_url": "复制链接地址",
+        "save_image_as": "保存图片为……",
+        "save_image_as_error_description": "图片保存失败",
+        "save_image_as_error_title": "图片保存失败"
+    },
+    "view_menu": {
+        "actual_size": "实际大小",
+        "toggle_developer_tools": "切换开发者工具",
+        "toggle_full_screen": "切换全屏",
+        "view": "查看"
+    },
+    "window_menu": {
+        "bring_all_to_front": "全部置前",
+        "label": "窗口",
+        "zoom": "放大"
+    }
 }

@@ -23,7 +23,7 @@ jobs:
               )
             )
         steps:
-            - uses: tibdex/backport@7005ef85c4562bc23b0e9b4a9940d5922f439750
+            - uses: tibdex/backport@9565281eda0731b1d20c4025c43339fb0a23812e # v2
               with:
                   labels_template: "<%= JSON.stringify([...labels, 'X-Release-Blocker']) %>"
                   # We can't use GITHUB_TOKEN here or CI won't run on the new PR

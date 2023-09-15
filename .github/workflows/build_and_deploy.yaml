@@ -145,7 +145,7 @@ jobs:
                   DEPLOYMENT_DIR: ${{ needs.prepare.outputs.packages-dir }}
 
             - name: Notify packages.element.io of new files
-              uses: peter-evans/repository-dispatch@26b39ed245ab8f31526069329e112ab2fb224588 # v2
+              uses: peter-evans/repository-dispatch@bf47d102fdb849e755b0b0023ea3e81a44b6f570 # v2
               with:
                   token: ${{ secrets.ELEMENT_BOT_TOKEN }}
                   repository: vector-im/packages.element.io

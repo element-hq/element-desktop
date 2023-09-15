@@ -1,47 +1,63 @@
 {
-    "Add to dictionary": "Přidat do slovníku",
-    "Failed to save image": "Chyba při ukládání obrázku",
-    "The image failed to save": "Obrázek se nepodařilo uložit",
-    "Save image as...": "Uložit obrázek jako...",
-    "Copy link address": "Kopírovat adresu odkazu",
-    "Copy image address": "Kopírovat adresu obrázku",
-    "Copy email address": "Kopírovat e-mailovou adresu",
-    "Copy image": "Kopírovat obrázek",
-    "File": "Soubor",
-    "Bring All to Front": "Přenést vše do popředí",
-    "Zoom": "Lupa",
-    "Stop Speaking": "Zastavit nahrávání hlasu",
-    "Start Speaking": "Spustit nahrávání hlasu",
-    "Speech": "Řeč",
-    "Unhide": "Zrušit skrytí",
-    "Hide Others": "Skrýt ostatní",
-    "Hide": "Skrýt",
-    "Services": "Služby",
-    "About": "O aplikaci",
-    "Help": "Nápověda",
-    "Close": "Zavřít",
-    "Minimize": "Minimalizovat",
-    "Window": "Okno",
-    "Toggle Developer Tools": "Přepnout zobrazení nástrojů pro vývojáře",
-    "Toggle Full Screen": "Přepnout zobrazení celé obrazovky",
-    "Preferences": "Předvolby",
-    "Zoom Out": "Oddálit",
-    "Zoom In": "Přiblížit",
-    "Actual Size": "Aktuální velikost",
-    "View": "Zobrazit",
-    "Select All": "Vybrat vše",
-    "Delete": "Smazat",
-    "Paste and Match Style": "Vložit a přizpůsobit styl",
-    "Paste": "Vložit",
-    "Copy": "Kopírovat",
-    "Cut": "Vyjmout",
-    "Redo": "Znovu",
-    "Undo": "Zpět",
-    "Edit": "Úpravy",
-    "Quit": "Ukončit",
-    "Show/Hide": "Zobrazit/Skrýt",
-    "Are you sure you want to quit?": "Opravdu chcete ukončit aplikaci?",
-    "Close %(brand)s": "Zavřít %(brand)s",
-    "Cancel": "Zrušit",
-    "%(brand)s Help": "%(brand)s nápověda"
+    "action": {
+        "cancel": "Zrušit",
+        "close": "Zavřít",
+        "close_brand": "Zavřít %(brand)s",
+        "copy": "Kopírovat",
+        "cut": "Vyjmout",
+        "delete": "Smazat",
+        "edit": "Úpravy",
+        "minimise": "Minimalizovat",
+        "paste": "Vložit",
+        "paste_match_style": "Vložit a přizpůsobit styl",
+        "quit": "Ukončit",
+        "redo": "Znovu",
+        "select_all": "Vybrat vše",
+        "show_hide": "Zobrazit/Skrýt",
+        "undo": "Zpět",
+        "zoom_in": "Přiblížit",
+        "zoom_out": "Oddálit"
+    },
+    "common": {
+        "about": "O aplikaci",
+        "brand_help": "%(brand)s nápověda",
+        "help": "Nápověda",
+        "preferences": "Předvolby"
+    },
+    "confirm_quit": "Opravdu chcete ukončit aplikaci?",
+    "edit_menu": {
+        "speech": "Řeč",
+        "speech_start_speaking": "Spustit nahrávání hlasu",
+        "speech_stop_speaking": "Zastavit nahrávání hlasu"
+    },
+    "file_menu": {
+        "label": "Soubor"
+    },
+    "menu": {
+        "hide": "Skrýt",
+        "hide_others": "Skrýt ostatní",
+        "services": "Služby",
+        "unhide": "Zrušit skrytí"
+    },
+    "right_click_menu": {
+        "add_to_dictionary": "Přidat do slovníku",
+        "copy_email": "Kopírovat e-mailovou adresu",
+        "copy_image": "Kopírovat obrázek",
+        "copy_image_url": "Kopírovat adresu obrázku",
+        "copy_link_url": "Kopírovat adresu odkazu",
+        "save_image_as": "Uložit obrázek jako...",
+        "save_image_as_error_description": "Obrázek se nepodařilo uložit",
+        "save_image_as_error_title": "Chyba při ukládání obrázku"
+    },
+    "view_menu": {
+        "actual_size": "Aktuální velikost",
+        "toggle_developer_tools": "Přepnout zobrazení nástrojů pro vývojáře",
+        "toggle_full_screen": "Přepnout zobrazení celé obrazovky",
+        "view": "Zobrazit"
+    },
+    "window_menu": {
+        "bring_all_to_front": "Přenést vše do popředí",
+        "label": "Okno",
+        "zoom": "Lupa"
+    }
 }

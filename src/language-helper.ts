@@ -15,23 +15,27 @@ limitations under the License.
 */
 
 import counterpart from "counterpart";
+import { TranslationKey as TKey } from "matrix-web-i18n";
 
 import type Store from "electron-store";
+import type EN from "./i18n/strings/en_EN.json";
 
 const FALLBACK_LOCALE = "en";
 
-export function _td(text: string): string {
+type TranslationKey = TKey<typeof EN>;
+
+export function _td(text: TranslationKey): TranslationKey {
     return text;
 }
 
 type SubstitutionValue = number | string;
 
-interface IVariables {
+interface Variables {
     [key: string]: SubstitutionValue | undefined;
     count?: number;
 }
 
-export function _t(text: string, variables: IVariables = {}): string {
+export function _t(text: TranslationKey, variables: Variables = {}): string {
     const { count } = variables;
 
     // Horrible hack to avoid https://github.com/vector-im/element-web/issues/4191
