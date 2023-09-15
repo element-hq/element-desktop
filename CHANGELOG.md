@@ -1,3 +1,9 @@
+Changes in [1.11.43](https://github.com/vector-im/element-desktop/releases/tag/v1.11.43) (2023-09-15)
+=====================================================================================================
+
+## 🔒 Security
+ * upgrade electron to 26.2.1 to fix CVE-2023-4863 ([\#1226](https://github.com/vector-im/element-desktop/pull/1226)). Contributed by @selfisekai.
+
 Changes in [1.11.42](https://github.com/vector-im/element-desktop/releases/tag/v1.11.42) (2023-09-13)
 =====================================================================================================
 
