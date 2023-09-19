@@ -112,7 +112,7 @@ async function main(): Promise<number | void> {
 
         if (process.env.SQLCIPHER_BUNDLED) {
             // Remove sqlcipher dependency when using bundled
-            cfg.deb!.recommends = cfg.deb!.recommends?.filter((d) => d !== "libsqlcipher0");
+            cfg.deb!.depends = cfg.deb!.depends?.filter((d) => d !== "libsqlcipher0");
         }
     }
 
