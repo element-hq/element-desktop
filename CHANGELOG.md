@@ -1,5 +1,5 @@
-Changes in [1.11.44-rc.1](https://github.com/vector-im/element-desktop/releases/tag/v1.11.44-rc.1) (2023-09-19)
-===============================================================================================================
+Changes in [1.11.44](https://github.com/vector-im/element-desktop/releases/tag/v1.11.44) (2023-09-26)
+=====================================================================================================
 
 ## ✨ Features
  * Make video & voice call buttons pin conference widget if unpinned ([\#11576](https://github.com/matrix-org/matrix-react-sdk/pull/11576)). Fixes vector-im/customer-retainer#72.
@@ -10,6 +10,7 @@ Changes in [1.11.44-rc.1](https://github.com/vector-im/element-desktop/releases/
  * Allow setting knock room directory visibility ([\#11529](https://github.com/matrix-org/matrix-react-sdk/pull/11529)). Contributed by @charlynguyen.
 
 ## 🐛 Bug Fixes
+ * Revert "Fix regression around FacePile with overflow (#11527)" ([\#11634](https://github.com/matrix-org/matrix-react-sdk/pull/11634)). Fixes vector-im/element-web#26209.
  * upgrade electron to 26.2.1 to fix CVE-2023-4863 ([\#1226](https://github.com/vector-im/element-desktop/pull/1226)). Contributed by @selfisekai.
  * Improve edge cases around macOS drag handles ([\#1219](https://github.com/vector-im/element-desktop/pull/1219)). Fixes #1199 and #1188.
  * Escape placeholder before injecting it into the style ([\#11607](https://github.com/matrix-org/matrix-react-sdk/pull/11607)).
