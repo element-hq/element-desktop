@@ -2,7 +2,7 @@
     "name": "element-desktop",
     "productName": "Element",
     "main": "lib/electron-main.js",
-    "version": "1.11.44",
+    "version": "1.11.45",
     "description": "A feature-rich client for Matrix.org",
     "author": "Element",
     "homepage": "https://element.io",
