@@ -1,3 +1,12 @@
+Changes in [1.11.45](https://github.com/vector-im/element-desktop/releases/tag/v1.11.45) (2023-09-29)
+=====================================================================================================
+
+## 🔒 Security
+ * Upgrade electron to 26.2.4 to fix CVE-2023-5217 ([\#1254](https://github.com/vector-im/element-desktop/pull/1254)). Contributed by @andybalaam.
+
+## 🐛 Bug Fixes
+ * Fix Emoji font on Safari 17 ([\#11673](https://github.com/matrix-org/matrix-react-sdk/pull/11673)).
+
 Changes in [1.11.44](https://github.com/vector-im/element-desktop/releases/tag/v1.11.44) (2023-09-26)
 =====================================================================================================
 
