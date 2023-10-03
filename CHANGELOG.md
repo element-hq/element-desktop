@@ -1,3 +1,9 @@
+Changes in [1.11.46-rc.2](https://github.com/vector-im/element-desktop/releases/tag/v1.11.46-rc.2) (2023-10-03)
+===============================================================================================================
+
+## 🐛 Bug Fixes
+ * Bump matrix-web-i18n dependency to 3.1.3 ([\#1259](https://github.com/vector-im/element-desktop/pull/1259) and [\#26287](https://github.com/vector-im/element-web/pull/26287))
+
 Changes in [1.11.46-rc.1](https://github.com/vector-im/element-desktop/releases/tag/v1.11.46-rc.1) (2023-10-03)
 ===============================================================================================================
 
