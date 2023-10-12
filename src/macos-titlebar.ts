@@ -119,7 +119,7 @@ export function setupMacosTitleBar(window: BrowserWindow): void {
 
             .mx_LeftPanel::before {
                 content: "";
-                height: 25px;
+                height: 20px;
                 -webkit-app-region: drag;
             }
 
