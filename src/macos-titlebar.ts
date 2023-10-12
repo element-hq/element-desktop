@@ -65,15 +65,6 @@ export function setupMacosTitleBar(window: BrowserWindow): void {
             .mx_AuthPage .mx_AuthFooter > * {
                 -webkit-app-region: no-drag;
             }
-            
-            /* Mark the header as a drag handle */
-            .mx_LeftPanel .mx_LeftPanel_filterContainer {
-                -webkit-app-region: drag;
-            }
-            /* Exclude header interactive elements from being drag handles */
-            .mx_LeftPanel .mx_LeftPanel_filterContainer .mx_AccessibleButton {
-                -webkit-app-region: no-drag;
-            }
         
             /* Mark the home page background as a drag handle */
             .mx_HomePage {
@@ -86,23 +77,10 @@ export function setupMacosTitleBar(window: BrowserWindow): void {
             }
             
             /* Mark the header as a drag handle */
-            .mx_LegacyRoomHeader,
-            .mx_RoomHeader {
-                -webkit-app-region: drag;
-                -webkit-user-select: none;
-            }
             .mx_ImageView_panel {
                 -webkit-app-region: drag;
             }
             /* Exclude header interactive elements from being drag handles */
-            .mx_RoomHeader .mx_BaseAvatar,
-            .mx_RoomHeader_heading,
-            .mx_RoomHeader button,
-            .mx_RoomHeader .mx_FacePile,
-            .mx_LegacyRoomHeader .mx_LegacyRoomHeader_avatar,
-            .mx_LegacyRoomHeader .mx_E2EIcon,
-            .mx_LegacyRoomHeader .mx_RoomTopic,
-            .mx_LegacyRoomHeader .mx_AccessibleButton,
             .mx_ImageView_panel > .mx_ImageView_info_wrapper,
             .mx_ImageView_panel > .mx_ImageView_title,
             .mx_ImageView_panel > .mx_ImageView_toolbar > * {
@@ -119,7 +97,9 @@ export function setupMacosTitleBar(window: BrowserWindow): void {
             .mx_RoomView_body,
             .mx_AutoHideScrollbar,
             .mx_RightPanel_ResizeWrapper,
-            .mx_RoomPreviewCard {
+            .mx_RoomPreviewCard,
+            .mx_LeftPanel,
+            .mx_RoomView {
                 -webkit-app-region: no-drag;
             }
             /* Exclude context menus and their backgrounds */
@@ -130,6 +110,32 @@ export function setupMacosTitleBar(window: BrowserWindow): void {
             iframe {
                 -webkit-app-region: no-drag;
             }
+
+            /* Add a bar above room header + left panel */
+            
+            .mx_LeftPanel {
+                flex-direction: column;
+            }
+
+            .mx_LeftPanel::before {
+                content: "";
+                height: 20px;
+                -webkit-app-region: drag;
+            }
+
+            .mx_RoomView::before {
+                content: "";
+                -webkit-app-region: drag;
+            }
+
+            .mx_RoomView[data-room-header="new"]::before {
+                height: 13px;
+            }
+
+            .mx_RoomView[data-room-header="legacy"]::before {
+                height: 27px;
+            }
+
         `);
     }
 
