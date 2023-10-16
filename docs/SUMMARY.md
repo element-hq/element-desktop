@@ -10,3 +10,7 @@
 # Distribution
 
 -   [Updates](updates.md)
+
+# Setup
+
+-   [Config](config.md)
