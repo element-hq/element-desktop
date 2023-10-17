@@ -85,8 +85,9 @@ function onLinkContextMenu(ev: Event, params: ContextMenuParams, webContents: We
     if (url.startsWith("vector://vector/webapp")) {
         // Avoid showing a context menu for app icons
         if (params.hasImageContents) return;
-        // Rewrite URL so that it can be used outside of the app
-        url = "https://app.element.io/" + url.substring(23);
+        const baseUrl = vectorConfig.web_base_url ?? "https://app.element.io/";
+        // Rewrite URL so that it can be used outside the app
+        url = baseUrl + url.substring(23);
     }
 
     const popupMenu = new Menu();
