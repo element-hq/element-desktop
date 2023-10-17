@@ -19,7 +19,7 @@
         "zoom_out": "Pomniejsz"
     },
     "common": {
-        "about": "O nas",
+        "about": "Informacje",
         "brand_help": "Pomoc %(brand)s",
         "help": "Pomoc",
         "preferences": "Preferencje"
@@ -53,7 +53,7 @@
         "actual_size": "Rozmiar rzeczywisty",
         "toggle_developer_tools": "Przełącz na narzędzia deweloperskie",
         "toggle_full_screen": "Przełącz na pełny ekran",
-        "view": "Pokaż"
+        "view": "Wyświetl"
     },
     "window_menu": {
         "bring_all_to_front": "Wyciągnij wszystko do przodu",
