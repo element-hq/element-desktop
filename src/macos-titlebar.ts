@@ -88,7 +88,8 @@ export function setupMacosTitleBar(window: BrowserWindow): void {
             }
             
             /* Mark the background as a drag handle only if no modal is open */
-            .mx_MatrixChat_wrapper[aria-hidden="false"] .mx_RoomView_wrapper {
+            .mx_MatrixChat_wrapper[aria-hidden="false"] .mx_RoomView_wrapper,
+            .mx_MatrixChat_wrapper[aria-hidden="false"] .mx_HomePage {
                 -webkit-app-region: drag;
             }
             /* Exclude content elements from being drag handles */
@@ -99,7 +100,9 @@ export function setupMacosTitleBar(window: BrowserWindow): void {
             .mx_RightPanel_ResizeWrapper,
             .mx_RoomPreviewCard,
             .mx_LeftPanel,
-            .mx_RoomView {
+            .mx_RoomView,
+            .mx_SpaceRoomView,
+            .mx_AccessibleButton {
                 -webkit-app-region: no-drag;
             }
             /* Exclude context menus and their backgrounds */
@@ -123,9 +126,15 @@ export function setupMacosTitleBar(window: BrowserWindow): void {
                 -webkit-app-region: drag;
             }
 
-            .mx_RoomView::before {
+            .mx_RoomView::before,
+            .mx_SpaceRoomView::before {
                 content: "";
                 -webkit-app-region: drag;
+            }
+            
+            .mx_SpaceRoomView::before {
+                display: block;
+                height: 24px;            
             }
 
             .mx_RoomView[data-room-header="new"]::before {
