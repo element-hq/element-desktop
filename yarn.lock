@@ -2366,6 +2366,40 @@ app-builder-lib@24.7.0:
     tar "^6.1.12"
     temp-file "^3.4.0"
 
+app-builder-lib@24.8.0:
+  version "24.8.0"
+  resolved "https://registry.yarnpkg.com/app-builder-lib/-/app-builder-lib-24.8.0.tgz#b62b58729035865a04d4089d3cc7bc12c05c4e71"
+  integrity sha512-C+IQn8V3D+PJ+c9hkYfcJOchvsWwF8PvrKvLz9D7riPK3mV3gMK2d7Y1/sklf8YcjiqUKhs9ZpKSuVafohyxlA==
+  dependencies:
+    "7zip-bin" "~5.1.1"
+    "@develar/schema-utils" "~2.6.5"
+    "@electron/notarize" "2.1.0"
+    "@electron/osx-sign" "1.0.5"
+    "@electron/universal" "1.4.1"
+    "@malept/flatpak-bundler" "^0.4.0"
+    "@types/fs-extra" "9.0.13"
+    async-exit-hook "^2.0.1"
+    bluebird-lst "^1.0.9"
+    builder-util "24.8.0"
+    builder-util-runtime "9.2.2"
+    chromium-pickle-js "^0.2.0"
+    debug "^4.3.4"
+    ejs "^3.1.8"
+    electron-publish "24.8.0"
+    form-data "^4.0.0"
+    fs-extra "^10.1.0"
+    hosted-git-info "^4.1.0"
+    is-ci "^3.0.0"
+    isbinaryfile "^5.0.0"
+    js-yaml "^4.1.0"
+    lazy-val "^1.0.5"
+    minimatch "^5.1.1"
+    read-config-file "6.3.2"
+    sanitize-filename "^1.6.3"
+    semver "^7.3.8"
+    tar "^6.1.12"
+    temp-file "^3.4.0"
+
 applescript@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/applescript/-/applescript-1.0.0.tgz#bb87af568cad034a4e48c4bdaf6067a3a2701317"
@@ -2785,6 +2819,14 @@ builder-util-runtime@9.2.1:
     debug "^4.3.4"
     sax "^1.2.4"
 
+builder-util-runtime@9.2.2:
+  version "9.2.2"
+  resolved "https://registry.yarnpkg.com/builder-util-runtime/-/builder-util-runtime-9.2.2.tgz#8ba9db2d2f2aa85c280d39edd9a68ee7bde9af92"
+  integrity sha512-Or2/ycVYRGQ876hKMfiz2Ghgzh3WllgPW75jqt1Ta2a5wprpnziFrHpQ9eUq6/ScsVXMnG4PmQqlMsE9NFg8DQ==
+  dependencies:
+    debug "^4.3.4"
+    sax "^1.2.4"
+
 builder-util@24.5.0:
   version "24.5.0"
   resolved "https://registry.yarnpkg.com/builder-util/-/builder-util-24.5.0.tgz#8683c9a7a1c5c9f9a4c4d2789ecca0e47dddd3f9"
@@ -2795,6 +2837,28 @@ builder-util@24.5.0:
     app-builder-bin "4.0.0"
     bluebird-lst "^1.0.9"
     builder-util-runtime "9.2.1"
+    chalk "^4.1.2"
+    cross-spawn "^7.0.3"
+    debug "^4.3.4"
+    fs-extra "^10.1.0"
+    http-proxy-agent "^5.0.0"
+    https-proxy-agent "^5.0.1"
+    is-ci "^3.0.0"
+    js-yaml "^4.1.0"
+    source-map-support "^0.5.19"
+    stat-mode "^1.0.0"
+    temp-file "^3.4.0"
+
+builder-util@24.8.0:
+  version "24.8.0"
+  resolved "https://registry.yarnpkg.com/builder-util/-/builder-util-24.8.0.tgz#e9773c65abca10d284858007ab0b6658ee41fa08"
+  integrity sha512-QSDHklYjzsvKybxLTZOvHzXQq8iI167C/ccSKgMxhML53ExCiGOwR+QUM+8VPi0KFR3RBAsiNC/w1KFeOght1A==
+  dependencies:
+    "7zip-bin" "~5.1.1"
+    "@types/debug" "^4.1.6"
+    app-builder-bin "4.0.0"
+    bluebird-lst "^1.0.9"
+    builder-util-runtime "9.2.2"
     chalk "^4.1.2"
     cross-spawn "^7.0.3"
     debug "^4.3.4"
@@ -3467,6 +3531,19 @@ electron-publish@24.5.0:
     "@types/fs-extra" "^9.0.11"
     builder-util "24.5.0"
     builder-util-runtime "9.2.1"
+    chalk "^4.1.2"
+    fs-extra "^10.1.0"
+    lazy-val "^1.0.5"
+    mime "^2.5.2"
+
+electron-publish@24.8.0:
+  version "24.8.0"
+  resolved "https://registry.yarnpkg.com/electron-publish/-/electron-publish-24.8.0.tgz#8fcf282a05b63958470c1ca53a8807555089d475"
+  integrity sha512-/qrlJFDs+2xQ6NvHIze2uaRJoQm6nks21dah2QWLRVKlxsfTBnDIYXU9HeGdaPqMJB4rmnYgLky8tEFx049xuA==
+  dependencies:
+    "@types/fs-extra" "^9.0.11"
+    builder-util "24.8.0"
+    builder-util-runtime "9.2.2"
     chalk "^4.1.2"
     fs-extra "^10.1.0"
     lazy-val "^1.0.5"
