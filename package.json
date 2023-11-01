@@ -123,7 +123,7 @@
         "keytar": "^7.9.0"
     },
     "resolutions": {
-        "@types/node": "16.18.52"
+        "@types/node": "16.18.59"
     },
     "build": {
         "appId": "im.riot.app",
