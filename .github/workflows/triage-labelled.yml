@@ -5,5 +5,7 @@ on:
         types: [labeled]
 
 jobs:
-  call-triage-labelled:
-    uses: vector-im/element-web/.github/workflows/triage-labelled.yml@develop
+    call-triage-labelled:
+        uses: vector-im/element-web/.github/workflows/triage-labelled.yml@develop
+        secrets:
+            ELEMENT_BOT_TOKEN: ${{ secrets.ELEMENT_BOT_TOKEN }}
