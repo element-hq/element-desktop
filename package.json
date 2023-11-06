@@ -87,20 +87,20 @@
         "@typescript-eslint/eslint-plugin": "^5.42.0",
         "@typescript-eslint/parser": "^5.42.0",
         "allchange": "^1.0.6",
-        "app-builder-lib": "24.7.0",
+        "app-builder-lib": "24.8.0",
         "babel-jest": "^29.0.0",
         "chokidar": "^3.5.2",
         "detect-libc": "^1.0.3",
         "electron": "^27.0.0",
         "electron-builder": "24.6.4",
-        "electron-builder-squirrel-windows": "24.7.0",
+        "electron-builder-squirrel-windows": "24.8.0",
         "electron-devtools-installer": "^3.2.0",
         "eslint": "^8.26.0",
         "eslint-config-google": "^0.14.0",
         "eslint-config-prettier": "^9.0.0",
         "eslint-plugin-import": "^2.25.4",
         "eslint-plugin-matrix-org": "^1.0.0",
-        "eslint-plugin-unicorn": "^48.0.0",
+        "eslint-plugin-unicorn": "^49.0.0",
         "expect-playwright": "^0.8.0",
         "find-npm-prefix": "^1.0.2",
         "fs-extra": "^11.0.0",
@@ -123,7 +123,7 @@
         "keytar": "^7.9.0"
     },
     "resolutions": {
-        "@types/node": "16.18.52"
+        "@types/node": "16.18.59"
     },
     "build": {
         "appId": "im.riot.app",
