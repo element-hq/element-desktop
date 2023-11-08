@@ -1,0 +1,22 @@
+name: Release Process
+on:
+    workflow_dispatch:
+        inputs:
+            mode:
+                description: What type of release
+                required: true
+                default: rc
+                type: choice
+                options:
+                    - rc
+                    - final
+concurrency: ${{ github.workflow }}
+jobs:
+    release:
+        uses: matrix-org/matrix-js-sdk/.github/workflows/release-action.yml@develop
+        secrets: inherit
+        with:
+            final: ${{ inputs.mode == 'final' }}
+            include-changes: vector-im/element-web@$VERSION
+            gpg-fingerprint: ${{ vars.GPG_FINGERPRINT }}
+            expected-asset-count: 1
