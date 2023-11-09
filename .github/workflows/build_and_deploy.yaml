@@ -149,8 +149,10 @@ jobs:
               id: deb
               if: inputs.linux
               run: |
-                  echo "amd64=$(ls linux-amd64-sqlcipher-system/*.deb | tail -n1)" >> $GITHUB_OUTPUT
-                  echo "arm64=$(ls linux-arm64-sqlcipher-system/*.deb | tail -n1)" >> $GITHUB_OUTPUT
+                  for arch in amd64 arm64
+                  do
+                      echo "$arch=$(ls linux-$arch-sqlcipher-system/*.deb | tail -n1)" >> $GITHUB_OUTPUT
+                  done
 
             - name: Publish amd64 deb to packages.element.io
               uses: vector-im/packages.element.io@master
