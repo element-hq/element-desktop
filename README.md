@@ -54,6 +54,7 @@ provide the `webapp` directory directly:
 ```
 # Assuming you've checked out and built a copy of element-web in ../element-web
 ln -s ../element-web/webapp ./
+yarn asar-webapp # Builds the webapp.asar package
 ```
 
 [TODO: add support for fetching develop builds, arbitrary URLs and arbitrary paths]
