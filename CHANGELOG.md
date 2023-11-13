@@ -1,3 +1,9 @@
+Changes in [1.11.49](https://github.com/vector-im/element-desktop/releases/tag/v1.11.49) (2023-11-13)
+=====================================================================================================
+
+## 🐛 Bug Fixes
+ * Ensure `setUserCreator` is called when a store is assigned ([\#3867](https://github.com/matrix-org/matrix-js-sdk/pull/3867)). Fixes vector-im/element-web#26520. Contributed by @MidhunSureshR.
+
 Changes in [1.11.48](https://github.com/vector-im/element-desktop/releases/tag/v1.11.48) (2023-11-07)
 =====================================================================================================
 
