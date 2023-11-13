@@ -67,7 +67,7 @@ jobs:
 
             - name: Build Natives
               if: steps.cache.outputs.cache-hit != 'true'
-              run:
+              run: |
                   # Python 3.12 drops distutils which keytar relies on
                   pip3 install setuptools
                   yarn build:native:universal
