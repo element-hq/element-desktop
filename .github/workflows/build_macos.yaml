@@ -67,7 +67,10 @@ jobs:
 
             - name: Build Natives
               if: steps.cache.outputs.cache-hit != 'true'
-              run: "yarn build:native:universal"
+              run: |
+                  # Python 3.12 drops distutils which keytar relies on
+                  pip3 install setuptools
+                  yarn build:native:universal
 
             - name: "[Nightly] Resolve version"
               id: nightly
