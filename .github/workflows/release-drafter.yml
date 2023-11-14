@@ -2,29 +2,20 @@ name: Release Drafter
 on:
     push:
         branches: [staging]
+    workflow_dispatch:
+        inputs:
+            previous-version:
+                description: What release to use as a base for release note purposes
+                required: false
+                type: string
 concurrency: ${{ github.workflow }}
 jobs:
-    element-web:
-        runs-on: ubuntu-latest
-        outputs:
-            version: ${{ steps.release.outputs.tag_name }}
-        steps:
-            - name: Get draft release
-              id: release
-              uses: cardinalby/git-get-release-action@cedef2faf69cb7c55b285bad07688d04430b7ada # v1
-              env:
-                  GITHUB_TOKEN: ${{ secrets.ELEMENT_BOT_TOKEN }}
-                  repo: vector-im/element-web
-              with:
-                  latest: true
-
     draft:
-        needs: element-web
         runs-on: ubuntu-latest
         steps:
-            - uses: release-drafter/release-drafter@dabcf3767562210392d862070ed2ef6434b9bc6f # v5
+            - uses: release-drafter/release-drafter@e64b19c4c46173209ed9f2e5a2f4ca7de89a0e86 # v5
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
                   disable-autolabeler: true
-                  version-template: ${{ needs.element-web.outputs.version }}
+                  previous-version: ${{ inputs.previous-version }}
