@@ -6,7 +6,7 @@
         "copy": "Kopijuoti",
         "cut": "Iškirpti",
         "delete": "Ištrinti",
-        "edit": "Redaguoti",
+        "edit": "Koreguoti",
         "minimise": "Sumažinti",
         "paste": "Įklijuoti",
         "paste_match_style": "Įklijuoti ir suderinti stilių",
@@ -52,7 +52,7 @@
         "actual_size": "Tikrasis dydis",
         "toggle_developer_tools": "Perjungti kūrėjo įrankius",
         "toggle_full_screen": "Perjungti viso ekrano režimą",
-        "view": "Peržiūrėti"
+        "view": "Žiūrėti"
     },
     "window_menu": {
         "bring_all_to_front": "Viską iškelti į priekį",
