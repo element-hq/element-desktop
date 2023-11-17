@@ -20,6 +20,7 @@
     },
     "common": {
         "about": "Névjegy",
+        "brand_help": "%(brand)s Súgó",
         "help": "Segítség",
         "preferences": "Beállítások"
     },
