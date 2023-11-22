@@ -108,8 +108,6 @@ jobs:
             sqlcipher: static
             version: ${{ needs.prepare.outputs.nightly-version }}
 
-    # This deploy job only handles Windows, macOS & linux_static as those are stateless and static.
-    # Linux will be deployed via reprepro after it, but we list it as a dependency to abort if it fails.
     deploy:
         needs:
             - prepare
@@ -130,9 +128,6 @@ jobs:
         steps:
             - name: Download artifacts
               uses: actions/download-artifact@v3
-              with:
-                  name: packages.element.io
-                  path: packages.element.io
 
             - name: Deploy artifacts
               run: |
@@ -150,23 +145,31 @@ jobs:
                   repository: vector-im/packages.element.io
                   event-type: packages-index
 
-    reprepro:
-        needs:
-            - linux
-            # We queue this after the other deploy stage as we want to abort if that fails
-            - deploy
-        name: Run reprepro ${{ matrix.arch }}
-        strategy:
-            matrix:
-                arch: [amd64, arm64]
-        if: |
-            always() && !failure() && !cancelled() && ((
-                github.event_name != 'workflow_dispatch' &&
-                github.event.release.prerelease != true
-            ) || (
-                inputs.deploy && inputs.linux
-            ))
-        uses: ./.github/workflows/reprepro.yaml
-        secrets: inherit
-        with:
-            artifact-name: linux-${{ matrix.arch }}-sqlcipher-system
+            - name: Find debs
+              id: deb
+              if: inputs.linux
+              run: |
+                  for arch in amd64 arm64
+                  do
+                      echo "$arch=$(ls linux-$arch-sqlcipher-system/*.deb | tail -n1)" >> $GITHUB_OUTPUT
+                  done
+
+            - name: Publish amd64 deb to packages.element.io
+              uses: vector-im/packages.element.io@master
+              if: inputs.linux
+              with:
+                  file: ${{ steps.deb.outputs.amd64 }}
+                  github-token: ${{ secrets.ELEMENT_BOT_TOKEN }}
+                  bucket-api: ${{ vars.CF_R2_S3_API }}
+                  bucket-key-id: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
+                  bucket-access-key: ${{ secrets.CF_R2_TOKEN }}
+
+            - name: Publish arm64 deb to packages.element.io
+              uses: vector-im/packages.element.io@master
+              if: inputs.linux
+              with:
+                  file: ${{ steps.deb.outputs.arm64 }}
+                  github-token: ${{ secrets.ELEMENT_BOT_TOKEN }}
+                  bucket-api: ${{ vars.CF_R2_S3_API }}
+                  bucket-key-id: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
+                  bucket-access-key: ${{ secrets.CF_R2_TOKEN }}
