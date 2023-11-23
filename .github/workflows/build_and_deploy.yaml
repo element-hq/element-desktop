@@ -147,7 +147,7 @@ jobs:
 
             - name: Find debs
               id: deb
-              if: inputs.linux
+              if: needs.linux.result == 'success'
               run: |
                   for arch in amd64 arm64
                   do
@@ -156,7 +156,7 @@ jobs:
 
             - name: Publish amd64 deb to packages.element.io
               uses: vector-im/packages.element.io@master
-              if: inputs.linux
+              if: needs.linux.result == 'success'
               with:
                   file: ${{ steps.deb.outputs.amd64 }}
                   github-token: ${{ secrets.ELEMENT_BOT_TOKEN }}
@@ -166,7 +166,7 @@ jobs:
 
             - name: Publish arm64 deb to packages.element.io
               uses: vector-im/packages.element.io@master
-              if: inputs.linux
+              if: needs.linux.result == 'success'
               with:
                   file: ${{ steps.deb.outputs.arm64 }}
                   github-token: ${{ secrets.ELEMENT_BOT_TOKEN }}
