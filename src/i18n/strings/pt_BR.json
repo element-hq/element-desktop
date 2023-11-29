@@ -5,7 +5,7 @@
         "close_brand": "Fechar %(brand)s",
         "copy": "Copiar",
         "cut": "Cortar",
-        "delete": "Deletar",
+        "delete": "Excluir",
         "edit": "Editar",
         "minimise": "Minimizar",
         "paste": "Colar",
@@ -52,7 +52,7 @@
         "actual_size": "Tamanho de Verdade",
         "toggle_developer_tools": "Ativar/Desativar Ferramentas de Desenvolvimento",
         "toggle_full_screen": "Pôr em/Tirar de Tela Cheia",
-        "view": "Visualizar"
+        "view": "Ver"
     },
     "window_menu": {
         "bring_all_to_front": "Trazer Todas Para Frente",

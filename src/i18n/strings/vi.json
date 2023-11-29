@@ -1,12 +1,12 @@
 {
     "action": {
-        "cancel": "Hủy bỏ",
+        "cancel": "Huỷ bỏ",
         "close": "Đóng",
         "close_brand": "Đóng %(brand)s",
         "copy": "Sao chép",
         "cut": "Cắt",
-        "delete": "Xóa",
-        "edit": "Chỉnh sửa",
+        "delete": "Xoá",
+        "edit": "Sửa",
         "minimise": "Thu nhỏ",
         "paste": "Dán",
         "paste_match_style": "Dán và khớp kiểu",
