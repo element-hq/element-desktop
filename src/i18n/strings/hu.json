@@ -1,27 +1,27 @@
 {
     "action": {
-        "cancel": "Mégsem",
-        "close": "Bezár",
+        "cancel": "Mégse",
+        "close": "Bezárás",
         "close_brand": "%(brand)s bezárása",
-        "copy": "Másol",
-        "cut": "Kivág",
+        "copy": "Másolás",
+        "cut": "Kivágás",
         "delete": "Töröl",
-        "edit": "Szerkeszt",
+        "edit": "Szerkesztés",
         "minimise": "Lecsukás",
         "paste": "Beillesztés",
         "paste_match_style": "Beillesztés formázással",
-        "quit": "Kilép",
+        "quit": "Kilépés",
         "redo": "Újra",
         "select_all": "Összes kijelölése",
-        "show_hide": "Megmutat/Elrejt",
-        "undo": "Visszavon",
-        "zoom_in": "Nagyít",
-        "zoom_out": "Kicsinyít"
+        "show_hide": "Megjelenítés/elrejtés",
+        "undo": "Visszavonás",
+        "zoom_in": "Nagyítás",
+        "zoom_out": "Kicsinyítés"
     },
     "common": {
         "about": "Névjegy",
         "brand_help": "%(brand)s Súgó",
-        "help": "Segítség",
+        "help": "Súgó",
         "preferences": "Beállítások"
     },
     "confirm_quit": "Biztos, hogy kilép?",

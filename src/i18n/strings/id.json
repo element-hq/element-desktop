@@ -1,11 +1,12 @@
 {
     "action": {
-        "cancel": "Batal",
+        "cancel": "Batalkan",
         "close": "Tutup",
         "close_brand": "Tutuo %(brand)s",
         "copy": "Salin",
         "cut": "Potong",
         "delete": "Hapus",
+        "edit": "Sunting",
         "minimise": "Minimalkan",
         "paste": "Tempel",
         "paste_match_style": "Tempel dan Cocokkan Gaya",
@@ -21,13 +22,16 @@
         "about": "Tentang",
         "brand_help": "Bantuan %(brand)s",
         "help": "Bantuan",
-        "preferences": "Pengaturan"
+        "preferences": "Preferensi"
     },
     "confirm_quit": "Apakah Anda yakin ingin keluar?",
     "edit_menu": {
         "speech": "Dikte",
         "speech_start_speaking": "Mulai Berbicara",
         "speech_stop_speaking": "Berhenti Berbicara"
+    },
+    "file_menu": {
+        "label": "Berkas"
     },
     "menu": {
         "hide": "Sembunyikan",

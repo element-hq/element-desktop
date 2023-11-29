@@ -1,6 +1,6 @@
 {
     "action": {
-        "cancel": "Tühista",
+        "cancel": "Loobu",
         "close": "Sulge",
         "close_brand": "Sulge %(brand)s",
         "copy": "Kopeeri",
@@ -22,7 +22,7 @@
         "about": "Rakenduse teave",
         "brand_help": "%(brand)s abiteave",
         "help": "Abiteave",
-        "preferences": "Seadistused"
+        "preferences": "Eelistused"
     },
     "confirm_quit": "Kas sa kindlasti soovid rakendusest väljuda?",
     "edit_menu": {
@@ -53,7 +53,7 @@
         "actual_size": "Näita tavasuuruses",
         "toggle_developer_tools": "Arendaja töövahendid sisse/välja",
         "toggle_full_screen": "Täisekraanivaade sisse/välja",
-        "view": "Vaata"
+        "view": "Näita"
     },
     "window_menu": {
         "bring_all_to_front": "Too kõik esiplaanile",
