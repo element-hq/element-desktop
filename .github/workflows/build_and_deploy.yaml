@@ -142,7 +142,7 @@ jobs:
               uses: peter-evans/repository-dispatch@bf47d102fdb849e755b0b0023ea3e81a44b6f570 # v2
               with:
                   token: ${{ secrets.ELEMENT_BOT_TOKEN }}
-                  repository: vector-im/packages.element.io
+                  repository: element-hq/packages.element.io
                   event-type: packages-index
 
             - name: Find debs
@@ -155,7 +155,7 @@ jobs:
                   done
 
             - name: Publish amd64 deb to packages.element.io
-              uses: vector-im/packages.element.io@master
+              uses: element-hq/packages.element.io@master
               if: needs.linux.result == 'success'
               with:
                   file: ${{ steps.deb.outputs.amd64 }}
@@ -165,7 +165,7 @@ jobs:
                   bucket-access-key: ${{ secrets.CF_R2_TOKEN }}
 
             - name: Publish arm64 deb to packages.element.io
-              uses: vector-im/packages.element.io@master
+              uses: element-hq/packages.element.io@master
               if: needs.linux.result == 'success'
               with:
                   file: ${{ steps.deb.outputs.arm64 }}
