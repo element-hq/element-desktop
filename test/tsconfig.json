@@ -7,7 +7,7 @@
         "module": "commonjs",
         "sourceMap": false,
         "strict": true,
-        "lib": ["es2020", "dom"]
+        "lib": ["ESNext", "es2020", "dom"]
     },
     "include": ["./**/*.ts"],
     "ts-node": {
