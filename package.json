@@ -112,7 +112,7 @@
         "mkdirp": "^3.0.0",
         "node-pre-gyp": "^0.17.0",
         "pacote": "^17.0.0",
-        "playwright": "1.37.1",
+        "playwright": "1.40.1",
         "prettier": "^2.8.1",
         "rimraf": "^5.0.0",
         "tar": "^6.1.2",
