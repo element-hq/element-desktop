@@ -20,6 +20,6 @@ jobs:
             GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         with:
             final: ${{ inputs.mode == 'final' }}
-            include-changes: vector-im/element-web@$VERSION
+            include-changes: element-hq/element-web@$VERSION
             gpg-fingerprint: ${{ vars.GPG_FINGERPRINT }}
             expected-asset-count: 1
