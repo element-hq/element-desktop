@@ -92,8 +92,8 @@ jobs:
               run: |
                   set -x
                   sed -i 's/deb http/deb [arch=amd64] http/g' /etc/apt/sources.list
-                  echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ bionic main multiverse restricted universe" | tee -a /etc/apt/sources.list
-                  echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ bionic-updates main multiverse restricted universe" | tee -a /etc/apt/sources.list
+                  echo "deb [arch=arm64]  http://deb.debian.org/debian-ports/ buster main multiverse restricted universe" | tee -a /etc/apt/sources.list
+                  echo "deb [arch=arm64]  http://deb.debian.org/debian-ports/ buster-updates main multiverse restricted universe" | tee -a /etc/apt/sources.list
                   dpkg --add-architecture arm64
                   apt-get -qq update
                   apt-get -qq install --no-install-recommends crossbuild-essential-arm64 libsqlcipher-dev:arm64 libssl-dev:arm64 libsecret-1-dev:arm64 libgnome-keyring-dev:arm64
