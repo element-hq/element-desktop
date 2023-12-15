@@ -138,7 +138,7 @@ jobs:
             - name: Install Deps
               run: "yarn install --frozen-lockfile"
 
-            - uses: actions/download-artifact@v3
+            - uses: actions/download-artifact@v4
               with:
                   name: ${{ matrix.artifact }}
                   path: dist
@@ -156,7 +156,7 @@ jobs:
                   ELEMENT_DESKTOP_EXECUTABLE: ${{ matrix.executable }}
 
             - name: Upload Artifacts
-              uses: actions/upload-artifact@v3
+              uses: actions/upload-artifact@v4
               if: always()
               with:
                   name: ${{ matrix.artifact }}
