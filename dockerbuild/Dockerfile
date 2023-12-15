@@ -1,5 +1,5 @@
 # Docker image to facilitate building Element Desktop with native bits using a glibc version with broader compatibility
-FROM buildpack-deps:bionic-curl
+FROM buildpack-deps:buster-curl
 
 ENV DEBIAN_FRONTEND noninteractive
 
