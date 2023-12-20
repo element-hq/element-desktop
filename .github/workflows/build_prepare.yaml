@@ -128,7 +128,7 @@ jobs:
                   echo "| React SDK   | [$REACT_VERSION](https://github.com/matrix-org/matrix-react-sdk/commit/$REACT_VERSION) |" >> $GITHUB_STEP_SUMMARY
                   echo "| JS SDK      | [$JS_VERSION](https://github.com/matrix-org/matrix-js-sdk/commit/$JS_VERSION) |" >> $GITHUB_STEP_SUMMARY
 
-            - uses: actions/upload-artifact@v4
+            - uses: actions/upload-artifact@v3
               with:
                   name: webapp
                   retention-days: 1
