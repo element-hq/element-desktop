@@ -167,10 +167,10 @@
                 "libuuid1",
                 "libsecret-1-0",
                 "libasound2",
-                "libgbm1"
+                "libgbm1",
+                "libsqlcipher0"
             ],
             "recommends": [
-                "libsqlcipher0",
                 "element-io-archive-keyring"
             ]
         },
