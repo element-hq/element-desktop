@@ -1965,11 +1965,6 @@
   dependencies:
     "@types/ms" "*"
 
-"@types/detect-libc@^1.0.0":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@types/detect-libc/-/detect-libc-1.0.3.tgz#d40e391c806be913c1927bf49a7281e5d344e64b"
-  integrity sha512-MnWWu7vPdUVq4kC8WN67ko44zkE1t80TM1NmMQheADz9AoRMLLdvPbLOQBWo8wJKiZsvlFfRkJtxZgRD2YIciQ==
-
 "@types/fs-extra@9.0.13", "@types/fs-extra@^9.0.11":
   version "9.0.13"
   resolved "https://registry.yarnpkg.com/@types/fs-extra/-/fs-extra-9.0.13.tgz#7594fbae04fe7f1918ce8b3d213f74ff44ac1f45"
