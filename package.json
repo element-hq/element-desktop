@@ -78,7 +78,6 @@
         "@electron/asar": "^3.2.3",
         "@types/auto-launch": "^5.0.1",
         "@types/counterpart": "^0.18.1",
-        "@types/detect-libc": "^1.0.0",
         "@types/jest": "^29.0.0",
         "@types/minimist": "^1.2.1",
         "@types/mkdirp": "^1.0.2",

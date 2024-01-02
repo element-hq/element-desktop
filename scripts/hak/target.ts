@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { GLIBC, MUSL, family as processLibC } from "detect-libc";
+import { GLIBC, MUSL, familySync as processLibC } from "detect-libc";
 
 // We borrow Rust's target naming scheme as a way of expressing all target
 // details in a single string.
@@ -61,7 +61,7 @@ export type WindowsTarget = Target & {
 
 export type LinuxTarget = Target & {
     platform: "linux";
-    libC: typeof processLibC;
+    libC: typeof GLIBC | typeof MUSL;
 };
 
 export type UniversalTarget = Target & {
@@ -212,7 +212,7 @@ export function getHost(): Target | undefined {
         (target) =>
             target.platform === process.platform &&
             target.arch === process.arch &&
-            (process.platform !== "linux" || (target as LinuxTarget).libC === processLibC),
+            (process.platform !== "linux" || (target as LinuxTarget).libC === processLibC()),
     );
 }
 
