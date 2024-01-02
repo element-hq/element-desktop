@@ -1,6 +1,9 @@
-import type { Configuration } from "electron-builder";
+import { Arch, Configuration } from "electron-builder";
 import * as os from "node:os";
 import * as fs from "node:fs";
+import * as path from "node:path";
+import { AfterPackContext } from "app-builder-lib/out/configuration";
+import { flipFuses, FuseV1Options, FuseVersion } from "@electron/fuses";
 
 /**
  * This script has different outputs depending on your os platform.
@@ -32,6 +35,8 @@ interface Package {
 
 const pkg: Package = JSON.parse(fs.readFileSync("package.json", "utf8"));
 
+let buildMacOsUniversal = false;
+
 /**
  * @type {import('electron-builder').Configuration}
  * @see https://www.electron.build/configuration/configuration
@@ -46,6 +51,44 @@ const config: DeepWriteable<Omit<Configuration, "extraMetadata">> & {
 } = {
     appId: "im.riot.app",
     asarUnpack: "**/*.node",
+    beforePack: async (context: AfterPackContext) => {
+        if (context.electronPlatformName === "darwin" && context.arch === Arch.universal) {
+            buildMacOsUniversal = true;
+        }
+    },
+    afterPack: async (context: AfterPackContext) => {
+        if (context.electronPlatformName !== "darwin" || context.arch === Arch.universal || !buildMacOsUniversal) {
+            // Burn in electron fuses, for macOS if we are building a universal package we only need to burn fuses there
+            const ext = {
+                darwin: ".app",
+                win32: ".exe",
+                linux: [""],
+            }[context.electronPlatformName];
+
+            const electronBinaryPath = path.join(
+                context.appOutDir,
+                `${context.packager.appInfo.productFilename}${ext}`,
+            );
+            console.log("Flipping fuses for: ", electronBinaryPath);
+
+            await flipFuses(electronBinaryPath, {
+                version: FuseVersion.V1,
+                resetAdHocDarwinSignature: context.electronPlatformName === "darwin" && context.arch === Arch.universal,
+
+                [FuseV1Options.EnableCookieEncryption]: true,
+                [FuseV1Options.OnlyLoadAppFromAsar]: true,
+
+                [FuseV1Options.RunAsNode]: false,
+                [FuseV1Options.EnableNodeOptionsEnvironmentVariable]: false,
+                [FuseV1Options.EnableNodeCliInspectArguments]: false,
+
+                // Mac app crashes when enabled for us on arm, might be fine for you
+                [FuseV1Options.LoadBrowserProcessSpecificV8Snapshot]: false,
+                // https://github.com/electron/fuses/issues/7
+                [FuseV1Options.EnableEmbeddedAsarIntegrityValidation]: false,
+            });
+        }
+    },
     files: [
         "package.json",
         {
