@@ -92,7 +92,7 @@
         "app-builder-lib": "24.9.4",
         "babel-jest": "^29.0.0",
         "chokidar": "^3.5.2",
-        "detect-libc": "^1.0.3",
+        "detect-libc": "^2.0.0",
         "electron": "^28.0.0",
         "electron-builder": "24.9.1",
         "electron-builder-squirrel-windows": "24.9.4",
