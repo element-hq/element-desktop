@@ -165,10 +165,13 @@ async function loadConfig(): Promise<void> {
             // Rip out all the homeserver options from the vector config
             global.vectorConfig = Object.keys(global.vectorConfig)
                 .filter((k) => !homeserverProps.includes(<any>k))
-                .reduce((obj, key) => {
-                    obj[key] = global.vectorConfig[key];
-                    return obj;
-                }, {} as Omit<Partial<(typeof global)["vectorConfig"]>, keyof typeof homeserverProps>);
+                .reduce(
+                    (obj, key) => {
+                        obj[key] = global.vectorConfig[key];
+                        return obj;
+                    },
+                    {} as Omit<Partial<(typeof global)["vectorConfig"]>, keyof typeof homeserverProps>,
+                );
         }
 
         global.vectorConfig = Object.assign(global.vectorConfig, localConfig);
