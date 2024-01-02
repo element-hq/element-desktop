@@ -65,10 +65,13 @@ const config: DeepWriteable<Omit<Configuration, "extraMetadata">> & {
                 linux: [""],
             }[context.electronPlatformName];
 
-            const electronBinaryPath = path.join(
-                context.appOutDir,
-                `${context.packager.appInfo.productFilename}${ext}`,
-            );
+            const IS_LINUX = context.electronPlatformName === "linux";
+            // .toLowerCase() to accommodate Linux file named `name` but productFileName is `Name` -- Replaces '-dev' because on Linux the executable name is `name` even for the DEV builds
+            const executableName = IS_LINUX
+                ? context.packager.appInfo.productFilename.toLowerCase().replace("-dev", "")
+                : context.packager.appInfo.productFilename;
+
+            const electronBinaryPath = path.join(context.appOutDir, `${executableName}${ext}`);
             console.log("Flipping fuses for: ", electronBinaryPath);
 
             await flipFuses(electronBinaryPath, {
