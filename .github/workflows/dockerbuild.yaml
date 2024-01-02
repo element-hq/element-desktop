@@ -17,7 +17,7 @@ jobs:
             contents: read
             packages: write
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4
 
             - name: Log in to the Container registry
               uses: docker/login-action@3d58c274f17dffee475a5520cbe67f0a882c4dbb
