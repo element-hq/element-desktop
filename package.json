@@ -125,7 +125,8 @@
         "keytar": "^7.9.0"
     },
     "resolutions": {
-        "@types/node": "16.18.68"
+        "@types/node": "16.18.68",
+        "config-file-ts": "0.2.6"
     },
     "jest": {
         "testEnvironment": "node",
