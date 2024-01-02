@@ -103,24 +103,19 @@ jobs:
               run: "yarn build:native --target ${{ steps.config.outputs.target }}"
 
             - name: "[Nightly] Resolve version"
-              id: nightly
               if: inputs.version != ''
               run: |
-                  echo "config-args=--nightly '${{ inputs.version }}'" >> $GITHUB_OUTPUT
+                  echo "ED_NIGHTLY=${{ inputs.version }}" >> $GITHUB_ENV
 
             - name: Generate debian files and arguments
-              id: debian
               run: |
                   if [ -f changelog.Debian ]; then
-                      echo "config-args=--deb-changelog changelog.Debian" >> $GITHUB_OUTPUT
+                      echo "ED_DEBIAN_CHANGELOG=changelog.Debian" >> $GITHUB_ENV
                   fi
 
             - name: Build App
               run: |
-                  npx ts-node scripts/generate-builder-config.ts \
-                      ${{ steps.nightly.outputs.config-args }} \
-                      ${{ steps.debian.outputs.config-args }}
-                  yarn build --publish never -l --config electron-builder.json ${{ steps.config.outputs.build-args }}
+                  yarn build --publish never -l ${{ steps.config.outputs.build-args }}
 
             - name: Check native libraries
               run: |
