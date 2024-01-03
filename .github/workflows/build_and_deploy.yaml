@@ -58,12 +58,11 @@ jobs:
         name: Windows ${{ matrix.arch }}
         strategy:
             matrix:
-                arch: [x86, x64]
+                arch: [ia32, x64]
         uses: ./.github/workflows/build_windows.yaml
         secrets: inherit
         with:
             sign: true
-            deploy-mode: true
             arch: ${{ matrix.arch }}
             version: ${{ needs.prepare.outputs.nightly-version }}
 
@@ -75,37 +74,25 @@ jobs:
         secrets: inherit
         with:
             sign: true
-            deploy-mode: true
             base-url: https://packages.element.io/${{ needs.prepare.outputs.packages-dir }}
             version: ${{ needs.prepare.outputs.nightly-version }}
 
-    # We do not put these calls into deploy-mode as we do not want it to add to the packages.element.io artifact
-    # We ship this build via reprepro only
     linux:
         if: github.event_name != 'workflow_dispatch' || inputs.linux
         needs: prepare
-        name: Linux ${{ matrix.arch }} (sqlcipher system)
+        name: Linux ${{ matrix.arch }} (sqlcipher ${{ matrix.sqlcipher }})
         strategy:
             matrix:
                 arch: [amd64, arm64]
+                sqlcipher: [system, static]
+                exclude:
+                    - arch: arm64
+                      sqlcipher: static
         uses: ./.github/workflows/build_linux.yaml
         with:
             arch: ${{ matrix.arch }}
             config: ${{ needs.prepare.outputs.config }}
-            sqlcipher: system
-            version: ${{ needs.prepare.outputs.nightly-version }}
-
-    # We ship the static build via static tarball only
-    linux_static:
-        if: github.event_name != 'workflow_dispatch' || inputs.linux
-        needs: prepare
-        name: Linux (sqlcipher static)
-        uses: ./.github/workflows/build_linux.yaml
-        with:
-            arch: amd64
-            deploy-mode: true
-            config: ${{ needs.prepare.outputs.config }}
-            sqlcipher: static
+            sqlcipher: ${{ matrix.sqlcipher }}
             version: ${{ needs.prepare.outputs.nightly-version }}
 
     deploy:
@@ -113,7 +100,6 @@ jobs:
             - prepare
             - macos
             - linux
-            - linux_static
             - windows
         runs-on: ubuntu-latest
         name: Deploy
@@ -127,7 +113,65 @@ jobs:
         environment: packages.element.io
         steps:
             - name: Download artifacts
-              uses: actions/download-artifact@v3
+              uses: actions/download-artifact@v4
+
+            - name: Prepare artifacts for deployment
+              run: |
+                  # Windows
+                  for arch in x64 ia32 arm64
+                  do
+                      if [ -d "win-$arch" ]; then
+                          mkdir -p packages.element.io/{install,update}/win32/$arch
+                          mv win-$arch/squirrel-windows*/*.exe "packages.element.io/install/win32/$arch/"
+                          mv win-$arch/squirrel-windows*/*.nupkg "packages.element.io/update/win32/$arch/"
+                          mv win-$arch/squirrel-windows*/RELEASES "packages.element.io/update/win32/$arch/"
+                      fi
+                  done
+
+                  # macOS
+                  if [ -d macos ]; then
+                      mkdir -p packages.element.io/{install,update}/macos
+                      mv macos/*.dmg packages.element.io/install/macos/
+                      mv macos/*-mac.zip packages.element.io/update/macos/
+                      mv macos/*.json packages.element.io/update/macos/
+                  fi
+
+                  # Linux
+                  if [ -d linux-amd64-sqlcipher-static ]; then
+                      mkdir -p packages.element.io/install/linux/glibc-x86-64
+                      mv linux-amd64-sqlcipher-static/*.tar.gz packages.element.io/install/linux/glibc-x86-64
+                  fi
+
+            # We don't wish to store the installer for every nightly ever, so we only keep the latest
+            - name: "[Nightly] Strip version from installer file"
+              if: needs.prepare.outputs.nightly-version != ''
+              run: |
+                  # Windows
+                  for arch in x64 ia32 arm64
+                  do
+                      [ -d "win-$arch" ] && mv packages.element.io/install/win32/$arch/{*,"Element Nightly Setup"}.exe
+                  done
+
+                  # macOS
+                  [ -d macos ] && mv packages.element.io/install/macos/{*,"Element Nightly"}.dmg
+
+                  # Linux
+                  [ -d linux-amd64-sqlcipher-static ] && mv packages.element.io/install/linux/glibc-x86-64/{*,element-desktop-nightly}.tar.gz
+
+            - name: "[Release] Prepare release latest symlink"
+              if: needs.prepare.outputs.nightly-version == ''
+              run: |
+                  # Windows
+                  for arch in x64 ia32 arm64
+                  do
+                      DIR=packages.element.io/install/win32/$arch [ -d "win-$arch" ] && ln -s "$(find $DIR -type f -iname "*.exe" | xargs -0 -n1 -- basename)" "$DIR/Element Setup.exe"
+                  done
+
+                  # macOS
+                  DIR=packages.element.io/install/macos [ -d macos ] && ln -s "$(find $DIR -type f -iname "*.dmg" | xargs -0 -n1 -- basename)" "$DIR/Element.dmg"
+
+                  # Linux
+                  DIR=packages.element.io/install/glibc-x86-64 [ -d linux-amd64-sqlcipher-static ] && ln -s "$(find $DIR -type f -iname "*.tar.gz" | xargs -0 -n1 -- basename)" "$DIR/element-desktop.tar.gz"
 
             - name: Deploy artifacts
               run: |
