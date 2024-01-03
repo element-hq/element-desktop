@@ -148,7 +148,11 @@ jobs:
               if: matrix.prepare_cmd
 
             # This is required for Playwright testing
+            - name: Set EnableNodeCliInspectArguments fuse enabled (sudo)
+              if: runner.os == 'Linux'
+              run: sudo npx @electron/fuses write --app ${{ matrix.executable }} EnableNodeCliInspectArguments=on
             - name: Set EnableNodeCliInspectArguments fuse enabled
+              if: runner.os != 'Linux'
               run: npx @electron/fuses write --app ${{ matrix.executable }} EnableNodeCliInspectArguments=on
 
             - name: Run tests
