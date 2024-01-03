@@ -101,6 +101,7 @@ jobs:
                   CSC_IDENTITY_AUTO_DISCOVERY: false
 
             - name: Generate releases.json
+              if: inputs.base-url
               run: |
                   PKG_JSON_VERSION=$(cat package.json | jq -r .version)
                   LATEST=$(find dist -type f -iname "*-mac.zip" | xargs -0 -n1 -- basename)
