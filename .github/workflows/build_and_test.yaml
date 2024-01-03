@@ -22,7 +22,6 @@ jobs:
                 arch: [x64, x86]
         with:
             arch: ${{ matrix.arch }}
-            test-mode: true
 
     # This allows core contributors to test changes to the dockerbuild image within a pull request
     linux_docker:
@@ -90,14 +89,11 @@ jobs:
             sqlcipher: ${{ matrix.sqlcipher }}
             docker-image: ${{ needs.linux_docker.outputs.docker-image }}
             arch: ${{ matrix.arch }}
-            test-mode: true
 
     macos:
         needs: fetch
         name: macOS
         uses: ./.github/workflows/build_macos.yaml
-        with:
-            test-mode: true
 
     test:
         needs:
@@ -150,6 +146,10 @@ jobs:
             - name: Prepare for tests
               run: ${{ matrix.prepare_cmd }}
               if: matrix.prepare_cmd
+
+            # This is required for Playwright testing
+            - name: Set EnableNodeCliInspectArguments fuse enabled
+              run: npx @electron/fuses write --app ${{ matrix.executable }} EnableNodeCliInspectArguments=on
 
             - name: Run tests
               uses: coactions/setup-xvfb@b6b4fcfb9f5a895edadc3bc76318fae0ac17c8b3 # v1

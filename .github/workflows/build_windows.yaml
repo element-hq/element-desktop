@@ -27,10 +27,6 @@ on:
                 type: boolean
                 required: false
                 description: "Whether to arrange artifacts in the arrangement needed for deployment, skipping unrelated ones"
-            test-mode:
-                type: boolean
-                required: false
-                description: "Whether to enable EnableNodeCliInspectArguments fuse to enable testing using playwright"
 jobs:
     build:
         runs-on: windows-latest
@@ -167,8 +163,6 @@ jobs:
             - name: Build App
               run: |
                   yarn electron-builder --publish never -w ${{ steps.config.outputs.build-args }}
-              env:
-                  ED_ENABLE_NODE_CLI_INSPECT_ARGUMENTS: ${{ inputs.test-mode && 'true' || '' }}
 
             - name: Check app was signed successfully
               if: inputs.sign != ''

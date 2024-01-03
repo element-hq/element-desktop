@@ -28,10 +28,6 @@ on:
                 type: string
                 required: false
                 description: "The docker image to use for the build, defaults to ghcr.io/element-hq/element-desktop-dockerbuild"
-            test-mode:
-                type: boolean
-                required: false
-                description: "Whether to enable EnableNodeCliInspectArguments fuse to enable testing using playwright"
 jobs:
     build:
         runs-on: ubuntu-latest
@@ -120,8 +116,6 @@ jobs:
             - name: Build App
               run: |
                   yarn build --publish never -l ${{ steps.config.outputs.build-args }}
-              env:
-                  ED_ENABLE_NODE_CLI_INSPECT_ARGUMENTS: ${{ inputs.test-mode && 'true' || '' }}
 
             - name: Check native libraries
               run: |
