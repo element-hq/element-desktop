@@ -1,6 +1,7 @@
-import type { Configuration } from "electron-builder";
-import * as os from "node:os";
-import * as fs from "node:fs";
+const os = require("os");
+const fs = require("fs");
+
+// Typescript conversion blocked on https://github.com/electron-userland/electron-builder/issues/7775
 
 /**
  * This script has different outputs depending on your os platform.
@@ -23,27 +24,13 @@ const NIGHTLY_APP_ID = "im.riot.nightly";
 const NIGHTLY_APP_NAME = "element-desktop-nightly";
 const NIGHTLY_DEB_NAME = "element-nightly";
 
-type DeepWriteable<T> = { -readonly [P in keyof T]: DeepWriteable<T[P]> };
-
-interface Package {
-    productName: string;
-    description: string;
-}
-
-const pkg: Package = JSON.parse(fs.readFileSync("package.json", "utf8"));
+const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
 
 /**
  * @type {import('electron-builder').Configuration}
  * @see https://www.electron.build/configuration/configuration
  */
-const config: DeepWriteable<Omit<Configuration, "extraMetadata">> & {
-    extraMetadata?: {
-        productName?: string;
-        name?: string;
-        version?: string;
-        description?: string;
-    };
-} = {
+const config = {
     appId: "im.riot.app",
     asarUnpack: "**/*.node",
     files: [
@@ -72,7 +59,7 @@ const config: DeepWriteable<Omit<Configuration, "extraMetadata">> & {
         icon: "build/icons",
         desktop: {
             MimeType: "x-scheme-handler/element",
-        } as any,
+        },
     },
     deb: {
         packageCategory: "net",
@@ -127,8 +114,8 @@ const config: DeepWriteable<Omit<Configuration, "extraMetadata">> & {
  * @param {string} process.env.ED_SIGNTOOL_THUMBPRINT
  */
 if (process.env.ED_SIGNTOOL_SUBJECT_NAME && process.env.ED_SIGNTOOL_THUMBPRINT) {
-    config.win!.certificateSubjectName = process.env.ED_SIGNTOOL_SUBJECT_NAME;
-    config.win!.certificateSha1 = process.env.ED_SIGNTOOL_THUMBPRINT;
+    config.win.certificateSubjectName = process.env.ED_SIGNTOOL_SUBJECT_NAME;
+    config.win.certificateSha1 = process.env.ED_SIGNTOOL_THUMBPRINT;
 }
 
 /**
@@ -136,7 +123,7 @@ if (process.env.ED_SIGNTOOL_SUBJECT_NAME && process.env.ED_SIGNTOOL_THUMBPRINT) 
  * @param {string} process.env.ED_NOTARYTOOL_TEAM_ID
  */
 if (process.env.ED_NOTARYTOOL_TEAM_ID) {
-    config.mac!.notarize = {
+    config.mac.notarize = {
         teamId: process.env.ED_NOTARYTOOL_TEAM_ID,
     };
 }
@@ -146,13 +133,13 @@ if (process.env.ED_NOTARYTOOL_TEAM_ID) {
  * @param {string} process.env.ED_NIGHTLY
  */
 if (process.env.ED_NIGHTLY) {
-    config.deb!.fpm = []; // Clear the fpm as the breaks deb fields don't apply to nightly
+    config.deb.fpm = []; // Clear the fpm as the breaks deb fields don't apply to nightly
 
     config.appId = NIGHTLY_APP_ID;
-    config.extraMetadata!.productName += " Nightly";
-    config.extraMetadata!.name = NIGHTLY_APP_NAME;
-    config.extraMetadata!.description += " (nightly unstable build)";
-    config.deb!.fpm!.push("--name", NIGHTLY_DEB_NAME);
+    config.extraMetadata.productName += " Nightly";
+    config.extraMetadata.name = NIGHTLY_APP_NAME;
+    config.extraMetadata.description += " (nightly unstable build)";
+    config.deb.fpm.push("--name", NIGHTLY_DEB_NAME);
 
     let version = process.env.ED_NIGHTLY;
     if (os.platform() === "win32") {
@@ -163,26 +150,26 @@ if (process.env.ED_NIGHTLY) {
         // Turns out if you use 0.0.0 here it makes Squirrel windows crash, so we use 0.0.1.
         version = "0.0.1-nightly." + version;
     }
-    config.extraMetadata!.version = version;
+    config.extraMetadata.version = version;
 }
 
 if (os.platform() === "linux") {
     // Electron crashes on debian if there's a space in the path.
     // https://github.com/vector-im/element-web/issues/13171
-    config.extraMetadata!.productName = config.extraMetadata!.productName!.replace(/ /g, "-");
+    config.extraMetadata.productName = config.extraMetadata.productName.replace(/ /g, "-");
 
     /**
      * Allow specifying deb changelog via env var
      * @param {string} process.env.ED_DEB_CHANGELOG
      */
     if (process.env.ED_DEBIAN_CHANGELOG) {
-        config.deb!.fpm!.push(`--deb-changelog=${process.env.ED_DEBIAN_CHANGELOG}`);
+        config.deb.fpm.push(`--deb-changelog=${process.env.ED_DEBIAN_CHANGELOG}`);
     }
 
     if (process.env.SQLCIPHER_BUNDLED) {
         // Remove sqlcipher dependency when using bundled
-        config.deb!.recommends = config.deb!.recommends?.filter((d) => d !== "libsqlcipher0");
+        config.deb.recommends = config.deb.recommends?.filter((d) => d !== "libsqlcipher0");
     }
 }
 
-export default config;
+exports.default = config;

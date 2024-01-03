@@ -124,9 +124,7 @@
         "keytar": "^7.9.0"
     },
     "resolutions": {
-        "@types/node": "16.18.68",
-        "jackspeak": "2.1.1",
-        "config-file-ts": "0.2.6"
+        "@types/node": "16.18.68"
     },
     "jest": {
         "testEnvironment": "node",
