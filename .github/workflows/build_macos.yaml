@@ -73,18 +73,17 @@ jobs:
                   yarn build:native:universal
 
             - name: "[Nightly] Resolve version"
-              id: nightly
               if: inputs.version != ''
               run: |
-                  echo "config-args=--nightly '${{ inputs.version }}'" >> $GITHUB_OUTPUT
+                  echo "ED_NIGHTLY=${{ inputs.version }}" >> $GITHUB_ENV
 
             # We split these because electron-builder gets upset if we set CSC_LINK even to an empty string
             - name: "[Signed] Build App"
               if: inputs.sign != ''
               run: |
-                  scripts/generate-builder-config.ts ${{ steps.nightly.outputs.config-args }} --notarytool-team-id='${{ secrets.APPLE_TEAM_ID }}'
-                  yarn build:universal --publish never --config electron-builder.json
+                  yarn build:universal --publish never
               env:
+                  ED_NOTARYTOOL_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
                   APPLE_ID: ${{ secrets.APPLE_ID }}
                   APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
                   CSC_KEY_PASSWORD: ${{ secrets.APPLE_CSC_KEY_PASSWORD }}
@@ -101,8 +100,7 @@ jobs:
             - name: "[Unsigned] Build App"
               if: inputs.sign == ''
               run: |
-                  scripts/generate-builder-config.ts ${{ steps.nightly.outputs.config-args }}
-                  yarn build:universal --publish never --config electron-builder.json
+                  yarn build:universal --publish never
               env:
                   CSC_IDENTITY_AUTO_DISCOVERY: false
 
