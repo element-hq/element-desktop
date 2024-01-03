@@ -24,7 +24,6 @@ const { flipFuses, FuseVersion, FuseV1Options } = require("@electron/fuses");
  */
 
 const NIGHTLY_APP_ID = "im.riot.nightly";
-const NIGHTLY_APP_NAME = "element-desktop-nightly";
 const NIGHTLY_DEB_NAME = "element-nightly";
 
 const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
@@ -52,11 +51,11 @@ const config = {
                 linux: [""],
             }[context.electronPlatformName];
 
-            const IS_LINUX = context.electronPlatformName === "linux";
-            // .toLowerCase() to accommodate Linux file named `name` but productFileName is `Name` -- Replaces '-dev' because on Linux the executable name is `name` even for the DEV builds
-            const executableName = IS_LINUX
-                ? context.packager.appInfo.productFilename.toLowerCase().replace("-dev", "")
-                : context.packager.appInfo.productFilename;
+            let executableName = context.packager.appInfo.productFilename;
+            if (context.electronPlatformName === "linux") {
+                // Linux uses the package name as the executable name
+                executableName = context.packager.appInfo.name;
+            }
 
             const electronBinaryPath = path.join(context.appOutDir, `${executableName}${ext}`);
             console.log("Flipping fuses for: ", electronBinaryPath);
@@ -183,7 +182,7 @@ if (process.env.ED_NIGHTLY) {
 
     config.appId = NIGHTLY_APP_ID;
     config.extraMetadata.productName += " Nightly";
-    config.extraMetadata.name = NIGHTLY_APP_NAME;
+    config.extraMetadata.name += "-nightly";
     config.extraMetadata.description += " (nightly unstable build)";
     config.deb.fpm.push("--name", NIGHTLY_DEB_NAME);
 
