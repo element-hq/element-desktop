@@ -126,7 +126,8 @@
     },
     "resolutions": {
         "@types/node": "16.18.68",
-        "config-file-ts": "0.2.6"
+        "config-file-ts": "0.2.6",
+        "jackspeak": "2.1.1"
     },
     "jest": {
         "testEnvironment": "node",
