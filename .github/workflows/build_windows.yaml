@@ -156,13 +156,9 @@ jobs:
               run: |
                   echo "ED_NIGHTLY=${{ inputs.version }}" >> $GITHUB_ENV
 
-            # TODO UNDO
-            - run: yarn run build:ts
-            - run: yarn run build:res
-
             - name: Build App
               run: |
-                  yarn electron-builder --publish never -w ${{ steps.config.outputs.build-args }}
+                  yarn build --publish never -w ${{ steps.config.outputs.build-args }}
 
             - name: Check app was signed successfully
               if: inputs.sign != ''
