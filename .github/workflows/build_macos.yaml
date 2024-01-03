@@ -36,7 +36,7 @@ jobs:
         runs-on: macos-latest
         environment: ${{ inputs.sign && 'packages.element.io' || '' }}
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4
 
             - uses: actions/download-artifact@v3
               with:
@@ -57,7 +57,7 @@ jobs:
                   rustup default stable
                   rustup target add aarch64-apple-darwin
 
-            - uses: actions/setup-node@v3
+            - uses: actions/setup-node@v4
               with:
                   cache: "yarn"
 

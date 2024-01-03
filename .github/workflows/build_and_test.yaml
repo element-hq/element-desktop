@@ -37,7 +37,7 @@ jobs:
             REGISTRY: ghcr.io
             IMAGE_NAME: ${{ github.repository }}-dockerbuild-pr
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4
 
             - name: "Get modified files"
               id: changed_files
@@ -129,9 +129,9 @@ jobs:
         name: Test ${{ matrix.name }}
         runs-on: ${{ matrix.os }}-latest
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4
 
-            - uses: actions/setup-node@v3
+            - uses: actions/setup-node@v4
               with:
                   cache: "yarn"
 
