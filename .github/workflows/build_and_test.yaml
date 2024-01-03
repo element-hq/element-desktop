@@ -111,12 +111,12 @@ jobs:
                     - name: "Linux (amd64) (sqlcipher: system)"
                       os: ubuntu
                       artifact: linux-amd64-sqlcipher-system
-                      executable: "element-desktop"
+                      executable: "/opt/Element/element-desktop"
                       prepare_cmd: "sudo apt install ./dist/*.deb"
                     - name: "Linux (amd64) (sqlcipher: static)"
                       os: ubuntu
                       artifact: linux-amd64-sqlcipher-static
-                      executable: "element-desktop"
+                      executable: "/opt/Element/element-desktop"
                       prepare_cmd: "sudo apt install ./dist/*.deb"
                     - name: Windows (x86)
                       os: windows
