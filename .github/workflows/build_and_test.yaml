@@ -106,8 +106,11 @@ jobs:
                     - name: macOS Universal
                       os: macos
                       artifact: macos
-                      executable: "/Volumes/Element/Element.app/Contents/MacOS/Element"
-                      prepare_cmd: "hdiutil attach ./dist/*.dmg -mountpoint /Volumes/Element"
+                      executable: "~/Applications/Element.app/Contents/MacOS/Element"
+                      prepare_cmd: |
+                          hdiutil attach ./dist/*.dmg -mountpoint /Volumes/Element &&
+                          cp -r /Volumes/Element/Element.app ~/Applications/ &&
+                          hdiutil detach /Volumes/Element
                     - name: "Linux (amd64) (sqlcipher: system)"
                       os: ubuntu
                       artifact: linux-amd64-sqlcipher-system
