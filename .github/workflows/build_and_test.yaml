@@ -163,8 +163,8 @@ jobs:
               uses: actions/upload-artifact@v3
               if: always()
               with:
-                  name: ${{ matrix.artifact }}
-                  path: ${{ matrix.name }}-artifact
+                  path: ${{ matrix.executable }}
+                  name: ${{ matrix.name }}-artifact
                   retention-days: 1
 
             - name: Run tests
