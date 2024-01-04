@@ -166,9 +166,11 @@ jobs:
                   name: ${{ matrix.artifact }}-executable
                   retention-days: 1
             - name: DEBUG2
-              if: always() && runner.os == 'macOS'
+              if: always()
+              continue-on-error: true
               run: |
                   ls -lah ${{ matrix.executable }}
+                  ls -lah ${{ matrix.executable }}/*
                   tree ${{ matrix.executable }}
 
             - name: Run tests
