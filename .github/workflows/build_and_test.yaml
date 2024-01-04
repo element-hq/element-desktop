@@ -164,7 +164,7 @@ jobs:
               if: always()
               with:
                   path: ${{ matrix.executable }}
-                  name: ${{ matrix.name }}-artifact
+                  name: ${{ matrix.artifact }}-executable
                   retention-days: 1
 
             - name: Run tests
