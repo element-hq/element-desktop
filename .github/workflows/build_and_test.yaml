@@ -107,6 +107,7 @@ jobs:
                       os: macos
                       artifact: macos
                       executable: "~/Applications/Element.app/Contents/MacOS/Element"
+                      fuse_executable: "~/Applications/Element.app"
                       prepare_cmd: |
                           hdiutil attach ./dist/*.dmg -mountpoint /Volumes/Element &&
                           rsync -a /Volumes/Element/Element.app ~/Applications/ &&
@@ -152,7 +153,7 @@ jobs:
 
             # This is required for Playwright testing
             - name: Set EnableNodeCliInspectArguments fuse enabled
-              run: $RUN_AS npx @electron/fuses write --app ${{ matrix.executable }} EnableNodeCliInspectArguments=on
+              run: $RUN_AS npx @electron/fuses write --app ${{ matrix.fuse_executable || matrix.executable }} EnableNodeCliInspectArguments=on
               env:
                   # We need sudo on Linux as it is installed in /opt/
                   RUN_AS: ${{ runner.os == 'Linux' && 'sudo' || '' }}
@@ -162,16 +163,16 @@ jobs:
               uses: actions/upload-artifact@v3
               if: always()
               with:
-                  path: ${{ matrix.executable }}
+                  path: ${{ matrix.fuse_executable || matrix.executable }}
                   name: ${{ matrix.artifact }}-executable
                   retention-days: 1
             - name: DEBUG2
               if: always()
               continue-on-error: true
               run: |
-                  ls -lah ${{ matrix.executable }}
-                  ls -lah ${{ matrix.executable }}/*
-                  tree ${{ matrix.executable }}
+                  ls -lah ${{ matrix.fuse_executable || matrix.executable }}
+                  ls -lah ${{ matrix.fuse_executable || matrix.executable }}/*
+                  tree ${{ matrix.fuse_executable || matrix.executable }}
 
             - name: Run tests
               uses: coactions/setup-xvfb@b6b4fcfb9f5a895edadc3bc76318fae0ac17c8b3 # v1
