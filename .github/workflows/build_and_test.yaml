@@ -109,7 +109,7 @@ jobs:
                       executable: "~/Applications/Element.app/Contents/MacOS/Element"
                       prepare_cmd: |
                           hdiutil attach ./dist/*.dmg -mountpoint /Volumes/Element &&
-                          cp -r /Volumes/Element/Element.app ~/Applications/ &&
+                          rsync -a /Volumes/Element/Element.app ~/Applications/ &&
                           hdiutil detach /Volumes/Element
                     - name: "Linux (amd64) (sqlcipher: system)"
                       os: ubuntu
@@ -166,6 +166,10 @@ jobs:
                   path: ${{ matrix.executable }}
                   name: ${{ matrix.artifact }}-executable
                   retention-days: 1
+            - name: DEBUG2
+              run: |
+                  ls -lah ${{ matrix.executable }}
+                  tree ${{ matrix.executable }}
 
             - name: Run tests
               uses: coactions/setup-xvfb@b6b4fcfb9f5a895edadc3bc76318fae0ac17c8b3 # v1
