@@ -106,7 +106,7 @@ jobs:
                     - name: macOS Universal
                       os: macos
                       artifact: macos
-                      executable: "~/Applications/Element.app/Contents/MacOS/Element"
+                      executable: "/Users/runner/Applications/Element.app/Contents/MacOS/Element"
                       fuse_executable: "~/Applications/Element.app"
                       prepare_cmd: |
                           hdiutil attach ./dist/*.dmg -mountpoint /Volumes/Element &&
