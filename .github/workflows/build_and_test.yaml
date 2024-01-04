@@ -158,6 +158,15 @@ jobs:
               if: runner.os != 'Linux'
               run: npx @electron/fuses write --app ${{ matrix.executable }} EnableNodeCliInspectArguments=on
 
+            # TODO remove me
+            - name: DEBUG
+              uses: actions/upload-artifact@v3
+              if: always()
+              with:
+                  name: ${{ matrix.artifact }}
+                  path: ${{ matrix.name }}-artifact
+                  retention-days: 1
+
             - name: Run tests
               uses: coactions/setup-xvfb@b6b4fcfb9f5a895edadc3bc76318fae0ac17c8b3 # v1
               timeout-minutes: 5
