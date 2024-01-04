@@ -69,9 +69,7 @@ const config = {
 
                 [FuseV1Options.RunAsNode]: false,
                 [FuseV1Options.EnableNodeOptionsEnvironmentVariable]: false,
-
-                // This is required for Playwright tests
-                [FuseV1Options.EnableNodeCliInspectArguments]: !!process.env.ED_ENABLE_NODE_CLI_INSPECT_ARGUMENTS,
+                [FuseV1Options.EnableNodeCliInspectArguments]: false,
 
                 // Mac app crashes when enabled for us on arm, might be fine for you
                 [FuseV1Options.LoadBrowserProcessSpecificV8Snapshot]: false,
