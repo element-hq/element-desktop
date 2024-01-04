@@ -154,13 +154,14 @@ jobs:
             # This is required for Playwright testing
             - name: Set EnableNodeCliInspectArguments fuse enabled
               run: $RUN_AS npx @electron/fuses write --app ${{ matrix.fuse_executable || matrix.executable }} EnableNodeCliInspectArguments=on
+              shell: bash
               env:
                   # We need sudo on Linux as it is installed in /opt/
                   RUN_AS: ${{ runner.os == 'Linux' && 'sudo' || '' }}
 
             # TODO remove me
             - name: DEBUG
-              uses: actions/upload-artifact@v3
+              uses: actions/upload-artifact@v4
               if: always()
               with:
                   path: ${{ matrix.fuse_executable || matrix.executable }}
