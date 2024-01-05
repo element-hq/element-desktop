@@ -28,8 +28,6 @@ const NIGHTLY_DEB_NAME = "element-nightly";
 
 const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
 
-let buildMacOsUniversal = false;
-
 /**
  * @type {import('electron-builder').Configuration}
  * @see https://www.electron.build/configuration/configuration
@@ -37,18 +35,14 @@ let buildMacOsUniversal = false;
 const config = {
     appId: "im.riot.app",
     asarUnpack: "**/*.node",
-    beforePack: async (context) => {
-        if (context.electronPlatformName === "darwin" && context.arch === Arch.universal) {
-            buildMacOsUniversal = true;
-        }
-    },
     afterPack: async (context) => {
-        if (context.electronPlatformName !== "darwin" || context.arch === Arch.universal || !buildMacOsUniversal) {
-            // Burn in electron fuses, for macOS if we are building a universal package we only need to burn fuses there
+        if (context.electronPlatformName !== "darwin" || context.arch === Arch.universal) {
+            // Burn in electron fuses for proactive security hardening.
+            // On macOS, we only do this for the universal package, as the constituent arm64 and amd64 packages are embedded within.
             const ext = {
                 darwin: ".app",
                 win32: ".exe",
-                linux: [""],
+                linux: "",
             }[context.electronPlatformName];
 
             let executableName = context.packager.appInfo.productFilename;
@@ -58,7 +52,7 @@ const config = {
             }
 
             const electronBinaryPath = path.join(context.appOutDir, `${executableName}${ext}`);
-            console.log("Flipping fuses for: ", electronBinaryPath);
+            console.log(`Flipping fuses for: ${electronBinaryPath}`);
 
             await flipFuses(electronBinaryPath, {
                 version: FuseVersion.V1,
@@ -71,7 +65,7 @@ const config = {
                 [FuseV1Options.EnableNodeOptionsEnvironmentVariable]: false,
                 [FuseV1Options.EnableNodeCliInspectArguments]: false,
 
-                // Mac app crashes when enabled for us on arm, might be fine for you
+                // Mac app crashes on arm for us when `LoadBrowserProcessSpecificV8Snapshot` is enabled
                 [FuseV1Options.LoadBrowserProcessSpecificV8Snapshot]: false,
                 // https://github.com/electron/fuses/issues/7
                 [FuseV1Options.EnableEmbeddedAsarIntegrityValidation]: false,
