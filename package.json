@@ -117,7 +117,8 @@
         "tar": "^6.1.2",
         "ts-jest": "^29.0.0",
         "ts-node": "^10.9.1",
-        "typescript": "5.3.3"
+        "typescript": "5.3.3",
+        "@electron/fuses": "^1.7.0"
     },
     "hakDependencies": {
         "matrix-seshat": "^3.0.1",

@@ -1,5 +1,8 @@
 const os = require("os");
 const fs = require("fs");
+const path = require("path");
+const Arch = require("electron-builder").Arch;
+const { flipFuses, FuseVersion, FuseV1Options } = require("@electron/fuses");
 
 // Typescript conversion blocked on https://github.com/electron-userland/electron-builder/issues/7775
 
@@ -21,7 +24,6 @@ const fs = require("fs");
  */
 
 const NIGHTLY_APP_ID = "im.riot.nightly";
-const NIGHTLY_APP_NAME = "element-desktop-nightly";
 const NIGHTLY_DEB_NAME = "element-nightly";
 
 const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
@@ -33,6 +35,43 @@ const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
 const config = {
     appId: "im.riot.app",
     asarUnpack: "**/*.node",
+    afterPack: async (context) => {
+        if (context.electronPlatformName !== "darwin" || context.arch === Arch.universal) {
+            // Burn in electron fuses for proactive security hardening.
+            // On macOS, we only do this for the universal package, as the constituent arm64 and amd64 packages are embedded within.
+            const ext = {
+                darwin: ".app",
+                win32: ".exe",
+                linux: "",
+            }[context.electronPlatformName];
+
+            let executableName = context.packager.appInfo.productFilename;
+            if (context.electronPlatformName === "linux") {
+                // Linux uses the package name as the executable name
+                executableName = context.packager.appInfo.name;
+            }
+
+            const electronBinaryPath = path.join(context.appOutDir, `${executableName}${ext}`);
+            console.log(`Flipping fuses for: ${electronBinaryPath}`);
+
+            await flipFuses(electronBinaryPath, {
+                version: FuseVersion.V1,
+                resetAdHocDarwinSignature: context.electronPlatformName === "darwin" && context.arch === Arch.universal,
+
+                [FuseV1Options.EnableCookieEncryption]: true,
+                [FuseV1Options.OnlyLoadAppFromAsar]: true,
+
+                [FuseV1Options.RunAsNode]: false,
+                [FuseV1Options.EnableNodeOptionsEnvironmentVariable]: false,
+                [FuseV1Options.EnableNodeCliInspectArguments]: false,
+
+                // Mac app crashes on arm for us when `LoadBrowserProcessSpecificV8Snapshot` is enabled
+                [FuseV1Options.LoadBrowserProcessSpecificV8Snapshot]: false,
+                // https://github.com/electron/fuses/issues/7
+                [FuseV1Options.EnableEmbeddedAsarIntegrityValidation]: false,
+            });
+        }
+    },
     files: [
         "package.json",
         {
@@ -137,7 +176,7 @@ if (process.env.ED_NIGHTLY) {
 
     config.appId = NIGHTLY_APP_ID;
     config.extraMetadata.productName += " Nightly";
-    config.extraMetadata.name = NIGHTLY_APP_NAME;
+    config.extraMetadata.name += "-nightly";
     config.extraMetadata.description += " (nightly unstable build)";
     config.deb.fpm.push("--name", NIGHTLY_DEB_NAME);
 

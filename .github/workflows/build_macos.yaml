@@ -88,10 +88,10 @@ jobs:
             - name: Check app was signed & notarised successfully
               if: inputs.sign != ''
               run: |
-                  hdiutil attach dist/*.dmg
-                  codesign -dv --verbose=4 /Volumes/Element*/*.app
-                  spctl -a -vvv -t install /Volumes/Element*/*.app
-                  hdiutil detach /Volumes/Element*
+                  hdiutil attach dist/*.dmg -mountpoint /Volumes/Element
+                  codesign -dv --verbose=4 /Volumes/Element/*.app
+                  spctl -a -vvv -t install /Volumes/Element/*.app
+                  hdiutil detach /Volumes/Element
 
             - name: "[Unsigned] Build App"
               if: inputs.sign == ''
