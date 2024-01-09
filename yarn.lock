@@ -2422,6 +2422,39 @@ app-builder-bin@4.0.0:
   resolved "https://registry.yarnpkg.com/app-builder-bin/-/app-builder-bin-4.0.0.tgz#1df8e654bd1395e4a319d82545c98667d7eed2f0"
   integrity sha512-xwdG0FJPQMe0M0UA4Tz0zEB8rBJTRA5a476ZawAqiBkMv16GRK5xpXThOjMaEOFnZ6zabejjG4J3da0SXG63KA==
 
+app-builder-lib@24.10.0:
+  version "24.10.0"
+  resolved "https://registry.yarnpkg.com/app-builder-lib/-/app-builder-lib-24.10.0.tgz#900d4a6688daa887d6800f01e30de8ff76603d63"
+  integrity sha512-kYxIANSdp/Un8xWcsjj4Vu+Qy5Ebhyu+CkI5cKr25mPR/NfBSKPMG8UbwcaEnsW0mp5QaaWP7bZvK6Lg5OIkJA==
+  dependencies:
+    "@develar/schema-utils" "~2.6.5"
+    "@electron/notarize" "2.1.0"
+    "@electron/osx-sign" "1.0.5"
+    "@electron/universal" "1.4.1"
+    "@malept/flatpak-bundler" "^0.4.0"
+    "@types/fs-extra" "9.0.13"
+    async-exit-hook "^2.0.1"
+    bluebird-lst "^1.0.9"
+    builder-util "24.9.4"
+    builder-util-runtime "9.2.3"
+    chromium-pickle-js "^0.2.0"
+    debug "^4.3.4"
+    ejs "^3.1.8"
+    electron-publish "24.9.4"
+    form-data "^4.0.0"
+    fs-extra "^10.1.0"
+    hosted-git-info "^4.1.0"
+    is-ci "^3.0.0"
+    isbinaryfile "^5.0.0"
+    js-yaml "^4.1.0"
+    lazy-val "^1.0.5"
+    minimatch "^5.1.1"
+    read-config-file "6.3.2"
+    sanitize-filename "^1.6.3"
+    semver "^7.3.8"
+    tar "^6.1.12"
+    temp-file "^3.4.0"
+
 app-builder-lib@24.9.1:
   version "24.9.1"
   resolved "https://registry.yarnpkg.com/app-builder-lib/-/app-builder-lib-24.9.1.tgz#bf3568529298b4de8595ed1acbb351fe27db5ba4"
