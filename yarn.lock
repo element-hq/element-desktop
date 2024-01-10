@@ -2436,10 +2436,10 @@ app-builder-bin@4.0.0:
   resolved "https://registry.yarnpkg.com/app-builder-bin/-/app-builder-bin-4.0.0.tgz#1df8e654bd1395e4a319d82545c98667d7eed2f0"
   integrity sha512-xwdG0FJPQMe0M0UA4Tz0zEB8rBJTRA5a476ZawAqiBkMv16GRK5xpXThOjMaEOFnZ6zabejjG4J3da0SXG63KA==
 
-app-builder-lib@24.10.0:
-  version "24.10.0"
-  resolved "https://registry.yarnpkg.com/app-builder-lib/-/app-builder-lib-24.10.0.tgz#900d4a6688daa887d6800f01e30de8ff76603d63"
-  integrity sha512-kYxIANSdp/Un8xWcsjj4Vu+Qy5Ebhyu+CkI5cKr25mPR/NfBSKPMG8UbwcaEnsW0mp5QaaWP7bZvK6Lg5OIkJA==
+app-builder-lib@24.11.0:
+  version "24.11.0"
+  resolved "https://registry.yarnpkg.com/app-builder-lib/-/app-builder-lib-24.11.0.tgz#4ce3abcfbe9624c3e94f7fa748e3052ebf715178"
+  integrity sha512-7l1ns6QxpXxSJNvToxT291w9VR4X1YRLwTXWqyzVU+Gt3gb15cp3h7aFYk2s0krlH5wL+gS7luj7dW4Qiyr+MA==
   dependencies:
     "@develar/schema-utils" "~2.6.5"
     "@electron/notarize" "2.1.0"
@@ -3556,12 +3556,12 @@ ejs@^3.1.8:
   dependencies:
     jake "^10.8.5"
 
-electron-builder-squirrel-windows@24.10.0:
-  version "24.10.0"
-  resolved "https://registry.yarnpkg.com/electron-builder-squirrel-windows/-/electron-builder-squirrel-windows-24.10.0.tgz#fbbdb39addfc658891a768101c195f547b88e907"
-  integrity sha512-RVC+kyk3StWjGot4Xc30Gju6CBcJ9Kob9B9vZT1ek9KsY2EJA6bNb3t8JRAV/ZLoQDb1jhBMyLMWJ0pHK37niQ==
+electron-builder-squirrel-windows@24.11.0:
+  version "24.11.0"
+  resolved "https://registry.yarnpkg.com/electron-builder-squirrel-windows/-/electron-builder-squirrel-windows-24.11.0.tgz#11cffcfcc64256d1e5a5413f0fe547dc716ce0c5"
+  integrity sha512-JnRKlZxf++icZfChD6cNVzulwOI/vqEgMlP9xPUcep3B0/4ca6gtQKH02TMjANbCf4wnkBluxbwotbFTBL5NCw==
   dependencies:
-    app-builder-lib "24.10.0"
+    app-builder-lib "24.11.0"
     archiver "^5.3.1"
     builder-util "24.9.4"
     fs-extra "^10.1.0"
