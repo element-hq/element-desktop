@@ -88,6 +88,7 @@ const config = {
         "webapp.asar",
     ],
     extraMetadata: {
+        name: pkg.name,
         productName: pkg.productName,
         description: pkg.description,
     },
