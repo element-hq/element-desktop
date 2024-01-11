@@ -20,6 +20,7 @@ import path from "node:path";
 import os from "node:os";
 
 export const test = base.extend<{ app: ElectronApplication; tmpDir: string }>({
+    // eslint-disable-next-line no-empty-pattern
     tmpDir: async ({}, use) => {
         const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "element-desktop-tests-"));
         console.log("Using temp profile directory: ", tmpDir);

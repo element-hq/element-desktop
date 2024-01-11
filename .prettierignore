@@ -8,6 +8,8 @@
 /CHANGELOG.md
 /package-lock.json
 /yarn.lock
+/playwright/html-report
+/playwright/test-results
 
 **/.idea
 .vscode

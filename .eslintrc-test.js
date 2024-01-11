@@ -2,11 +2,11 @@ module.exports = {
     plugins: ["matrix-org"],
     extends: [".eslintrc.js"],
     parserOptions: {
-        project: ["test/tsconfig.json"],
+        project: ["playwright/tsconfig.json"],
     },
     overrides: [
         {
-            files: ["test/**/*.ts"],
+            files: ["playwright/**/*.ts"],
             extends: ["plugin:matrix-org/typescript"],
             rules: {
                 // Things we do that break the ideal style
