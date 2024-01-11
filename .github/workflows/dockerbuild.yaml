@@ -17,7 +17,7 @@ jobs:
             contents: read
             packages: write
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4
 
             - name: Log in to the Container registry
               uses: docker/login-action@3d58c274f17dffee475a5520cbe67f0a882c4dbb
@@ -28,7 +28,7 @@ jobs:
 
             - name: Extract metadata for Docker
               id: meta
-              uses: docker/metadata-action@2a4836ac76fe8f5d0ee3a0d89aa12a80cc552ad3
+              uses: docker/metadata-action@31cebacef4805868f9ce9a0cb03ee36c32df2ac4
               with:
                   images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
                   tags: |

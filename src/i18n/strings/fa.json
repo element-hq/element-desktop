@@ -5,7 +5,7 @@
         "close_brand": "بستن %(brand)s",
         "copy": "رونوشت",
         "cut": "برش",
-        "delete": "حذف",
+        "delete": "پاک‌کردن",
         "edit": "ویرایش",
         "minimise": "کمینه",
         "paste": "جای‌گذاری",
@@ -52,7 +52,7 @@
         "actual_size": "اندازهٔ واقعی",
         "toggle_developer_tools": "تغییر وضعیت ابزارهای توسعه‌دهنده",
         "toggle_full_screen": "تغییر وضعیت تمام‌صفحه",
-        "view": "دیدن"
+        "view": "مشاهده"
     },
     "window_menu": {
         "bring_all_to_front": "همه را به جلو بیاورید",

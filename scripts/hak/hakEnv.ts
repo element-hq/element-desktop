@@ -41,7 +41,10 @@ export default class HakEnv {
     public runtimeVersion?: string;
     public dotHakDir: string;
 
-    public constructor(public readonly projectRoot: string, targetId: TargetId | null) {
+    public constructor(
+        public readonly projectRoot: string,
+        targetId: TargetId | null,
+    ) {
         const target = targetId ? TARGETS[targetId] : getHost();
 
         if (!target) {

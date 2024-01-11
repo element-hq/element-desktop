@@ -5,7 +5,7 @@
         "close_brand": "%(brand)s bezárása",
         "copy": "Másolás",
         "cut": "Kivágás",
-        "delete": "Töröl",
+        "delete": "Törlés",
         "edit": "Szerkesztés",
         "minimise": "Lecsukás",
         "paste": "Beillesztés",
@@ -34,18 +34,18 @@
         "label": "Fájl"
     },
     "menu": {
-        "hide": "Eltakar",
-        "hide_others": "Minden mást eltakar",
+        "hide": "Elrejtés",
+        "hide_others": "Mások elrejtése",
         "services": "Szolgáltatás",
-        "unhide": "Felfed"
+        "unhide": "Felfedés"
     },
     "right_click_menu": {
         "add_to_dictionary": "Hozzáadás a szótárhoz",
-        "copy_email": "E-mail cím másolása",
+        "copy_email": "E-mail-cím másolása",
         "copy_image": "Kép másolása",
         "copy_image_url": "Kép címének másolása",
         "copy_link_url": "Hivatkozás másolása",
-        "save_image_as": "Kép mentése másként...",
+        "save_image_as": "Kép mentése másként…",
         "save_image_as_error_description": "A kép mentése sikertelen",
         "save_image_as_error_title": "Kép mentése sikertelen"
     },
@@ -53,7 +53,7 @@
         "actual_size": "Jelenlegi méret",
         "toggle_developer_tools": "Fejlesztői eszközök",
         "toggle_full_screen": "Teljes képernyő",
-        "view": "Nézet"
+        "view": "Megtekintés"
     },
     "window_menu": {
         "bring_all_to_front": "Mindent előtérbe hoz",

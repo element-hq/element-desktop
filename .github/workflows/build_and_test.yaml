@@ -19,7 +19,7 @@ jobs:
         uses: ./.github/workflows/build_windows.yaml
         strategy:
             matrix:
-                arch: [x64, x86]
+                arch: [x64, ia32]
         with:
             arch: ${{ matrix.arch }}
 
@@ -37,11 +37,11 @@ jobs:
             REGISTRY: ghcr.io
             IMAGE_NAME: ${{ github.repository }}-dockerbuild-pr
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4
 
             - name: "Get modified files"
               id: changed_files
-              uses: tj-actions/changed-files@da093c1609db0edd0a037ce9664e135f74bf30d9 # v40
+              uses: tj-actions/changed-files@716b1e13042866565e00e85fd4ec490e186c4a2f # v41
               with:
                   files: |
                       dockerbuild/**
@@ -106,21 +106,26 @@ jobs:
                     - name: macOS Universal
                       os: macos
                       artifact: macos
-                      executable: "/Volumes/Element/Element.app/Contents/MacOS/Element"
-                      prepare_cmd: "hdiutil attach ./dist/*.dmg -mountpoint /Volumes/Element"
+                      executable: "/Users/runner/Applications/Element.app/Contents/MacOS/Element"
+                      # We need to mount the DMG and copy the app to the Applications folder as a mounted DMG is
+                      # read-only and thus would not allow us to override the fuses as is required for Playwright.
+                      prepare_cmd: |
+                          hdiutil attach ./dist/*.dmg -mountpoint /Volumes/Element &&
+                          rsync -a /Volumes/Element/Element.app ~/Applications/ &&
+                          hdiutil detach /Volumes/Element
                     - name: "Linux (amd64) (sqlcipher: system)"
                       os: ubuntu
                       artifact: linux-amd64-sqlcipher-system
-                      executable: "element-desktop"
+                      executable: "/opt/Element/element-desktop"
                       prepare_cmd: "sudo apt install ./dist/*.deb"
                     - name: "Linux (amd64) (sqlcipher: static)"
                       os: ubuntu
                       artifact: linux-amd64-sqlcipher-static
-                      executable: "element-desktop"
+                      executable: "/opt/Element/element-desktop"
                       prepare_cmd: "sudo apt install ./dist/*.deb"
                     - name: Windows (x86)
                       os: windows
-                      artifact: win-x86
+                      artifact: win-ia32
                       executable: "./dist/win-ia32-unpacked/Element.exe"
                     - name: Windows (x64)
                       os: windows
@@ -129,16 +134,16 @@ jobs:
         name: Test ${{ matrix.name }}
         runs-on: ${{ matrix.os }}-latest
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4
 
-            - uses: actions/setup-node@v3
+            - uses: actions/setup-node@v4
               with:
                   cache: "yarn"
 
             - name: Install Deps
               run: "yarn install --frozen-lockfile"
 
-            - uses: actions/download-artifact@v3
+            - uses: actions/download-artifact@v4
               with:
                   name: ${{ matrix.artifact }}
                   path: dist
@@ -146,6 +151,15 @@ jobs:
             - name: Prepare for tests
               run: ${{ matrix.prepare_cmd }}
               if: matrix.prepare_cmd
+
+            # We previously disabled the `EnableNodeCliInspectArguments` fuse, but Playwright requires
+            # it to to be enabled to test Electron apps, so turn it back on.
+            - name: Set EnableNodeCliInspectArguments fuse enabled
+              run: $RUN_AS npx @electron/fuses write --app ${{ matrix.executable }} EnableNodeCliInspectArguments=on
+              shell: bash
+              env:
+                  # We need sudo on Linux as it is installed in /opt/
+                  RUN_AS: ${{ runner.os == 'Linux' && 'sudo' || '' }}
 
             - name: Run tests
               uses: coactions/setup-xvfb@b6b4fcfb9f5a895edadc3bc76318fae0ac17c8b3 # v1
@@ -156,9 +170,9 @@ jobs:
                   ELEMENT_DESKTOP_EXECUTABLE: ${{ matrix.executable }}
 
             - name: Upload Artifacts
-              uses: actions/upload-artifact@v3
+              uses: actions/upload-artifact@v4
               if: always()
               with:
-                  name: ${{ matrix.artifact }}
+                  name: ${{ matrix.artifact }}-test
                   path: test_artifacts
                   retention-days: 1

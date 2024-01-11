@@ -41,9 +41,9 @@ jobs:
         outputs:
             nightly-version: ${{ steps.versions.outputs.nightly }}
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4
 
-            - uses: actions/setup-node@v3
+            - uses: actions/setup-node@v4
               with:
                   cache: "yarn"
 
@@ -74,6 +74,7 @@ jobs:
 
                   # Pick the greatest one
                   VERSION=$(cat VERSIONS | sort -uf | tail -n1)
+                  echo "Found latest nightly version $VERSION"
                   # Increment it
                   echo "nightly=$(scripts/generate-nightly-version.ts --latest $VERSION)" >> $GITHUB_OUTPUT
               env:
@@ -128,7 +129,7 @@ jobs:
                   echo "| React SDK   | [$REACT_VERSION](https://github.com/matrix-org/matrix-react-sdk/commit/$REACT_VERSION) |" >> $GITHUB_STEP_SUMMARY
                   echo "| JS SDK      | [$JS_VERSION](https://github.com/matrix-org/matrix-js-sdk/commit/$JS_VERSION) |" >> $GITHUB_STEP_SUMMARY
 
-            - uses: actions/upload-artifact@v3
+            - uses: actions/upload-artifact@v4
               with:
                   name: webapp
                   retention-days: 1
