@@ -74,6 +74,7 @@ jobs:
 
                   # Pick the greatest one
                   VERSION=$(cat VERSIONS | sort -uf | tail -n1)
+                  echo "Found latest nightly version $VERSION"
                   # Increment it
                   echo "nightly=$(scripts/generate-nightly-version.ts --latest $VERSION)" >> $GITHUB_OUTPUT
               env:
