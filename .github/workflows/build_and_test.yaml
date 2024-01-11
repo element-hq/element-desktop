@@ -153,7 +153,7 @@ jobs:
               if: matrix.prepare_cmd
 
             # We previously disabled the `EnableNodeCliInspectArguments` fuse, but Playwright requires
-            # it to to be enabled to test Electron apps, so turn it back on.
+            # it to be enabled to test Electron apps, so turn it back on.
             - name: Set EnableNodeCliInspectArguments fuse enabled
               run: $RUN_AS npx @electron/fuses write --app ${{ matrix.executable }} EnableNodeCliInspectArguments=on
               shell: bash
@@ -165,14 +165,13 @@ jobs:
               uses: coactions/setup-xvfb@b6b4fcfb9f5a895edadc3bc76318fae0ac17c8b3 # v1
               timeout-minutes: 5
               with:
-                  run: "yarn test"
+                  run: "yarn test ${{ runner.os != 'Linux' && '--ignore-snapshots' || '' }}"
               env:
                   ELEMENT_DESKTOP_EXECUTABLE: ${{ matrix.executable }}
 
-            - name: Upload Artifacts
-              uses: actions/upload-artifact@v4
-              if: always()
+            - name: Upload HTML report
+              uses: actions/upload-artifact@v3
               with:
                   name: ${{ matrix.artifact }}-test
-                  path: test_artifacts
-                  retention-days: 1
+                  path: playwright-report
+                  retention-days: 14
