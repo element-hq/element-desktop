@@ -164,20 +164,26 @@ jobs:
                   # Windows
                   for arch in x64 ia32 arm64
                   do
-                      pushd packages.element.io/install/win32/$arch
-                      [ -d "win-$arch" ] && ln -s "$(find . -type f -iname "*.exe" | xargs -0 -n1 -- basename)" "Element Setup.exe"
-                      popd
+                      if [ -d "win-$arch" ]; then
+                          pushd packages.element.io/install/win32/$arch
+                          ln -s "$(find . -type f -iname "*.exe" | xargs -0 -n1 -- basename)" "Element Setup.exe"
+                          popd
+                      fi
                   done
 
                   # macOS
-                  pushd packages.element.io/install/macos
-                  [ -d macos ] && ln -s "$(find . -type f -iname "*.dmg" | xargs -0 -n1 -- basename)" "Element.dmg"
-                  popd
+                  if [ -d macos ]; then
+                      pushd packages.element.io/install/macos
+                      ln -s "$(find . -type f -iname "*.dmg" | xargs -0 -n1 -- basename)" "Element.dmg"
+                      popd
+                  fi
 
                   # Linux
-                  pushd packages.element.io/install/glibc-x86-64
-                  [ -d linux-amd64-sqlcipher-static ] && ln -s "$(find . -type f -iname "*.tar.gz" | xargs -0 -n1 -- basename)" "element-desktop.tar.gz"
-                  popd
+                  if [ -d linux-amd64-sqlcipher-static ]; then
+                      pushd packages.element.io/install/glibc-x86-64
+                      ln -s "$(find . -type f -iname "*.tar.gz" | xargs -0 -n1 -- basename)" "element-desktop.tar.gz"
+                      popd
+                  fi
 
             - name: Deploy artifacts
               run: |
