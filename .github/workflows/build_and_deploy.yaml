@@ -180,7 +180,7 @@ jobs:
 
                   # Linux
                   if [ -d linux-amd64-sqlcipher-static ]; then
-                      pushd packages.element.io/install/glibc-x86-64
+                      pushd packages.element.io/install/linux/glibc-x86-64
                       ln -s "$(find . -type f -iname "*.tar.gz" | xargs -0 -n1 -- basename)" "element-desktop.tar.gz"
                       popd
                   fi
