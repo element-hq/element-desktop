@@ -92,7 +92,6 @@
         "@types/uuid": "^9.0.2",
         "@typescript-eslint/eslint-plugin": "^6.0.0",
         "@typescript-eslint/parser": "^6.0.0",
-        "allchange": "^1.0.6",
         "app-builder-lib": "24.11.0",
         "chokidar": "^3.5.2",
         "detect-libc": "^2.0.0",
