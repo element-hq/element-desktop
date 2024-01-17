@@ -1,5 +1,13 @@
 export default {
-    entry: ["src/electron-main.ts", "src/preload.ts", "electron-builder.js", ".eslintrc-*.js", "scripts/**", "hak/**"],
+    entry: [
+        "src/electron-main.ts",
+        "src/preload.ts",
+        "electron-builder.js",
+        ".eslintrc-*.js",
+        "scripts/**",
+        "hak/**",
+        "playwright/**",
+    ],
     project: ["**/*.{js,ts}"],
     ignoreDependencies: [
         // Brought in via hak scripts
