@@ -208,7 +208,7 @@ jobs:
                       echo "$arch=$(ls linux-$arch-sqlcipher-system/*.deb | tail -n1)" >> $GITHUB_OUTPUT
                   done
 
-            - name: Stash packages.element.io
+            - name: Stash debs
               if: ${{ !needs.prepare.outputs.deploy && needs.linux.result == 'success' }}
               uses: actions/upload-artifact@v4
               with:
