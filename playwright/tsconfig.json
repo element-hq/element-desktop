@@ -5,7 +5,7 @@
         "esModuleInterop": true,
         "target": "es2017",
         "module": "es2022",
-        "lib": ["ESNext", "es2021", "dom"]
+        "lib": ["ESNext", "es2021", "dom"],
     },
-    "include": ["**/*.ts"]
+    "include": ["**/*.ts"],
 }
