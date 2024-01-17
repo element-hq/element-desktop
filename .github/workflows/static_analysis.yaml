@@ -12,6 +12,7 @@ jobs:
 
             - uses: actions/setup-node@v4
               with:
+                  node-version-file: package.json
                   cache: "yarn"
 
             # Does not need branch matching as only analyses this layer
@@ -33,6 +34,7 @@ jobs:
 
             - uses: actions/setup-node@v4
               with:
+                  node-version-file: package.json
                   cache: "yarn"
 
             # Does not need branch matching as only analyses this layer
@@ -50,6 +52,7 @@ jobs:
 
             - uses: actions/setup-node@v4
               with:
+                  node-version-file: package.json
                   cache: "yarn"
 
             # Does not need branch matching as only analyses this layer
@@ -67,6 +70,7 @@ jobs:
 
             - uses: actions/setup-node@v4
               with:
+                  node-version-file: package.json
                   cache: "yarn"
 
             - name: Install Deps
