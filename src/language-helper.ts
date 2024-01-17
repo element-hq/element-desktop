@@ -24,10 +24,6 @@ const FALLBACK_LOCALE = "en";
 
 type TranslationKey = TKey<typeof EN>;
 
-export function _td(text: TranslationKey): TranslationKey {
-    return text;
-}
-
 type SubstitutionValue = number | string;
 
 interface Variables {
