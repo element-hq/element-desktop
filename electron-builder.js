@@ -115,6 +115,7 @@ const config = {
             "libsecret-1-0",
             "libasound2",
             "libgbm1",
+            "libc>=2.28",
         ],
         recommends: ["libsqlcipher0", "element-io-archive-keyring"],
         fpm: [
