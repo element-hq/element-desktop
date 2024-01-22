@@ -57,6 +57,7 @@
     },
     "window_menu": {
         "bring_all_to_front": "Porta tutto in primo piano",
-        "label": "Finestra"
+        "label": "Finestra",
+        "zoom": "Ingrandisci"
     }
 }
