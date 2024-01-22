@@ -115,6 +115,7 @@ const config = {
             "libsecret-1-0",
             "libasound2",
             "libgbm1",
+            "libc6 (>= 2.28)",
         ],
         recommends: ["libsqlcipher0", "element-io-archive-keyring"],
         fpm: [
@@ -122,8 +123,6 @@ const config = {
             "Replaces: riot-desktop (<< 1.7.0), riot-web (<< 1.7.0)",
             "--deb-field",
             "Breaks: riot-desktop (<< 1.7.0), riot-web (<< 1.7.0)",
-            "--deb-pre-depends",
-            "libc (>= 2.28)",
         ],
     },
     mac: {
