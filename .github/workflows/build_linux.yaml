@@ -59,7 +59,7 @@ jobs:
 
             - name: Cache .hak
               id: cache
-              uses: actions/cache@v3
+              uses: actions/cache@v4
               with:
                   key: ${{ runner.os }}-${{ inputs.docker-image || github.ref_name }}-${{ inputs.sqlcipher }}-${{ inputs.arch }}-${{ hashFiles('hakHash', 'electronVersion') }}
                   path: |
