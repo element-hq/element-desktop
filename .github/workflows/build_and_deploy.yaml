@@ -215,7 +215,7 @@ jobs:
                   done
 
             - name: Stash debs
-              if: ${{ !needs.prepare.outputs.deploy == 'true' && needs.linux.result == 'success' }}
+              if: needs.prepare.outputs.deploy == 'false' && needs.linux.result == 'success'
               uses: actions/upload-artifact@v4
               with:
                   name: debs
