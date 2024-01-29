@@ -1,25 +1,10 @@
-name: Release Process
+name: Post Release Process
 on:
-    workflow_dispatch:
-        inputs:
-            mode:
-                description: What type of release
-                required: true
-                default: rc
-                type: choice
-                options:
-                    - rc
-                    - final
+    release:
+        types: [published]
 concurrency: ${{ github.workflow }}
 jobs:
     release:
-        uses: matrix-org/matrix-js-sdk/.github/workflows/release-make.yml@develop
+        uses: matrix-org/matrix-js-sdk/.github/workflows/release-action.yml@develop
         secrets:
             ELEMENT_BOT_TOKEN: ${{ secrets.ELEMENT_BOT_TOKEN }}
-            GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
-            GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-        with:
-            final: ${{ inputs.mode == 'final' }}
-            include-changes: element-hq/element-web@$VERSION
-            gpg-fingerprint: ${{ vars.GPG_FINGERPRINT }}
-            expected-asset-count: 1
