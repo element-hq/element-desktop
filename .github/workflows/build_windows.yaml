@@ -111,6 +111,7 @@ jobs:
 
             - name: Install and configure eSigner CKA
               if: inputs.sign
+              shell: powershell
               run: |
                   Set-StrictMode -Version 'Latest'
 
@@ -156,7 +157,6 @@ jobs:
             - run: yarn run build:res
 
             - name: Build App
-              shell: powershell
               run: |
                   yarn electron-builder --publish never -w ${{ steps.config.outputs.build-args }}
 
