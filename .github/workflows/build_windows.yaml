@@ -156,6 +156,7 @@ jobs:
             - run: yarn run build:res
 
             - name: Build App
+              shell: powershell
               run: |
                   yarn electron-builder --publish never -w ${{ steps.config.outputs.build-args }}
 
