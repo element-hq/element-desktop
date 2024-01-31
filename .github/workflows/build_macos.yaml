@@ -53,6 +53,11 @@ jobs:
                   rustup default stable
                   rustup target add aarch64-apple-darwin
 
+            # M1 macos-14 comes without Python preinstalled
+            - uses: actions/setup-python@v5
+              with:
+                python-version: "3.12"
+
             - uses: actions/setup-node@v4
               with:
                   node-version-file: package.json
