@@ -29,7 +29,7 @@ on:
                 description: "The URL to which the output will be deployed."
 jobs:
     build:
-        runs-on: macos-latest
+        runs-on: macos-14 # M1
         environment: ${{ inputs.sign && 'packages.element.io' || '' }}
         steps:
             - uses: actions/checkout@v4
