@@ -1,6 +1,11 @@
 # This workflow relies on actions/cache to store the hak dependency artifacts as they take a long time to build
 # Due to this extra care must be taken to only ever run all build_* scripts against the same branch to ensure
 # the correct cache scoping, and additional care must be taken to not run untrusted actions on the develop branch.
+
+# windows-latest by default uses the pwsh shell which breaks codeSigningCert in the workflow
+defaults:
+    run:
+        shell: powershell
 on:
     workflow_call:
         secrets:
