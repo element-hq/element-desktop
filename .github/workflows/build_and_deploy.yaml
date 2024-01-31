@@ -103,9 +103,9 @@ jobs:
             - linux
             - windows
         runs-on: ubuntu-latest
-        name: ${{ needs.prepare.outputs.deploy && 'Deploy' || 'Deploy (dry-run)' }}
+        name: ${{ needs.prepare.outputs.deploy == 'true' && 'Deploy' || 'Deploy (dry-run)' }}
         if: always() && !failure() && !cancelled()
-        environment: ${{ needs.prepare.outputs.deploy && 'packages.element.io' || '' }}
+        environment: ${{ needs.prepare.outputs.deploy == 'true' && 'packages.element.io' || '' }}
         steps:
             - name: Download artifacts
               uses: actions/download-artifact@v4
@@ -181,14 +181,14 @@ jobs:
                   fi
 
             - name: Stash packages.element.io
-              if: ${{ !needs.prepare.outputs.deploy }}
+              if: needs.prepare.outputs.deploy == 'false'
               uses: actions/upload-artifact@v4
               with:
                   name: packages.element.io
                   path: packages.element.io
 
             - name: Deploy artifacts
-              if: needs.prepare.outputs.deploy
+              if: needs.prepare.outputs.deploy == 'true'
               run: |
                   aws s3 cp --recursive packages.element.io/ s3://$R2_BUCKET/$DEPLOYMENT_DIR --endpoint-url $R2_URL --region auto
               env:
@@ -198,7 +198,7 @@ jobs:
                   DEPLOYMENT_DIR: ${{ needs.prepare.outputs.packages-dir }}
 
             - name: Notify packages.element.io of new files
-              if: needs.prepare.outputs.deploy
+              if: needs.prepare.outputs.deploy == 'true'
               uses: peter-evans/repository-dispatch@bf47d102fdb849e755b0b0023ea3e81a44b6f570 # v2
               with:
                   token: ${{ secrets.ELEMENT_BOT_TOKEN }}
@@ -215,7 +215,7 @@ jobs:
                   done
 
             - name: Stash debs
-              if: ${{ !needs.prepare.outputs.deploy && needs.linux.result == 'success' }}
+              if: needs.prepare.outputs.deploy == 'false' && needs.linux.result == 'success'
               uses: actions/upload-artifact@v4
               with:
                   name: debs
@@ -225,7 +225,7 @@ jobs:
 
             - name: Publish amd64 deb to packages.element.io
               uses: element-hq/packages.element.io@master
-              if: needs.prepare.outputs.deploy && needs.linux.result == 'success'
+              if: needs.prepare.outputs.deploy == 'true' && needs.linux.result == 'success'
               with:
                   file: ${{ steps.deb.outputs.amd64 }}
                   github-token: ${{ secrets.ELEMENT_BOT_TOKEN }}
@@ -235,7 +235,7 @@ jobs:
 
             - name: Publish arm64 deb to packages.element.io
               uses: element-hq/packages.element.io@master
-              if: needs.prepare.outputs.deploy && needs.linux.result == 'success'
+              if: needs.prepare.outputs.deploy == 'true' && needs.linux.result == 'success'
               with:
                   file: ${{ steps.deb.outputs.arm64 }}
                   github-token: ${{ secrets.ELEMENT_BOT_TOKEN }}
