@@ -4,8 +4,8 @@
 
 # window-latest by default uses the pwsh shell which breaks codeSigningCert in the workflow
 defaults:
-  run:
-    shell: powershell
+    run:
+        shell: powershell
 on:
     workflow_call:
         secrets:
