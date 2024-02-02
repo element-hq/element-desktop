@@ -199,7 +199,7 @@ jobs:
 
             - name: Notify packages.element.io of new files
               if: needs.prepare.outputs.deploy == 'true'
-              uses: peter-evans/repository-dispatch@bf47d102fdb849e755b0b0023ea3e81a44b6f570 # v2
+              uses: peter-evans/repository-dispatch@ff45666b9427631e3450c54a1bcbee4d9ff4d7c0 # v3
               with:
                   token: ${{ secrets.ELEMENT_BOT_TOKEN }}
                   repository: element-hq/packages.element.io
