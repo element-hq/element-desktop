@@ -23,3 +23,16 @@ jobs:
             include-changes: element-hq/element-web@$VERSION
             gpg-fingerprint: ${{ vars.GPG_FINGERPRINT }}
             expected-asset-count: 1
+
+    check:
+        name: Post release checks
+        runs-on: ubuntu-latest
+        steps:
+            - name: Wait for desktop packaging
+              uses: t3chguy/wait-on-check-action@18541021811b56544d90e0f073401c2b99e249d6 # fork
+              with:
+                  ref: master
+                  repo-token: ${{ secrets.GITHUB_TOKEN }}
+                  wait-interval: 10
+                  check-name: Deploy
+                  allowed-conclusions: success
