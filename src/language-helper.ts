@@ -91,11 +91,21 @@ export class AppLocalization {
         this.resetLocalizedUI();
     }
 
+    // Fallbacks to a locale (e.g. en-gb to [en-gb, en, en-en] or just en to [en, en-en])
+    private variations(locale: string): string[] {
+        const [genericPart, specificPart] = locale.split("-");
+        const candidates = [locale];
+        if (specificPart) {
+            candidates.push(genericPart);
+        }
+        if (genericPart != specificPart) {
+            candidates.push(`${genericPart}-${genericPart}`);
+        }
+        return candidates;
+    }
+
     // Format language strings from normalized form to non-normalized form (e.g. en-gb to en_GB)
     private denormalize(locale: string): string {
-        if (locale === "en") {
-            locale = "en_EN";
-        }
         const parts = locale.split("-");
         if (parts.length > 1) {
             parts[1] = parts[1].toUpperCase();
@@ -120,7 +130,7 @@ export class AppLocalization {
             locales = [locales];
         }
 
-        const loadedLocales = locales.filter((locale) => {
+        const loadedLocales = locales.flatMap(this.variations).filter((locale) => {
             const translations = this.fetchTranslationJson(locale);
             if (translations !== null) {
                 counterpart.registerTranslations(locale, translations);
