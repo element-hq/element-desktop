@@ -115,8 +115,8 @@ export class AppLocalization {
 
     public fetchTranslationJson(locale: string): Record<string, string> | null {
         try {
-            console.log("Fetching translation json for locale: " + locale);
-            return loadJsonFile(__dirname, "i18n", "strings", `${this.denormalize(locale)}.json`);
+            console.log(`Fetching translation json for locale: ${locale}`);
+            return loadJsonFile(__dirname, "i18n", "strings", `${locale}.json`);
         } catch (e) {
             console.log(`Could not fetch translation json for locale: '${locale}'`, e);
             return null;
@@ -130,7 +130,7 @@ export class AppLocalization {
             locales = [locales];
         }
 
-        const loadedLocales = locales.flatMap(this.variations).filter((locale) => {
+        const loadedLocales = locales.flatMap(this.variations).map(this.denormalize).filter((locale) => {
             const translations = this.fetchTranslationJson(locale);
             if (translations !== null) {
                 counterpart.registerTranslations(locale, translations);
