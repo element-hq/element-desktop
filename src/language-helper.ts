@@ -73,7 +73,7 @@ export class AppLocalization {
     private readonly localizedComponents?: Set<Component>;
 
     public constructor({ store, components = [] }: { store: TypedStore; components: Component[] }) {
-        counterpart.registerTranslations(FALLBACK_LOCALE, this.fetchTranslationJson("en_EN"));
+        counterpart.registerTranslations(FALLBACK_LOCALE, this.fetchTranslationJson("en_EN") ?? {});
         counterpart.setFallbackLocale(FALLBACK_LOCALE);
         counterpart.setSeparator("|");
 
@@ -103,13 +103,13 @@ export class AppLocalization {
         return parts.join("_");
     }
 
-    public fetchTranslationJson(locale: string): Record<string, string> {
+    public fetchTranslationJson(locale: string): Record<string, string> | null {
         try {
             console.log("Fetching translation json for locale: " + locale);
             return loadJsonFile(__dirname, "i18n", "strings", `${this.denormalize(locale)}.json`);
         } catch (e) {
             console.log(`Could not fetch translation json for locale: '${locale}'`, e);
-            return {};
+            return null;
         }
     }
 
