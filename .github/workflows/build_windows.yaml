@@ -35,7 +35,7 @@ jobs:
         env:
             SIGNTOOL_PATH: "C:/Program Files (x86)/Windows Kits/10/bin/10.0.22000.0/x86/signtool.exe"
         steps:
-            - uses: kanga333/variable-mapper@3681b75f5c6c00162721168fb91ab74925eaebcb
+            - uses: nbucic/variable-mapper@0673f6891a0619ba7c002ecfed0f9f4f39017b6f
               id: config
               with:
                   key: "${{ inputs.arch }}"
