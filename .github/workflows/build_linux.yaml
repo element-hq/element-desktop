@@ -33,7 +33,7 @@ jobs:
             run:
                 shell: bash
         steps:
-            - uses: kanga333/variable-mapper@master
+            - uses: nbucic/variable-mapper@0673f6891a0619ba7c002ecfed0f9f4f39017b6f
               id: config
               with:
                   key: "${{ inputs.arch }}"
