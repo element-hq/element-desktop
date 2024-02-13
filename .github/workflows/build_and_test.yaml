@@ -22,9 +22,6 @@ jobs:
                 arch: [x64, ia32]
         with:
             arch: ${{ matrix.arch }}
-            # TODO remove this before merging
-            sign: true
-        secrets: inherit
 
     # This allows core contributors to test changes to the dockerbuild image within a pull request
     linux_docker:
