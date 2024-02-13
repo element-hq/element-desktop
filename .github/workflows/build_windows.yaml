@@ -119,10 +119,10 @@ jobs:
               run: |
                   Set-StrictMode -Version 'Latest'
 
-                  # Download
-                  Invoke-WebRequest -OutFile eSigner_CKA.zip "${{ env.ESIGNER_URL }}"
-                  Expand-Archive -Path eSigner_CKA.zip -DestinationPath C:\Reference
-                  Rename-Item -Path *_build_*.exe -NewName eSigner_CKA.exe
+                  # Download, extract, and rename
+                  Invoke-WebRequest -OutFile eSigner_CKA.zip "$env:ESIGNER_URL"
+                  Expand-Archive -Path eSigner_CKA.zip -DestinationPath .
+                  Get-ChildItem -Path * -Include "*_build_*.exe" | Rename-Item -NewName eSigner_CKA.exe
 
                   # Install
                   New-Item -ItemType Directory -Force -Path "$env:INSTALL_DIR"
