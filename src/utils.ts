@@ -15,6 +15,8 @@ limitations under the License.
 */
 
 import crypto from "crypto";
+import fs from "node:fs";
+import path from "node:path";
 
 export async function randomArray(size: number): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -26,4 +28,16 @@ export async function randomArray(size: number): Promise<string> {
             }
         });
     });
+}
+
+type JsonValue = null | string | number;
+type JsonArray = Array<JsonValue | JsonObject | JsonArray>;
+interface JsonObject {
+    [key: string]: JsonObject | JsonArray | JsonValue;
+}
+type Json = JsonArray | JsonObject;
+
+export function loadJsonFile<T extends Json>(...paths: string[]): T {
+    const file = fs.readFileSync(path.join(...paths), { encoding: "utf-8" });
+    return JSON.parse(file);
 }
