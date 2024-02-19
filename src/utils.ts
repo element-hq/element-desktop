@@ -37,6 +37,11 @@ interface JsonObject {
 }
 type Json = JsonArray | JsonObject;
 
+/**
+ * Utility to load JSON file from the local filesystem synchronously.
+ * Preferred over `require` due to how it may execute javascript code if the file does not exist.
+ * @param paths takes an array of paths which will be joined using the system's path delimiter
+ */
 export function loadJsonFile<T extends Json>(...paths: string[]): T {
     const file = fs.readFileSync(path.join(...paths), { encoding: "utf-8" });
     return JSON.parse(file);
