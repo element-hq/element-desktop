@@ -19,6 +19,7 @@ import { TranslationKey as TKey } from "matrix-web-i18n";
 
 import type Store from "electron-store";
 import type EN from "./i18n/strings/en_EN.json";
+import { loadJsonFile } from "./utils";
 
 const FALLBACK_LOCALE = "en";
 
@@ -105,7 +106,7 @@ export class AppLocalization {
     public fetchTranslationJson(locale: string): Record<string, string> {
         try {
             console.log("Fetching translation json for locale: " + locale);
-            return require(`./i18n/strings/${this.denormalize(locale)}.json`);
+            return loadJsonFile(`./i18n/strings/${this.denormalize(locale)}.json`);
         } catch (e) {
             console.log(`Could not fetch translation json for locale: '${locale}'`, e);
             return {};

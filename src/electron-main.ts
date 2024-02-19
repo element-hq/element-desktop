@@ -41,6 +41,7 @@ import { getProfileFromDeeplink, protocolInit } from "./protocol";
 import { _t, AppLocalization } from "./language-helper";
 import { setDisplayMediaCallback } from "./displayMediaCallback";
 import { setupMacosTitleBar } from "./macos-titlebar";
+import { loadJsonFile } from "./utils";
 
 const argv = minimist(process.argv, {
     alias: { help: "h" },
@@ -143,8 +144,7 @@ async function loadConfig(): Promise<void> {
     const asarPath = await getAsarPath();
 
     try {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        global.vectorConfig = require(asarPath + "config.json");
+        global.vectorConfig = loadJsonFile(asarPath, "config.json");
     } catch (e) {
         // it would be nice to check the error code here and bail if the config
         // is unparsable, but we get MODULE_NOT_FOUND in the case of a missing
@@ -155,8 +155,7 @@ async function loadConfig(): Promise<void> {
 
     try {
         // Load local config and use it to override values from the one baked with the build
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const localConfig = require(path.join(app.getPath("userData"), "config.json"));
+        const localConfig = loadJsonFile(app.getPath("userData"), "config.json");
 
         // If the local config has a homeserver defined, don't use the homeserver from the build
         // config. This is to avoid a problem where Riot thinks there are multiple homeservers
