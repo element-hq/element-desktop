@@ -106,7 +106,7 @@ export class AppLocalization {
     public fetchTranslationJson(locale: string): Record<string, string> {
         try {
             console.log("Fetching translation json for locale: " + locale);
-            return loadJsonFile(`./i18n/strings/${this.denormalize(locale)}.json`);
+            return loadJsonFile(__dirname, "i18n", "strings", `${this.denormalize(locale)}.json`);
         } catch (e) {
             console.log(`Could not fetch translation json for locale: '${locale}'`, e);
             return {};
