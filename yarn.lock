@@ -1404,7 +1404,7 @@
     node-gyp "^10.0.0"
     which "^4.0.0"
 
-"@pkgjs/parseargs@0.11.0", "@pkgjs/parseargs@^0.11.0":
+"@pkgjs/parseargs@^0.11.0":
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
   integrity sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==
@@ -1467,17 +1467,17 @@
     semver "^7.3.5"
     validate-npm-package-name "^4.0.0"
 
-"@pnpm/npm-resolver@18.0.2":
-  version "18.0.2"
-  resolved "https://registry.yarnpkg.com/@pnpm/npm-resolver/-/npm-resolver-18.0.2.tgz#992cadfc79d2148577ff6523dd8022b4aabaef64"
-  integrity sha512-YfjSHpaFgYvqMomKNLMa49pVabGvaSeEBX3J9j1v7FGtzad7SPZ+BH7ObPLHkIm4rA9K5zvuTJ8gBwMiGQJcQg==
+"@pnpm/npm-resolver@18.1.0":
+  version "18.1.0"
+  resolved "https://registry.yarnpkg.com/@pnpm/npm-resolver/-/npm-resolver-18.1.0.tgz#bbafcdf88391ee84e2dc78c2b599b54dbbc8f8e3"
+  integrity sha512-fUYKX/iHiHldL0VRVvkQI35YK2jWhZEkPO6rrGke8309+LKAo12v833nBttMDpQrtHefmqhB4mhCzQq6L2Xqmg==
   dependencies:
     "@pnpm/core-loggers" "9.0.6"
     "@pnpm/error" "5.0.2"
     "@pnpm/fetching-types" "5.0.0"
     "@pnpm/graceful-fs" "3.2.0"
     "@pnpm/resolve-workspace-range" "5.0.1"
-    "@pnpm/resolver-base" "11.0.2"
+    "@pnpm/resolver-base" "11.1.0"
     "@pnpm/types" "9.4.2"
     "@zkochan/retry" "^0.2.0"
     encode-registry "^3.0.1"
@@ -1501,10 +1501,10 @@
   dependencies:
     semver "^7.4.0"
 
-"@pnpm/resolver-base@11.0.2":
-  version "11.0.2"
-  resolved "https://registry.yarnpkg.com/@pnpm/resolver-base/-/resolver-base-11.0.2.tgz#e448577cc4235b6d48b08e7b068da1132e7cde18"
-  integrity sha512-g6VXB/LK7DugXiCPG62qmYtuypVt44nnwyXYkTv86FKudI5d5Wy1FLkYAYKCj+No9h1GG3eSSwGH1NL0y4IbYg==
+"@pnpm/resolver-base@11.1.0":
+  version "11.1.0"
+  resolved "https://registry.yarnpkg.com/@pnpm/resolver-base/-/resolver-base-11.1.0.tgz#e640ba9ae096bf05a0b905496a63509556322618"
+  integrity sha512-y2qKaj18pwe1VWc3YXEitdYFo+WqOOt60aqTUuOVkJAirUzz0DzuYh3Ifct4znYWPdgUXHaN5DMphNF5iL85rA==
   dependencies:
     "@pnpm/types" "9.4.2"
 
@@ -1513,13 +1513,13 @@
   resolved "https://registry.yarnpkg.com/@pnpm/types/-/types-9.4.2.tgz#0a34c3c41d5452461d8d8958374a727f9c46cfb2"
   integrity sha512-g1hcF8Nv4gd76POilz9gD4LITAPXOe5nX4ijgr8ixCbLQZfcpYiMfJ+C1RlMNRUDo8vhlNB4O3bUlxmT6EAQXA==
 
-"@pnpm/workspace.pkgs-graph@^2.0.13":
-  version "2.0.13"
-  resolved "https://registry.yarnpkg.com/@pnpm/workspace.pkgs-graph/-/workspace.pkgs-graph-2.0.13.tgz#3ac17ff64dff524c87df8e0239f98dde74b11969"
-  integrity sha512-XwpApD7dGCxL0xAwNANakxq4Ou91WMWZDF/IkMDnVGS1I3Xxh9tpQExpfpuxFPd//WofPJnxOi6AlXQS4D9bFA==
+"@pnpm/workspace.pkgs-graph@^2.0.14":
+  version "2.0.14"
+  resolved "https://registry.yarnpkg.com/@pnpm/workspace.pkgs-graph/-/workspace.pkgs-graph-2.0.14.tgz#3ea12b8d95987e64bc98876422ea7ad578cd022a"
+  integrity sha512-SBXXyWDkPEoaLTjLRyQzRHoBYH+P0NLcIjX1yPUxuJiMTvGOMzjpLWTuxYNVe/P0V0VQMrjpJFaJPjlViNLhzg==
   dependencies:
     "@pnpm/npm-package-arg" "^1.0.0"
-    "@pnpm/npm-resolver" "18.0.2"
+    "@pnpm/npm-resolver" "18.1.0"
     "@pnpm/resolve-workspace-range" "5.0.1"
     ramda "npm:@pnpm/ramda@0.28.1"
 
@@ -3235,9 +3235,9 @@ electron-window-state@^5.0.3:
     mkdirp "^0.5.1"
 
 electron@^28.0.0:
-  version "28.1.4"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-28.1.4.tgz#3e1772521d19a8c70162c6c86deb3e57bb28721f"
-  integrity sha512-WE6go611KOhtH6efRPMnVC7FE7DCKnQ3ZyHFeI1DbaCy8OU4UjZ8/CZGcuZmZgRdxSBEHoHdgaJkWRHZzF0FOg==
+  version "28.2.1"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-28.2.1.tgz#8edf2be24d97160b7eb52b7ce9a2424cf14c0791"
+  integrity sha512-wlzXf+OvOiVlBf9dcSeMMf7Q+N6DG+wtgFbMK0sA/JpIJcdosRbLMQwLg/LTwNVKIbmayqFLDp4FmmFkEMhbYA==
   dependencies:
     "@electron/get" "^2.0.0"
     "@types/node" "^18.11.18"
@@ -3611,14 +3611,7 @@ fast-safe-stringify@^2.0.7:
   resolved "https://registry.yarnpkg.com/fast-safe-stringify/-/fast-safe-stringify-2.1.1.tgz#c406a83b6e70d9e35ce3b30a81141df30aeba884"
   integrity sha512-W+KJc2dmILlPplD/H4K9l9LcAHAfPtP6BY84uVLXQ6Evcz9Lcg33Y2z1IVblT6xdY54PXYVHEv+0Wpq8Io6zkA==
 
-fastq@^1.15.0:
-  version "1.16.0"
-  resolved "https://registry.yarnpkg.com/fastq/-/fastq-1.16.0.tgz#83b9a9375692db77a822df081edb6a9cf6839320"
-  integrity sha512-ifCoaXsDrsdkWTtiNJX5uzHDsrck5TzfKKDcuFFTIrrc/BS076qgEIfoIy1VeZqViznfKiysPYTh/QeHtnIsYA==
-  dependencies:
-    reusify "^1.0.4"
-
-fastq@^1.6.0:
+fastq@^1.15.0, fastq@^1.6.0:
   version "1.17.0"
   resolved "https://registry.yarnpkg.com/fastq/-/fastq-1.17.0.tgz#ca5e1a90b5e68f97fc8b61330d5819b82f5fab03"
   integrity sha512-zGygtijUMT7jnk3h26kUms3BkSDp4IfIKjmnqI2tvx6nuBfiF1UqOxbnLfzdv+apBy+53oaImsKtMw/xYbW+1w==
@@ -4158,12 +4151,7 @@ ignore-walk@^6.0.4:
   dependencies:
     minimatch "^9.0.0"
 
-ignore@^5.1.8:
-  version "5.3.0"
-  resolved "https://registry.yarnpkg.com/ignore/-/ignore-5.3.0.tgz#67418ae40d34d6999c95ff56016759c718c82f78"
-  integrity sha512-g7dmpshy+gD7mh88OC9NwSGTKoc3kyLAZQRU1mt53Aw/vnvfXnbC+F/7F7QoYVKbV+KNvJx8wArewKy1vXMtlg==
-
-ignore@^5.2.0, ignore@^5.2.4:
+ignore@^5.1.8, ignore@^5.2.0, ignore@^5.2.4:
   version "5.3.1"
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-5.3.1.tgz#5073e554cd42c5b33b394375f538b8593e34d4ef"
   integrity sha512-5Fytz/IraMjqpwfd34ke28PTVMjZjJG2MPn5t7OE4eUCUNf8BAa7b5WUS9/Qvr6mwOQS7Mk6vdsMno5he+T8Xw==
@@ -4588,17 +4576,16 @@ keyv@^4.0.0, keyv@^4.5.3:
     json-buffer "3.0.1"
 
 knip@^4.0.1:
-  version "4.2.1"
-  resolved "https://registry.yarnpkg.com/knip/-/knip-4.2.1.tgz#bec8ba809acee3dedeb0cd28b0599915e37007cc"
-  integrity sha512-KG++YCus11YyQQeiBxhXxv6NCJzol4AYER9q1kwZGFw+gwDzG/0Q6MN87McYFN74nGRX4O2xM5CA3TTPcbpn5A==
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/knip/-/knip-4.3.0.tgz#68e0db24a78d8bf994bb03e8ca2aeb2426b962a5"
+  integrity sha512-evAFvFE2XI/4VehP/9bAsWj8f4nWuYOFYSOk4DIM7mdkDr/co/RlXO7wxrGjvX2I29/fbyNb9im73NvvFePzXw==
   dependencies:
     "@ericcornelissen/bash-parser" "0.5.2"
     "@nodelib/fs.walk" "2.0.0"
     "@npmcli/map-workspaces" "3.0.4"
     "@npmcli/package-json" "5.0.0"
-    "@pkgjs/parseargs" "0.11.0"
     "@pnpm/logger" "5.0.0"
-    "@pnpm/workspace.pkgs-graph" "^2.0.13"
+    "@pnpm/workspace.pkgs-graph" "^2.0.14"
     "@snyk/github-codeowners" "1.1.0"
     "@types/picomatch" "2.3.3"
     easy-table "1.2.0"
@@ -4609,8 +4596,8 @@ knip@^4.0.1:
     minimist "1.2.8"
     picocolors "1.0.0"
     picomatch "3.0.1"
-    pretty-ms "8.0.0"
-    smol-toml "1.1.3"
+    pretty-ms "9.0.0"
+    smol-toml "1.1.4"
     strip-json-comments "5.0.1"
     summary "2.1.0"
     zod "3.22.4"
@@ -4731,9 +4718,9 @@ lowercase-keys@^2.0.0:
   integrity sha512-tqNXrS78oMOE73NMxK4EMLQsQowWf8jKooH9g7xPavRT706R6bkQJ6DY2Te7QukaZsulxa30wQ7bk0pm4XiHmA==
 
 lru-cache@^10.0.1, lru-cache@^10.0.2, "lru-cache@^9.1.1 || ^10.0.0":
-  version "10.1.0"
-  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-10.1.0.tgz#2098d41c2dc56500e6c88584aa656c84de7d0484"
-  integrity sha512-/1clY/ui8CzjKFyjdvwPWJUYKiFVXG2I2cY0ssG7h4+hwk+XOIX7ZSG9Q7TW8TW3Kp3BUSqgFWBLgL4PJ+Blag==
+  version "10.2.0"
+  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-10.2.0.tgz#0bd445ca57363465900f4d1f9bd8db343a4d95c3"
+  integrity sha512-2bIM8x+VAf6JT4bKAljS1qUWgMsqZRPGJS6FSahIMPVvctcNhyVp7AJu7quxOW9jwkryBReKZY5tY5JYv2n/7Q==
 
 lru-cache@^5.1.1:
   version "5.1.1"
@@ -5469,10 +5456,10 @@ parse-json@^5.0.0:
     json-parse-even-better-errors "^2.3.0"
     lines-and-columns "^1.1.6"
 
-parse-ms@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/parse-ms/-/parse-ms-3.0.0.tgz#3ea24a934913345fcc3656deda72df921da3a70e"
-  integrity sha512-Tpb8Z7r7XbbtBTrM9UhpkzzaMrqA2VXMT3YChzYltwV3P3pM6t8wl7TvpMnSTosz1aQAdVib7kdoys7vYOPerw==
+parse-ms@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/parse-ms/-/parse-ms-4.0.0.tgz#c0c058edd47c2a590151a718990533fd62803df4"
+  integrity sha512-TXfryirbmq34y8QBwgqCVLi+8oA3oWx2eAnSn62ITyEhEYaWRlVZ2DvMM9eZbMs/RfxPu/PK/aBLyGj4IrqMHw==
 
 parse-npm-tarball-url@^3.0.0:
   version "3.0.0"
@@ -5610,12 +5597,12 @@ prettier@^3.0.0:
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.2.4.tgz#4723cadeac2ce7c9227de758e5ff9b14e075f283"
   integrity sha512-FWu1oLHKCrtpO1ypU6J0SbK2d9Ckwysq6bHj/uaCP26DxrPpppCLQRGVuqAxSTvhF00AcvDRyYrLNW7ocBhFFQ==
 
-pretty-ms@8.0.0:
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/pretty-ms/-/pretty-ms-8.0.0.tgz#a35563b2a02df01e595538f86d7de54ca23194a3"
-  integrity sha512-ASJqOugUF1bbzI35STMBUpZqdfYKlJugy6JBziGi2EE+AL5JPJGSzvpeVXojxrr0ViUYoToUjb5kjSEGf7Y83Q==
+pretty-ms@9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/pretty-ms/-/pretty-ms-9.0.0.tgz#53c57f81171c53be7ce3fd20bdd4265422bc5929"
+  integrity sha512-E9e9HJ9R9NasGOgPaPE8VMeiPKAyWR5jcFpNnwIejslIhWqdqOrb2wShBsncMPUb+BcCd2OPYfh7p2W6oemTng==
   dependencies:
-    parse-ms "^3.0.0"
+    parse-ms "^4.0.0"
 
 proc-log@^3.0.0:
   version "3.0.0"
@@ -6109,10 +6096,10 @@ smart-buffer@^4.0.2, smart-buffer@^4.2.0:
   resolved "https://registry.yarnpkg.com/smart-buffer/-/smart-buffer-4.2.0.tgz#6e1d71fa4f18c05f7d0ff216dd16a481d0e8d9ae"
   integrity sha512-94hK0Hh8rPqQl2xXc3HsaBoOXKV20MToPkcXvwbISWLEs+64sBq5kFgn2kJDHb1Pry9yrP0dxrCI9RRci7RXKg==
 
-smol-toml@1.1.3:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/smol-toml/-/smol-toml-1.1.3.tgz#c7323eba2446001b7ffa6116e1671ace8053f281"
-  integrity sha512-qTyy6Owjho1ISBmxj4HdrFWB2kMQ5RczU6J04OqslSfdSH656OIHuomHS4ZDvhwm37nig/uXyiTMJxlC9zIVfw==
+smol-toml@1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/smol-toml/-/smol-toml-1.1.4.tgz#08c23b105f56f17e57b0a77c7edcb10b75a62c5c"
+  integrity sha512-Y0OT8HezWsTNeEOSVxDnKOW/AyNXHQ4BwJNbAXlLTF5wWsBvrcHhIkE5Rf8kQMLmgf7nDX3PVOlgC6/Aiggu3Q==
 
 socks-proxy-agent@^8.0.1:
   version "8.0.2"
@@ -6153,9 +6140,9 @@ spdx-correct@^3.0.0:
     spdx-license-ids "^3.0.0"
 
 spdx-exceptions@^2.1.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/spdx-exceptions/-/spdx-exceptions-2.3.0.tgz#3f28ce1a77a00372683eade4a433183527a2163d"
-  integrity sha512-/tTrYOC7PPI1nUAgx34hUpqXuyJG+DTHJTnIULG4rDygi4xu/tfgmq1e1cIRwRzwZgo4NLySi+ricLkZkw4i5A==
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/spdx-exceptions/-/spdx-exceptions-2.4.0.tgz#c07a4ede25b16e4f78e6707bbd84b15a45c19c1b"
+  integrity sha512-hcjppoJ68fhxA/cjbN4T8N6uCUejN8yFw69ttpqtBeCbF3u13n7mb31NB9jKwGTTWWnt9IbRA/mf1FprYS8wfw==
 
 spdx-expression-parse@^3.0.0:
   version "3.0.1"
