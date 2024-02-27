@@ -10,4 +10,4 @@ jobs:
     draft:
         uses: matrix-org/matrix-js-sdk/.github/workflows/release-drafter-workflow.yml@develop
         with:
-            include-changes: element-hq/element-web@$VERSION
+            include-changes: element-hq/element-web~$VERSION
