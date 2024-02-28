@@ -15,6 +15,11 @@ on:
                 required: false
                 default: false
                 description: "Whether the build is a Nightly and to calculate the version strings new builds should use"
+            deploy:
+                type: boolean
+                required: false
+                default: false
+                description: "Whether the build should be deployed to production"
         secrets:
             # Required if `nightly` is set
             CF_R2_ACCESS_KEY_ID:
@@ -29,10 +34,13 @@ on:
             packages-dir:
                 description: "The directory non-deb packages for this run should live in within packages.element.io"
                 value: ${{ inputs.nightly && 'nightly' || 'desktop' }}
-            # This is just a simple pass-through of the input to simplify reuse of complex inline conditions
+            # These are just simple pass-throughs of the input to simplify reuse of complex inline conditions
             config:
                 description: "The relative path to the config file for this run"
                 value: ${{ inputs.config }}
+            deploy:
+                description: "The relative path to the config file for this run"
+                value: ${{ inputs.deploy }}
 jobs:
     prepare:
         name: Prepare
@@ -41,10 +49,11 @@ jobs:
         outputs:
             nightly-version: ${{ steps.versions.outputs.nightly }}
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4
 
-            - uses: actions/setup-node@v3
+            - uses: actions/setup-node@v4
               with:
+                  node-version-file: package.json
                   cache: "yarn"
 
             - name: Install Deps
@@ -74,6 +83,7 @@ jobs:
 
                   # Pick the greatest one
                   VERSION=$(cat VERSIONS | sort -uf | tail -n1)
+                  echo "Found latest nightly version $VERSION"
                   # Increment it
                   echo "nightly=$(scripts/generate-nightly-version.ts --latest $VERSION)" >> $GITHUB_OUTPUT
               env:
@@ -124,11 +134,11 @@ jobs:
                   echo "| Component   | Version |" >> $GITHUB_STEP_SUMMARY
                   echo "| ----------- | ------- |" >> $GITHUB_STEP_SUMMARY
                   echo "| Bundle Hash | $BUNDLE_HASH |" >> $GITHUB_STEP_SUMMARY
-                  echo "| Element Web | [$WEB_VERSION](https://github.com/vector-im/element-web/commit/$WEB_VERSION) |" >> $GITHUB_STEP_SUMMARY
+                  echo "| Element Web | [$WEB_VERSION](https://github.com/element-hq/element-web/commit/$WEB_VERSION) |" >> $GITHUB_STEP_SUMMARY
                   echo "| React SDK   | [$REACT_VERSION](https://github.com/matrix-org/matrix-react-sdk/commit/$REACT_VERSION) |" >> $GITHUB_STEP_SUMMARY
                   echo "| JS SDK      | [$JS_VERSION](https://github.com/matrix-org/matrix-js-sdk/commit/$JS_VERSION) |" >> $GITHUB_STEP_SUMMARY
 
-            - uses: actions/upload-artifact@v3
+            - uses: actions/upload-artifact@v4
               with:
                   name: webapp
                   retention-days: 1

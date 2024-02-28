@@ -28,16 +28,12 @@ export default async function (hakEnv: HakEnv, moduleInfo: DependencyInfo): Prom
 
     console.log("Running yarn install");
     await new Promise<void>((resolve, reject) => {
-        const proc = childProcess.spawn(
-            "yarn" + (hakEnv.isWin() ? ".cmd" : ""),
-            ["install"],
-            {
-                cwd: moduleInfo.moduleBuildDir,
-                env,
-                shell: true,
-                stdio: "inherit",
-            },
-        );
+        const proc = childProcess.spawn("yarn" + (hakEnv.isWin() ? ".cmd" : ""), ["install"], {
+            cwd: moduleInfo.moduleBuildDir,
+            env,
+            shell: true,
+            stdio: "inherit",
+        });
         proc.on("exit", (code) => {
             code ? reject(code) : resolve();
         });
@@ -47,16 +43,12 @@ export default async function (hakEnv: HakEnv, moduleInfo: DependencyInfo): Prom
 
     console.log("Running yarn build");
     await new Promise<void>((resolve, reject) => {
-        const proc = childProcess.spawn(
-            "yarn" + (hakEnv.isWin() ? ".cmd" : ""),
-            ["run", buildTarget],
-            {
-                cwd: moduleInfo.moduleBuildDir,
-                env,
-                shell: true,
-                stdio: "inherit",
-            },
-        );
+        const proc = childProcess.spawn("yarn" + (hakEnv.isWin() ? ".cmd" : ""), ["run", buildTarget], {
+            cwd: moduleInfo.moduleBuildDir,
+            env,
+            shell: true,
+            stdio: "inherit",
+        });
         proc.on("exit", (code) => {
             code ? reject(code) : resolve();
         });

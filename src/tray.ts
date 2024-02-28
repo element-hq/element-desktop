@@ -72,7 +72,9 @@ export function create(config: IConfig): void {
         guid = uuidv5(`${app.getName()}-${app.getPath("userData")}`, getUuid());
     }
 
-    trayIcon = new Tray(defaultIcon, guid);
+    // Passing guid=undefined on Windows will cause it to throw `Error: Invalid GUID format`
+    // The type here is wrong, the param must be omitted, never undefined.
+    trayIcon = guid ? new Tray(defaultIcon, guid) : new Tray(defaultIcon);
     trayIcon.setToolTip(config.brand);
     initApplicationMenu();
     trayIcon.on("click", toggleWin);

@@ -48,6 +48,7 @@ jobs:
             config: element.io/${{ inputs.mode || (github.event_name == 'release' && 'release') || 'nightly' }}
             version: ${{ (inputs.mode != 'release' && github.event_name != 'release') && 'develop' || '' }}
             nightly: ${{ inputs.mode != 'release' && github.event_name != 'release' }}
+            deploy: ${{ inputs.deploy || (github.event_name != 'workflow_dispatch' && github.event.release.prerelease != true) }}
         secrets:
             CF_R2_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
             CF_R2_TOKEN: ${{ secrets.CF_R2_TOKEN }}
@@ -58,12 +59,11 @@ jobs:
         name: Windows ${{ matrix.arch }}
         strategy:
             matrix:
-                arch: [x86, x64]
+                arch: [ia32, x64]
         uses: ./.github/workflows/build_windows.yaml
         secrets: inherit
         with:
             sign: true
-            deploy-mode: true
             arch: ${{ matrix.arch }}
             version: ${{ needs.prepare.outputs.nightly-version }}
 
@@ -75,67 +75,120 @@ jobs:
         secrets: inherit
         with:
             sign: true
-            deploy-mode: true
             base-url: https://packages.element.io/${{ needs.prepare.outputs.packages-dir }}
             version: ${{ needs.prepare.outputs.nightly-version }}
 
-    # We do not put these calls into deploy-mode as we do not want it to add to the packages.element.io artifact
-    # We ship this build via reprepro only
     linux:
         if: github.event_name != 'workflow_dispatch' || inputs.linux
         needs: prepare
-        name: Linux ${{ matrix.arch }} (sqlcipher system)
+        name: Linux ${{ matrix.arch }} (sqlcipher ${{ matrix.sqlcipher }})
         strategy:
             matrix:
                 arch: [amd64, arm64]
+                sqlcipher: [system, static]
+                exclude:
+                    - arch: arm64
+                      sqlcipher: static
         uses: ./.github/workflows/build_linux.yaml
         with:
             arch: ${{ matrix.arch }}
             config: ${{ needs.prepare.outputs.config }}
-            sqlcipher: system
+            sqlcipher: ${{ matrix.sqlcipher }}
             version: ${{ needs.prepare.outputs.nightly-version }}
 
-    # We ship the static build via static tarball only
-    linux_static:
-        if: github.event_name != 'workflow_dispatch' || inputs.linux
-        needs: prepare
-        name: Linux (sqlcipher static)
-        uses: ./.github/workflows/build_linux.yaml
-        with:
-            arch: amd64
-            deploy-mode: true
-            config: ${{ needs.prepare.outputs.config }}
-            sqlcipher: static
-            version: ${{ needs.prepare.outputs.nightly-version }}
-
-    # This deploy job only handles Windows, macOS & linux_static as those are stateless and static.
-    # Linux will be deployed via reprepro after it, but we list it as a dependency to abort if it fails.
     deploy:
         needs:
             - prepare
             - macos
             - linux
-            - linux_static
             - windows
         runs-on: ubuntu-latest
-        name: Deploy
-        if: |
-            (
-                github.event_name != 'workflow_dispatch' &&
-                github.event.release.prerelease != true
-            ) || (
-                always() && !failure() && !cancelled() && inputs.deploy &&
-                (inputs.macos || inputs.windows || inputs.linux)
-            )
-        environment: packages.element.io
+        name: ${{ needs.prepare.outputs.deploy == 'true' && 'Deploy' || 'Deploy (dry-run)' }}
+        if: always() && !failure() && !cancelled()
+        environment: ${{ needs.prepare.outputs.deploy == 'true' && 'packages.element.io' || '' }}
         steps:
             - name: Download artifacts
-              uses: actions/download-artifact@v3
+              uses: actions/download-artifact@v4
+
+            - name: Prepare artifacts for deployment
+              run: |
+                  # Windows
+                  for arch in x64 ia32 arm64
+                  do
+                      if [ -d "win-$arch" ]; then
+                          mkdir -p packages.element.io/{install,update}/win32/$arch
+                          mv win-$arch/squirrel-windows*/*.exe "packages.element.io/install/win32/$arch/"
+                          mv win-$arch/squirrel-windows*/*.nupkg "packages.element.io/update/win32/$arch/"
+                          mv win-$arch/squirrel-windows*/RELEASES "packages.element.io/update/win32/$arch/"
+                      fi
+                  done
+
+                  # macOS
+                  if [ -d macos ]; then
+                      mkdir -p packages.element.io/{install,update}/macos
+                      mv macos/*.dmg packages.element.io/install/macos/
+                      mv macos/*-mac.zip packages.element.io/update/macos/
+                      mv macos/*.json packages.element.io/update/macos/
+                  fi
+
+                  # Linux
+                  if [ -d linux-amd64-sqlcipher-static ]; then
+                      mkdir -p packages.element.io/install/linux/glibc-x86-64
+                      mv linux-amd64-sqlcipher-static/*.tar.gz packages.element.io/install/linux/glibc-x86-64
+                  fi
+
+            # We don't wish to store the installer for every nightly ever, so we only keep the latest
+            - name: "[Nightly] Strip version from installer file"
+              if: needs.prepare.outputs.nightly-version != ''
+              run: |
+                  # Windows
+                  for arch in x64 ia32 arm64
+                  do
+                      [ -d "win-$arch" ] && mv packages.element.io/install/win32/$arch/{*,"Element Nightly Setup"}.exe
+                  done
+
+                  # macOS
+                  [ -d macos ] && mv packages.element.io/install/macos/{*,"Element Nightly"}.dmg
+
+                  # Linux
+                  [ -d linux-amd64-sqlcipher-static ] && mv packages.element.io/install/linux/glibc-x86-64/{*,element-desktop-nightly}.tar.gz
+
+            - name: "[Release] Prepare release latest symlink"
+              if: needs.prepare.outputs.nightly-version == ''
+              run: |
+                  # Windows
+                  for arch in x64 ia32 arm64
+                  do
+                      if [ -d "win-$arch" ]; then
+                          pushd packages.element.io/install/win32/$arch
+                          ln -s "$(find . -type f -iname "*.exe" | xargs -0 -n1 -- basename)" "Element Setup.exe"
+                          popd
+                      fi
+                  done
+
+                  # macOS
+                  if [ -d macos ]; then
+                      pushd packages.element.io/install/macos
+                      ln -s "$(find . -type f -iname "*.dmg" | xargs -0 -n1 -- basename)" "Element.dmg"
+                      popd
+                  fi
+
+                  # Linux
+                  if [ -d linux-amd64-sqlcipher-static ]; then
+                      pushd packages.element.io/install/linux/glibc-x86-64
+                      ln -s "$(find . -type f -iname "*.tar.gz" | xargs -0 -n1 -- basename)" "element-desktop.tar.gz"
+                      popd
+                  fi
+
+            - name: Stash packages.element.io
+              if: needs.prepare.outputs.deploy == 'false'
+              uses: actions/upload-artifact@v4
               with:
                   name: packages.element.io
                   path: packages.element.io
 
             - name: Deploy artifacts
+              if: needs.prepare.outputs.deploy == 'true'
               run: |
                   aws s3 cp --recursive packages.element.io/ s3://$R2_BUCKET/$DEPLOYMENT_DIR --endpoint-url $R2_URL --region auto
               env:
@@ -145,29 +198,47 @@ jobs:
                   DEPLOYMENT_DIR: ${{ needs.prepare.outputs.packages-dir }}
 
             - name: Notify packages.element.io of new files
-              uses: peter-evans/repository-dispatch@bf47d102fdb849e755b0b0023ea3e81a44b6f570 # v2
+              if: needs.prepare.outputs.deploy == 'true'
+              uses: peter-evans/repository-dispatch@ff45666b9427631e3450c54a1bcbee4d9ff4d7c0 # v3
               with:
                   token: ${{ secrets.ELEMENT_BOT_TOKEN }}
-                  repository: vector-im/packages.element.io
+                  repository: element-hq/packages.element.io
                   event-type: packages-index
 
-    reprepro:
-        needs:
-            - linux
-            # We queue this after the other deploy stage as we want to abort if that fails
-            - deploy
-        name: Run reprepro ${{ matrix.arch }}
-        strategy:
-            matrix:
-                arch: [amd64, arm64]
-        if: |
-            (
-                github.event_name != 'workflow_dispatch' &&
-                github.event.release.prerelease != true
-            ) || (
-                always() && !failure() && !cancelled() && inputs.deploy && inputs.linux
-            )
-        uses: ./.github/workflows/reprepro.yaml
-        secrets: inherit
-        with:
-            artifact-name: linux-${{ matrix.arch }}-sqlcipher-system
+            - name: Find debs
+              id: deb
+              if: needs.linux.result == 'success'
+              run: |
+                  for arch in amd64 arm64
+                  do
+                      echo "$arch=$(ls linux-$arch-sqlcipher-system/*.deb | tail -n1)" >> $GITHUB_OUTPUT
+                  done
+
+            - name: Stash debs
+              if: needs.prepare.outputs.deploy == 'false' && needs.linux.result == 'success'
+              uses: actions/upload-artifact@v4
+              with:
+                  name: debs
+                  path: |
+                      ${{ steps.deb.outputs.amd64 }}
+                      ${{ steps.deb.outputs.arm64 }}
+
+            - name: Publish amd64 deb to packages.element.io
+              uses: element-hq/packages.element.io@master
+              if: needs.prepare.outputs.deploy == 'true' && needs.linux.result == 'success'
+              with:
+                  file: ${{ steps.deb.outputs.amd64 }}
+                  github-token: ${{ secrets.ELEMENT_BOT_TOKEN }}
+                  bucket-api: ${{ vars.CF_R2_S3_API }}
+                  bucket-key-id: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
+                  bucket-access-key: ${{ secrets.CF_R2_TOKEN }}
+
+            - name: Publish arm64 deb to packages.element.io
+              uses: element-hq/packages.element.io@master
+              if: needs.prepare.outputs.deploy == 'true' && needs.linux.result == 'success'
+              with:
+                  file: ${{ steps.deb.outputs.arm64 }}
+                  github-token: ${{ secrets.ELEMENT_BOT_TOKEN }}
+                  bucket-api: ${{ vars.CF_R2_S3_API }}
+                  bucket-key-id: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
+                  bucket-access-key: ${{ secrets.CF_R2_TOKEN }}

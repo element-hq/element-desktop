@@ -19,9 +19,9 @@
         "zoom_out": "Pienennä"
     },
     "common": {
-        "about": "Tietoja",
-        "help": "Apua",
-        "preferences": "Asetukset"
+        "about": "Tietoa",
+        "help": "Ohje",
+        "preferences": "Valinnat"
     },
     "confirm_quit": "Haluatko varmasti poistua?",
     "edit_menu": {

@@ -12,7 +12,7 @@
         "typeRoots": ["src/@types", "node_modules/@types"],
         "lib": ["es2020", "dom"],
         "types": ["node"],
-        "strict": true
+        "strict": true,
     },
-    "include": ["./src/**/*.ts"]
+    "include": ["./src/**/*.ts"],
 }

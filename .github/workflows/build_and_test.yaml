@@ -19,7 +19,7 @@ jobs:
         uses: ./.github/workflows/build_windows.yaml
         strategy:
             matrix:
-                arch: [x64, x86]
+                arch: [x64, ia32]
         with:
             arch: ${{ matrix.arch }}
 
@@ -37,17 +37,17 @@ jobs:
             REGISTRY: ghcr.io
             IMAGE_NAME: ${{ github.repository }}-dockerbuild-pr
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4
 
             - name: "Get modified files"
               id: changed_files
-              uses: tj-actions/changed-files@41960309398d165631f08c5df47a11147e14712b # v39
+              uses: tj-actions/changed-files@ae82ed4ae04587b665efad2f206578aa6f0e8539 # v42
               with:
                   files: |
-                      dockerbuild/*
+                      dockerbuild/**
             - name: Log in to the Container registry
               if: steps.changed_files.outputs.any_modified == 'true'
-              uses: docker/login-action@b4bedf8053341df3b5a9f9e0f2cf4e79e27360c6
+              uses: docker/login-action@83a00bc1ab5ded6580f31df1c49e6aaa932d840d
               with:
                   registry: ${{ env.REGISTRY }}
                   username: ${{ github.actor }}
@@ -63,7 +63,7 @@ jobs:
 
             - name: Build and push Docker image
               if: steps.changed_files.outputs.any_modified == 'true'
-              uses: docker/build-push-action@4c1b68d83ad20cc1a09620ca477d5bbbb5fa14d0
+              uses: docker/build-push-action@4a13e500e55cf31b7a5d59a38ab2040ab0f42f56 # v5
               with:
                   context: dockerbuild
                   push: true
@@ -106,21 +106,26 @@ jobs:
                     - name: macOS Universal
                       os: macos
                       artifact: macos
-                      executable: "/Volumes/Element/Element.app/Contents/MacOS/Element"
-                      prepare_cmd: "hdiutil attach ./dist/*.dmg -mountpoint /Volumes/Element"
+                      executable: "/Users/runner/Applications/Element.app/Contents/MacOS/Element"
+                      # We need to mount the DMG and copy the app to the Applications folder as a mounted DMG is
+                      # read-only and thus would not allow us to override the fuses as is required for Playwright.
+                      prepare_cmd: |
+                          hdiutil attach ./dist/*.dmg -mountpoint /Volumes/Element &&
+                          rsync -a /Volumes/Element/Element.app ~/Applications/ &&
+                          hdiutil detach /Volumes/Element
                     - name: "Linux (amd64) (sqlcipher: system)"
                       os: ubuntu
                       artifact: linux-amd64-sqlcipher-system
-                      executable: "element-desktop"
+                      executable: "/opt/Element/element-desktop"
                       prepare_cmd: "sudo apt install ./dist/*.deb"
                     - name: "Linux (amd64) (sqlcipher: static)"
                       os: ubuntu
                       artifact: linux-amd64-sqlcipher-static
-                      executable: "element-desktop"
+                      executable: "/opt/Element/element-desktop"
                       prepare_cmd: "sudo apt install ./dist/*.deb"
                     - name: Windows (x86)
                       os: windows
-                      artifact: win-x86
+                      artifact: win-ia32
                       executable: "./dist/win-ia32-unpacked/Element.exe"
                     - name: Windows (x64)
                       os: windows
@@ -129,16 +134,17 @@ jobs:
         name: Test ${{ matrix.name }}
         runs-on: ${{ matrix.os }}-latest
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4
 
-            - uses: actions/setup-node@v3
+            - uses: actions/setup-node@v4
               with:
+                  node-version-file: package.json
                   cache: "yarn"
 
             - name: Install Deps
               run: "yarn install --frozen-lockfile"
 
-            - uses: actions/download-artifact@v3
+            - uses: actions/download-artifact@v4
               with:
                   name: ${{ matrix.artifact }}
                   path: dist
@@ -147,18 +153,26 @@ jobs:
               run: ${{ matrix.prepare_cmd }}
               if: matrix.prepare_cmd
 
+            # We previously disabled the `EnableNodeCliInspectArguments` fuse, but Playwright requires
+            # it to be enabled to test Electron apps, so turn it back on.
+            - name: Set EnableNodeCliInspectArguments fuse enabled
+              run: $RUN_AS npx @electron/fuses write --app ${{ matrix.executable }} EnableNodeCliInspectArguments=on
+              shell: bash
+              env:
+                  # We need sudo on Linux as it is installed in /opt/
+                  RUN_AS: ${{ runner.os == 'Linux' && 'sudo' || '' }}
+
             - name: Run tests
-              uses: coactions/setup-xvfb@b6b4fcfb9f5a895edadc3bc76318fae0ac17c8b3 # v1
+              uses: coactions/setup-xvfb@6b00cf1889f4e1d5a48635647013c0508128ee1a
               timeout-minutes: 5
               with:
-                  run: "yarn test"
+                  run: "yarn test ${{ runner.os != 'Linux' && '--ignore-snapshots' || '' }}"
               env:
                   ELEMENT_DESKTOP_EXECUTABLE: ${{ matrix.executable }}
 
-            - name: Upload Artifacts
-              uses: actions/upload-artifact@v3
-              if: always()
+            - name: Upload HTML report
+              uses: actions/upload-artifact@v4
               with:
-                  name: ${{ matrix.artifact }}
-                  path: test_artifacts
-                  retention-days: 1
+                  name: ${{ matrix.artifact }}-test
+                  path: playwright-report
+                  retention-days: 14

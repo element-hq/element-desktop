@@ -30,6 +30,9 @@
         "speech_start_speaking": "Inizia a parlare",
         "speech_stop_speaking": "Smetti di parlare"
     },
+    "file_menu": {
+        "label": "File"
+    },
     "menu": {
         "hide": "Nascondi",
         "hide_others": "Nascondi gli altri",
@@ -54,6 +57,7 @@
     },
     "window_menu": {
         "bring_all_to_front": "Porta tutto in primo piano",
-        "label": "Finestra"
+        "label": "Finestra",
+        "zoom": "Ingrandisci"
     }
 }

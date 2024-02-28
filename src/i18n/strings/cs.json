@@ -1,12 +1,12 @@
 {
     "action": {
-        "cancel": "Zrušit",
+        "cancel": "Storno",
         "close": "Zavřít",
         "close_brand": "Zavřít %(brand)s",
-        "copy": "Kopírovat",
+        "copy": "Zkopírovat",
         "cut": "Vyjmout",
         "delete": "Smazat",
-        "edit": "Úpravy",
+        "edit": "Upravit",
         "minimise": "Minimalizovat",
         "paste": "Vložit",
         "paste_match_style": "Vložit a přizpůsobit styl",
@@ -19,7 +19,7 @@
         "zoom_out": "Oddálit"
     },
     "common": {
-        "about": "O aplikaci",
+        "about": "O",
         "brand_help": "%(brand)s nápověda",
         "help": "Nápověda",
         "preferences": "Předvolby"

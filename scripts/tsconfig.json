@@ -7,10 +7,10 @@
         "module": "commonjs",
         "sourceMap": false,
         "strict": true,
-        "lib": ["es2020", "dom"]
+        "lib": ["es2020", "dom"],
     },
     "include": ["../src/@types", "./**/*.ts"],
     "ts-node": {
-        "transpileOnly": true
-    }
+        "transpileOnly": true,
+    },
 }

@@ -86,8 +86,13 @@ export function getProfileFromDeeplink(args: string[]): string | undefined {
     if (deeplinkUrl?.includes(SEARCH_PARAM)) {
         const parsedUrl = new URL(deeplinkUrl);
         if (parsedUrl.protocol === PROTOCOL) {
-            const ssoID = parsedUrl.searchParams.get(SEARCH_PARAM)!;
             const store = readStore();
+            let ssoID = parsedUrl.searchParams.get(SEARCH_PARAM);
+            if (!ssoID) {
+                // In OIDC, we must shuttle the value in the `state` param rather than `element-desktop-ssoid`
+                // We encode it as a suffix like `:element-desktop-ssoid:XXYYZZ`
+                ssoID = parsedUrl.searchParams.get("state")!.split(`:${SEARCH_PARAM}:`)[1];
+            }
             console.log("Forwarding to profile: ", store[ssoID]);
             return store[ssoID];
         }
