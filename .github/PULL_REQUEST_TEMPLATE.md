@@ -2,10 +2,10 @@
 
 ## Checklist
 
--   [ ] Ensure your code works with manual testing
+-   [ ] Ensure your code works with manual testing.
 -   [ ] New or updated `public`/`exported` symbols have accurate [TSDoc](https://tsdoc.org/) documentation.
--   [ ] Linter and other CI checks pass
--   [ ] Sign-off given on the changes (see [CONTRIBUTING.md](https://github.com/vector-im/element-desktop/blob/develop/CONTRIBUTING.md))
+-   [ ] Linter and other CI checks pass.
+-   [ ] Sign-off given on the changes (see [CONTRIBUTING.md](https://github.com/vector-im/element-desktop/blob/develop/CONTRIBUTING.md)).
 
 <!--
 If you would like to specify text for the changelog entry other than your PR title, add the following:
