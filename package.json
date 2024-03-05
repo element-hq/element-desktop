@@ -74,8 +74,8 @@
         "uuid": "^9.0.0"
     },
     "devDependencies": {
-        "@action-validator/cli": "^0.5.3",
-        "@action-validator/core": "^0.5.3",
+        "@action-validator/cli": "^0.6.0",
+        "@action-validator/core": "^0.6.0",
         "@babel/core": "^7.18.10",
         "@babel/preset-env": "^7.18.10",
         "@babel/preset-typescript": "^7.18.6",
