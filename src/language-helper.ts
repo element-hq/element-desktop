@@ -113,7 +113,7 @@ export class AppLocalization {
         return parts.join("_");
     }
 
-    public fetchTranslationJson(locale: string): Record<string, string> | null {
+    public fetchTranslationJson(locale: string): object | null {
         try {
             console.log(`Fetching translation json for locale: ${locale}`);
             return loadJsonFile(__dirname, "i18n", "strings", `${locale}.json`);
@@ -130,13 +130,16 @@ export class AppLocalization {
             locales = [locales];
         }
 
-        const loadedLocales = locales.flatMap(this.variations).map(this.denormalize).filter((locale) => {
-            const translations = this.fetchTranslationJson(locale);
-            if (translations !== null) {
-                counterpart.registerTranslations(locale, translations);
-            }
-            return !!translations;
-        });
+        const loadedLocales = locales
+            .flatMap(this.variations)
+            .map(this.denormalize)
+            .filter((locale) => {
+                const translations = this.fetchTranslationJson(locale);
+                if (translations !== null) {
+                    counterpart.registerTranslations(locale, translations);
+                }
+                return !!translations;
+            });
 
         counterpart.setLocale(loadedLocales[0]);
         this.store.set(AppLocalization.STORE_KEY, locales);
