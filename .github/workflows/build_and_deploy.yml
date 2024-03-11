@@ -1,0 +1,54 @@
+name: Build and Deploy
+on:
+    # Nightly build
+    schedule:
+        - cron: "0 9 * * *"
+    # Release build
+    release:
+        types: [published]
+    # Manual nightly & release
+    workflow_dispatch:
+        inputs:
+            mode:
+                description: What type of build to trigger. Release builds MUST be ran from the `master` branch.
+                required: true
+                default: nightly
+                type: choice
+                options:
+                    - nightly
+                    - release
+            macos:
+                description: Build macOS
+                required: true
+                type: boolean
+                default: true
+            windows:
+                description: Build Windows
+                required: true
+                type: boolean
+                default: true
+            linux:
+                description: Build Linux
+                required: true
+                type: boolean
+                default: true
+            deploy:
+                description: Deploy artifacts
+                required: true
+                type: boolean
+                default: true
+run-name: Element ${{ inputs.mode != 'release' && github.event_name != 'release' && 'Nightly' || 'Desktop' }}
+concurrency: ${{ github.workflow }}
+env:
+    R2_BUCKET: ${{ vars.R2_BUCKET }}
+jobs:
+    prepare:
+        uses: ./.github/workflows/build_prepare.yaml
+        with:
+            config: element.io/${{ inputs.mode || (github.event_name == 'release' && 'release') || 'nightly' }}
+            version: ${{ (inputs.mode != 'release' && github.event_name != 'release') && 'develop' || '' }}
+            nightly: ${{ inputs.mode != 'release' && github.event_name != 'release' }}
+            deploy: ${{ inputs.deploy || (github.event_name != 'workflow_dispatch' && github.event.release.prerelease != true) }}
+        secrets:
+            CF_R2_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
+            CF_R2_TOKEN: ${{ secrets.CF_R2_TOKEN }}
