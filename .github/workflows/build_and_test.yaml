@@ -175,5 +175,5 @@ jobs:
               uses: actions/upload-artifact@v4
               with:
                   name: ${{ matrix.artifact }}-test
-                  path: playwright-report
+                  path: playwright/html-report
                   retention-days: 14
