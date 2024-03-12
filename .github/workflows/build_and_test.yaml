@@ -171,6 +171,7 @@ jobs:
                   ELEMENT_DESKTOP_EXECUTABLE: ${{ matrix.executable }}
 
             - name: Upload HTML report
+              if: always()
               uses: actions/upload-artifact@v4
               with:
                   name: ${{ matrix.artifact }}-test
