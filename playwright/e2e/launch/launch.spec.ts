@@ -17,6 +17,7 @@ limitations under the License.
 import { test, expect } from "../../element-desktop-test";
 
 test.describe("App launch", () => {
+    test.slow();
     test("should launch and render the welcome view successfully", async ({ page }) => {
         await page.locator("#matrixchat").waitFor();
         await page.locator(".mx_Welcome").waitFor();

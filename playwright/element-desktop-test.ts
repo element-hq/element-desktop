@@ -33,7 +33,7 @@ export const test = base.extend<{ app: ElectronApplication; tmpDir: string }>({
         const executablePath = process.env["ELEMENT_DESKTOP_EXECUTABLE"];
         if (!executablePath) {
             // Unpackaged mode testing
-            args.unshift("./lib/electron-main.js");
+            args.unshift(path.join(__dirname, "..", "lib", "electron-main.js"));
         }
 
         const app = await electron.launch({
@@ -41,6 +41,9 @@ export const test = base.extend<{ app: ElectronApplication; tmpDir: string }>({
             executablePath,
             args,
         });
+
+        app.process().stdout.pipe(process.stdout);
+        app.process().stderr.pipe(process.stderr);
 
         await app.firstWindow();
         await use(app);
