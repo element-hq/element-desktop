@@ -42,6 +42,9 @@ export const test = base.extend<{ app: ElectronApplication; tmpDir: string }>({
             args,
         });
 
+        app.process().stdout.pipe(process.stdout);
+        app.process().stderr.pipe(process.stderr);
+
         await app.firstWindow();
         await use(app);
     },
