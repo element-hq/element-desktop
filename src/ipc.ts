@@ -23,6 +23,7 @@ import { randomArray } from "./utils";
 import { Settings } from "./settings";
 import { keytar } from "./keytar";
 import { getDisplayMediaCallback, setDisplayMediaCallback } from "./displayMediaCallback";
+import { getSecretStore } from "./secrets";
 
 ipcMain.on("setBadgeCount", function (_ev: IpcMainEvent, count: number): void {
     if (process.platform !== "win32") {
@@ -145,6 +146,26 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
 
         case "startSSOFlow":
             recordSSOSession(args[0]);
+            break;
+
+        case "getSecret":
+            try {
+                ret = await getSecretStore().getSecret(args[0]);
+            } catch (e) {
+                ret = null;
+            }
+            break;
+        case "saveSecret":
+            try {
+                ret = await getSecretStore().saveSecret(args[0], args[1]);
+            } catch (e) {
+                ret = null;
+            }
+            break;
+        case "destroySecret":
+            try {
+                ret = await getSecretStore().destroySecret(args[0]);
+            } catch (e) {}
             break;
 
         case "getPickleKey":
