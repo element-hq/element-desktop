@@ -133,9 +133,12 @@ const config = {
         icon: "build/icons/icon.icns",
     },
     win: {
-        target: ["squirrel"],
+        target: ["squirrel", "msi"],
         signingHashAlgorithms: ["sha256"],
         icon: "build/icons/icon.ico",
+    },
+    msi: {
+        perMachine: true,
     },
     directories: {
         output: "dist",
