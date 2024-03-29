@@ -1,10 +1,8 @@
-const os = require("os");
-const fs = require("fs");
-const path = require("path");
-const Arch = require("electron-builder").Arch;
-const { flipFuses, FuseVersion, FuseV1Options } = require("@electron/fuses");
-
-// Typescript conversion blocked on https://github.com/electron-userland/electron-builder/issues/7775
+import * as os from "os";
+import * as fs from "fs";
+import * as path from "path";
+import { Arch, Configuration as BaseConfiguration } from "electron-builder";
+import { flipFuses, FuseVersion, FuseV1Options } from "@electron/fuses";
 
 /**
  * This script has different outputs depending on your os platform.
@@ -26,13 +24,27 @@ const { flipFuses, FuseVersion, FuseV1Options } = require("@electron/fuses");
 const NIGHTLY_APP_ID = "im.riot.nightly";
 const NIGHTLY_DEB_NAME = "element-nightly";
 
-const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
+interface Pkg {
+    name: string;
+    productName: string;
+    description: string;
+    version: string;
+}
+
+type Writable<T> = T extends object ? { -readonly [K in keyof T]: Writable<T[K]> } : T;
+
+const pkg: Pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
 
 /**
  * @type {import('electron-builder').Configuration}
  * @see https://www.electron.build/configuration/configuration
  */
-const config = {
+const config: Writable<Omit<BaseConfiguration, "extraMetadata">> & {
+    extraMetadata: Partial<Pkg>;
+    linux: {
+        desktop: Record<string, string>;
+    };
+} = {
     appId: "im.riot.app",
     asarUnpack: "**/*.node",
     afterPack: async (context) => {
@@ -212,4 +224,4 @@ if (os.platform() === "linux") {
     }
 }
 
-exports.default = config;
+export default config;

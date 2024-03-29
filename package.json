@@ -123,6 +123,7 @@
         "keytar": "^7.9.0"
     },
     "resolutions": {
-        "@types/node": "18.19.24"
+        "@types/node": "18.19.24",
+        "config-file-ts": "0.2.8-rc1"
     }
 }
