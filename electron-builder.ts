@@ -31,7 +31,9 @@ interface Pkg {
     version: string;
 }
 
-type Writable<T> = NonNullable<T extends object ? { -readonly [K in keyof T]: Writable<T[K]> } : T>;
+type Writable<T> = NonNullable<
+    T extends Function ? T : T extends object ? { -readonly [K in keyof T]: Writable<T[K]> } : T
+>;
 
 const pkg: Pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
 
