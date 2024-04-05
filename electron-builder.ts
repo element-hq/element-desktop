@@ -1,7 +1,7 @@
 import * as os from "os";
 import * as fs from "fs";
 import * as path from "path";
-import { Arch, Configuration as BaseConfiguration } from "electron-builder";
+import { Arch, Configuration as BaseConfiguration, AfterPackContext } from "electron-builder";
 import { flipFuses, FuseVersion, FuseV1Options } from "@electron/fuses";
 
 /**
@@ -31,31 +31,38 @@ interface Pkg {
     version: string;
 }
 
-type Writable<T> = T extends object ? { -readonly [K in keyof T]: Writable<T[K]> } : T;
+type Writable<T> = NonNullable<T extends object ? { -readonly [K in keyof T]: Writable<T[K]> } : T>;
 
 const pkg: Pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
+
+interface Configuration extends BaseConfiguration {
+    extraMetadata: Partial<Pick<Pkg, "version">> & Omit<Pkg, "version">;
+    linux: {
+        desktop: Record<string, string>;
+    } & BaseConfiguration["linux"];
+    win: BaseConfiguration["win"];
+    mac: BaseConfiguration["mac"];
+    deb: {
+        fpm: string[];
+    } & BaseConfiguration["deb"];
+}
 
 /**
  * @type {import('electron-builder').Configuration}
  * @see https://www.electron.build/configuration/configuration
  */
-const config: Writable<Omit<BaseConfiguration, "extraMetadata">> & {
-    extraMetadata: Partial<Pkg>;
-    linux: {
-        desktop: Record<string, string>;
-    };
-} = {
+const config: Writable<Configuration> = {
     appId: "im.riot.app",
     asarUnpack: "**/*.node",
-    afterPack: async (context) => {
+    afterPack: async (context: AfterPackContext) => {
         if (context.electronPlatformName !== "darwin" || context.arch === Arch.universal) {
             // Burn in electron fuses for proactive security hardening.
             // On macOS, we only do this for the universal package, as the constituent arm64 and amd64 packages are embedded within.
-            const ext = {
+            const ext = (<Record<string, string>>{
                 darwin: ".app",
                 win32: ".exe",
                 linux: "",
-            }[context.electronPlatformName];
+            })[context.electronPlatformName];
 
             let executableName = context.packager.appInfo.productFilename;
             if (context.electronPlatformName === "linux") {
@@ -158,7 +165,7 @@ const config: Writable<Omit<BaseConfiguration, "extraMetadata">> & {
             schemes: ["element"],
         },
     ],
-} as const;
+};
 
 /**
  * Allow specifying windows signing cert via env vars
