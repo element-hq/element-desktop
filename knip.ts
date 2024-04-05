@@ -9,6 +9,7 @@ export default {
         "matrix-seshat",
         // Needed by `electron-builder`
         "electron-builder-squirrel-windows",
+        "@types/yargs",
         // Required for `action-validator`
         "@action-validator/*",
     ],
