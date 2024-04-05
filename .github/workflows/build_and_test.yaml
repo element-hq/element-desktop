@@ -41,13 +41,13 @@ jobs:
 
             - name: "Get modified files"
               id: changed_files
-              uses: tj-actions/changed-files@77af4bed286740ef1a6387dc4e4e4dec39f96054 # v43
+              uses: tj-actions/changed-files@2d756ea4c53f7f6b397767d8723b3a10a9f35bf2 # v44
               with:
                   files: |
                       dockerbuild/**
             - name: Log in to the Container registry
               if: steps.changed_files.outputs.any_modified == 'true'
-              uses: docker/login-action@e92390c5fb421da1463c202d546fed0ec5c39f20
+              uses: docker/login-action@5f4866a30a54f16a52d2ecb4a3898e9e424939cf
               with:
                   registry: ${{ env.REGISTRY }}
                   username: ${{ github.actor }}
