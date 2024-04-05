@@ -158,7 +158,7 @@ const config: Writable<Omit<BaseConfiguration, "extraMetadata">> & {
             schemes: ["element"],
         },
     ],
-};
+} as const;
 
 /**
  * Allow specifying windows signing cert via env vars
