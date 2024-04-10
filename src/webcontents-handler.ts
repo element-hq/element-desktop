@@ -33,7 +33,7 @@ import {
 import url from "url";
 import fs from "fs";
 import fetch from "node-fetch";
-import { promisify } from 'node:util'
+import { promisify } from "util";
 import { pipeline } from "stream";
 import path from "path";
 
