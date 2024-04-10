@@ -48,7 +48,8 @@ jobs:
                         "arm64": {
                           "target": "aarch64-pc-windows-msvc",
                           "build-args": "--arm64",
-                          "arch": "amd64_arm64"
+                          "arch": "amd64_arm64",
+                          "skip-squirrel": true
                         },
                         "ia32": {
                           "target": "i686-pc-windows-msvc",
@@ -166,6 +167,8 @@ jobs:
             - name: Build App
               run: |
                   yarn electron-builder --publish never -w ${{ steps.config.outputs.build-args }}
+              env:
+                  SKIP_SQUIRREL: ${{ steps.config.outputs.skip-squirrel }}
 
             - name: Check app was signed successfully
               if: inputs.sign != ''

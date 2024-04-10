@@ -154,7 +154,7 @@ const config: Writable<Configuration> = {
         icon: "build/icons/icon.icns",
     },
     win: {
-        target: ["squirrel", "msi"],
+        target: process.env.SKIP_SQUIRREL ? ["msi"] : ["squirrel", "msi"],
         signingHashAlgorithms: ["sha256"],
         icon: "build/icons/icon.ico",
     },
