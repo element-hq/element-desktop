@@ -49,7 +49,7 @@ jobs:
                           "target": "aarch64-pc-windows-msvc",
                           "build-args": "--arm64",
                           "arch": "amd64_arm64",
-                          "skip-squirrel": true
+                          "skip-squirrel": "true"
                         },
                         "ia32": {
                           "target": "i686-pc-windows-msvc",
