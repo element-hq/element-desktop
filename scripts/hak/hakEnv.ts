@@ -17,17 +17,17 @@ limitations under the License.
 import path from "path";
 import os from "os";
 import nodePreGypVersioning from "node-pre-gyp/lib/util/versioning";
-import { getElectronVersion } from "app-builder-lib/out/electron/electronVersion";
+import { getElectronVersionFromInstalled } from "app-builder-lib/out/electron/electronVersion";
 
 import { Arch, Target, TARGETS, getHost, isHostId, TargetId } from "./target";
 
 async function getRuntime(projectRoot: string): Promise<string> {
-    const electronVersion = await getElectronVersion(projectRoot);
+    const electronVersion = await getElectronVersionFromInstalled(projectRoot);
     return electronVersion ? "electron" : "node-webkit";
 }
 
 async function getRuntimeVersion(projectRoot: string): Promise<string> {
-    const electronVersion = await getElectronVersion(projectRoot);
+    const electronVersion = await getElectronVersionFromInstalled(projectRoot);
     if (electronVersion) {
         return electronVersion;
     } else {
