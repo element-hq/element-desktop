@@ -33,6 +33,7 @@ import {
 import url from "url";
 import fs from "fs";
 import fetch from "node-fetch";
+import { promisify } from 'node:util'
 import { pipeline } from "stream";
 import path from "path";
 
@@ -165,7 +166,8 @@ function onLinkContextMenu(ev: Event, params: ContextMenuParams, webContents: We
                             const resp = await fetch(url);
                             if (!resp.ok) throw new Error(`unexpected response ${resp.statusText}`);
                             if (!resp.body) throw new Error(`unexpected response has no body ${resp.statusText}`);
-                            pipeline(resp.body, fs.createWriteStream(filePath));
+                            const promisfyPipeline = promisify(pipeline);
+                            promisfyPipeline(resp.body, fs.createWriteStream(filePath));
                         }
                     } catch (err) {
                         console.error(err);
