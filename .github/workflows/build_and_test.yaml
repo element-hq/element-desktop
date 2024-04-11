@@ -19,7 +19,7 @@ jobs:
         uses: ./.github/workflows/build_windows.yaml
         strategy:
             matrix:
-                arch: [x64, ia32, arm64]
+                arch: [x64, ia32]
         with:
             arch: ${{ matrix.arch }}
 
@@ -131,9 +131,6 @@ jobs:
                       os: windows
                       artifact: win-x64
                       executable: "./dist/win-unpacked/Element.exe"
-                    # We do not have the ability to test ARM64 builds because
-                    # 1. the Squirrel build is broken
-                    # 2. we do not have a Windows ARM64 test runner
         name: Test ${{ matrix.name }}
         runs-on: ${{ matrix.os }}-latest
         steps:
