@@ -23,39 +23,6 @@ jobs:
         with:
             arch: ${{ matrix.arch }}
 
-    # TEST DO NOT MERGE
-    deploy-ess:
-        needs: windows
-        runs-on: ubuntu-latest
-        name: Deploy builds to ESS
-        env:
-            BUCKET_NAME: "element-desktop-msi.onprem.element.io"
-            AWS_REGION: "eu-central-1"
-        permissions:
-            id-token: write # This is required for requesting the JWT
-        steps:
-            - name: Configure aws credentials
-              uses: aws-actions/configure-aws-credentials@v3
-              with:
-                  role-to-assume: arn:aws:iam::264135176173:role/Push-ElementDesktop-MSI
-                  role-session-name: githubaction-run-${{ github.run_id }}
-                  aws-region: ${{ env.AWS_REGION }}
-
-            - name: Download artifacts
-              uses: actions/download-artifact@v4
-              with:
-                  pattern: win-*
-
-            - name: Copy files to S3
-              run: |
-                  PREFIX="${VERSION%.*}"
-                  for file in win-*/*.msi; do
-                      filename=$(basename "$file")
-                      aws s3 cp "$file" "s3://${{ env.BUCKET_NAME }}/$PREFIX/$filename"
-                  done
-              env:
-                  VERSION: v9.88.77
-
     # This allows core contributors to test changes to the dockerbuild image within a pull request
     linux_docker:
         name: Linux docker
