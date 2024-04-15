@@ -1,7 +1,5 @@
 name: Build and Deploy
 on:
-    push:
-        branches: [t3chguy/msi]
     # Nightly build
     schedule:
         - cron: "0 9 * * *"
@@ -50,6 +48,7 @@ jobs:
             config: element.io/${{ inputs.mode || (github.event_name == 'release' && 'release') || 'nightly' }}
             version: ${{ (inputs.mode != 'release' && github.event_name != 'release') && 'develop' || '' }}
             nightly: ${{ inputs.mode != 'release' && github.event_name != 'release' }}
+            deploy: ${{ inputs.deploy || (github.event_name != 'workflow_dispatch' && github.event.release.prerelease != true) }}
         secrets:
             CF_R2_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
             CF_R2_TOKEN: ${{ secrets.CF_R2_TOKEN }}
@@ -248,8 +247,7 @@ jobs:
         needs: deploy
         runs-on: ubuntu-latest
         name: Deploy builds to ESS
-        #if: needs.prepare.outputs.deploy == 'true' && github.event_name == 'release'
-        if: always()
+        if: needs.prepare.outputs.deploy == 'true' && github.event_name == 'release'
         env:
             BUCKET_NAME: "element-desktop-msi.onprem.element.io"
             AWS_REGION: "eu-central-1"
@@ -276,5 +274,4 @@ jobs:
                       aws s3 cp "file" "s3://${{ env.BUCKET_NAME }}/$PREFIX/$filename"
                   done
               env:
-                  #VERSION: ${{ github.event.release.tag_name }}
-                  VERSION: v9.88.77
+                  VERSION: ${{ github.event.release.tag_name }}
