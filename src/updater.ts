@@ -15,6 +15,9 @@ limitations under the License.
 */
 
 import { app, autoUpdater, ipcMain } from "electron";
+import fs from "node:fs/promises";
+
+import { getSquirrelExecutable } from "./squirrelhooks";
 
 const UPDATE_POLL_INTERVAL_MS = 60 * 60 * 1000;
 const INITIAL_UPDATE_DELAY_MS = 30 * 1000;
@@ -74,10 +77,12 @@ async function pollForUpdates(): Promise<void> {
     }
 }
 
-export function start(updateBaseUrl: string): void {
+export async function start(updateBaseUrl: string): Promise<void> {
+    if (!(await available(updateBaseUrl))) return;
     if (updateBaseUrl.slice(-1) !== "/") {
         updateBaseUrl = updateBaseUrl + "/";
     }
+
     try {
         let url: string;
         let serverType: "json" | undefined;
@@ -93,7 +98,6 @@ export function start(updateBaseUrl: string): void {
             // Squirrel / electron only supports auto-update on these two platforms.
             // I'm not even going to try to guess which feed style they'd use if they
             // implemented it on Linux, or if it would be different again.
-            console.log("Auto update not supported on this platform");
             return;
         }
 
@@ -114,6 +118,26 @@ export function start(updateBaseUrl: string): void {
         // will fail if running in debug mode
         console.log("Couldn't enable update checking", err);
     }
+}
+
+async function available(updateBaseUrl?: string): Promise<boolean> {
+    if (process.platform === "linux") {
+        // Auto update is not supported on Linux
+        console.log("Auto update not supported on this platform");
+        return false;
+    }
+
+    if (process.platform === "win32") {
+        try {
+            await fs.access(getSquirrelExecutable());
+        } catch {
+            console.log("Squirrel not found, auto update not supported");
+            return false;
+        }
+    }
+
+    // Otherwise we're either on macOS or Windows with Squirrel
+    return !!updateBaseUrl;
 }
 
 ipcMain.on("install_update", installUpdate);

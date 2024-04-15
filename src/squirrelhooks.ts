@@ -18,12 +18,16 @@ import path from "path";
 import { spawn } from "child_process";
 import { app } from "electron";
 
+export function getSquirrelExecutable(): string {
+    return path.resolve(path.dirname(process.execPath), "..", "Update.exe");
+}
+
 function runUpdateExe(args: string[]): Promise<void> {
     // Invokes Squirrel's Update.exe which will do things for us like create shortcuts
     // Note that there's an Update.exe in the app-x.x.x directory and one in the parent
     // directory: we need to run the one in the parent directory, because it discovers
     // information about the app by inspecting the directory it's run from.
-    const updateExe = path.resolve(path.dirname(process.execPath), "..", "Update.exe");
+    const updateExe = getSquirrelExecutable();
     console.log(`Spawning '${updateExe}' with args '${args}'`);
     return new Promise((resolve) => {
         spawn(updateExe, args, {
