@@ -11,6 +11,16 @@ jobs:
   S3PackageUpload:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout actions-oidc-debugger
+        uses: actions/checkout@v3
+        with:
+          repository: github/actions-oidc-debugger
+          ref: main
+          path: ./.github/actions/actions-oidc-debugger
+      - name: Debug OIDC Claims
+        uses: ./.github/actions/actions-oidc-debugger
+        with:
+          audience: 'sts.amazonaws.com'
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v3
         with:
