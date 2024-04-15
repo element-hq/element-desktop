@@ -254,7 +254,7 @@ jobs:
         permissions:
             id-token: write # This is required for requesting the JWT
         steps:
-            - name: Configure aws credentials
+            - name: Configure AWS credentials
               uses: aws-actions/configure-aws-credentials@v3
               with:
                   role-to-assume: arn:aws:iam::264135176173:role/Push-ElementDesktop-MSI
@@ -270,8 +270,8 @@ jobs:
               run: |
                   PREFIX="${VERSION%.*}"
                   for file in win-*/*.msi; do
-                      filename=$(basename "file")
-                      aws s3 cp "file" "s3://${{ env.BUCKET_NAME }}/$PREFIX/$filename"
+                      filename=$(basename "$file")
+                      aws s3 cp "$file" "s3://${{ env.BUCKET_NAME }}/$PREFIX/$filename"
                   done
               env:
                   VERSION: ${{ github.event.release.tag_name }}

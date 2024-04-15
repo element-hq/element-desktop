@@ -50,8 +50,8 @@ jobs:
               run: |
                   PREFIX="${VERSION%.*}"
                   for file in win-*/*.msi; do
-                      filename=$(basename "file")
-                      aws s3 cp "file" "s3://${{ env.BUCKET_NAME }}/$PREFIX/$filename"
+                      filename=$(basename "$file")
+                      aws s3 cp "$file" "s3://${{ env.BUCKET_NAME }}/$PREFIX/$filename"
                   done
               env:
                   VERSION: v9.88.77
