@@ -33,7 +33,7 @@ yarn run fetch --noverify --cfgdir ""
 
 ```
 # Fetch the Element public key from the element.io web server over a secure connection and import
-# it into your local GPG keychain (you'll need GPG installed). You only need to to do this
+# it into your local GPG keychain (you'll need GPG installed). You only need to do this
 # once.
 yarn run fetch --importkey
 # Fetch the package and verify the signature
