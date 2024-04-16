@@ -255,7 +255,7 @@ jobs:
             id-token: write # This is required for requesting the JWT
         steps:
             - name: Configure AWS credentials
-              uses: aws-actions/configure-aws-credentials@v3
+              uses: aws-actions/configure-aws-credentials@v4
               with:
                   role-to-assume: arn:aws:iam::264135176173:role/Push-ElementDesktop-MSI
                   role-session-name: githubaction-run-${{ github.run_id }}
