@@ -1420,15 +1420,16 @@
   dependencies:
     which "^4.0.0"
 
-"@npmcli/run-script@^7.0.0":
-  version "7.0.4"
-  resolved "https://registry.yarnpkg.com/@npmcli/run-script/-/run-script-7.0.4.tgz#9f29aaf4bfcf57f7de2a9e28d1ef091d14b2e6eb"
-  integrity sha512-9ApYM/3+rBt9V80aYg6tZfzj3UWdiYyCt7gJUD1VJKvWF5nwKDSICXbYIQbspFTq6TOpbsEtIC0LArB8d9PFmg==
+"@npmcli/run-script@^8.0.0":
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/@npmcli/run-script/-/run-script-8.0.0.tgz#644f8e28fd3cde25e40a79d3b35cb14076ec848b"
+  integrity sha512-5noc+eCQmX1W9nlFUe65n5MIteikd3vOA2sEPdXtlUv68KWyHNFZnT/LDRXu/E4nZ5yxjciP30pADr/GQ97W1w==
   dependencies:
     "@npmcli/node-gyp" "^3.0.0"
     "@npmcli/package-json" "^5.0.0"
     "@npmcli/promise-spawn" "^7.0.0"
     node-gyp "^10.0.0"
+    proc-log "^4.0.0"
     which "^4.0.0"
 
 "@pkgjs/parseargs@^0.11.0":
@@ -5438,15 +5439,15 @@ p-try@^2.0.0:
   resolved "https://registry.yarnpkg.com/p-try/-/p-try-2.2.0.tgz#cb2868540e313d61de58fafbe35ce9004d5540e6"
   integrity sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==
 
-pacote@^17.0.0:
-  version "17.0.6"
-  resolved "https://registry.yarnpkg.com/pacote/-/pacote-17.0.6.tgz#874bb59cda5d44ab784d0b6530fcb4a7d9b76a60"
-  integrity sha512-cJKrW21VRE8vVTRskJo78c/RCvwJCn1f4qgfxL4w77SOWrTCRcmfkYHlHtS0gqpgjv3zhXflRtgsrUCX5xwNnQ==
+pacote@^18.0.0:
+  version "18.0.0"
+  resolved "https://registry.yarnpkg.com/pacote/-/pacote-18.0.0.tgz#974491c8b5a40f42830bc55361924ca7c7e45784"
+  integrity sha512-ma7uVt/q3Sb3XbLwUjOeClz+7feHjMOFegHn5whw++x+GzikZkAq/2auklSbRuy6EI2iJh1/ZqCpVaUcxRaeqQ==
   dependencies:
     "@npmcli/git" "^5.0.0"
     "@npmcli/installed-package-contents" "^2.0.1"
     "@npmcli/promise-spawn" "^7.0.0"
-    "@npmcli/run-script" "^7.0.0"
+    "@npmcli/run-script" "^8.0.0"
     cacache "^18.0.0"
     fs-minipass "^3.0.0"
     minipass "^7.0.2"
@@ -5454,7 +5455,7 @@ pacote@^17.0.0:
     npm-packlist "^8.0.0"
     npm-pick-manifest "^9.0.0"
     npm-registry-fetch "^16.0.0"
-    proc-log "^3.0.0"
+    proc-log "^4.0.0"
     promise-retry "^2.0.1"
     read-package-json "^7.0.0"
     read-package-json-fast "^3.0.0"
@@ -5636,6 +5637,11 @@ proc-log@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/proc-log/-/proc-log-3.0.0.tgz#fb05ef83ccd64fd7b20bbe9c8c1070fc08338dd8"
   integrity sha512-++Vn7NS4Xf9NacaU9Xq3URUuqZETPsf8L4j5/ckhaRYsfPeRyzGw+iDjFhV/Jr3uNmTvvddEJFWh5R1gRgUH8A==
+
+proc-log@^4.0.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/proc-log/-/proc-log-4.1.0.tgz#ab6c1552b454e9e467cb58119179e4557d109b34"
+  integrity sha512-dmQ2iPw2nJMi9/4dpaG1wd0m1GE+K5kW7RGbjy5hoEEGnhPIzsm+klBO5RGGdcoYbWsNtU2KSNAdEldts+icLg==
 
 process-nextick-args@~2.0.0:
   version "2.0.1"
