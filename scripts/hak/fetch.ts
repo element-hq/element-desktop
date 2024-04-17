@@ -44,6 +44,9 @@ export default async function fetch(hakEnv: HakEnv, moduleInfo: DependencyInfo):
         const proc = childProcess.spawn(hakEnv.isWin() ? "yarn.cmd" : "yarn", ["install", "--ignore-scripts"], {
             stdio: "inherit",
             cwd: moduleInfo.moduleBuildDir,
+            // We need shell mode on Windows to be able to launch `.cmd` executables
+            // See https://nodejs.org/en/blog/vulnerability/april-2024-security-releases-2
+            shell: hakEnv.isWin(),
         });
         proc.on("exit", (code) => {
             code ? reject(code) : resolve();
