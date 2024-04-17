@@ -32,6 +32,11 @@ export async function setPackageVersion(ver: string): Promise<void> {
                 "--new-version",
                 ver,
             ],
+            {
+                // We need shell mode on Windows to be able to launch `.cmd` executables
+                // See https://nodejs.org/en/blog/vulnerability/april-2024-security-releases-2
+                shell: process.platform === "win32",
+            },
             (err) => {
                 if (err) {
                     reject(err);
