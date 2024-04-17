@@ -33,7 +33,7 @@ export async function setPackageVersion(ver: string): Promise<void> {
                 ver,
             ],
             {
-                shell: true,
+                shell: process.platform === "win32",
             },
             (err) => {
                 if (err) {
