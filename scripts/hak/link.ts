@@ -53,6 +53,8 @@ export default async function link(hakEnv: HakEnv, moduleInfo: DependencyInfo): 
         const proc = childProcess.spawn(yarnCmd, ["link"], {
             cwd: moduleInfo.moduleOutDir,
             stdio: "inherit",
+            // We need shell mode on Windows to be able to launch `.cmd` executables
+            // See https://nodejs.org/en/blog/vulnerability/april-2024-security-releases-2
             shell: hakEnv.isWin(),
         });
         proc.on("exit", (code) => {
@@ -64,6 +66,8 @@ export default async function link(hakEnv: HakEnv, moduleInfo: DependencyInfo): 
         const proc = childProcess.spawn(yarnCmd, ["link", moduleInfo.name], {
             cwd: hakEnv.projectRoot,
             stdio: "inherit",
+            // We need shell mode on Windows to be able to launch `.cmd` executables
+            // See https://nodejs.org/en/blog/vulnerability/april-2024-security-releases-2
             shell: hakEnv.isWin(),
         });
         proc.on("exit", (code) => {
