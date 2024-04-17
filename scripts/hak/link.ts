@@ -53,6 +53,7 @@ export default async function link(hakEnv: HakEnv, moduleInfo: DependencyInfo): 
         const proc = childProcess.spawn(yarnCmd, ["link"], {
             cwd: moduleInfo.moduleOutDir,
             stdio: "inherit",
+            shell: true,
         });
         proc.on("exit", (code) => {
             code ? reject(code) : resolve();
@@ -63,6 +64,7 @@ export default async function link(hakEnv: HakEnv, moduleInfo: DependencyInfo): 
         const proc = childProcess.spawn(yarnCmd, ["link", moduleInfo.name], {
             cwd: hakEnv.projectRoot,
             stdio: "inherit",
+            shell: true,
         });
         proc.on("exit", (code) => {
             code ? reject(code) : resolve();

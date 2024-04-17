@@ -32,6 +32,7 @@ export default async function buildKeytar(hakEnv: HakEnv, moduleInfo: Dependency
                 cwd: moduleInfo.moduleBuildDir,
                 env,
                 stdio: "inherit",
+                shell: true,
             },
         );
         proc.on("exit", (code) => {

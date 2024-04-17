@@ -32,6 +32,9 @@ export async function setPackageVersion(ver: string): Promise<void> {
                 "--new-version",
                 ver,
             ],
+            {
+                shell: true,
+            },
             (err) => {
                 if (err) {
                     reject(err);
