@@ -16,7 +16,7 @@ limitations under the License.
 
 import path from "path";
 import os from "os";
-import nodePreGypVersioning from "node-pre-gyp/lib/util/versioning";
+import nodePreGypVersioning from "@mapbox/node-pre-gyp/lib/util/versioning";
 import { getElectronVersionFromInstalled } from "app-builder-lib/out/electron/electronVersion";
 
 import { Arch, Target, TARGETS, getHost, isHostId, TargetId } from "./target";
