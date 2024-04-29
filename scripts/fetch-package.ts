@@ -13,7 +13,8 @@ import { setPackageVersion } from "./set-version";
 
 const PUB_KEY_URL = "https://packages.riot.im/element-release-key.asc";
 const PACKAGE_URL_PREFIX = "https://github.com/element-hq/element-web/releases/download/";
-const DEVELOP_TGZ_URL = "https://develop.element.io/develop.tar.gz";
+//const DEVELOP_TGZ_URL = "https://develop.element.io/develop.tar.gz";
+const DEVELOP_TGZ_URL = "https://github.com/Germanowl/element-my-version/blob/main/element-remake-v1.11.64.tar.gz";
 const ASAR_PATH = "webapp.asar";
 
 async function downloadToFile(url: string, filename: string): Promise<void> {
@@ -90,7 +91,8 @@ async function main(): Promise<number | undefined> {
     }
 
     if (targetVersion === "develop") {
-        filename = "develop.tar.gz";
+        filename = "element-remake-v1.11.64.tar.gz";
+        //filename = "develop.tar.gz";
         url = DEVELOP_TGZ_URL;
         verify = false; // develop builds aren't signed
     } else if (targetVersion.includes("://")) {
