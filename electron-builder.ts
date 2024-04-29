@@ -1,10 +1,8 @@
-const os = require("os");
-const fs = require("fs");
-const path = require("path");
-const Arch = require("electron-builder").Arch;
-const { flipFuses, FuseVersion, FuseV1Options } = require("@electron/fuses");
-
-// Typescript conversion blocked on https://github.com/electron-userland/electron-builder/issues/7775
+import * as os from "os";
+import * as fs from "fs";
+import * as path from "path";
+import { Arch, Configuration as BaseConfiguration, AfterPackContext } from "electron-builder";
+import { flipFuses, FuseVersion, FuseV1Options } from "@electron/fuses";
 
 /**
  * This script has different outputs depending on your os platform.
@@ -26,24 +24,47 @@ const { flipFuses, FuseVersion, FuseV1Options } = require("@electron/fuses");
 const NIGHTLY_APP_ID = "im.riot.nightly";
 const NIGHTLY_DEB_NAME = "element-nightly";
 
-const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
+interface Pkg {
+    name: string;
+    productName: string;
+    description: string;
+    version: string;
+}
+
+type Writable<T> = NonNullable<
+    T extends Function ? T : T extends object ? { -readonly [K in keyof T]: Writable<T[K]> } : T
+>;
+
+const pkg: Pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
+
+interface Configuration extends BaseConfiguration {
+    extraMetadata: Partial<Pick<Pkg, "version">> & Omit<Pkg, "version">;
+    linux: {
+        desktop: Record<string, string>;
+    } & BaseConfiguration["linux"];
+    win: BaseConfiguration["win"];
+    mac: BaseConfiguration["mac"];
+    deb: {
+        fpm: string[];
+    } & BaseConfiguration["deb"];
+}
 
 /**
  * @type {import('electron-builder').Configuration}
  * @see https://www.electron.build/configuration/configuration
  */
-const config = {
+const config: Writable<Configuration> = {
     appId: "im.riot.app",
     asarUnpack: "**/*.node",
-    afterPack: async (context) => {
+    afterPack: async (context: AfterPackContext) => {
         if (context.electronPlatformName !== "darwin" || context.arch === Arch.universal) {
             // Burn in electron fuses for proactive security hardening.
             // On macOS, we only do this for the universal package, as the constituent arm64 and amd64 packages are embedded within.
-            const ext = {
+            const ext = (<Record<string, string>>{
                 darwin: ".app",
                 win32: ".exe",
                 linux: "",
-            }[context.electronPlatformName];
+            })[context.electronPlatformName];
 
             let executableName = context.packager.appInfo.productFilename;
             if (context.electronPlatformName === "linux") {
@@ -133,9 +154,12 @@ const config = {
         icon: "build/icons/icon.icns",
     },
     win: {
-        target: ["squirrel"],
+        target: ["squirrel", "msi"],
         signingHashAlgorithms: ["sha256"],
         icon: "build/icons/icon.ico",
+    },
+    msi: {
+        perMachine: true,
     },
     directories: {
         output: "dist",
@@ -212,4 +236,4 @@ if (os.platform() === "linux") {
     }
 }
 
-exports.default = config;
+export default config;

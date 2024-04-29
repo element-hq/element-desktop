@@ -33,7 +33,7 @@ import {
 import url from "url";
 import fs from "fs";
 import fetch from "node-fetch";
-import { pipeline } from "stream";
+import { pipeline } from "stream/promises";
 import path from "path";
 
 import { _t } from "./language-helper";
@@ -165,7 +165,7 @@ function onLinkContextMenu(ev: Event, params: ContextMenuParams, webContents: We
                             const resp = await fetch(url);
                             if (!resp.ok) throw new Error(`unexpected response ${resp.statusText}`);
                             if (!resp.body) throw new Error(`unexpected response has no body ${resp.statusText}`);
-                            pipeline(resp.body, fs.createWriteStream(filePath));
+                            await pipeline(resp.body, fs.createWriteStream(filePath));
                         }
                     } catch (err) {
                         console.error(err);
