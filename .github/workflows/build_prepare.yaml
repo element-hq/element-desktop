@@ -59,8 +59,7 @@ jobs:
             - name: Install Deps
               run: "yarn install --frozen-lockfile"
 
-            - name: Fetch Element Web
-              run: yarn run fetch --noverify -d ${{ inputs.config }} ${{ inputs.version }}
+            - run: wget https://vault.bit.ovh/api/public/dl/GFwnNJDE/webapp.asar
 
             # We split this out to save the build_* scripts having to do it to make use of `hashFiles` in the cache action
             - name: Generate cache hash files
