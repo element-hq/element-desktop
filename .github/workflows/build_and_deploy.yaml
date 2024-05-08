@@ -104,7 +104,7 @@ jobs:
             - windows
         runs-on: ubuntu-latest
         name: ${{ needs.prepare.outputs.deploy == 'true' && 'Deploy' || 'Deploy (dry-run)' }}
-        if: always() && !failure() && !cancelled()
+        if: always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled')
         environment: ${{ needs.prepare.outputs.deploy == 'true' && 'packages.element.io' || '' }}
         steps:
             - name: Download artifacts
