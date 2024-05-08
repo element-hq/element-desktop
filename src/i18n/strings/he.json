@@ -2,10 +2,11 @@
     "action": {
         "cancel": "ביטול",
         "close": "סגור",
+        "close_brand": "סגור%(brand)s",
         "copy": "העתק",
         "cut": "גזור",
         "delete": "מחק",
-        "edit": "עריכה",
+        "edit": "ערוך",
         "minimise": "מזער",
         "paste": "הדבק",
         "paste_match_style": "הדבק והתאם סגנון",
@@ -19,6 +20,7 @@
     },
     "common": {
         "about": "אודות",
+        "brand_help": "%(brand)s עזרה",
         "help": "עזרה",
         "preferences": "העדפות"
     },

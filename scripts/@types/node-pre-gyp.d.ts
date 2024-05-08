@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-declare module "node-pre-gyp/lib/util/versioning" {
+declare module "@mapbox/node-pre-gyp/lib/util/versioning" {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     export function get_runtime_abi(runtime: string, version: string): string;
 }

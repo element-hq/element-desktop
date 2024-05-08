@@ -51,8 +51,8 @@
     },
     "view_menu": {
         "actual_size": "Rozmiar rzeczywisty",
-        "toggle_developer_tools": "Przełącz na narzędzia deweloperskie",
-        "toggle_full_screen": "Przełącz na pełny ekran",
+        "toggle_developer_tools": "Przełącz narzędzia deweloperskie",
+        "toggle_full_screen": "Przełącz pełny ekran",
         "view": "Wyświetl"
     },
     "window_menu": {

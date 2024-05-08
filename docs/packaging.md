@@ -22,12 +22,7 @@ For releasing Element Desktop, we assume the following prerequisites:
 
 **Both of these are done automatically when you run the release automation.**
 
-Once those are ready, the **manual** release build can be manually invoked using https://github.com/vector-im/element-desktop/actions/workflows/build_and_deploy.yaml
-
-1. Click `Run workflow`
-1. Specify the `master` branch
-1. Switch type to release
-1. Click the green `Run workflow`
+The packaging is kicked off automagically for you when a Github Release for Element Desktop is published.
 
 ### More detail on the github actions
 
