@@ -105,6 +105,9 @@ jobs:
                   fi
 
             # electron-builder is incapable of installing an arm64-compatible fpm
+            - uses: ruby/setup-ruby@v1
+              with:
+                  ruby-version: "3"
             - name: Install fpm
               run: |
                   gem install fpm
