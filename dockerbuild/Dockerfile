@@ -19,7 +19,7 @@ RUN apt-get -qq update && apt-get -qq dist-upgrade && \
   libsecret-1-dev \
   libopenjp2-tools \
   # Used by github actions \
-  jq grep file \
+  jq grep file ruby-dev \
   # Used by seshat (when not SQLCIPHER_STATIC) \
   libsqlcipher-dev && \
   # git-lfs
