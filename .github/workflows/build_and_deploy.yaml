@@ -86,9 +86,6 @@ jobs:
             matrix:
                 arch: [amd64, arm64]
                 sqlcipher: [system, static]
-                exclude:
-                    - arch: arm64
-                      sqlcipher: static
         uses: ./.github/workflows/build_linux.yaml
         with:
             arch: ${{ matrix.arch }}
@@ -136,6 +133,10 @@ jobs:
                       mkdir -p packages.element.io/install/linux/glibc-x86-64
                       mv linux-amd64-sqlcipher-static/*.tar.gz packages.element.io/install/linux/glibc-x86-64
                   fi
+                  if [ -d linux-arm64-sqlcipher-static ]; then
+                      mkdir -p packages.element.io/install/linux/glibc-aarch64
+                      mv linux-arm64-sqlcipher-static/*.tar.gz packages.element.io/install/linux/glibc-aarch64
+                  fi
 
             # We don't wish to store the installer for every nightly ever, so we only keep the latest
             - name: "[Nightly] Strip version from installer file"
@@ -152,6 +153,7 @@ jobs:
 
                   # Linux
                   [ -d linux-amd64-sqlcipher-static ] && mv packages.element.io/install/linux/glibc-x86-64/{*,element-desktop-nightly}.tar.gz
+                  [ -d linux-arm64-sqlcipher-static ] && mv packages.element.io/install/linux/glibc-aarch64/{*,element-desktop-nightly}.tar.gz
 
             - name: "[Release] Prepare release latest symlink"
               if: needs.prepare.outputs.nightly-version == ''
@@ -176,6 +178,11 @@ jobs:
                   # Linux
                   if [ -d linux-amd64-sqlcipher-static ]; then
                       pushd packages.element.io/install/linux/glibc-x86-64
+                      ln -s "$(find . -type f -iname "*.tar.gz" | xargs -0 -n1 -- basename)" "element-desktop.tar.gz"
+                      popd
+                  fi
+                  if [ -d linux-arm64-sqlcipher-static ]; then
+                      pushd packages.element.io/install/linux/glibc-aarch64
                       ln -s "$(find . -type f -iname "*.tar.gz" | xargs -0 -n1 -- basename)" "element-desktop.tar.gz"
                       popd
                   fi
