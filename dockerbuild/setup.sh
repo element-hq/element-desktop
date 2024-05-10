@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-if [ "$TARGETPLATFORM" = "linux/arm64" ]; then
+if [ "$TARGETPLATFORM" = "linux/amd64" ]; then
+  apt-get -y install gcc-multilib g++-multilib
+elif [ "$TARGETPLATFORM" = "linux/arm64" ]; then
   echo "Building for aarch64"
   apt-get -qq update
   apt-get -y install crossbuild-essential-arm64 libsqlcipher-dev:arm64 libssl-dev:arm64 libsecret-1-dev:arm64

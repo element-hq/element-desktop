@@ -15,7 +15,7 @@ RUN apt-get -qq update && apt-get -qq dist-upgrade && \
   # rpm is required for FPM to build rpm package
   # tclsh is required for building SQLite as part of SQLCipher
   # libsecret-1-dev is required even for prebuild keytar
-  apt-get -qq install --no-install-recommends qtbase5-dev bsdtar build-essential autoconf libssl-dev gcc-multilib g++-multilib lzip rpm python libcurl4 git git-lfs ssh unzip tcl \
+  apt-get -qq install --no-install-recommends qtbase5-dev bsdtar build-essential autoconf libssl-dev lzip rpm python libcurl4 git git-lfs ssh unzip tcl \
   libsecret-1-dev \
   libopenjp2-tools \
   # Used by github actions \
@@ -51,4 +51,4 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no
 
 # Run platform-specific tasks
 COPY . /dockerbuild/
-RUN /dockerbuild/aarch64.sh
+RUN /dockerbuild/setup.sh
