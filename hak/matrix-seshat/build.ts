@@ -19,38 +19,38 @@ import childProcess from "child_process";
 import HakEnv from "../../scripts/hak/hakEnv";
 import { DependencyInfo } from "../../scripts/hak/dep";
 
+function run(
+    moduleInfo: DependencyInfo,
+    cmd: string,
+    args: string[],
+    env: Record<string, string | undefined>,
+): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+        const proc = childProcess.spawn(cmd, args, {
+            cwd: moduleInfo.moduleBuildDir,
+            env,
+            shell: true,
+            stdio: "inherit",
+        });
+        proc.on("exit", (code) => {
+            code ? reject(code) : resolve();
+        });
+    });
+}
+
 export default async function (hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
     const env = hakEnv.makeGypEnv();
 
     if (!hakEnv.isHost()) {
         env.CARGO_BUILD_TARGET = hakEnv.getTargetId();
     }
+    const yarnCmd = "yarn" + (hakEnv.isWin() ? ".cmd" : "");
 
     console.log("Running yarn install");
-    await new Promise<void>((resolve, reject) => {
-        const proc = childProcess.spawn("yarn" + (hakEnv.isWin() ? ".cmd" : ""), ["install"], {
-            cwd: moduleInfo.moduleBuildDir,
-            env,
-            shell: true,
-            stdio: "inherit",
-        });
-        proc.on("exit", (code) => {
-            code ? reject(code) : resolve();
-        });
-    });
+    await run(moduleInfo, yarnCmd, ["install"], env);
 
     const buildTarget = hakEnv.wantsStaticSqlCipher() ? "build-bundled" : "build";
 
     console.log("Running yarn build");
-    await new Promise<void>((resolve, reject) => {
-        const proc = childProcess.spawn("yarn" + (hakEnv.isWin() ? ".cmd" : ""), ["run", buildTarget], {
-            cwd: moduleInfo.moduleBuildDir,
-            env,
-            shell: true,
-            stdio: "inherit",
-        });
-        proc.on("exit", (code) => {
-            code ? reject(code) : resolve();
-        });
-    });
+    await run(moduleInfo, yarnCmd, ["run", buildTarget], env);
 }
