@@ -82,18 +82,21 @@ jobs:
               run: |
                   echo "SQLCIPHER_BUNDLED=1" >> $GITHUB_ENV
 
-            # Ideally the docker image would be ready for cross-compilation but libsqlcipher-dev is not Multi-Arch compatible
-            # https://unix.stackexchange.com/a/349359
             - name: Prepare for cross compilation
               if: steps.cache.outputs.cache-hit != 'true' && inputs.arch == 'arm64'
               run: |
-                  set -x
-                  dpkg --add-architecture arm64
-                  apt-get -qq update
-                  apt-get -qq install --no-install-recommends crossbuild-essential-arm64 libsqlcipher-dev:arm64 libssl-dev:arm64 libsecret-1-dev:arm64
                   rustup target add aarch64-unknown-linux-gnu
                   mv dockerbuild/aarch64/.cargo .
                   cat dockerbuild/aarch64/.env >> $GITHUB_ENV
+
+            # Ideally the docker image would be ready for cross-compilation but libsqlcipher-dev is not Multi-Arch compatible
+            # https://unix.stackexchange.com/a/349359
+            - name: Prepare for cross compilation (dynamic)
+              if: steps.cache.outputs.cache-hit != 'true' && inputs.arch == 'arm64' && inputs.sqlcipher == 'system'
+              run: |
+                  dpkg --add-architecture arm64
+                  apt-get -qq update
+                  apt-get -qq install --no-install-recommends libsqlcipher-dev:arm64 libssl-dev:arm64 libsecret-1-dev:arm64
 
             - name: Build Natives
               if: steps.cache.outputs.cache-hit != 'true'

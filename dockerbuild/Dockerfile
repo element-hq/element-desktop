@@ -19,6 +19,8 @@ RUN apt-get -qq update && apt-get -qq dist-upgrade && \
   jq grep file \
   # Used by seshat (when not SQLCIPHER_STATIC) \
   libsqlcipher-dev && \
+  # Used for cross-compilation
+  crossbuild-essential-arm64 \
   # git-lfs
   git lfs install && \
   apt-get purge -y --auto-remove && rm -rf /var/lib/apt/lists/*
