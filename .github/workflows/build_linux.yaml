@@ -89,7 +89,7 @@ jobs:
                       --rm \
                       -v $(pwd):/${{ github.workspace }} \
                       -w ${{ github.workspace }} \
-                      --platform linux/${{ matrix.arch }} \
+                      --platform linux/${{ inputs.arch }} \
                       ${{ inputs.docker-image || format('ghcr.io/element-hq/element-desktop-dockerbuild:{0}', github.ref_name == 'master' && 'master' || 'develop') }} \
                       ${{ steps.config.outputs.docker-args }} \
                       -e SQLCIPHER_BUNDLED=${{ inputs.sqlcipher == 'static' && '1' || '0' }} \
