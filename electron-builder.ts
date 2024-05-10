@@ -119,7 +119,7 @@ const config: Writable<Configuration> = {
         maintainer: "support@element.io",
         icon: "build/icons",
         desktop: {
-            MimeType: "x-scheme-handler/element",
+            MimeType: "x-scheme-handler/io.element.desktop;x-scheme-handler/element",
         },
     },
     deb: {
@@ -167,7 +167,7 @@ const config: Writable<Configuration> = {
     protocols: [
         {
             name: "element",
-            schemes: ["element"],
+            schemes: ["io.element.desktop", "element"],
         },
     ],
 };

@@ -19,7 +19,8 @@ import { URL } from "url";
 import path from "path";
 import fs from "fs";
 
-const PROTOCOL = "element:";
+const LEGACY_PROTOCOL = "element";
+const PROTOCOL = "io.element.desktop";
 const SEARCH_PARAM = "element-desktop-ssoid";
 const STORE_FILE_NAME = "sso-sessions.json";
 
@@ -33,7 +34,7 @@ function processUrl(url: string): void {
     // sanity check: we only register for the one protocol, so we shouldn't
     // be getting anything else unless the user is forcing a URL to open
     // with the Element app.
-    if (parsed.protocol !== PROTOCOL) {
+    if (parsed.protocol !== `${PROTOCOL}:` && parsed.protocol !== `${LEGACY_PROTOCOL}:`) {
         console.log("Ignoring unexpected protocol: ", parsed.protocol);
         return;
     }
@@ -82,10 +83,10 @@ export function recordSSOSession(sessionID: string): void {
 
 export function getProfileFromDeeplink(args: string[]): string | undefined {
     // check if we are passed a profile in the SSO callback url
-    const deeplinkUrl = args.find((arg) => arg.startsWith(PROTOCOL + "//"));
+    const deeplinkUrl = args.find((arg) => arg.startsWith(`${PROTOCOL}://`) || arg.startsWith(`${LEGACY_PROTOCOL}://`));
     if (deeplinkUrl?.includes(SEARCH_PARAM)) {
         const parsedUrl = new URL(deeplinkUrl);
-        if (parsedUrl.protocol === PROTOCOL) {
+        if (parsedUrl.protocol === `${PROTOCOL}:` || parsedUrl.protocol === `${LEGACY_PROTOCOL}:`) {
             const store = readStore();
             let ssoID = parsedUrl.searchParams.get(SEARCH_PARAM);
             if (!ssoID) {
@@ -105,11 +106,13 @@ export function protocolInit(): void {
     // --profile/--profile-dir are passed via the SEARCH_PARAM var in the callback url
     const args = process.argv.slice(1).filter((arg) => arg !== "--hidden" && arg !== "-hidden");
     if (app.isPackaged) {
-        app.setAsDefaultProtocolClient("element", process.execPath, args);
+        app.setAsDefaultProtocolClient(PROTOCOL, process.execPath, args);
+        app.setAsDefaultProtocolClient(LEGACY_PROTOCOL, process.execPath, args);
     } else if (process.platform === "win32") {
         // on Mac/Linux this would just cause the electron binary to open
         // special handler for running without being packaged, e.g `electron .` by passing our app path to electron
-        app.setAsDefaultProtocolClient("element", process.execPath, [app.getAppPath(), ...args]);
+        app.setAsDefaultProtocolClient(PROTOCOL, process.execPath, [app.getAppPath(), ...args]);
+        app.setAsDefaultProtocolClient(LEGACY_PROTOCOL, process.execPath, [app.getAppPath(), ...args]);
     }
 
     if (process.platform === "darwin") {
@@ -122,7 +125,7 @@ export function protocolInit(): void {
         // Protocol handler for win32/Linux
         app.on("second-instance", (ev, commandLine) => {
             const url = commandLine[commandLine.length - 1];
-            if (!url.startsWith(PROTOCOL + "//")) return;
+            if (!url.startsWith(`${PROTOCOL}://`) && !url.startsWith(`${LEGACY_PROTOCOL}://`)) return;
             processUrl(url);
         });
     }
