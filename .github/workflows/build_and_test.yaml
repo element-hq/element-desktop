@@ -45,6 +45,15 @@ jobs:
               with:
                   files: |
                       dockerbuild/**
+
+            - name: Set up QEMU
+              uses: docker/setup-qemu-action@68827325e0b33c7199eb31dd4e31fbe9023e06e3 # v3
+
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@d70bba72b1f3fd22344832f00baa16ece964efeb # v3
+              with:
+                  install: true
+
             - name: Log in to the Container registry
               if: steps.changed_files.outputs.any_modified == 'true'
               uses: docker/login-action@5f4866a30a54f16a52d2ecb4a3898e9e424939cf
@@ -68,6 +77,7 @@ jobs:
                   context: dockerbuild
                   push: true
                   tags: ${{ steps.docker.outputs.image }}
+                  platforms: linux/amd64,linux/arm64
 
     linux:
         needs:

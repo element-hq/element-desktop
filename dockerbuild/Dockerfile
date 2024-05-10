@@ -3,6 +3,9 @@ FROM buildpack-deps:buster-curl
 
 ENV DEBIAN_FRONTEND noninteractive
 
+# For DinD to work
+COPY --from=docker:dind /usr/local/bin/docker /usr/local/bin/
+
 RUN curl --proto "=https" -L https://yarnpkg.com/latest.tar.gz | tar xvz && mv yarn-* /yarn && ln -s /yarn/bin/yarn /usr/bin/yarn
 RUN apt-get -qq update && apt-get -qq dist-upgrade && \
   # add repo for git-lfs
@@ -19,8 +22,6 @@ RUN apt-get -qq update && apt-get -qq dist-upgrade && \
   jq grep file \
   # Used by seshat (when not SQLCIPHER_STATIC) \
   libsqlcipher-dev && \
-  # Used for cross-compilation
-  crossbuild-essential-arm64 \
   # git-lfs
   git lfs install && \
   apt-get purge -y --auto-remove && rm -rf /var/lib/apt/lists/*
@@ -47,3 +48,7 @@ ENV RUSTUP_HOME=/usr/local/rustup \
     PATH=/usr/local/cargo/bin:$PATH
 
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path --profile minimal
+
+# Run platform-specific tasks
+ADD COPY ./dockerbuild/ /dockerbuild/
+RUN /dockerbuild/aarch64.sh

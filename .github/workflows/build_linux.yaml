@@ -27,8 +27,6 @@ on:
 jobs:
     build:
         runs-on: ubuntu-latest
-        container:
-            image: ${{ inputs.docker-image || format('ghcr.io/element-hq/element-desktop-dockerbuild:{0}', github.ref_name == 'master' && 'master' || 'develop') }}
         defaults:
             run:
                 shell: bash
@@ -47,7 +45,8 @@ jobs:
                         "arm64": {
                           "target": "aarch64-unknown-linux-gnu",
                           "arch": "aarch64",
-                          "build-args": "--arm64"
+                          "build-args": "--arm64",
+                          "docker-args": "--env-file ./dockerbuild/aarch64/.env"
                         }
                       }
 
@@ -77,30 +76,24 @@ jobs:
             - name: Install Deps
               run: "yarn install --frozen-lockfile"
 
-            - name: Prepare for static sqlcipher build
-              if: inputs.sqlcipher == 'static'
-              run: |
-                  echo "SQLCIPHER_BUNDLED=1" >> $GITHUB_ENV
-
-            - name: Prepare for cross compilation
-              if: steps.cache.outputs.cache-hit != 'true' && inputs.arch == 'arm64'
-              run: |
-                  rustup target add aarch64-unknown-linux-gnu
-                  mv dockerbuild/aarch64/.cargo .
-                  cat dockerbuild/aarch64/.env >> $GITHUB_ENV
-
-            # Ideally the docker image would be ready for cross-compilation but libsqlcipher-dev is not Multi-Arch compatible
-            # https://unix.stackexchange.com/a/349359
-            - name: Prepare for cross compilation (dynamic)
-              if: steps.cache.outputs.cache-hit != 'true' && inputs.arch == 'arm64' && inputs.sqlcipher == 'system'
-              run: |
-                  dpkg --add-architecture arm64
-                  apt-get -qq update
-                  apt-get -qq install --no-install-recommends libsqlcipher-dev:arm64 libssl-dev:arm64 libsecret-1-dev:arm64
+            - name: Set up QEMU
+              uses: docker/setup-qemu-action@v1
+              if: steps.cache.outputs.cache-hit != 'true' && inputs.arch != 'amd64'
+              with:
+                  platforms: ${{ matrix.arch }}
 
             - name: Build Natives
               if: steps.cache.outputs.cache-hit != 'true'
-              run: "yarn build:native --target ${{ steps.config.outputs.target }}"
+              run: |
+                  docker run \
+                      --rm \
+                      -v $(pwd):/${{ github.workspace }} \
+                      -w ${{ github.workspace }} \
+                      --platform linux/${{ matrix.arch }} \
+                      ${{ inputs.docker-image || format('ghcr.io/element-hq/element-desktop-dockerbuild:{0}', github.ref_name == 'master' && 'master' || 'develop') }} \
+                      ${{ steps.config.outputs.docker-args }} \
+                      -e SQLCIPHER_BUNDLED=${{ inputs.sqlcipher == 'static' && '1' || '0' }} \
+                      yarn build:native --target ${{ steps.config.outputs.target }}
 
             - name: "[Nightly] Resolve version"
               if: inputs.version != ''
