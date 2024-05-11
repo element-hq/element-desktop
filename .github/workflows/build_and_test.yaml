@@ -111,7 +111,7 @@ jobs:
             matrix:
                 include:
                     - name: macOS Universal
-                      os: macos
+                      os: macos-latest
                       artifact: macos
                       executable: "/Users/runner/Applications/Element.app/Contents/MacOS/Element"
                       # We need to mount the DMG and copy the app to the Applications folder as a mounted DMG is
@@ -121,12 +121,12 @@ jobs:
                           rsync -a /Volumes/Element/Element.app ~/Applications/ &&
                           hdiutil detach /Volumes/Element
                     - name: "Linux (amd64) (sqlcipher: system)"
-                      os: ubuntu
+                      os: ubuntu-latest
                       artifact: linux-amd64-sqlcipher-system
                       executable: "/opt/Element/element-desktop"
                       prepare_cmd: "sudo apt install ./dist/*.deb"
                     - name: "Linux (amd64) (sqlcipher: static)"
-                      os: ubuntu
+                      os: ubuntu-latest
                       artifact: linux-amd64-sqlcipher-static
                       executable: "/opt/Element/element-desktop"
                       prepare_cmd: "sudo apt install ./dist/*.deb"
@@ -141,15 +141,15 @@ jobs:
                       executable: "/opt/Element/element-desktop"
                       prepare_cmd: "sudo apt install ./dist/*.deb"
                     - name: Windows (x86)
-                      os: windows
+                      os: windows-latest
                       artifact: win-ia32
                       executable: "./dist/win-ia32-unpacked/Element.exe"
                     - name: Windows (x64)
-                      os: windows
+                      os: windows-latest
                       artifact: win-x64
                       executable: "./dist/win-unpacked/Element.exe"
         name: Test ${{ matrix.name }}
-        runs-on: ${{ matrix.os }}-latest
+        runs-on: ${{ matrix.os }}
         steps:
             - uses: actions/checkout@v4
 
