@@ -130,6 +130,16 @@ jobs:
                       artifact: linux-amd64-sqlcipher-static
                       executable: "/opt/Element/element-desktop"
                       prepare_cmd: "sudo apt install ./dist/*.deb"
+                    - name: "Linux (arm64) (sqlcipher: system)"
+                      os: dind-l-arm64
+                      artifact: linux-arm64-sqlcipher-system
+                      executable: "/opt/Element/element-desktop"
+                      prepare_cmd: "sudo apt install ./dist/*.deb"
+                    - name: "Linux (arm64) (sqlcipher: static)"
+                      os: dind-l-arm64
+                      artifact: linux-arm64-sqlcipher-static
+                      executable: "/opt/Element/element-desktop"
+                      prepare_cmd: "sudo apt install ./dist/*.deb"
                     - name: Windows (x86)
                       os: windows
                       artifact: win-ia32
