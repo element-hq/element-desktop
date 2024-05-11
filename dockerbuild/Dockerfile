@@ -39,10 +39,6 @@ ENV DEBUG_COLORS true
 ENV FORCE_COLOR true
 ENV NODE_VERSION 18.19.0
 
-ARG TARGETARCH
-# this package is used for snapcraft and we should not clear apt list - to avoid apt-get update during snap build
-RUN curl --proto "=https" -L https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-$TARGETARCH.tar.gz | tar xz -C /usr/local --strip-components=1 && \
-  unlink /usr/local/CHANGELOG.md && unlink /usr/local/LICENSE && unlink /usr/local/README.md
 
 ENV RUSTUP_HOME=/usr/local/rustup \
     CARGO_HOME=/usr/local/cargo \
