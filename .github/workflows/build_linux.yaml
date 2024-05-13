@@ -120,8 +120,6 @@ jobs:
                     -e SQLCIPHER_BUNDLED \
                     ${{ env.HAK_DOCKER_IMAGE }} \
                     yarn build:native --target ${{ steps.config.outputs.target }}
-                  # reset permissions
-                  sudo chown -R $(id -u):$(id -g) ./.hak
 
             - name: "[Nightly] Resolve version"
               if: inputs.version != ''
@@ -136,7 +134,7 @@ jobs:
 
             - name: Build App
               run: |
-                  yarn build --publish never -l ${{ steps.config.outputs.build-args }}
+                  sudo yarn build --publish never -l ${{ steps.config.outputs.build-args }}
 
             - name: Check native libraries
               run: |
