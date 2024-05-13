@@ -20,15 +20,11 @@ on:
                 type: string
                 required: true
                 description: "How to link sqlcipher, one of 'system' | 'static'"
-            docker-image:
-                type: string
-                required: false
-                description: "The docker image to use for the build, defaults to ghcr.io/element-hq/element-desktop-dockerbuild"
 jobs:
     build:
-        runs-on: ${{ inputs.arch == 'amd64' && 'ubuntu-latest' || 'dind-l-arm64' }}
-        container:
-            image: ${{ inputs.docker-image || format('ghcr.io/element-hq/element-desktop-dockerbuild:{0}', github.ref_name == 'master' && 'master' || 'develop') }}
+        runs-on: ubuntu-latest
+        env:
+            HAK_DOCKER_IMAGE: ${{ format('ghcr.io/element-hq/element-desktop-dockerbuild:{0}', github.ref_name == 'master' && 'master' || 'develop') }}
         defaults:
             run:
                 shell: bash
@@ -46,8 +42,7 @@ jobs:
                         },
                         "arm64": {
                           "target": "aarch64-unknown-linux-gnu",
-                          "arch": "aarch64",
-                          "build-args": "--arm64"
+                          "arch": "aarch64"
                         }
                       }
 
@@ -61,7 +56,7 @@ jobs:
               id: cache
               uses: actions/cache@v4
               with:
-                  key: ${{ runner.os }}-${{ inputs.docker-image || github.ref_name }}-${{ inputs.sqlcipher }}-${{ inputs.arch }}-${{ hashFiles('hakHash', 'electronVersion') }}
+                  key: ${{ runner.os }}-${{ github.ref_name }}-${{ inputs.sqlcipher }}-${{ inputs.arch }}-${{ hashFiles('hakHash', 'electronVersion') }}
                   path: |
                       ./.hak
 
@@ -82,22 +77,40 @@ jobs:
               run: |
                   echo "SQLCIPHER_BUNDLED=1" >> $GITHUB_ENV
 
-            - name: Prepare for cross compilation
-              if: steps.cache.outputs.cache-hit != 'true' && inputs.arch == 'arm64'
-              run: |
-                  cat dockerbuild/aarch64/.env >> $GITHUB_ENV
+            - name: "Get modified files"
+              id: changed_files
+              if: steps.cache.outputs.cache-hit != 'true' && github.event_name == 'pull_request'
+              uses: tj-actions/changed-files@635f118699dd888d737c15018cd30aff2e0274f8 # v44
+              with:
+                  files: |
+                      dockerbuild/**
 
-            # electron-builder is incapable of installing an arm64-compatible fpm
-            - name: Install fpm
-              if: inputs.arch == 'arm64'
-              run: |
-                  gem install dotenv -v 2.8.1
-                  gem install fpm
-                  echo "USE_SYSTEM_FPM=true" >> $GITHUB_ENV
+            - name: Set up QEMU
+              uses: docker/setup-qemu-action@68827325e0b33c7199eb31dd4e31fbe9023e06e3 # v3
+              if: steps.cache.outputs.cache-hit != 'true' && inputs.arch != 'amd64'
+              with:
+                  platforms: linux/${{ inputs.arch }}
+
+            # This allows contributors to test changes to the dockerbuild image within a pull request
+            - name: Build
+              uses: docker/build-push-action@2cdde995de11925a030ce8070c3d77a52ffcf1c0 # v5
+              if: steps.changed_files.outputs.any_modified == 'true'
+              with:
+                  context: dockerbuild
+                  load: true
+                  platforms: linux/${{ inputs.arch }}
+                  tags: ${{ env.HAK_DOCKER_IMAGE }}
 
             - name: Build Natives
               if: steps.cache.outputs.cache-hit != 'true'
-              run: "yarn build:native --target ${{ steps.config.outputs.target }}"
+              uses: addnab/docker-run-action@4f65fabd2431ebc8d299f8e5a018d79a769ae185 # v3
+              with:
+                  #                  username: ${{ secrets.DOCKER_USERNAME }}
+                  #                  password: ${{ secrets.DOCKER_PASSWORD }}
+                  #                  registry: gcr.io
+                  image: ${{ env.HAK_DOCKER_IMAGE }}
+                  options: -v ${{ github.workspace }}:/work -e SQLCIPHER_BUNDLED
+                  run: "yarn build:native --target ${{ steps.config.outputs.target }}"
 
             - name: "[Nightly] Resolve version"
               if: inputs.version != ''
@@ -110,9 +123,24 @@ jobs:
                       echo "ED_DEBIAN_CHANGELOG=changelog.Debian" >> $GITHUB_ENV
                   fi
 
-            - name: Build App
+            # electron-builder is incapable of installing an arm64-compatible fpm
+            - name: Install fpm
+              if: inputs.arch == 'arm64'
               run: |
-                  yarn build --publish never -l ${{ steps.config.outputs.build-args }}
+                  #                  gem install dotenv -v 2.8.1
+                         gem install fpm
+                         echo "USE_SYSTEM_FPM=true" >> $GITHUB_ENV
+
+            - name: Build App
+              uses: addnab/docker-run-action@4f65fabd2431ebc8d299f8e5a018d79a769ae185 # v3
+              with:
+                  #                  username: ${{ secrets.DOCKER_USERNAME }}
+                  #                  password: ${{ secrets.DOCKER_PASSWORD }}
+                  #                  registry: gcr.io
+                  image: electronuserland/builder:18
+                  options: -v ${{ github.workspace }}:/work -e USE_SYSTEM_FPM
+                  run: |
+                      yarn build --publish never -l
 
             - name: Check native libraries
               run: |
