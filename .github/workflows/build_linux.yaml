@@ -72,7 +72,7 @@ jobs:
               id: cache
               uses: actions/cache@v4
               with:
-                  key: 1-${{ runner.os }}-${{ github.ref_name }}-${{ inputs.sqlcipher }}-${{ inputs.arch }}-${{ hashFiles('hakHash', 'electronVersion') }}
+                  key: 21-${{ runner.os }}-${{ github.ref_name }}-${{ inputs.sqlcipher }}-${{ inputs.arch }}-${{ hashFiles('hakHash', 'electronVersion') }}
                   path: |
                       ./.hak
 
@@ -114,12 +114,14 @@ jobs:
             - name: Build Natives
               if: steps.cache.outputs.cache-hit != 'true'
               run: |
+                  # we can't specify uid:gid here as those permissions don't work on the self-hoster runner
                   docker run \
-                    --user $(id -u):$(id -g) \
                     -v ${{ github.workspace }}:/work -w /work \
                     -e SQLCIPHER_BUNDLED \
                     ${{ env.HAK_DOCKER_IMAGE }} \
                     yarn build:native --target ${{ steps.config.outputs.target }}
+                  # reset permissions
+                  sudo chown -R $(id -u):$(id -g) ./.hak
 
             - name: "[Nightly] Resolve version"
               if: inputs.version != ''
