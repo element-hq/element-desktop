@@ -123,19 +123,12 @@ jobs:
                       echo "ED_DEBIAN_CHANGELOG=changelog.Debian" >> $GITHUB_ENV
                   fi
 
-            # electron-builder is incapable of installing an arm64-compatible fpm
-            - name: Install fpm
-              if: inputs.arch == 'arm64'
-              run: |
-                  #                  gem install dotenv -v 2.8.1
-                         gem install fpm
-                         echo "USE_SYSTEM_FPM=true" >> $GITHUB_ENV
-
             - name: Build App
               run: |
                   docker run \
                     -v ${{ github.workspace }}:/work -w /work \
                     -e USE_SYSTEM_FPM \
+                    -e USE_SYSTEM_FPM=true \
                     electronuserland/builder:18 \
                     yarn build --publish never -l ${{ steps.config.outputs.build-args }}
 
