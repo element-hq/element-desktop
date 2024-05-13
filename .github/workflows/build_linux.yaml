@@ -127,8 +127,6 @@ jobs:
               run: |
                   docker run \
                     -v ${{ github.workspace }}:/work -w /work \
-                    -e USE_SYSTEM_FPM \
-                    -e USE_SYSTEM_FPM=true \
                     electronuserland/builder:18 \
                     yarn build --publish never -l ${{ steps.config.outputs.build-args }}
 
