@@ -82,12 +82,18 @@ jobs:
               run: |
                   echo "SQLCIPHER_BUNDLED=1" >> $GITHUB_ENV
 
-            - run: uname -a
-
             - name: Prepare for cross compilation
               if: steps.cache.outputs.cache-hit != 'true' && inputs.arch == 'arm64'
               run: |
                   cat dockerbuild/aarch64/.env >> $GITHUB_ENV
+
+            # electron-builder is incapable of installing an arm64-compatible fpm
+            - name: Install fpm
+              if: inputs.arch == 'arm64'
+              run: |
+                  gem install dotenv -v 2.8.1
+                  gem install fpm
+                  echo "USE_SYSTEM_FPM=true" >> $GITHUB_ENV
 
             - name: Build Natives
               if: steps.cache.outputs.cache-hit != 'true'
@@ -103,13 +109,6 @@ jobs:
                   if [ -f changelog.Debian ]; then
                       echo "ED_DEBIAN_CHANGELOG=changelog.Debian" >> $GITHUB_ENV
                   fi
-
-            # electron-builder is incapable of installing an arm64-compatible fpm
-            - name: Install fpm
-              run: |
-                  gem install dotenv -v 2.8.1
-                  gem install fpm
-                  echo "USE_SYSTEM_FPM=true" >> $GITHUB_ENV
 
             - name: Build App
               run: |
