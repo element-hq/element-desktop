@@ -34,20 +34,12 @@ declare global {
 
 test.describe("App launch", () => {
     test.slow();
-
-    let page: Page;
-    test.beforeAll(async ({ page: _page }) => {
-        page = _page;
+    test("should launch and render the welcome view successfully and support seshat", async ({ page }) => {
         await page.locator("#matrixchat").waitFor();
-    });
-
-    test("should launch and render the welcome view successfully", async () => {
         await page.locator(".mx_Welcome").waitFor();
         await expect(page).toHaveURL("vector://vector/webapp/#/welcome");
         await expect(page).toHaveScreenshot();
-    });
 
-    test("should support seshat", async () => {
         const supported = await page.evaluate<boolean>(async () => {
             const indexManager = window.mxPlatformPeg.get()?.getEventIndexingManager();
             return await indexManager?.supportsEventIndexing();
