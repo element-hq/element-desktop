@@ -22,13 +22,23 @@ on:
                 description: "How to link sqlcipher, one of 'system' | 'static'"
 jobs:
     build:
-        runs-on: ubuntu-latest
+        runs-on: ${{ inputs.arch == 'arm64' && 'dind-l-arm64' || 'ubuntu-latest' }}
         env:
-            HAK_DOCKER_IMAGE: ${{ format('ghcr.io/element-hq/element-desktop-dockerbuild:{0}', github.ref_name == 'master' && 'master' || 'develop') }}
+            HAK_DOCKER_IMAGE: ${{ format('ghcr.io/element-hq/element-desktop-dockerbuild:{0}', github.event_name == 'pull_request' && 'develop' || github.ref_name) }}
         defaults:
             run:
                 shell: bash
         steps:
+            # Workaround for self-hosted runners lacking yarn
+            - name: Install Yarn
+              if: runner.environment == 'self-hosted'
+              run: |
+                  sudo apt-get -qq update
+                  sudo apt install -y curl
+                  curl -fsSL --create-dirs -o $HOME/bin/yarn https://github.com/yarnpkg/yarn/releases/download/v1.22.19/yarn-1.22.19.js
+                  chmod +x $HOME/bin/yarn
+                  echo "$HOME/bin" >> $GITHUB_PATH
+
             - uses: nbucic/variable-mapper@0673f6891a0619ba7c002ecfed0f9f4f39017b6f
               id: config
               with:
@@ -57,7 +67,7 @@ jobs:
               id: cache
               uses: actions/cache@v4
               with:
-                  key: ${{ runner.os }}-${{ github.ref_name }}-${{ inputs.sqlcipher }}-${{ inputs.arch }}-${{ hashFiles('hakHash', 'electronVersion') }}
+                  key: 111-${{ runner.os }}-${{ github.ref_name }}-${{ inputs.sqlcipher }}-${{ inputs.arch }}-${{ hashFiles('hakHash', 'electronVersion') }}
                   path: |
                       ./.hak
 
@@ -86,12 +96,6 @@ jobs:
                   files: |
                       dockerbuild/**
 
-            - name: Set up QEMU
-              uses: docker/setup-qemu-action@68827325e0b33c7199eb31dd4e31fbe9023e06e3 # v3
-              if: steps.cache.outputs.cache-hit != 'true' && inputs.arch != 'amd64'
-              with:
-                  platforms: linux/${{ inputs.arch }}
-
             # This allows contributors to test changes to the dockerbuild image within a pull request
             - name: Build docker image
               uses: docker/build-push-action@2cdde995de11925a030ce8070c3d77a52ffcf1c0 # v5
@@ -107,7 +111,6 @@ jobs:
               run: |
                   docker run \
                     -v ${{ github.workspace }}:/work -w /work \
-                    --platform linux/${{ inputs.arch }} \
                     -e SQLCIPHER_BUNDLED \
                     ${{ env.HAK_DOCKER_IMAGE }} \
                     yarn build:native --target ${{ steps.config.outputs.target }}
@@ -127,7 +130,7 @@ jobs:
               run: |
                   docker run \
                     -v ${{ github.workspace }}:/work -w /work \
-                    electronuserland/builder:18 \
+                    ${{ env.HAK_DOCKER_IMAGE }} \
                     yarn build --publish never -l ${{ steps.config.outputs.build-args }}
 
             - name: Check native libraries

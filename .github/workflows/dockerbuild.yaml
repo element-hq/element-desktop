@@ -2,7 +2,7 @@ name: Dockerbuild
 on:
     workflow_dispatch: {}
     push:
-        branches: [master, develop]
+        branches: [master, staging, develop]
         paths:
             - "dockerbuild/**"
 concurrency: ${{ github.workflow }}-${{ github.ref_name }}
