@@ -1,5 +1,5 @@
 # Docker image to facilitate building Element Desktop's native bits
-FROM rust:bookworm
+FROM rust:buster
 
 ENV DEBIAN_FRONTEND noninteractive
 
