@@ -109,7 +109,7 @@ jobs:
                   #                  password: ${{ secrets.DOCKER_PASSWORD }}
                   #                  registry: gcr.io
                   image: ${{ env.HAK_DOCKER_IMAGE }}
-                  options: -v ${{ github.workspace }}:/work -e SQLCIPHER_BUNDLED
+                  options: -v ${{ github.workspace }}:/work --platform linux/${{ inputs.arch }} -e SQLCIPHER_BUNDLED
                   run: "yarn build:native --target ${{ steps.config.outputs.target }}"
 
             - name: "[Nightly] Resolve version"
@@ -138,7 +138,7 @@ jobs:
                   #                  password: ${{ secrets.DOCKER_PASSWORD }}
                   #                  registry: gcr.io
                   image: electronuserland/builder:18
-                  options: -v ${{ github.workspace }}:/work -e USE_SYSTEM_FPM
+                  options: -v ${{ github.workspace }}:/work --platform linux/${{ inputs.arch }} -e USE_SYSTEM_FPM
                   run: |
                       yarn build --publish never -l
 
