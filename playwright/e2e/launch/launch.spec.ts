@@ -16,6 +16,20 @@ limitations under the License.
 
 import { test, expect } from "../../element-desktop-test";
 
+declare global {
+    interface Window {
+        mxPlatformPeg: {
+            get(): {
+                getEventIndexingManager():
+                    | {
+                          supportsEventIndexing(): Promise<boolean>;
+                      }
+                    | undefined;
+            };
+        };
+    }
+}
+
 test.describe("App launch", () => {
     test.slow();
     test("should launch and render the welcome view successfully", async ({ page }) => {
@@ -23,5 +37,14 @@ test.describe("App launch", () => {
         await page.locator(".mx_Welcome").waitFor();
         await expect(page).toHaveURL("vector://vector/webapp/#/welcome");
         await expect(page).toHaveScreenshot();
+    });
+
+    test("should support seshat", async ({ page }) => {
+        const supported = await page.evaluate<boolean>(async () => {
+            const indexManager = window.mxPlatformPeg.get()?.getEventIndexingManager();
+            return await indexManager?.supportsEventIndexing();
+        });
+
+        expect(supported).toBe(true);
     });
 });
