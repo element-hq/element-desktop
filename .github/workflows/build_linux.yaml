@@ -40,8 +40,8 @@ jobs:
                   echo "$HOME/bin" >> $GITHUB_PATH
 
                   # electron-builder is incapable of installing an arm64-compatible fpm
-                  gem install dotenv -v 2.8.1
-                  gem install fpm
+                  sudo gem install dotenv -v 2.8.1
+                  sudo gem install fpm
                   echo "USE_SYSTEM_FPM=true" >> $GITHUB_ENV
 
             - uses: nbucic/variable-mapper@0673f6891a0619ba7c002ecfed0f9f4f39017b6f
