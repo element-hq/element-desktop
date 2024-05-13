@@ -138,8 +138,8 @@ jobs:
                       assert_contains_string "$LIBS" "libsqlcipher.so.0"
                   fi
 
-                  ./scripts/check-libraries.sh dist/linux-*unpacked/element-desktop*
-                  ./scripts/check-libraries.sh dist/linux-*unpacked/resources/app.asar.unpacked/node_modules/matrix-seshat/index.node
+                  ./scripts/glibc-check.sh dist/linux-*unpacked/element-desktop*
+                  ./scripts/glibc-check.sh dist/linux-*unpacked/resources/app.asar.unpacked/node_modules/matrix-seshat/index.node
               env:
                   ARCH: ${{ steps.config.outputs.arch }}
 
