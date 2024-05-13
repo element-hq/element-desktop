@@ -104,14 +104,12 @@ jobs:
 
             - name: Build Natives
               if: steps.cache.outputs.cache-hit != 'true'
-              uses: addnab/docker-run-action@4f65fabd2431ebc8d299f8e5a018d79a769ae185 # v3
-              with:
-                  #                  username: ${{ secrets.DOCKER_USERNAME }}
-                  #                  password: ${{ secrets.DOCKER_PASSWORD }}
-                  #                  registry: gcr.io
-                  image: ${{ env.HAK_DOCKER_IMAGE }}
-                  options: -v ${{ github.workspace }}:/work --platform linux/${{ inputs.arch }} -e SQLCIPHER_BUNDLED
-                  run: "yarn build:native --target ${{ steps.config.outputs.target }}"
+              run: docker run \
+                  -v ${{ github.workspace }}:/work -w /work \
+                  --platform linux/${{ inputs.arch }} \
+                  -e SQLCIPHER_BUNDLED \
+                  ${{ env.HAK_DOCKER_IMAGE }} \
+                  yarn build:native --target ${{ steps.config.outputs.target }}
 
             - name: "[Nightly] Resolve version"
               if: inputs.version != ''
@@ -133,15 +131,11 @@ jobs:
                          echo "USE_SYSTEM_FPM=true" >> $GITHUB_ENV
 
             - name: Build App
-              uses: addnab/docker-run-action@4f65fabd2431ebc8d299f8e5a018d79a769ae185 # v3
-              with:
-                  #                  username: ${{ secrets.DOCKER_USERNAME }}
-                  #                  password: ${{ secrets.DOCKER_PASSWORD }}
-                  #                  registry: gcr.io
-                  image: electronuserland/builder:18
-                  options: -v ${{ github.workspace }}:/work -e USE_SYSTEM_FPM
-                  run: |
-                      yarn build --publish never -l ${{ steps.config.outputs.build-args }}
+              run: docker run \
+                  -v ${{ github.workspace }}:/work -w /work \
+                  -e USE_SYSTEM_FPM \
+                  electronuserland/builder:18 \
+                  yarn build --publish never -l ${{ steps.config.outputs.build-args }}
 
             - name: Check native libraries
               run: |
