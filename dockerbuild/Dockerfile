@@ -13,6 +13,7 @@ RUN apt-get -qq update && apt-get -qq dist-upgrade && \
   # Used by seshat (when not SQLCIPHER_STATIC) \
   libsqlcipher-dev && \
   apt-get purge -y --auto-remove && rm -rf /var/lib/apt/lists/*
+RUN ln -s /usr/bin/python3 /usr/bin/python & ln -s /usr/bin/pip3 /usr/bin/pip
 
 # fix error /usr/local/bundle/gems/fpm-1.5.0/lib/fpm/package/freebsd.rb:72:in `encode': "\xE2" from ASCII-8BIT to UTF-8 (Encoding::UndefinedConversionError)
 # http://jaredmarkell.com/docker-and-locales/

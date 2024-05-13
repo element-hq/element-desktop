@@ -93,7 +93,7 @@ jobs:
                   platforms: linux/${{ inputs.arch }}
 
             # This allows contributors to test changes to the dockerbuild image within a pull request
-            - name: Build
+            - name: Build docker image
               uses: docker/build-push-action@2cdde995de11925a030ce8070c3d77a52ffcf1c0 # v5
               if: steps.changed_files.outputs.any_modified == 'true'
               with:
