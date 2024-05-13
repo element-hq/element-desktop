@@ -42,7 +42,8 @@ jobs:
                         },
                         "arm64": {
                           "target": "aarch64-unknown-linux-gnu",
-                          "arch": "aarch64"
+                          "arch": "aarch64",
+                          "build-args": "--arm64"
                         }
                       }
 
@@ -138,9 +139,9 @@ jobs:
                   #                  password: ${{ secrets.DOCKER_PASSWORD }}
                   #                  registry: gcr.io
                   image: electronuserland/builder:18
-                  options: -v ${{ github.workspace }}:/work --platform linux/${{ inputs.arch }} -e USE_SYSTEM_FPM
+                  options: -v ${{ github.workspace }}:/work -e USE_SYSTEM_FPM
                   run: |
-                      yarn build --publish never -l
+                      yarn build --publish never -l ${{ steps.config.outputs.build-args }}
 
             - name: Check native libraries
               run: |
