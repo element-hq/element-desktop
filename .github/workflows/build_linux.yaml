@@ -104,12 +104,13 @@ jobs:
 
             - name: Build Natives
               if: steps.cache.outputs.cache-hit != 'true'
-              run: docker run \
-                  -v ${{ github.workspace }}:/work -w /work \
-                  --platform linux/${{ inputs.arch }} \
-                  -e SQLCIPHER_BUNDLED \
-                  ${{ env.HAK_DOCKER_IMAGE }} \
-                  yarn build:native --target ${{ steps.config.outputs.target }}
+              run: |
+                  docker run \
+                    -v ${{ github.workspace }}:/work -w /work \
+                    --platform linux/${{ inputs.arch }} \
+                    -e SQLCIPHER_BUNDLED \
+                    ${{ env.HAK_DOCKER_IMAGE }} \
+                    yarn build:native --target ${{ steps.config.outputs.target }}
 
             - name: "[Nightly] Resolve version"
               if: inputs.version != ''
@@ -131,11 +132,12 @@ jobs:
                          echo "USE_SYSTEM_FPM=true" >> $GITHUB_ENV
 
             - name: Build App
-              run: docker run \
-                  -v ${{ github.workspace }}:/work -w /work \
-                  -e USE_SYSTEM_FPM \
-                  electronuserland/builder:18 \
-                  yarn build --publish never -l ${{ steps.config.outputs.build-args }}
+              run: |
+                  docker run \
+                    -v ${{ github.workspace }}:/work -w /work \
+                    -e USE_SYSTEM_FPM \
+                    electronuserland/builder:18 \
+                    yarn build --publish never -l ${{ steps.config.outputs.build-args }}
 
             - name: Check native libraries
               run: |
