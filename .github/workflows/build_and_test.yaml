@@ -90,17 +90,17 @@ jobs:
         name: Test ${{ matrix.name }}
         runs-on: ${{ matrix.os }}
         steps:
-            - uses: actions/checkout@v4
-
             # Workaround for self-hosted runners lacking yarn
             - name: Install Yarn
-              if: matrix.os == 'dind-l-arm64'
+              if: runner.environment == 'self-hosted'
               run: |
                   sudo apt-get -qq update
-                  sudo apt install -y curl
+                  sudo apt-get install -y curl
                   curl -fsSL --create-dirs -o $HOME/bin/yarn https://github.com/yarnpkg/yarn/releases/download/v1.22.19/yarn-1.22.19.js
                   chmod +x $HOME/bin/yarn
                   echo "$HOME/bin" >> $GITHUB_PATH
+
+            - uses: actions/checkout@v4
 
             - uses: actions/setup-node@v4
               with:
