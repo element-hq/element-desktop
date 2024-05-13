@@ -153,15 +153,15 @@ jobs:
         steps:
             - uses: actions/checkout@v4
 
+            - uses: actions/setup-node@v4
+              with:
+                  node-version-file: package.json
+                  cache: ${{ matrix.os != 'dind-l-arm64' && 'yarn' || '' }}
+
             # Workaround for self-hosted runners lacking yarn
             - name: Install Yarn
               if: matrix.os == 'dind-l-arm64'
               run: npm install -g yarn
-
-            - uses: actions/setup-node@v4
-              with:
-                  node-version-file: package.json
-                  cache: "yarn"
 
             - name: Install Deps
               run: "yarn install --frozen-lockfile"
