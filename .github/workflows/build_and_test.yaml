@@ -157,6 +157,8 @@ jobs:
             - name: Install Yarn
               if: matrix.os == 'dind-l-arm64'
               run: |
+                  sudo apt-get -qq update
+                  sudo apt install -y curl
                   curl -fsSL --create-dirs -o $HOME/bin/yarn https://github.com/yarnpkg/yarn/releases/download/v1.22.19/yarn-1.22.19.js
                   chmod +x $HOME/bin/yarn
                   echo "$HOME/bin" >> $GITHUB_PATH
