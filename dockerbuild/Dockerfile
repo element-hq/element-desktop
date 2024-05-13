@@ -24,3 +24,9 @@ ENV LC_ALL C.UTF-8
 
 ENV DEBUG_COLORS true
 ENV FORCE_COLOR true
+
+ENV NODE_VERSION 18.19.0
+ARG TARGETOS
+ARG TARGETARCH
+COPY dockerbuild/setup.sh /setup.sh
+RUN /setup.sh
