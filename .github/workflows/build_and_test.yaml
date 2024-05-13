@@ -134,12 +134,12 @@ jobs:
                       os: dind-l-arm64
                       artifact: linux-arm64-sqlcipher-system
                       executable: "/opt/Element/element-desktop"
-                      prepare_cmd: "sudo apt-get -qq update && sudo apt install ./dist/*.deb"
+                      prepare_cmd: "sudo apt-get -qq update && sudo apt install -y ./dist/*.deb"
                     - name: "Linux (arm64) (sqlcipher: static)"
                       os: dind-l-arm64
                       artifact: linux-arm64-sqlcipher-static
                       executable: "/opt/Element/element-desktop"
-                      prepare_cmd: "sudo apt-get -qq update && sudo apt install ./dist/*.deb"
+                      prepare_cmd: "sudo apt-get -qq update && sudo apt install -y ./dist/*.deb"
                     - name: Windows (x86)
                       os: windows-latest
                       artifact: win-ia32
