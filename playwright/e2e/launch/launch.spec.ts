@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import { Page } from "@playwright/test";
+
 import { test, expect } from "../../element-desktop-test";
 
 declare global {
@@ -32,14 +34,20 @@ declare global {
 
 test.describe("App launch", () => {
     test.slow();
-    test("should launch and render the welcome view successfully", async ({ page }) => {
+
+    let page: Page;
+    test.beforeAll(async ({ page: _page }) => {
+        page = _page;
         await page.locator("#matrixchat").waitFor();
+    });
+
+    test("should launch and render the welcome view successfully", async () => {
         await page.locator(".mx_Welcome").waitFor();
         await expect(page).toHaveURL("vector://vector/webapp/#/welcome");
         await expect(page).toHaveScreenshot();
     });
 
-    test("should support seshat", async ({ page }) => {
+    test("should support seshat", async () => {
         const supported = await page.evaluate<boolean>(async () => {
             const indexManager = window.mxPlatformPeg.get()?.getEventIndexingManager();
             return await indexManager?.supportsEventIndexing();
