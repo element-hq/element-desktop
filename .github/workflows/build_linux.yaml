@@ -108,17 +108,14 @@ jobs:
                   platforms: linux/${{ inputs.arch }}
                   tags: ${{ env.HAK_DOCKER_IMAGE }}
 
-            #            - name: Build Natives
-            #              if: steps.cache.outputs.cache-hit != 'true'
-            #              run: |
-            #                  docker run \
-            #                    --user $(id -u):$(id -g) \
-            #                    --tmpfs /tmp \
-            #                    --tmpfs ~/.tmp \
-            #                    -v ${{ github.workspace }}:/work -w /work \
-            #                    -e SQLCIPHER_BUNDLED \
-            #                    ${{ env.HAK_DOCKER_IMAGE }} \
-            #                    yarn build:native
+            - name: Build Natives
+              if: steps.cache.outputs.cache-hit != 'true'
+              run: |
+                  docker run \
+                    -v ${{ github.workspace }}:/work -w /work \
+                    -e SQLCIPHER_BUNDLED \
+                    ${{ env.HAK_DOCKER_IMAGE }} \
+                    yarn build:native
 
             - name: "[Nightly] Resolve version"
               if: inputs.version != ''
@@ -133,7 +130,7 @@ jobs:
 
             - name: Build App
               run: |
-                  yarn build --publish never -l
+                  USE_SYSTEM_FPM=true sudo yarn build --publish never -l
 
             - name: Check native libraries
               run: |
