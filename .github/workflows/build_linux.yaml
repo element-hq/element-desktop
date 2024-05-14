@@ -66,7 +66,7 @@ jobs:
               run: |
                   echo "key=$CACHE_KEY" >> $GITHUB_OUTPUT
               env:
-                  CACHE_KEY: ${{ runner.os }}-${{ github.ref_name }}-${{ inputs.sqlcipher }}-${{ inputs.arch }}-${{ hashFiles('hakHash', 'electronVersion') }}
+                  CACHE_KEY: 98-${{ runner.os }}-${{ github.ref_name }}-${{ inputs.sqlcipher }}-${{ inputs.arch }}-${{ hashFiles('hakHash', 'electronVersion') }}
 
             - name: Cache .hak
               id: cache
@@ -128,8 +128,7 @@ jobs:
                       ./scripts/glibc-check.sh $filename
                   done
               env:
-                  # XXX: Buster only supports as far as 2.28
-                  MAX_VER: 2.29
+                  MAX_VER: 2.28 # buster-era glibc
 
     build:
         needs: hak
