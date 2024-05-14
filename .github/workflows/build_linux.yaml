@@ -120,6 +120,16 @@ jobs:
                     ${{ env.HAK_DOCKER_IMAGE }} \
                     yarn build:native
 
+            - name: Check native libraries
+              run: |
+                  shopt -s globstar
+
+                  for filename in ./.hak/hakModules/**/*.node; do
+                      ./scripts/glibc-check.sh $filename
+                  done
+              env:
+                  ARCH: ${{ steps.config.outputs.arch }}
+
     build:
         needs: hak
         runs-on: ubuntu-latest
@@ -206,9 +216,6 @@ jobs:
                   else
                       assert_contains_string "$LIBS" "libsqlcipher.so.0"
                   fi
-
-                  ./scripts/glibc-check.sh dist/linux-*unpacked/element-desktop*
-                  ./scripts/glibc-check.sh dist/linux-*unpacked/resources/app.asar.unpacked/node_modules/matrix-seshat/index.node
               env:
                   ARCH: ${{ steps.config.outputs.arch }}
 
