@@ -139,7 +139,9 @@ jobs:
                   fi
 
                   ./scripts/glibc-check.sh dist/linux-*unpacked/element-desktop*
-                  ./scripts/glibc-check.sh dist/linux-*unpacked/resources/app.asar.unpacked/node_modules/matrix-seshat/index.node
+                  for filename in $FILES; do
+                      ./scripts/glibc-check.sh $filename
+                  done
               env:
                   ARCH: ${{ steps.config.outputs.arch }}
 

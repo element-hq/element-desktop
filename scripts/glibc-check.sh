@@ -36,7 +36,7 @@ vercomp() {
 
 IFS="
 "
-VERS=$(objdump -T "$BINARY" | grep GLIBC | sed 's/.*GLIBC_\([.0-9]*\).*/\1/g' | sort -u)
+VERS=$(objdump -T "$BINARY" | grep GLIBC_ | sed 's/.*GLIBC_\([.0-9]*\).*/\1/g' | sort -u)
 
 for VER in $VERS; do
   vercomp "$VER" "$MAX_VER"
