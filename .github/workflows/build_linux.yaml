@@ -21,30 +21,24 @@ on:
                 required: true
                 description: "How to link sqlcipher, one of 'system' | 'static'"
 jobs:
-    build:
+    # We build the hak files on native infrastructure as matrix-seshat fails to cross-compile properly
+    # https://github.com/matrix-org/seshat/issues/135
+    hak:
         runs-on: ${{ inputs.arch == 'arm64' && 'dind-l-arm64' || 'ubuntu-latest' }}
         env:
             HAK_DOCKER_IMAGE: ${{ format('ghcr.io/element-hq/element-desktop-dockerbuild:{0}', github.event_name == 'pull_request' && 'develop' || github.ref_name) }}
-        defaults:
-            run:
-                shell: bash
+        outputs:
+            cache-key: ${{ steps.cache-key.outputs.key }}
         steps:
-            - run: tar --version
-
-            # Workaround for self-hosted runners lacking tools
-            - name: Install missing tools
+            # Workaround for self-hosted runners lacking yarn
+            - name: Install Yarn
               if: runner.environment == 'self-hosted'
               run: |
                   sudo apt-get -qq update
-                  sudo apt install -y curl git ruby-dev
+                  sudo apt-get install -y curl
                   curl -fsSL --create-dirs -o $HOME/bin/yarn https://github.com/yarnpkg/yarn/releases/download/v1.22.19/yarn-1.22.19.js
                   chmod +x $HOME/bin/yarn
                   echo "$HOME/bin" >> $GITHUB_PATH
-
-                  # electron-builder is incapable of installing an arm64-compatible fpm
-                  sudo gem install dotenv -v 2.8.1
-                  sudo gem install fpm
-                  echo "USE_SYSTEM_FPM=1" >> $GITHUB_ENV
 
             - uses: nbucic/variable-mapper@0673f6891a0619ba7c002ecfed0f9f4f39017b6f
               id: config
@@ -54,10 +48,10 @@ jobs:
                   map: |
                       {
                         "amd64": {
-                          "arch": "x86-64"
+                          "target": "x86_64-unknown-linux-gnu"
                         },
-                        "arm64": {
-                          "arch": "aarch64"
+                        "arm64": {                          
+                          "target": "aarch64-unknown-linux-gnu"
                         }
                       }
 
@@ -67,11 +61,18 @@ jobs:
               with:
                   name: webapp
 
+            - name: Calculate cache key
+              id: cache-key
+              run: |
+                  echo "key=$CACHE_KEY" >> $GITHUB_OUTPUT
+              env:
+                  CACHE_KEY: ${{ runner.os }}-${{ github.ref_name }}-${{ inputs.sqlcipher }}-${{ inputs.arch }}-${{ hashFiles('hakHash', 'electronVersion') }}
+
             - name: Cache .hak
               id: cache
               uses: actions/cache@v4
               with:
-                  key: 21-${{ runner.os }}-${{ github.ref_name }}-${{ inputs.sqlcipher }}-${{ inputs.arch }}-${{ hashFiles('hakHash', 'electronVersion') }}
+                  key: ${{ steps.cache-key.outputs.key }}
                   path: |
                       ./.hak
 
@@ -118,7 +119,51 @@ jobs:
                     -e SQLCIPHER_BUNDLED \
                     ${{ env.HAK_DOCKER_IMAGE }} \
                     yarn build:native
-                  chown -R $(id -u):$(id -g) ./.hak
+
+    build:
+        needs: hak
+        runs-on: ubuntu-latest
+        env:
+            HAK_DOCKER_IMAGE: ${{ format('ghcr.io/element-hq/element-desktop-dockerbuild:{0}', github.event_name == 'pull_request' && 'develop' || github.ref_name) }}
+        steps:
+            - uses: nbucic/variable-mapper@0673f6891a0619ba7c002ecfed0f9f4f39017b6f
+              id: config
+              with:
+                  key: "${{ inputs.arch }}"
+                  export_to: output
+                  map: |
+                      {
+                        "amd64": {
+                          "arch": "x86-64"
+                        },
+                        "arm64": {                          
+                          "arch": "aarch64",
+                          "build-args": "--arm64"
+                        }
+                      }
+
+            - uses: actions/checkout@v4
+
+            - uses: actions/download-artifact@v4
+              with:
+                  name: webapp
+
+            - name: Load .hak
+              id: cache
+              uses: actions/cache/restore@v4
+              with:
+                  key: ${{ needs.hak.outputs.cache-key }}
+                  fail-on-cache-miss: true
+                  path: |
+                      ./.hak
+
+            - uses: actions/setup-node@v4
+              with:
+                  node-version-file: package.json
+                  cache: "yarn"
+              env:
+                  # Workaround for https://github.com/actions/setup-node/issues/317
+                  FORCE_COLOR: 0
 
             - name: "[Nightly] Resolve version"
               if: inputs.version != ''
@@ -132,7 +177,7 @@ jobs:
                   fi
 
             - name: Build App
-              run: yarn build --publish never -l
+              run: yarn build --publish never -l ${{ steps.config.outputs.build-args }}
 
             - name: Check native libraries
               run: |
