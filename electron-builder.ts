@@ -39,9 +39,7 @@ const pkg: Pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
 
 interface Configuration extends BaseConfiguration {
     extraMetadata: Partial<Pick<Pkg, "version">> & Omit<Pkg, "version">;
-    linux: {
-        desktop: Record<string, string>;
-    } & BaseConfiguration["linux"];
+    linux: BaseConfiguration["linux"];
     win: BaseConfiguration["win"];
     mac: BaseConfiguration["mac"];
     deb: {
@@ -118,9 +116,6 @@ const config: Writable<Configuration> = {
         category: "Network;InstantMessaging;Chat",
         maintainer: "support@element.io",
         icon: "build/icons",
-        desktop: {
-            MimeType: "x-scheme-handler/element",
-        },
     },
     deb: {
         packageCategory: "net",
@@ -167,7 +162,7 @@ const config: Writable<Configuration> = {
     protocols: [
         {
             name: "element",
-            schemes: ["element"],
+            schemes: ["io.element.desktop", "element"],
         },
     ],
 };
