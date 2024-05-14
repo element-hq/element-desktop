@@ -66,7 +66,7 @@ jobs:
               run: |
                   echo "key=$CACHE_KEY" >> $GITHUB_OUTPUT
               env:
-                  CACHE_KEY: 98-${{ runner.os }}-${{ github.ref_name }}-${{ inputs.sqlcipher }}-${{ inputs.arch }}-${{ hashFiles('hakHash', 'electronVersion') }}
+                  CACHE_KEY: ${{ runner.os }}-${{ github.ref_name }}-${{ inputs.sqlcipher }}-${{ inputs.arch }}-${{ hashFiles('hakHash', 'electronVersion', 'dockerbuild/*') }}
 
             - name: Cache .hak
               id: cache
