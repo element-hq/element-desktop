@@ -98,9 +98,8 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
         case "focusWindow":
             if (global.mainWindow.isMinimized()) {
                 global.mainWindow.restore();
-            } else if (!global.mainWindow.isVisible()) {
-                global.mainWindow.show();
             } else {
+                global.mainWindow.show();
                 global.mainWindow.focus();
             }
             break;
