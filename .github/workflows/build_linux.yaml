@@ -130,7 +130,7 @@ jobs:
 
             - name: Build App
               run: |
-                  sudo -E USE_SYSTEM_FPM yarn build --publish never -l
+                  sudo --preserve-env=USE_SYSTEM_FPM yarn build --publish never -l
 
             - name: Check native libraries
               run: |
