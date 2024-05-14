@@ -20,6 +20,8 @@ on:
                 type: string
                 required: true
                 description: "How to link sqlcipher, one of 'system' | 'static'"
+env:
+    SQLCIPHER_BUNDLED: ${{ inputs.sqlcipher == 'static' && '1' || '' }}
 jobs:
     # We build the hak files on native infrastructure as matrix-seshat fails to cross-compile properly
     # https://github.com/matrix-org/seshat/issues/135
@@ -120,8 +122,6 @@ jobs:
                     -e SQLCIPHER_BUNDLED \
                     $HAK_DOCKER_IMAGE \
                     yarn build:native
-              env:
-                  SQLCIPHER_BUNDLED: ${{ inputs.sqlcipher == 'static' && '1' || '' }}
 
             - name: Check native libraries
               run: |
@@ -205,7 +205,6 @@ jobs:
                   ./scripts/glibc-check.sh dist/linux-*unpacked/element-desktop*
               env:
                   ARCH: ${{ needs.hak.outputs.arch }}
-                  SQLCIPHER_BUNDLED: ${{ inputs.sqlcipher == 'static' && '1' || '' }}
 
             # We exclude *-unpacked as it loses permissions and the tarball contains it with correct permissions
             - name: Upload Artifacts
