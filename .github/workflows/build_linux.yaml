@@ -42,7 +42,7 @@ jobs:
                   # electron-builder is incapable of installing an arm64-compatible fpm
                   sudo gem install dotenv -v 2.8.1
                   sudo gem install fpm
-                  echo "USE_SYSTEM_FPM=true" >> $GITHUB_ENV
+                  echo "USE_SYSTEM_FPM=1" >> $GITHUB_ENV
 
             - uses: nbucic/variable-mapper@0673f6891a0619ba7c002ecfed0f9f4f39017b6f
               id: config
@@ -57,8 +57,7 @@ jobs:
                         },
                         "arm64": {
                           "target": "aarch64-unknown-linux-gnu",
-                          "arch": "aarch64",
-                          "build-args": "--arm64"
+                          "arch": "aarch64"
                         }
                       }
 
@@ -134,7 +133,7 @@ jobs:
 
             - name: Build App
               run: |
-                  sudo yarn build --publish never -l ${{ steps.config.outputs.build-args }}
+                  sudo yarn build --publish never -l
 
             - name: Check native libraries
               run: |
