@@ -165,6 +165,10 @@ jobs:
                   # Workaround for https://github.com/actions/setup-node/issues/317
                   FORCE_COLOR: 0
 
+            # Does not need branch matching as only analyses this layer
+            - name: Install Deps
+              run: "yarn install --frozen-lockfile"
+
             - name: "[Nightly] Resolve version"
               if: inputs.version != ''
               run: |
