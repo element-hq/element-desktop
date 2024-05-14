@@ -29,12 +29,15 @@ jobs:
             HAK_DOCKER_IMAGE: ${{ format('ghcr.io/element-hq/element-desktop-dockerbuild:{0}', github.event_name == 'pull_request' && 'develop' || github.ref_name) }}
         outputs:
             cache-key: ${{ steps.cache-key.outputs.key }}
+            arch: ${{ steps.config.outputs.arch }}
+            build-args: ${{ steps.config.outputs.build-args }}
         steps:
             # Workaround for self-hosted runners lacking tools
             - name: Install missing tools
               if: runner.environment == 'self-hosted'
               run: |
                   sudo apt-get -qq update
+                  # curl for yarn download, git for tj-actions/changed-files, zstd for actions/cache
                   sudo apt-get install -y curl git zstd
                   curl -fsSL --create-dirs -o $HOME/bin/yarn https://github.com/yarnpkg/yarn/releases/download/v1.22.19/yarn-1.22.19.js
                   chmod +x $HOME/bin/yarn
@@ -48,10 +51,13 @@ jobs:
                   map: |
                       {
                         "amd64": {
-                          "target": "x86_64-unknown-linux-gnu"
+                          "target": "x86_64-unknown-linux-gnu",
+                          "arch": "x86-64"
                         },
                         "arm64": {                          
-                          "target": "aarch64-unknown-linux-gnu"
+                          "target": "aarch64-unknown-linux-gnu",
+                          "arch": "aarch64",
+                          "build-args": "--arm64"
                         }
                       }
 
@@ -88,11 +94,6 @@ jobs:
             - name: Install Deps
               run: "yarn install --frozen-lockfile"
 
-            - name: Prepare for static sqlcipher build
-              if: inputs.sqlcipher == 'static'
-              run: |
-                  echo "SQLCIPHER_BUNDLED=1" >> $GITHUB_ENV
-
             - name: "Get modified files"
               id: changed_files
               if: steps.cache.outputs.cache-hit != 'true' && github.event_name == 'pull_request'
@@ -117,8 +118,10 @@ jobs:
                   docker run \
                     -v ${{ github.workspace }}:/work -w /work \
                     -e SQLCIPHER_BUNDLED \
-                    ${{ env.HAK_DOCKER_IMAGE }} \
+                    $HAK_DOCKER_IMAGE \
                     yarn build:native
+              env:
+                  SQLCIPHER_BUNDLED: ${{ inputs.sqlcipher == 'static' && '1' || '' }}
 
             - name: Check native libraries
               run: |
@@ -133,25 +136,7 @@ jobs:
     build:
         needs: hak
         runs-on: ubuntu-latest
-        env:
-            HAK_DOCKER_IMAGE: ${{ format('ghcr.io/element-hq/element-desktop-dockerbuild:{0}', github.event_name == 'pull_request' && 'develop' || github.ref_name) }}
         steps:
-            - uses: nbucic/variable-mapper@0673f6891a0619ba7c002ecfed0f9f4f39017b6f
-              id: config
-              with:
-                  key: "${{ inputs.arch }}"
-                  export_to: output
-                  map: |
-                      {
-                        "amd64": {
-                          "arch": "x86-64"
-                        },
-                        "arm64": {                          
-                          "arch": "aarch64",
-                          "build-args": "--arm64"
-                        }
-                      }
-
             - uses: actions/checkout@v4
 
             - uses: actions/download-artifact@v4
@@ -191,7 +176,7 @@ jobs:
                   fi
 
             - name: Build App
-              run: yarn build --publish never -l ${{ steps.config.outputs.build-args }}
+              run: yarn build --publish never -l ${{ needs.hak.outputs.build-args }}
 
             - name: Check native libraries
               run: |
@@ -219,7 +204,7 @@ jobs:
 
                   ./scripts/glibc-check.sh dist/linux-*unpacked/element-desktop*
               env:
-                  ARCH: ${{ steps.config.outputs.arch }}
+                  ARCH: ${{ needs.hak.outputs.arch }}
                   SQLCIPHER_BUNDLED: ${{ inputs.sqlcipher == 'static' && '1' || '' }}
 
             # We exclude *-unpacked as it loses permissions and the tarball contains it with correct permissions
