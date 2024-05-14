@@ -216,8 +216,11 @@ jobs:
                   else
                       assert_contains_string "$LIBS" "libsqlcipher.so.0"
                   fi
+
+                  ./scripts/glibc-check.sh dist/linux-*unpacked/element-desktop*
               env:
                   ARCH: ${{ steps.config.outputs.arch }}
+                  SQLCIPHER_BUNDLED: ${{ inputs.sqlcipher == 'static' && '1' || '' }}
 
             # We exclude *-unpacked as it loses permissions and the tarball contains it with correct permissions
             - name: Upload Artifacts
