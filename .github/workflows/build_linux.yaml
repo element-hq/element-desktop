@@ -29,6 +29,8 @@ jobs:
             run:
                 shell: bash
         steps:
+            - run: tar --version
+
             # Workaround for self-hosted runners lacking tools
             - name: Install missing tools
               if: runner.environment == 'self-hosted'
