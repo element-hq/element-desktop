@@ -48,7 +48,7 @@ for VER in $VERS; do
     echo "Looking for symbols in libraries..."
     for LIBRARY in $(ldd "$BINARY" | cut -d ' ' -f 3); do
       echo "$LIBRARY"
-      objdump -T "$LIBRARY" | grep -F "GLIBC_${VER}" || echo "Library not found"
+      objdump -T "$LIBRARY" | grep -F "GLIBC_${VER}"
     done
     exit 27
   else

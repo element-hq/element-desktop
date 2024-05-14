@@ -128,7 +128,8 @@ jobs:
                       ./scripts/glibc-check.sh $filename
                   done
               env:
-                  ARCH: ${{ steps.config.outputs.arch }}
+                  # XXX: Buster only supports as far as 2.28
+                  MAX_VER: 2.29
 
     build:
         needs: hak
