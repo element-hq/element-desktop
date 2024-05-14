@@ -118,6 +118,7 @@ jobs:
                     -e SQLCIPHER_BUNDLED \
                     ${{ env.HAK_DOCKER_IMAGE }} \
                     yarn build:native
+                  chown -R $(id -u):$(id -g) ./.hak
 
             - name: "[Nightly] Resolve version"
               if: inputs.version != ''
@@ -131,8 +132,7 @@ jobs:
                   fi
 
             - name: Build App
-              run: |
-                  sudo --preserve-env=USE_SYSTEM_FPM yarn build --publish never -l
+              run: yarn build --publish never -l
 
             - name: Check native libraries
               run: |
