@@ -19,7 +19,7 @@ limitations under the License.
 
 // Squirrel on windows starts the app with various flags as hooks to tell us when we've been installed/uninstalled etc.
 import "./squirrelhooks";
-import { app, BrowserWindow, Menu, autoUpdater, protocol, dialog, Input } from "electron";
+import { app, BrowserWindow, Menu, autoUpdater, protocol, dialog, Input, Event, session } from "electron";
 import * as Sentry from "@sentry/electron/main";
 import AutoLaunch from "auto-launch";
 import path from "path";
@@ -39,6 +39,9 @@ import webContentsHandler from "./webcontents-handler";
 import * as updater from "./updater";
 import { getProfileFromDeeplink, protocolInit } from "./protocol";
 import { _t, AppLocalization } from "./language-helper";
+import { setDisplayMediaCallback } from "./displayMediaCallback";
+import { setupMacosTitleBar } from "./macos-titlebar";
+import { loadJsonFile } from "./utils";
 
 const argv = minimist(process.argv, {
     alias: { help: "h" },
@@ -141,8 +144,7 @@ async function loadConfig(): Promise<void> {
     const asarPath = await getAsarPath();
 
     try {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        global.vectorConfig = require(asarPath + "config.json");
+        global.vectorConfig = loadJsonFile(asarPath, "config.json");
     } catch (e) {
         // it would be nice to check the error code here and bail if the config
         // is unparsable, but we get MODULE_NOT_FOUND in the case of a missing
@@ -153,8 +155,7 @@ async function loadConfig(): Promise<void> {
 
     try {
         // Load local config and use it to override values from the one baked with the build
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const localConfig = require(path.join(app.getPath("userData"), "config.json"));
+        const localConfig = loadJsonFile(app.getPath("userData"), "config.json");
 
         // If the local config has a homeserver defined, don't use the homeserver from the build
         // config. This is to avoid a problem where Riot thinks there are multiple homeservers
@@ -163,10 +164,13 @@ async function loadConfig(): Promise<void> {
             // Rip out all the homeserver options from the vector config
             global.vectorConfig = Object.keys(global.vectorConfig)
                 .filter((k) => !homeserverProps.includes(<any>k))
-                .reduce((obj, key) => {
-                    obj[key] = global.vectorConfig[key];
-                    return obj;
-                }, {} as Omit<Partial<(typeof global)["vectorConfig"]>, keyof typeof homeserverProps>);
+                .reduce(
+                    (obj, key) => {
+                        obj[key] = global.vectorConfig[key];
+                        return obj;
+                    },
+                    {} as Omit<Partial<(typeof global)["vectorConfig"]>, keyof typeof homeserverProps>,
+                );
         }
 
         global.vectorConfig = Object.assign(global.vectorConfig, localConfig);
@@ -258,7 +262,8 @@ global.appQuitting = false;
 const exitShortcuts: Array<(input: Input, platform: string) => boolean> = [
     (input, platform): boolean => platform !== "darwin" && input.alt && input.key.toUpperCase() === "F4",
     (input, platform): boolean => platform !== "darwin" && input.control && input.key.toUpperCase() === "Q",
-    (input, platform): boolean => platform === "darwin" && input.meta && input.key.toUpperCase() === "Q",
+    (input, platform): boolean =>
+        platform === "darwin" && input.meta && !input.control && input.key.toUpperCase() === "Q",
 ];
 
 const warnBeforeExit = (event: Event, input: Input): void => {
@@ -271,12 +276,12 @@ const warnBeforeExit = (event: Event, input: Input): void => {
             dialog.showMessageBoxSync(global.mainWindow, {
                 type: "question",
                 buttons: [
-                    _t("Cancel"),
-                    _t("Close %(brand)s", {
+                    _t("action|cancel"),
+                    _t("action|close_brand", {
                         brand: global.vectorConfig.brand || "Element",
                     }),
                 ],
-                message: _t("Are you sure you want to quit?"),
+                message: _t("confirm_quit"),
                 defaultId: 1,
                 cancelId: 0,
             }) === 0;
@@ -453,6 +458,9 @@ app.on("ready", async () => {
         // https://www.electronjs.org/docs/faq#the-font-looks-blurry-what-is-this-and-what-can-i-do
         backgroundColor: "#fff",
 
+        titleBarStyle: process.platform === "darwin" ? "hidden" : "default",
+        trafficLightPosition: { x: 9, y: 8 },
+
         icon: global.trayConfig.icon_path,
         show: false,
         autoHideMenuBar: global.store.get("autoHideMenuBar", true),
@@ -470,6 +478,10 @@ app.on("ready", async () => {
         },
     });
     global.mainWindow.loadURL("vector://vector/webapp/");
+
+    if (process.platform === "darwin") {
+        setupMacosTitleBar(global.mainWindow);
+    }
 
     // Handle spellchecker
     // For some reason spellCheckerEnabled isn't persisted, so we have to use the store here
@@ -531,6 +543,11 @@ app.on("ready", async () => {
     global.appLocalization = new AppLocalization({
         store: global.store,
         components: [(): void => tray.initApplicationMenu(), (): void => Menu.setApplicationMenu(buildMenuTemplate())],
+    });
+
+    session.defaultSession.setDisplayMediaRequestHandler((_, callback) => {
+        global.mainWindow?.webContents.send("openDesktopCapturerSourcePicker");
+        setDisplayMediaCallback(callback);
     });
 });
 

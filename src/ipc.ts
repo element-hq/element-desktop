@@ -22,6 +22,7 @@ import { recordSSOSession } from "./protocol";
 import { randomArray } from "./utils";
 import { Settings } from "./settings";
 import { keytar } from "./keytar";
+import { getDisplayMediaCallback, setDisplayMediaCallback } from "./displayMediaCallback";
 
 ipcMain.on("setBadgeCount", function (_ev: IpcMainEvent, count: number): void {
     if (process.platform !== "win32") {
@@ -97,9 +98,8 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
         case "focusWindow":
             if (global.mainWindow.isMinimized()) {
                 global.mainWindow.restore();
-            } else if (!global.mainWindow.isVisible()) {
-                global.mainWindow.show();
             } else {
+                global.mainWindow.show();
                 global.mainWindow.focus();
             }
             break;
@@ -185,6 +185,11 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
                 name: source.name,
                 thumbnailURL: source.thumbnail.toDataURL(),
             }));
+            break;
+        case "callDisplayMediaCallback":
+            await getDisplayMediaCallback()?.({ video: args[0] });
+            setDisplayMediaCallback(null);
+            ret = null;
             break;
 
         case "clearStorage":

@@ -16,18 +16,18 @@ limitations under the License.
 
 import path from "path";
 import os from "os";
-import nodePreGypVersioning from "node-pre-gyp/lib/util/versioning";
-import { getElectronVersion } from "app-builder-lib/out/electron/electronVersion";
+import nodePreGypVersioning from "@mapbox/node-pre-gyp/lib/util/versioning";
+import { getElectronVersionFromInstalled } from "app-builder-lib/out/electron/electronVersion";
 
 import { Arch, Target, TARGETS, getHost, isHostId, TargetId } from "./target";
 
 async function getRuntime(projectRoot: string): Promise<string> {
-    const electronVersion = await getElectronVersion(projectRoot);
+    const electronVersion = await getElectronVersionFromInstalled(projectRoot);
     return electronVersion ? "electron" : "node-webkit";
 }
 
 async function getRuntimeVersion(projectRoot: string): Promise<string> {
-    const electronVersion = await getElectronVersion(projectRoot);
+    const electronVersion = await getElectronVersionFromInstalled(projectRoot);
     if (electronVersion) {
         return electronVersion;
     } else {
@@ -41,7 +41,10 @@ export default class HakEnv {
     public runtimeVersion?: string;
     public dotHakDir: string;
 
-    public constructor(public readonly projectRoot: string, targetId: TargetId | null) {
+    public constructor(
+        public readonly projectRoot: string,
+        targetId: TargetId | null,
+    ) {
         const target = targetId ? TARGETS[targetId] : getHost();
 
         if (!target) {
@@ -81,6 +84,10 @@ export default class HakEnv {
         return this.target.platform === "linux";
     }
 
+    public isFreeBSD(): boolean {
+        return this.target.platform === "freebsd";
+    }
+
     public getTargetArch(): Arch {
         return this.target.arch;
     }
@@ -102,6 +109,6 @@ export default class HakEnv {
     }
 
     public wantsStaticSqlCipher(): boolean {
-        return !this.isLinux() || process.env.SQLCIPHER_BUNDLED == "1";
+        return !(this.isLinux() || this.isFreeBSD()) || process.env.SQLCIPHER_BUNDLED == "1";
     }
 }

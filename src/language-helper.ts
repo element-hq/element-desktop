@@ -15,23 +15,24 @@ limitations under the License.
 */
 
 import counterpart from "counterpart";
+import { TranslationKey as TKey } from "matrix-web-i18n";
 
 import type Store from "electron-store";
+import type EN from "./i18n/strings/en_EN.json";
+import { loadJsonFile } from "./utils";
 
 const FALLBACK_LOCALE = "en";
 
-export function _td(text: string): string {
-    return text;
-}
+type TranslationKey = TKey<typeof EN>;
 
 type SubstitutionValue = number | string;
 
-interface IVariables {
+interface Variables {
     [key: string]: SubstitutionValue | undefined;
     count?: number;
 }
 
-export function _t(text: string, variables: IVariables = {}): string {
+export function _t(text: TranslationKey, variables: Variables = {}): string {
     const { count } = variables;
 
     // Horrible hack to avoid https://github.com/vector-im/element-web/issues/4191
@@ -105,7 +106,7 @@ export class AppLocalization {
     public fetchTranslationJson(locale: string): Record<string, string> {
         try {
             console.log("Fetching translation json for locale: " + locale);
-            return require(`./i18n/strings/${this.denormalize(locale)}.json`);
+            return loadJsonFile(__dirname, "i18n", "strings", `${this.denormalize(locale)}.json`);
         } catch (e) {
             console.log(`Could not fetch translation json for locale: '${locale}'`, e);
             return {};

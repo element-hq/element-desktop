@@ -28,11 +28,12 @@ import {
     DownloadItem,
     MenuItemConstructorOptions,
     IpcMainEvent,
+    Event,
 } from "electron";
 import url from "url";
 import fs from "fs";
 import fetch from "node-fetch";
-import { pipeline } from "stream";
+import { pipeline } from "stream/promises";
 import path from "path";
 
 import { _t } from "./language-helper";
@@ -84,8 +85,9 @@ function onLinkContextMenu(ev: Event, params: ContextMenuParams, webContents: We
     if (url.startsWith("vector://vector/webapp")) {
         // Avoid showing a context menu for app icons
         if (params.hasImageContents) return;
-        // Rewrite URL so that it can be used outside of the app
-        url = "https://app.element.io/" + url.substring(23);
+        const baseUrl = vectorConfig.web_base_url ?? "https://app.element.io/";
+        // Rewrite URL so that it can be used outside the app
+        url = baseUrl + url.substring(23);
     }
 
     const popupMenu = new Menu();
@@ -104,7 +106,7 @@ function onLinkContextMenu(ev: Event, params: ContextMenuParams, webContents: We
     if (params.hasImageContents) {
         popupMenu.append(
             new MenuItem({
-                label: _t("Copy image"),
+                label: _t("right_click_menu|copy_image"),
                 accelerator: "c",
                 click(): void {
                     webContents.copyImageAt(params.x, params.y);
@@ -119,7 +121,7 @@ function onLinkContextMenu(ev: Event, params: ContextMenuParams, webContents: We
         if (url.startsWith(MAILTO_PREFIX)) {
             popupMenu.append(
                 new MenuItem({
-                    label: _t("Copy email address"),
+                    label: _t("right_click_menu|copy_email"),
                     accelerator: "a",
                     click(): void {
                         clipboard.writeText(url.substr(MAILTO_PREFIX.length));
@@ -129,7 +131,9 @@ function onLinkContextMenu(ev: Event, params: ContextMenuParams, webContents: We
         } else {
             popupMenu.append(
                 new MenuItem({
-                    label: params.hasImageContents ? _t("Copy image address") : _t("Copy link address"),
+                    label: params.hasImageContents
+                        ? _t("right_click_menu|copy_image_url")
+                        : _t("right_click_menu|copy_link_url"),
                     accelerator: "a",
                     click(): void {
                         clipboard.writeText(url);
@@ -144,7 +148,7 @@ function onLinkContextMenu(ev: Event, params: ContextMenuParams, webContents: We
     if (params.hasImageContents && !url.startsWith("blob:")) {
         popupMenu.append(
             new MenuItem({
-                label: _t("Save image as..."),
+                label: _t("right_click_menu|save_image_as"),
                 accelerator: "s",
                 async click(): Promise<void> {
                     const targetFileName = params.suggestedFilename || params.altText || "image.png";
@@ -161,14 +165,14 @@ function onLinkContextMenu(ev: Event, params: ContextMenuParams, webContents: We
                             const resp = await fetch(url);
                             if (!resp.ok) throw new Error(`unexpected response ${resp.statusText}`);
                             if (!resp.body) throw new Error(`unexpected response has no body ${resp.statusText}`);
-                            pipeline(resp.body, fs.createWriteStream(filePath));
+                            await pipeline(resp.body, fs.createWriteStream(filePath));
                         }
                     } catch (err) {
                         console.error(err);
                         dialog.showMessageBox({
                             type: "error",
-                            title: _t("Failed to save image"),
-                            message: _t("The image failed to save"),
+                            title: _t("right_click_menu|save_image_as_error_title"),
+                            message: _t("right_click_menu|save_image_as_error_description"),
                         });
                     }
                 },
@@ -198,7 +202,7 @@ function cutCopyPasteSelectContextMenus(params: ContextMenuParams): MenuItemCons
                 type: "separator",
             },
             {
-                label: _t("Add to dictionary"),
+                label: _t("right_click_menu|add_to_dictionary"),
                 click: (menuItem, browserWindow) => {
                     browserWindow?.webContents.session.addWordToSpellCheckerDictionary(params.misspelledWord);
                 },
@@ -212,19 +216,19 @@ function cutCopyPasteSelectContextMenus(params: ContextMenuParams): MenuItemCons
     options.push(
         {
             role: "cut",
-            label: _t("Cut"),
+            label: _t("action|cut"),
             accelerator: "t",
             enabled: params.editFlags.canCut,
         },
         {
             role: "copy",
-            label: _t("Copy"),
+            label: _t("action|copy"),
             accelerator: "c",
             enabled: params.editFlags.canCopy,
         },
         {
             role: "paste",
-            label: _t("Paste"),
+            label: _t("action|paste"),
             accelerator: "p",
             enabled: params.editFlags.canPaste,
         },
@@ -234,7 +238,7 @@ function cutCopyPasteSelectContextMenus(params: ContextMenuParams): MenuItemCons
         },
         {
             role: "selectAll",
-            label: _t("Select All"),
+            label: _t("action|select_all"),
             accelerator: "a",
             enabled: params.editFlags.canSelectAll,
         },

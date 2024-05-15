@@ -1,6 +1,5 @@
 # Windows
 
-
 ## Requirements to build native modules
 
 We rely on Github Actions `windows-latest` plus a few extra utilities as per [the workflow](https://github.com/vector-im/element-desktop/blob/develop/.github/workflows/build_windows.yaml).
