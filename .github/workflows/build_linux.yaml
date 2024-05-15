@@ -28,7 +28,7 @@ jobs:
     hak:
         runs-on: ${{ inputs.arch == 'arm64' && 'dind-l-arm64' || 'ubuntu-latest' }}
         env:
-            HAK_DOCKER_IMAGE: ${{ format('ghcr.io/element-hq/element-desktop-dockerbuild:{0}', github.event_name == 'pull_request' && 'develop' || github.ref_name) }}
+            HAK_DOCKER_IMAGE: ghcr.io/element-hq/element-desktop-dockerbuild
         outputs:
             cache-key: ${{ steps.cache-key.outputs.key }}
             arch: ${{ steps.config.outputs.arch }}
@@ -44,6 +44,16 @@ jobs:
                   curl -fsSL --create-dirs -o $HOME/bin/yarn https://github.com/yarnpkg/yarn/releases/download/v1.22.19/yarn-1.22.19.js
                   chmod +x $HOME/bin/yarn
                   echo "$HOME/bin" >> $GITHUB_PATH
+
+            - name: Resolve docker image tag for push
+              if: github.event_name == 'push'
+              run: echo "HAK_DOCKER_IMAGE=$HAK_DOCKER_IMAGE:$GITHUB_REF_NAME" >> $GITHUB_ENV
+            - name: Resolve docker image tag for release
+              if: github.event_name == 'release'
+              run: echo "HAK_DOCKER_IMAGE=$HAK_DOCKER_IMAGE:staging" >> $GITHUB_ENV
+            - name: Resolve docker image tag for other triggers
+              if: github.event_name != 'push' && github.event_name != 'release'
+              run: echo "HAK_DOCKER_IMAGE=$HAK_DOCKER_IMAGE:develop" >> $GITHUB_ENV
 
             - uses: nbucic/variable-mapper@0673f6891a0619ba7c002ecfed0f9f4f39017b6f
               id: config
