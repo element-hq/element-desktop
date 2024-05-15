@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/playwright:v1.43.1-jammy
+FROM mcr.microsoft.com/playwright:v1.44.0-jammy
 
 WORKDIR /work/element-desktop
 
