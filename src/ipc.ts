@@ -38,13 +38,15 @@ ipcMain.on("setBadgeCount", function (_ev: IpcMainEvent, count: number): void {
 
 let focusHandlerAttached = false;
 ipcMain.on("loudNotification", function (): void {
-    if (process.platform === "win32" && global.mainWindow && !global.mainWindow.isFocused() && !focusHandlerAttached) {
-        global.mainWindow.flashFrame(true);
-        global.mainWindow.once("focus", () => {
-            global.mainWindow?.flashFrame(false);
-            focusHandlerAttached = false;
-        });
-        focusHandlerAttached = true;
+    if (process.platform === "win32" || process.platform === "linux") {
+        if (global.mainWindow && !global.mainWindow.isFocused() && !focusHandlerAttached) {
+            global.mainWindow.flashFrame(true);
+            global.mainWindow.once("focus", () => {
+                global.mainWindow?.flashFrame(false);
+                focusHandlerAttached = false;
+            });
+            focusHandlerAttached = true;
+        }
     }
 });
 
