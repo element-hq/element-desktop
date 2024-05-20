@@ -181,7 +181,6 @@ export const TARGETS: Record<TargetId, Target> = {
     "x86_64-apple-darwin": x8664AppleDarwin,
     "universal-apple-darwin": universalAppleDarwin,
     // Windows
-    "i686-pc-windows-msvc": i686PcWindowsMsvc,
     "x86_64-pc-windows-msvc": x8664PcWindowsMsvc,
     "aarch64-pc-windows-msvc": aarch64WindowsMsvc,
     // FreeBSD
