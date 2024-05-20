@@ -27,4 +27,3 @@ In order to load all the C++ utilities installed by Visual Studio you can run th
 ```
 call "C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Auxiliary\Build\vcvarsall.bat" amd64
 ```
-
