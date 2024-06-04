@@ -136,6 +136,7 @@ Alternatively, a custom location for the profile data can be specified using the
 
 -   `%APPDATA%\$NAME\config.json` on Windows
 -   `$XDG_CONFIG_HOME/$NAME/config.json` or `~/.config/$NAME/config.json` on Linux
+-   `~/.var/app/im.riot.Riot/config/$NAME/config.json` with Flatpak
 -   `~/Library/Application Support/$NAME/config.json` on macOS
 
 In the paths above, `$NAME` is typically `Element`, unless you use `--profile
