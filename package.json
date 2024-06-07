@@ -120,7 +120,7 @@
         "typescript": "5.4.5"
     },
     "hakDependencies": {
-        "matrix-seshat": "^3.0.1",
+        "matrix-seshat": "^4.0.0",
         "keytar": "^7.9.0"
     },
     "resolutions": {
