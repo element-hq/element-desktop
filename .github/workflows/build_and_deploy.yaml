@@ -85,7 +85,7 @@ jobs:
         strategy:
             matrix:
                 arch: [amd64, arm64]
-                sqlcipher: [system, static]
+                sqlcipher: [static]
         uses: ./.github/workflows/build_linux.yaml
         with:
             arch: ${{ matrix.arch }}
@@ -218,7 +218,7 @@ jobs:
               run: |
                   for arch in amd64 arm64
                   do
-                      echo "$arch=$(ls linux-$arch-sqlcipher-system/*.deb | tail -n1)" >> $GITHUB_OUTPUT
+                      echo "$arch=$(ls linux-$arch-sqlcipher-static/*.deb | tail -n1)" >> $GITHUB_OUTPUT
                   done
 
             - name: Stash debs
