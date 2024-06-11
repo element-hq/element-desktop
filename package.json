@@ -62,7 +62,7 @@
         "test:screenshots:run": "docker run --rm --network host -v $(pwd):/work/element-desktop -v /var/run/docker.sock:/var/run/docker.sock --platform linux/amd64 -it element-desktop-playwright"
     },
     "dependencies": {
-        "@sentry/electron": "^4.3.0",
+        "@sentry/electron": "^5.0.0",
         "auto-launch": "^5.0.5",
         "counterpart": "^0.18.6",
         "electron-clear-data": "^1.0.5",
