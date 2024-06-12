@@ -53,7 +53,7 @@ function safeOpenURL(target: string): void {
         // so we know the url parser has understood all the parts
         // of the input string
         const newTarget = url.format(parsedUrl);
-        shell.openExternal(newTarget);
+        void shell.openExternal(newTarget);
     }
 }
 
@@ -169,7 +169,7 @@ function onLinkContextMenu(ev: Event, params: ContextMenuParams, webContents: We
                         }
                     } catch (err) {
                         console.error(err);
-                        dialog.showMessageBox({
+                        void dialog.showMessageBox({
                             type: "error",
                             title: _t("right_click_menu|save_image_as_error_title"),
                             message: _t("right_click_menu|save_image_as_error_description"),
@@ -275,7 +275,7 @@ const userDownloadMap = new Map<number, string>(); // Map from id to path
 ipcMain.on("userDownloadAction", function (ev: IpcMainEvent, { id, open = false }) {
     const path = userDownloadMap.get(id);
     if (open && path) {
-        shell.openPath(path);
+        void shell.openPath(path);
     }
     userDownloadMap.delete(id);
 });

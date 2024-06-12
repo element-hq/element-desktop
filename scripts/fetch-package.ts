@@ -114,7 +114,7 @@ async function main(): Promise<number | undefined> {
             return 1;
         }
 
-        await new Promise<boolean>((resolve) => {
+        await new Promise<boolean>((resolve, reject) => {
             const gpgProc = childProcess.execFile("gpg", ["--import"], (error) => {
                 if (error) {
                     console.log("Failed to import key", error);
@@ -123,9 +123,11 @@ async function main(): Promise<number | undefined> {
                 }
                 resolve(!error);
             });
-            fetch(PUB_KEY_URL).then((resp) => {
-                stream.pipeline(resp.body, gpgProc.stdin!);
-            });
+            fetch(PUB_KEY_URL)
+                .then((resp) => {
+                    stream.pipeline(resp.body, gpgProc.stdin!).catch(reject);
+                })
+                .catch(reject);
         });
         return 0;
     }

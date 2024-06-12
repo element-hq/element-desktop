@@ -176,7 +176,7 @@ async function loadConfig(): Promise<void> {
         global.vectorConfig = Object.assign(global.vectorConfig, localConfig);
     } catch (e) {
         if (e instanceof SyntaxError) {
-            dialog.showMessageBox({
+            void dialog.showMessageBox({
                 type: "error",
                 title: `Your ${global.vectorConfig.brand || "Element"} is misconfigured`,
                 message:
@@ -292,7 +292,7 @@ const warnBeforeExit = (event: Event, input: Input): void => {
     }
 };
 
-configureSentry();
+void configureSentry();
 
 // handle uncaught errors otherwise it displays
 // stack traces in popup dialogs, which is terrible (which
@@ -442,7 +442,7 @@ app.on("ready", async () => {
         console.log('Auto update disabled via command line flag "--no-update"');
     } else if (global.vectorConfig["update_base_url"]) {
         console.log(`Starting auto update with base URL: ${global.vectorConfig["update_base_url"]}`);
-        updater.start(global.vectorConfig["update_base_url"]);
+        void updater.start(global.vectorConfig["update_base_url"]);
     } else {
         console.log("No update_base_url is defined: auto update is disabled");
     }
@@ -477,7 +477,7 @@ app.on("ready", async () => {
             webgl: true,
         },
     });
-    global.mainWindow.loadURL("vector://vector/webapp/");
+    void global.mainWindow.loadURL("vector://vector/webapp/");
 
     if (process.platform === "darwin") {
         setupMacosTitleBar(global.mainWindow);

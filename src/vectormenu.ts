@@ -140,7 +140,7 @@ export function buildMenuTemplate(): Menu {
                     // XXX: vectorConfig won't have defaults applied to it so we need to duplicate them here
                     label: _t("common|brand_help", { brand: global.vectorConfig?.brand || "Element" }),
                     click(): void {
-                        shell.openExternal(global.vectorConfig?.help_url || "https://element.io/help");
+                        void shell.openExternal(global.vectorConfig?.help_url || "https://element.io/help");
                     },
                 },
             ],
