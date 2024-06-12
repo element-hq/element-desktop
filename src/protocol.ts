@@ -50,7 +50,7 @@ function processUrl(url: string): void {
     urlToLoad.hash = parsed.hash;
 
     console.log("Opening URL: ", urlToLoad.href);
-    global.mainWindow.loadURL(urlToLoad.href);
+    void global.mainWindow.loadURL(urlToLoad.href);
 }
 
 function readStore(): Record<string, string> {

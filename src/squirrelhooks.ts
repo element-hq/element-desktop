@@ -43,7 +43,7 @@ function checkSquirrelHooks(): boolean {
 
     switch (cmd) {
         case "--squirrel-install":
-            runUpdateExe(["--createShortcut=" + target]).then(() => app.quit());
+            void runUpdateExe(["--createShortcut=" + target]).then(() => app.quit());
             return true;
 
         case "--squirrel-updated":
@@ -52,7 +52,7 @@ function checkSquirrelHooks(): boolean {
             return true;
 
         case "--squirrel-uninstall":
-            runUpdateExe(["--removeShortcut=" + target]).then(() => app.quit());
+            void runUpdateExe(["--removeShortcut=" + target]).then(() => app.quit());
             return true;
 
         default:

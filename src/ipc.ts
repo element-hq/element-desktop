@@ -217,11 +217,11 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
                             label: r.initial,
                             backgroundColor: defaultColors[total % defaultColors.length],
                             click: (): void => {
-                                global.mainWindow?.loadURL(`vector://vector/webapp/#/room/${r.roomId}`);
+                                void global.mainWindow?.loadURL(`vector://vector/webapp/#/room/${r.roomId}`);
                             },
                         });
                         if (r.avatarUrl) {
-                            fetch(r.avatarUrl)
+                            void fetch(r.avatarUrl)
                                 .then((resp) => {
                                     if (!resp.ok) return;
                                     return resp.arrayBuffer();

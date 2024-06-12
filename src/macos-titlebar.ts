@@ -150,15 +150,15 @@ export function setupMacosTitleBar(window: BrowserWindow): void {
 
     window.on("enter-full-screen", () => {
         if (cssKey !== undefined) {
-            window.webContents.removeInsertedCSS(cssKey);
+            void window.webContents.removeInsertedCSS(cssKey);
         }
     });
     window.on("leave-full-screen", () => {
-        applyStyling();
+        void applyStyling();
     });
     window.webContents.on("did-finish-load", () => {
         if (!window.isFullScreen()) {
-            applyStyling();
+            void applyStyling();
         }
     });
 }
