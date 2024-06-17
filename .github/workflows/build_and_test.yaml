@@ -31,9 +31,7 @@ jobs:
             matrix:
                 sqlcipher: [system, static]
                 arch: [amd64, arm64]
-        secrets: inherit
         with:
-            sign: true
             config: ${{ github.event.pull_request.base.ref == 'develop' && 'element.io/nightly' || 'element.io/release' }}
             sqlcipher: ${{ matrix.sqlcipher }}
             arch: ${{ matrix.arch }}
@@ -42,6 +40,9 @@ jobs:
         needs: fetch
         name: macOS
         uses: ./.github/workflows/build_macos.yaml
+        secrets: inherit
+        with:
+            sign: true
 
     test:
         needs:
