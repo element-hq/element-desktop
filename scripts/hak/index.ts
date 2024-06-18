@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 import path from "path";
-import findNpmPrefix from "find-npm-prefix";
 
 import HakEnv from "./hakEnv";
 import { TargetId } from "./target";
@@ -37,7 +36,7 @@ const METACOMMANDS: Record<string, string[]> = {
 const HAKSCRIPTS = ["check", "fetch", "build"];
 
 async function main(): Promise<void> {
-    const prefix = await findNpmPrefix(process.cwd());
+    const prefix = path.join(__dirname, "..", "..");
     let packageJson;
     try {
         packageJson = require(path.join(prefix, "package.json"));
