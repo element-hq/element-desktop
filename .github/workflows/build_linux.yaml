@@ -109,14 +109,14 @@ jobs:
             - name: "Get modified files"
               id: changed_files
               if: steps.cache.outputs.cache-hit != 'true' && github.event_name == 'pull_request'
-              uses: tj-actions/changed-files@d6babd6899969df1a11d14c368283ea4436bca78 # v44
+              uses: tj-actions/changed-files@cc733854b1f224978ef800d29e4709d5ee2883e4 # v44
               with:
                   files: |
                       dockerbuild/**
 
             # This allows contributors to test changes to the dockerbuild image within a pull request
             - name: Build docker image
-              uses: docker/build-push-action@ca052bb54ab0790a636c9b5f226502c73d547a25 # v5
+              uses: docker/build-push-action@31159d49c0d4756269a0940a750801a1ea5d7003 # v6
               if: steps.changed_files.outputs.any_modified == 'true'
               with:
                   context: dockerbuild
