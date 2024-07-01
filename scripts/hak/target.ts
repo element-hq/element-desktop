@@ -23,7 +23,6 @@ export type TargetId =
     | "aarch64-apple-darwin"
     | "x86_64-apple-darwin"
     | "universal-apple-darwin"
-    | "i686-pc-windows-msvc"
     | "x86_64-pc-windows-msvc"
     | "aarch64-pc-windows-msvc"
     | "i686-unknown-freebsd"
@@ -86,13 +85,6 @@ const universalAppleDarwin: UniversalTarget = {
     platform: "darwin",
     arch: "universal",
     subtargets: [aarch64AppleDarwin, x8664AppleDarwin],
-};
-
-const i686PcWindowsMsvc: WindowsTarget = {
-    id: "i686-pc-windows-msvc",
-    platform: "win32",
-    arch: "ia32",
-    vcVarsArch: "x86",
 };
 
 const x8664PcWindowsMsvc: WindowsTarget = {
@@ -189,7 +181,6 @@ export const TARGETS: Record<TargetId, Target> = {
     "x86_64-apple-darwin": x8664AppleDarwin,
     "universal-apple-darwin": universalAppleDarwin,
     // Windows
-    "i686-pc-windows-msvc": i686PcWindowsMsvc,
     "x86_64-pc-windows-msvc": x8664PcWindowsMsvc,
     "aarch64-pc-windows-msvc": aarch64WindowsMsvc,
     // FreeBSD

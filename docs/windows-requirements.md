@@ -22,17 +22,8 @@ If you want to build native modules, make sure that the following tools are inst
 
 Once installed make sure all those utilities are accessible in your `PATH`.
 
-If you want to be able to build x86 targets from an x64 host install the right toolchain:
-
-```cmd
-rustup toolchain install stable-i686-pc-windows-msvc
-rustup target add i686-pc-windows-msvc
-```
-
 In order to load all the C++ utilities installed by Visual Studio you can run the following in a terminal window.
 
 ```
 call "C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Auxiliary\Build\vcvarsall.bat" amd64
 ```
-
-You can replace `amd64` with `x86` depending on your CPU architecture.

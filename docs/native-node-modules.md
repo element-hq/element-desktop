@@ -109,13 +109,7 @@ yarn run build:universal
 
 ### Windows
 
-If you're on Windows, you can choose to build specifically for 32 or 64 bit:
-
-```
-yarn run build:32
-```
-
-or
+If you're on Windows, you can only build for 64 bit:
 
 ```
 yarn run build:64
