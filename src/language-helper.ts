@@ -73,7 +73,7 @@ export class AppLocalization {
     private readonly localizedComponents?: Set<Component>;
 
     public constructor({ store, components = [] }: { store: TypedStore; components: Component[] }) {
-        counterpart.registerTranslations(FALLBACK_LOCALE, this.fetchTranslationJson("en_EN"));
+        counterpart.registerTranslations(FALLBACK_LOCALE, this.fetchTranslationJson("en_EN") ?? {});
         counterpart.setFallbackLocale(FALLBACK_LOCALE);
         counterpart.setSeparator("|");
 
@@ -91,11 +91,21 @@ export class AppLocalization {
         this.resetLocalizedUI();
     }
 
+    // Fallbacks to a locale (e.g. en-gb to [en-gb, en, en-en] or just en to [en, en-en])
+    private variations(locale: string): string[] {
+        const [genericPart, specificPart] = locale.split("-");
+        const candidates = [locale];
+        if (specificPart) {
+            candidates.push(genericPart);
+        }
+        if (genericPart != specificPart) {
+            candidates.push(`${genericPart}-${genericPart}`);
+        }
+        return candidates;
+    }
+
     // Format language strings from normalized form to non-normalized form (e.g. en-gb to en_GB)
     private denormalize(locale: string): string {
-        if (locale === "en") {
-            locale = "en_EN";
-        }
         const parts = locale.split("-");
         if (parts.length > 1) {
             parts[1] = parts[1].toUpperCase();
@@ -103,13 +113,13 @@ export class AppLocalization {
         return parts.join("_");
     }
 
-    public fetchTranslationJson(locale: string): Record<string, string> {
+    public fetchTranslationJson(locale: string): object | null {
         try {
-            console.log("Fetching translation json for locale: " + locale);
-            return loadJsonFile(__dirname, "i18n", "strings", `${this.denormalize(locale)}.json`);
+            console.log(`Fetching translation json for locale: ${locale}`);
+            return loadJsonFile(__dirname, "i18n", "strings", `${locale}.json`);
         } catch (e) {
             console.log(`Could not fetch translation json for locale: '${locale}'`, e);
-            return {};
+            return null;
         }
     }
 
@@ -120,13 +130,16 @@ export class AppLocalization {
             locales = [locales];
         }
 
-        const loadedLocales = locales.filter((locale) => {
-            const translations = this.fetchTranslationJson(locale);
-            if (translations !== null) {
-                counterpart.registerTranslations(locale, translations);
-            }
-            return !!translations;
-        });
+        const loadedLocales = locales
+            .flatMap(this.variations)
+            .map(this.denormalize)
+            .filter((locale) => {
+                const translations = this.fetchTranslationJson(locale);
+                if (translations !== null) {
+                    counterpart.registerTranslations(locale, translations);
+                }
+                return !!translations;
+            });
 
         counterpart.setLocale(loadedLocales[0]);
         this.store.set(AppLocalization.STORE_KEY, locales);
