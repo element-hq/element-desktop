@@ -3650,9 +3650,9 @@ electron-window-state@^5.0.3:
     mkdirp "^0.5.1"
 
 electron@^31.0.0:
-  version "31.0.2"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-31.0.2.tgz#9b719fe6072060fe74cb609bcbb84694abce5b17"
-  integrity sha512-55efQ5yfLN+AQHcFC00AXQqtxC3iAGaxX2GQ3EDbFJ0ca9GHNOdSXkcrdBElLleiDrR2hpXNkQxN1bDn0oxe6w==
+  version "31.1.0"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-31.1.0.tgz#2836dbeb8f80c9b278aa4563c8fc3a6e6afbe723"
+  integrity sha512-TBOwqLxSxnx6+pH6GMri7R3JPH2AkuGJHfWZS0p1HsmN+Qr1T9b0IRJnnehSd/3NZAmAre4ft9Ljec7zjyKFJA==
   dependencies:
     "@electron/get" "^2.0.0"
     "@types/node" "^20.9.0"
@@ -4895,7 +4895,7 @@ jake@^10.8.5:
     filelist "^1.0.4"
     minimatch "^3.1.2"
 
-jiti@^1.21.0:
+jiti@^1.21.6:
   version "1.21.6"
   resolved "https://registry.yarnpkg.com/jiti/-/jiti-1.21.6.tgz#6c7f7398dd4b3142767f9a168af2f317a428d268"
   integrity sha512-2yTgeWTWzMWkHu6Jp9NKgePDaYHbntiwvYuuJLbbN9vl7DC9DvXKOB2BC3ZZ92D3cvV/aflH0osDfwpHepQ53w==
@@ -5023,16 +5023,16 @@ keyv@^4.0.0, keyv@^4.5.3:
     json-buffer "3.0.1"
 
 knip@^5.0.0:
-  version "5.23.0"
-  resolved "https://registry.yarnpkg.com/knip/-/knip-5.23.0.tgz#655bec539375571baa8cebe059d64ae9ceb4fd41"
-  integrity sha512-kHXcxmbbpTa+ZPx29KfAbBGP6TK81wXjvHyUPTCbGNFwOVnVUminesaO/of+9KleCzw3pUPiK/k4UsEu+aFK4Q==
+  version "5.23.3"
+  resolved "https://registry.yarnpkg.com/knip/-/knip-5.23.3.tgz#fe456ac1aa247804207670bab9ca9ab671dea687"
+  integrity sha512-i0vFlpe3D9AZmp3Hlq3ZncjJQB2x21LeVrIV+9rnBavaKpTLhV/sLmE4iqTjEWedLtpfJsax68S68aqZzcXpsQ==
   dependencies:
     "@ericcornelissen/bash-parser" "0.5.3"
     "@nodelib/fs.walk" "2.0.0"
     "@snyk/github-codeowners" "1.1.0"
     easy-table "1.2.0"
     fast-glob "^3.3.2"
-    jiti "^1.21.0"
+    jiti "^1.21.6"
     js-yaml "^4.1.0"
     minimist "^1.2.8"
     picocolors "^1.0.0"
