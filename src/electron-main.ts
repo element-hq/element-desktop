@@ -19,18 +19,7 @@ limitations under the License.
 
 // Squirrel on windows starts the app with various flags as hooks to tell us when we've been installed/uninstalled etc.
 import "./squirrelhooks";
-import {
-    app,
-    BrowserWindow,
-    Menu,
-    autoUpdater,
-    protocol,
-    dialog,
-    Input,
-    Event,
-    session,
-    ipcMain,
-} from "electron";
+import { app, BrowserWindow, Menu, autoUpdater, protocol, dialog, Input, Event, session, ipcMain } from "electron";
 import * as Sentry from "@sentry/electron/main";
 import AutoLaunch from "auto-launch";
 import path from "path";
@@ -598,7 +587,7 @@ app.on("ready", async () => {
             // `accessToken` can be falsy, but if we're trying to download media without authentication
             // then we should expect failure anyway.
             const headers = { ...req.requestHeaders };
-            headers['Authorization'] = `Bearer ${accessToken}`;
+            headers["Authorization"] = `Bearer ${accessToken}`;
             return callback({ requestHeaders: headers });
         });
         global.mainWindow!.webContents.send("userAccessToken");
