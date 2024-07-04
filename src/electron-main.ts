@@ -30,7 +30,6 @@ import {
     Event,
     session,
     ipcMain,
-    ipcRenderer,
 } from "electron";
 import * as Sentry from "@sentry/electron/main";
 import AutoLaunch from "auto-launch";
