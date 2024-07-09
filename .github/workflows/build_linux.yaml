@@ -38,6 +38,9 @@ jobs:
             - name: Install missing tools
               if: runner.environment == 'self-hosted'
               run: |
+                  # Sanity check that the arch is arm64 as we expect
+                  [[ $(uname -p) == "aarch64" ]] || exit 1
+
                   sudo apt-get -qq update
                   # curl for yarn download, git for tj-actions/changed-files, zstd for actions/cache
                   sudo apt-get install -y curl git zstd

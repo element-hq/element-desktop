@@ -94,6 +94,9 @@ jobs:
             - name: Install Yarn
               if: runner.environment == 'self-hosted'
               run: |
+                  # Sanity check that the arch is arm64 as we expect
+                  [[ $(uname -p) == "aarch64" ]] || exit 1
+
                   sudo apt-get -qq update
                   sudo apt-get install -y curl
                   curl -fsSL --create-dirs -o $HOME/bin/yarn https://github.com/yarnpkg/yarn/releases/download/v1.22.19/yarn-1.22.19.js
