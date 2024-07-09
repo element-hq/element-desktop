@@ -144,5 +144,8 @@ jobs:
               uses: actions/upload-artifact@v4
               with:
                   name: ${{ matrix.artifact }}-test
-                  path: playwright/html-report
+                  path: |
+                      playwright/html-report
+                      playwright/videos
+                      playwright/trace.zip
                   retention-days: 14
