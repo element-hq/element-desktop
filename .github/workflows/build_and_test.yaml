@@ -59,6 +59,9 @@ jobs:
                           hdiutil attach ./dist/*.dmg -mountpoint /Volumes/Element &&
                           rsync -a /Volumes/Element/Element.app ~/Applications/ &&
                           hdiutil detach /Volumes/Element
+                          # Work around macOS Permissions weirdness in Github Actions
+                          sqlite3 $HOME/Library/Application\ Support/com.apple.TCC/TCC.db "INSERT OR IGNORE INTO access VALUES ('kTCCServiceMicrophone','/usr/local/opt/runner/provisioner/provisioner',1,2,4,1,NULL,NULL,0,'UNUSED',NULL,0,1687786159,NULL,NULL,'UNUSED',1687786159);"
+                          sqlite3 $HOME/Library/Application\ Support/com.apple.TCC/TCC.db "INSERT OR IGNORE INTO access VALUES ('kTCCServiceMicrophone','/opt/off/opt/runner/provisioner/provisioner',1,2,4,1,NULL,NULL,0,'UNUSED',NULL,0,1687786159,NULL,NULL,'UNUSED',1687786159);"
         name: Test ${{ matrix.name }}
         runs-on: ${{ matrix.os }}
         steps:
@@ -103,17 +106,6 @@ jobs:
                   # We need sudo on Linux as it is installed in /opt/
                   RUN_AS: ${{ runner.os == 'Linux' && 'sudo' || '' }}
 
-            - name: Grant microphone access
-              run: |
-                  sqlite3 $HOME/Library/Application\ Support/com.apple.TCC/TCC.db "INSERT OR IGNORE INTO access VALUES ('kTCCServiceMicrophone','/usr/local/opt/runner/provisioner/provisioner',1,2,4,1,NULL,NULL,0,'UNUSED',NULL,0,1687786159,NULL,NULL,'UNUSED',1687786159);"
-                  sqlite3 $HOME/Library/Application\ Support/com.apple.TCC/TCC.db "INSERT OR IGNORE INTO access VALUES ('kTCCServiceMicrophone','/opt/off/opt/runner/provisioner/provisioner',1,2,4,1,NULL,NULL,0,'UNUSED',NULL,0,1687786159,NULL,NULL,'UNUSED',1687786159);"
-
-            - run: $ELEMENT_DESKTOP_EXECUTABLE &
-              env:
-                  ELEMENT_DESKTOP_EXECUTABLE: ${{ matrix.executable }}
-
-            - run: screencapture desktop.png
-
             - name: Run tests
               uses: coactions/setup-xvfb@6b00cf1889f4e1d5a48635647013c0508128ee1a
               timeout-minutes: 5
@@ -131,7 +123,6 @@ jobs:
               with:
                   name: ${{ matrix.artifact }}-test
                   path: |
-                      desktop.png
                       desktop2.png
                       playwright/html-report
                       playwright/videos
