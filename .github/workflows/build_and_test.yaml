@@ -107,9 +107,7 @@ jobs:
               env:
                   ELEMENT_DESKTOP_EXECUTABLE: ${{ matrix.executable }}
 
-            - uses: OrbitalOwen/desktop-screenshot-action@0.1
-              with:
-                  file-name: "desktop.jpg"
+            - run: screencapture desktop.png
 
             - name: Run tests
               uses: coactions/setup-xvfb@6b00cf1889f4e1d5a48635647013c0508128ee1a
@@ -119,9 +117,7 @@ jobs:
               env:
                   ELEMENT_DESKTOP_EXECUTABLE: ${{ matrix.executable }}
 
-            - uses: OrbitalOwen/desktop-screenshot-action@0.1
-              with:
-                  file-name: "desktop2.jpg"
+            - run: screencapture desktop2.png
 
             - name: Upload HTML report
               if: always()
@@ -129,8 +125,8 @@ jobs:
               with:
                   name: ${{ matrix.artifact }}-test
                   path: |
-                      desktop.jpg
-                      desktop2.jpg
+                      desktop.png
+                      desktop2.png
                       playwright/html-report
                       playwright/videos
                       playwright/trace.zip
