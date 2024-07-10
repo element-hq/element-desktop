@@ -19,7 +19,7 @@ limitations under the License.
 
 // Squirrel on windows starts the app with various flags as hooks to tell us when we've been installed/uninstalled etc.
 import "./squirrelhooks";
-import { app, BrowserWindow, Menu, autoUpdater, protocol, dialog, Input, Event, session } from "electron";
+import { app, BrowserWindow, Menu, autoUpdater, protocol, dialog, Input, Event, session, ipcMain } from "electron";
 import * as Sentry from "@sentry/electron/main";
 import AutoLaunch from "auto-launch";
 import path from "path";
@@ -548,6 +548,51 @@ app.on("ready", async () => {
     session.defaultSession.setDisplayMediaRequestHandler((_, callback) => {
         global.mainWindow?.webContents.send("openDesktopCapturerSourcePicker");
         setDisplayMediaCallback(callback);
+    });
+
+    session.defaultSession.webRequest.onBeforeRequest((req, callback) => {
+        // This handler emulates the element-web service worker, where URLs are rewritten late in the request
+        // for backwards compatibility. As authenticated media becomes more prevalent, this should be replaced
+        // by the app using authenticated URLs from the outset.
+        let url = req.url;
+        if (!url.includes("/_matrix/media/v3/download") && !url.includes("/_matrix/media/v3/thumbnail")) {
+            return callback({}); // not a URL we care about
+        }
+
+        // Check for feature support from the server. This requires asking the renderer process for supported
+        // versions.
+        ipcMain.once("serverSupportedVersions", (_, versionsResponse) => {
+            if (versionsResponse?.versions?.includes("v1.11")) {
+                url = url.replace(/\/media\/v3\/(.*)\//, "/client/v1/media/$1/");
+                return callback({ redirectURL: url });
+            } else {
+                return callback({}); // no support == no modification
+            }
+        });
+        global.mainWindow!.webContents.send("serverSupportedVersions"); // ping now that the listener exists
+
+        // we don't invoke callback() in this function - see the ipcMain.once above for callback usage.
+    });
+
+    session.defaultSession.webRequest.onBeforeSendHeaders((req, callback) => {
+        if (!req.url.includes("/_matrix/client/v1/media")) {
+            return callback({}); // invoke unmodified
+        }
+
+        // Only add authorization header to authenticated media URLs. This emulates the service worker
+        // behaviour in element-web.
+
+        // We need to get the access token from the renderer process to do that, though.
+        ipcMain.once("userAccessToken", (_, accessToken) => {
+            // `accessToken` can be falsy, but if we're trying to download media without authentication
+            // then we should expect failure anyway.
+            const headers = { ...req.requestHeaders };
+            headers["Authorization"] = `Bearer ${accessToken}`;
+            return callback({ requestHeaders: headers });
+        });
+        global.mainWindow!.webContents.send("userAccessToken");
+
+        // we don't invoke callback() in this function - see the ipcMain.once above for callback usage.
     });
 });
 
