@@ -40,8 +40,8 @@ export const test = base.extend<{ app: ElectronApplication; tmpDir: string }>({
             env: process.env,
             executablePath,
             args,
-            recordVideo: { dir: "playwright/videos" },
-            tracesDir: "playwright/traces",
+            // recordVideo: { dir: "playwright/videos" },
+            // tracesDir: "playwright/traces",
         });
 
         app.process().stdout.pipe(process.stdout);
@@ -52,9 +52,9 @@ export const test = base.extend<{ app: ElectronApplication; tmpDir: string }>({
     },
     page: async ({ app }, use) => {
         const window = await app.firstWindow();
-        await window.context().tracing.start({ screenshots: true, snapshots: true });
+        // await window.context().tracing.start({ screenshots: true, snapshots: true });
         await use(window);
-        await window.context().tracing.stop({ path: "playwright/trace.zip" });
+        // await window.context().tracing.stop({ path: "playwright/trace.zip" });
         await app.close().catch((e) => {
             console.error(e);
         });
