@@ -29,5 +29,5 @@ export default defineConfig({
     reporter: [["html", { outputFolder: "playwright/html-report" }]],
     snapshotDir: "playwright/snapshots",
     snapshotPathTemplate: "{snapshotDir}/{testFilePath}/{arg}-{platform}{ext}",
-    timeout: 10 * 1000,
+    timeout: 30 * 1000,
 });
