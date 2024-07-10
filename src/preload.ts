@@ -35,6 +35,8 @@ const CHANNELS = [
     "userDownloadCompleted",
     "userDownloadAction",
     "openDesktopCapturerSourcePicker",
+    "userAccessToken",
+    "serverSupportedVersions",
 ];
 
 contextBridge.exposeInMainWorld("electron", {
