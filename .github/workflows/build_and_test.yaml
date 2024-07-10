@@ -59,34 +59,6 @@ jobs:
                           hdiutil attach ./dist/*.dmg -mountpoint /Volumes/Element &&
                           rsync -a /Volumes/Element/Element.app ~/Applications/ &&
                           hdiutil detach /Volumes/Element
-                    - name: "Linux (amd64) (sqlcipher: system)"
-                      os: ubuntu-latest
-                      artifact: linux-amd64-sqlcipher-system
-                      executable: "/opt/Element/element-desktop"
-                      prepare_cmd: "sudo apt-get -qq update && sudo apt install ./dist/*.deb"
-                    - name: "Linux (amd64) (sqlcipher: static)"
-                      os: ubuntu-latest
-                      artifact: linux-amd64-sqlcipher-static
-                      executable: "/opt/Element/element-desktop"
-                      prepare_cmd: "sudo apt-get -qq update && sudo apt install ./dist/*.deb"
-                    - name: "Linux (arm64) (sqlcipher: system)"
-                      os: dind-l-arm64
-                      artifact: linux-arm64-sqlcipher-system
-                      executable: "/opt/Element/element-desktop"
-                      prepare_cmd: "sudo apt-get -qq update && sudo apt install -y ./dist/*.deb"
-                    - name: "Linux (arm64) (sqlcipher: static)"
-                      os: dind-l-arm64
-                      artifact: linux-arm64-sqlcipher-static
-                      executable: "/opt/Element/element-desktop"
-                      prepare_cmd: "sudo apt-get -qq update && sudo apt install -y ./dist/*.deb"
-                    - name: Windows (x86)
-                      os: windows-latest
-                      artifact: win-ia32
-                      executable: "./dist/win-ia32-unpacked/Element.exe"
-                    - name: Windows (x64)
-                      os: windows-latest
-                      artifact: win-x64
-                      executable: "./dist/win-unpacked/Element.exe"
         name: Test ${{ matrix.name }}
         runs-on: ${{ matrix.os }}
         steps:
@@ -131,6 +103,14 @@ jobs:
                   # We need sudo on Linux as it is installed in /opt/
                   RUN_AS: ${{ runner.os == 'Linux' && 'sudo' || '' }}
 
+            - run: $ELEMENT_DESKTOP_EXECUTABLE &
+              env:
+                  ELEMENT_DESKTOP_EXECUTABLE: ${{ matrix.executable }}
+
+            - uses: OrbitalOwen/desktop-screenshot-action@0.1
+              with:
+                  file-name: "desktop.jpg"
+
             - name: Run tests
               uses: coactions/setup-xvfb@6b00cf1889f4e1d5a48635647013c0508128ee1a
               timeout-minutes: 5
@@ -139,12 +119,18 @@ jobs:
               env:
                   ELEMENT_DESKTOP_EXECUTABLE: ${{ matrix.executable }}
 
+            - uses: OrbitalOwen/desktop-screenshot-action@0.1
+              with:
+                  file-name: "desktop2.jpg"
+
             - name: Upload HTML report
               if: always()
               uses: actions/upload-artifact@v4
               with:
                   name: ${{ matrix.artifact }}-test
                   path: |
+                      desktop.jpg
+                      desktop2.jpg
                       playwright/html-report
                       playwright/videos
                       playwright/trace.zip
