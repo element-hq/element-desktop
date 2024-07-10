@@ -115,7 +115,7 @@
         "rimraf": "^6.0.0",
         "tar": "^6.2.1",
         "ts-node": "^10.9.1",
-        "typescript": "5.5.2"
+        "typescript": "5.5.3"
     },
     "hakDependencies": {
         "matrix-seshat": "^4.0.0",
