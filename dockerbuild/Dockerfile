@@ -18,7 +18,9 @@ RUN ln -s /usr/bin/python3 /usr/bin/python & ln -s /usr/bin/pip3 /usr/bin/pip
 ENV DEBUG_COLORS true
 ENV FORCE_COLOR true
 
-ENV NODE_VERSION 18.19.0
+WORKDIR /project
+
+ENV NODE_VERSION 20.15.1
 ARG TARGETOS
 ARG TARGETARCH
 COPY setup.sh /setup.sh
