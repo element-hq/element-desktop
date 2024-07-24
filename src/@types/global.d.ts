@@ -20,8 +20,8 @@ declare global {
     var launcher: AutoLaunch;
     var vectorConfig: Record<string, any>;
     var trayConfig: {
-        // eslint-disable-next-line camelcase
-        icon_path: string;
+        color_icon_path: string; // eslint-disable-line camelcase
+        monochrome_icon_path: string; // eslint-disable-line camelcase
         brand: string;
     };
     var store: Store<{
@@ -31,6 +31,7 @@ declare global {
         autoHideMenuBar?: boolean;
         locale?: string | string[];
         disableHardwareAcceleration?: boolean;
+        monochrome?: boolean;
     }>;
 }
 /* eslint-enable no-var */
