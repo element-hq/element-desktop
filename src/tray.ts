@@ -46,8 +46,20 @@ function toggleWin(): void {
     }
 }
 
+function toggleMonochrome(): void {
+    const monochrome = !isMonochrome();
+    if (monochrome) {
+        trayIcon?.setImage(nativeImage.createFromPath(global.trayConfig.monochrome_icon_path));
+    } else {
+        trayIcon?.setImage(nativeImage.createFromPath(global.trayConfig.color_icon_path));
+    }
+    global.store.set("monochrome", monochrome);
+    initApplicationMenu();
+}
+
 interface IConfig {
-    icon_path: string; // eslint-disable-line camelcase
+    color_icon_path: string; // eslint-disable-line camelcase
+    monochrome_icon_path: string; // eslint-disable-line camelcase
     brand: string;
 }
 
@@ -57,10 +69,16 @@ function getUuid(): string {
     return global.vectorConfig["uuid"] || "eba84003-e499-4563-8e9d-166e34b5cc25";
 }
 
+function isMonochrome(): boolean {
+    return global.store.get("monochrome", process.platform === "linux");
+}
+
 export function create(config: IConfig): void {
     // no trays on darwin
     if (process.platform === "darwin" || trayIcon) return;
-    const defaultIcon = nativeImage.createFromPath(config.icon_path);
+    const defaultIcon = nativeImage.createFromPath(
+        isMonochrome() ? config.monochrome_icon_path : config.color_icon_path,
+    );
 
     let guid: string | undefined;
     if (process.platform === "win32" && app.isPackaged) {
@@ -122,6 +140,12 @@ export function initApplicationMenu(): void {
     }
 
     const contextMenu = Menu.buildFromTemplate([
+        {
+            label: _t("action|toggle_monochrome"),
+            click: toggleMonochrome,
+            type: "checkbox",
+            checked: isMonochrome(),
+        },
         {
             label: _t("action|show_hide"),
             click: toggleWin,
