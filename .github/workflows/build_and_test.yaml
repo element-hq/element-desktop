@@ -22,6 +22,7 @@ jobs:
                 arch: [x64, ia32]
         with:
             arch: ${{ matrix.arch }}
+            sign: true
 
     linux:
         needs: fetch
