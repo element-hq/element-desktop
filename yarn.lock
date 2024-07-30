@@ -3160,7 +3160,7 @@ debounce-fn@^4.0.0:
   dependencies:
     mimic-fn "^3.0.0"
 
-debug@4, debug@^4.1.0, debug@^4.1.1, debug@^4.3.1, debug@^4.3.2, debug@^4.3.4:
+debug@4, debug@^4.3.1, debug@^4.3.2, debug@^4.3.4:
   version "4.3.5"
   resolved "https://registry.yarnpkg.com/debug/-/debug-4.3.5.tgz#e83444eceb9fedd4a1da56d671ae2446a01a6e1e"
   integrity sha512-pt0bNEmneDIvdL1Xsd9oDQ/wrQRkXDT4AUWlNZNPKvW5x/jyO9VFXkJUP07vQ2upmw5PlaITaPKc31jK13V+jg==
@@ -3173,6 +3173,13 @@ debug@^3.2.7:
   integrity sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==
   dependencies:
     ms "^2.1.1"
+
+debug@^4.1.0, debug@^4.1.1:
+  version "4.3.6"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-4.3.6.tgz#2ab2c38fbaffebf8aa95fdfe6d88438c7a13c52b"
+  integrity sha512-O/09Bd4Z1fBrU4VzkhFqVgpPzaGbw6Sm9FEkBT1A/YBXQFGuuSxa1dN2nxgxS34JmKXqYx8CZAwEVoJFImUXIg==
+  dependencies:
+    ms "2.1.2"
 
 decompress-response@^6.0.0:
   version "6.0.0"
@@ -3418,9 +3425,9 @@ electron-window-state@^5.0.3:
     mkdirp "^0.5.1"
 
 electron@^31.0.0:
-  version "31.2.1"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-31.2.1.tgz#cfd7de576520d5c02d7c1f979bac85ad6b26d78d"
-  integrity sha512-g3CLKjl4yuXt6VWm/KpgEjYYhFiCl19RgUn8lOC8zV/56ZXAS3+mqV4wWzicE/7vSYXs6GRO7vkYRwrwhX3Gaw==
+  version "31.3.1"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-31.3.1.tgz#de5f21f10db1ba0568e0cdd7ae76ec40a4b800c3"
+  integrity sha512-9fiuWlRhBfygtcT+auRd/WdBK/f8LZZcrpx0RjpXhH2DPTP/PfnkC4JB1PW55qCbGbh4wAgkYbf4ExIag8oGCA==
   dependencies:
     "@electron/get" "^2.0.0"
     "@types/node" "^20.9.0"
