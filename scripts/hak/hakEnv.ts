@@ -97,15 +97,16 @@ export default class HakEnv {
     }
 
     public makeGypEnv(): Record<string, string | undefined> {
-        return Object.assign({}, process.env, {
+        return {
+            ...process.env,
             npm_config_arch: this.target.arch,
             npm_config_target_arch: this.target.arch,
             npm_config_disturl: "https://electronjs.org/headers",
             npm_config_runtime: this.runtime,
             npm_config_target: this.runtimeVersion,
-            npm_config_build_from_source: true,
+            npm_config_build_from_source: "true",
             npm_config_devdir: path.join(os.homedir(), ".electron-gyp"),
-        });
+        };
     }
 
     public wantsStaticSqlCipher(): boolean {
