@@ -79,7 +79,7 @@ async function pollForUpdates(): Promise<void> {
 
 export async function start(updateBaseUrl: string): Promise<void> {
     if (!(await available(updateBaseUrl))) return;
-    if (updateBaseUrl.slice(-1) !== "/") {
+    if (!updateBaseUrl.endsWith("/")) {
         updateBaseUrl = updateBaseUrl + "/";
     }
 
