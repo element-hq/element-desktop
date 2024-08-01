@@ -3,9 +3,9 @@
         "resolveJsonModule": true,
         "moduleResolution": "node",
         "esModuleInterop": true,
-        "target": "es2017",
+        "target": "es2022",
         "module": "es2022",
-        "lib": ["ESNext", "es2021", "dom"]
+        "lib": ["es2022", "dom"]
     },
     "include": ["**/*.ts"]
 }
