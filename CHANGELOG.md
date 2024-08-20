@@ -1,3 +1,8 @@
+Changes in [1.11.75](https://github.com/element-hq/element-desktop/releases/tag/v1.11.75) (2024-08-20)
+======================================================================================================
+# Security
+- Fixes for [CVE-2024-42369](https://nvd.nist.gov/vuln/detail/CVE-2024-42369) / [GHSA-vhr5-g3pm-49fm](https://github.com/matrix-org/matrix-js-sdk/security/advisories/GHSA-vhr5-g3pm-49fm).
+
 Changes in [1.11.74](https://github.com/element-hq/element-desktop/releases/tag/v1.11.74) (2024-08-13)
 ======================================================================================================
 ## ✨ Features
