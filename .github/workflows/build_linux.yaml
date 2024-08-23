@@ -112,7 +112,7 @@ jobs:
             - name: "Get modified files"
               id: changed_files
               if: steps.cache.outputs.cache-hit != 'true' && github.event_name == 'pull_request'
-              uses: tj-actions/changed-files@c65cd883420fd2eb864698a825fc4162dd94482c # v44
+              uses: tj-actions/changed-files@40853de9f8ce2d6cfdc73c1b96f14e22ba44aec4 # v45
               with:
                   files: |
                       dockerbuild/**
