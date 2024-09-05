@@ -1,0 +1,1 @@
+Please read the element-web [contributing guide](https://github.com/element-hq/element-web/blob/develop/CONTRIBUTING.md).
