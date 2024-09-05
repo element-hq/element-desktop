@@ -7,7 +7,7 @@
 
 # Element Desktop
 
-Element Desktop is a Matrix client for desktop platforms with Element Web at its core.
+Element Desktop is a Matrix client for desktop platforms with Element Web at its core. You can directly run and manage the source code in this repository, available dual-licensed under an AGPL or GPL.
 
 # First Steps
 
