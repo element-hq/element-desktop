@@ -28,6 +28,19 @@ export function destroy(): void {
     }
 }
 
+export function isMonochrome(): boolean {
+    return global.store.get("monochromeIcon", process.platform === "linux");
+}
+
+export function refreshIcon(): void {
+    const monochrome = isMonochrome();
+    if (monochrome) {
+        trayIcon?.setImage(nativeImage.createFromPath(global.trayConfig.monochrome_icon_path));
+    } else {
+        trayIcon?.setImage(nativeImage.createFromPath(global.trayConfig.color_icon_path));
+    }
+}
+
 function toggleWin(): void {
     if (global.mainWindow?.isVisible() && !global.mainWindow.isMinimized() && global.mainWindow.isFocused()) {
         global.mainWindow.hide();
@@ -36,17 +49,6 @@ function toggleWin(): void {
         if (!global.mainWindow?.isVisible()) global.mainWindow?.show();
         global.mainWindow?.focus();
     }
-}
-
-function toggleMonochrome(): void {
-    const monochrome = !isMonochrome();
-    if (monochrome) {
-        trayIcon?.setImage(nativeImage.createFromPath(global.trayConfig.monochrome_icon_path));
-    } else {
-        trayIcon?.setImage(nativeImage.createFromPath(global.trayConfig.color_icon_path));
-    }
-    global.store.set("monochrome", monochrome);
-    initApplicationMenu();
 }
 
 interface IConfig {
@@ -59,10 +61,6 @@ function getUuid(): string {
     // The uuid field is optional and only needed on unsigned Windows packages where the executable path changes
     // The hardcoded uuid is an arbitrary v4 uuid generated on https://www.uuidgenerator.net/version4
     return global.vectorConfig["uuid"] || "eba84003-e499-4563-8e9d-166e34b5cc25";
-}
-
-function isMonochrome(): boolean {
-    return global.store.get("monochrome", process.platform === "linux");
 }
 
 export function create(config: IConfig): void {
@@ -132,12 +130,6 @@ export function initApplicationMenu(): void {
     }
 
     const contextMenu = Menu.buildFromTemplate([
-        {
-            label: _t("action|toggle_monochrome"),
-            click: toggleMonochrome,
-            type: "checkbox",
-            checked: isMonochrome(),
-        },
         {
             label: _t("action|show_hide"),
             click: toggleWin,

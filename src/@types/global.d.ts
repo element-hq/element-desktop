@@ -31,7 +31,7 @@ declare global {
         autoHideMenuBar?: boolean;
         locale?: string | string[];
         disableHardwareAcceleration?: boolean;
-        monochrome?: boolean;
+        monochromeIcon?: boolean;
     }>;
 }
 /* eslint-enable no-var */
