@@ -51,6 +51,7 @@
     "features": {
         "threadsActivityCentre": true,
         "feature_spotlight": true,
+        "feature_group_calls": true,
         "feature_video_rooms": true,
         "feature_element_call_video_rooms": true,
         "feature_new_room_decoration_ui": true
