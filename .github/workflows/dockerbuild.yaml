@@ -28,7 +28,7 @@ jobs:
                   install: true
 
             - name: Log in to the Container registry
-              uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567
+              uses: docker/login-action@3b8fed7e4b60203b2aa0ecc6c6d6d91d12c06760
               with:
                   registry: ${{ env.REGISTRY }}
                   username: ${{ github.actor }}
