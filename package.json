@@ -123,6 +123,7 @@
     },
     "resolutions": {
         "@types/node": "18.19.54",
-        "config-file-ts": "0.2.8-rc1"
+        "config-file-ts": "0.2.8-rc1",
+        "lru-cache": "11.0.1"
     }
 }
