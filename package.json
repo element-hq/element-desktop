@@ -48,6 +48,7 @@
         "build:64": "yarn run build:ts && yarn run build:res && electron-builder --x64",
         "build:universal": "yarn run build:ts && yarn run build:res && electron-builder --universal",
         "build": "yarn run build:ts && yarn run build:res && electron-builder",
+        "build:appimage": "yarn run build:ts && yarn run build:res && electron-builder -l appimage --publish=never",
         "build:ts": "tsc",
         "build:res": "ts-node scripts/copy-res.ts",
         "docker:setup": "docker build --platform linux/amd64 -t element-desktop-dockerbuild dockerbuild",
