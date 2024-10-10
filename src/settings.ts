@@ -67,4 +67,13 @@ export const Settings: Record<string, Setting> = {
             global.store.set("disableHardwareAcceleration", !value);
         },
     },
+    "Electron.monochromeIcon": {
+        async read(): Promise<any> {
+            return tray.isMonochrome();
+        },
+        async write(value: any): Promise<void> {
+            global.store.set("monochromeIcon", value);
+            tray.refreshIcon();
+        },
+    },
 };
