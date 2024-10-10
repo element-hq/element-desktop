@@ -128,14 +128,9 @@ export function setupMacosTitleBar(window: BrowserWindow): void {
                 height: 24px;            
             }
 
-            .mx_RoomView[data-room-header="new"]::before {
+            .mx_RoomView::before {
                 height: 13px;
             }
-
-            .mx_RoomView[data-room-header="legacy"]::before {
-                height: 27px;
-            }
-
         `);
     }
 

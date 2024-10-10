@@ -28,7 +28,7 @@ jobs:
                   install: true
 
             - name: Log in to the Container registry
-              uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567
+              uses: docker/login-action@3b8fed7e4b60203b2aa0ecc6c6d6d91d12c06760
               with:
                   registry: ${{ env.REGISTRY }}
                   username: ${{ github.actor }}
@@ -43,7 +43,7 @@ jobs:
                       type=ref,event=branch
 
             - name: Build and push Docker image
-              uses: docker/build-push-action@5cd11c3a4ced054e52742c5fd54dca954e0edd85 # v6
+              uses: docker/build-push-action@4f58ea79222b3b9dc2c8bbdd6debcef730109a75 # v6
               with:
                   context: dockerbuild
                   push: true
