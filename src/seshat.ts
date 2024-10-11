@@ -62,7 +62,9 @@ async function getOrCreatePassphrase(key: string): Promise<string> {
 const deleteContents = async (p: string): Promise<void> => {
     for (const entry of await afs.readdir(p)) {
         const curPath = path.join(p, entry);
-        await afs.unlink(curPath);
+        try {
+            await afs.unlink(curPath);
+        } catch (e) {}
     }
 };
 
