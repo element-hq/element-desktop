@@ -26,7 +26,7 @@ jobs:
     # We build the hak files on native infrastructure as matrix-seshat fails to cross-compile properly
     # https://github.com/matrix-org/seshat/issues/135
     hak:
-        runs-on: ${{ inputs.arch == 'arm64' && 'dind-l-arm64' || 'ubuntu-latest' }}
+        runs-on: ${{ inputs.arch == 'arm64' && 'dind-l-arm64' || 'ubuntu-22.04' }}
         env:
             HAK_DOCKER_IMAGE: ghcr.io/element-hq/element-desktop-dockerbuild
         outputs:
@@ -148,7 +148,7 @@ jobs:
 
     build:
         needs: hak
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-22.04
         steps:
             - uses: actions/checkout@v4
 
