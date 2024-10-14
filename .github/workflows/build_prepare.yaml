@@ -65,7 +65,8 @@ jobs:
             # We split this out to save the build_* scripts having to do it to make use of `hashFiles` in the cache action
             - name: Generate cache hash files
               run: |
-                  yarn run --silent electron --version > electronVersion
+                  # Add --no-sandbox as otherwise it fails because the helper isn't setuid root. It's only getting the version.
+                  yarn run --silent electron --no-sandbox --version > electronVersion
                   cat package.json | jq -c .hakDependencies | sha1sum > hakHash
                   find hak -type f -print0 | xargs -0 sha1sum >> hakHash
                   find scripts/hak -type f -print0 | xargs -0 sha1sum >> hakHash
