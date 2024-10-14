@@ -99,7 +99,7 @@ jobs:
             - macos
             - linux
             - windows
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-22.04
         name: ${{ needs.prepare.outputs.deploy == 'true' && 'Deploy' || 'Deploy (dry-run)' }}
         if: always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled')
         environment: ${{ needs.prepare.outputs.deploy == 'true' && 'packages.element.io' || '' }}
@@ -252,7 +252,7 @@ jobs:
 
     deploy-ess:
         needs: deploy
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-22.04
         name: Deploy builds to ESS
         if: needs.prepare.outputs.deploy == 'true' && github.event_name == 'release'
         env:

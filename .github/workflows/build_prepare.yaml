@@ -45,7 +45,7 @@ jobs:
     prepare:
         name: Prepare
         environment: ${{ inputs.nightly && 'packages.element.io' || '' }}
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-22.04
         outputs:
             nightly-version: ${{ steps.versions.outputs.nightly }}
         steps:
