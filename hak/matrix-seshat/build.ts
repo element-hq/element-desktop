@@ -27,7 +27,11 @@ export default async function (hakEnv: HakEnv, moduleInfo: DependencyInfo): Prom
             stdio: "inherit",
         });
         proc.on("exit", (code) => {
-            code ? reject(code) : resolve();
+            if (code) {
+                reject(code);
+            } else {
+                resolve();
+            }
         });
     });
 
@@ -42,7 +46,11 @@ export default async function (hakEnv: HakEnv, moduleInfo: DependencyInfo): Prom
             stdio: "inherit",
         });
         proc.on("exit", (code) => {
-            code ? reject(code) : resolve();
+            if (code) {
+                reject(code);
+            } else {
+                resolve();
+            }
         });
     });
 }
