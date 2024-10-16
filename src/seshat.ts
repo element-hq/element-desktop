@@ -60,9 +60,17 @@ async function getOrCreatePassphrase(key: string): Promise<string> {
 }
 
 const deleteContents = async (p: string): Promise<void> => {
-    for (const entry of await afs.readdir(p)) {
-        const curPath = path.join(p, entry);
-        await afs.unlink(curPath);
+    try {
+        for (const entry of await afs.readdir(p)) {
+            const curPath = path.join(p, entry);
+            try {
+                await afs.unlink(curPath);
+            } catch (e) {
+                console.log("Error deleting a file in EventStore directory", e);
+            }
+        }
+    } catch (e) {
+        console.log("Error reading the files in EventStore directory", e);
     }
 };
 
@@ -115,10 +123,7 @@ ipcMain.on("seshat", async function (_ev: IpcMainEvent, payload): Promise<void> 
                         // anyways so reindexing it is a waste of time.
                         if (userVersion === 0) {
                             await recoveryIndex.shutdown();
-
-                            try {
-                                await deleteContents(eventStorePath);
-                            } catch {}
+                            await deleteContents(eventStorePath);
                         } else {
                             await recoveryIndex.reindex();
                         }
@@ -147,9 +152,7 @@ ipcMain.on("seshat", async function (_ev: IpcMainEvent, payload): Promise<void> 
             break;
 
         case "deleteEventIndex": {
-            try {
-                await deleteContents(eventStorePath);
-            } catch {}
+            await deleteContents(eventStorePath);
             break;
         }
 
