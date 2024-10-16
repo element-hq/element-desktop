@@ -24,7 +24,7 @@ export default async function link(hakEnv: HakEnv, moduleInfo: DependencyInfo): 
     // Also we do this for each module which is unnecessary, but meh.
     try {
         await fsProm.stat(yarnrc);
-    } catch (e) {
+    } catch {
         await fsProm.writeFile(
             yarnrc,
             // XXX: 1. This must be absolute, as yarn will resolve link directories
@@ -50,7 +50,11 @@ export default async function link(hakEnv: HakEnv, moduleInfo: DependencyInfo): 
             shell: hakEnv.isWin(),
         });
         proc.on("exit", (code) => {
-            code ? reject(code) : resolve();
+            if (code) {
+                reject(code);
+            } else {
+                resolve();
+            }
         });
     });
 
@@ -63,7 +67,11 @@ export default async function link(hakEnv: HakEnv, moduleInfo: DependencyInfo): 
             shell: hakEnv.isWin(),
         });
         proc.on("exit", (code) => {
-            code ? reject(code) : resolve();
+            if (code) {
+                reject(code);
+            } else {
+                resolve();
+            }
         });
     });
 }

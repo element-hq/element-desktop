@@ -147,7 +147,7 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
                 if (ret === null) {
                     ret = await keytar?.getPassword("riot.im", `${args[0]}|${args[1]}`);
                 }
-            } catch (e) {
+            } catch {
                 // if an error is thrown (e.g. keytar can't connect to the keychain),
                 // then return null, which means the default pickle key will be used
                 ret = null;
@@ -159,7 +159,7 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
                 const pickleKey = await randomArray(32);
                 await keytar?.setPassword("element.io", `${args[0]}|${args[1]}`, pickleKey);
                 ret = pickleKey;
-            } catch (e) {
+            } catch {
                 ret = null;
             }
             break;
@@ -170,7 +170,7 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
                 // migrate from riot.im (remove once we think there will no longer be
                 // logins from the time of riot.im)
                 await keytar?.deletePassword("riot.im", `${args[0]}|${args[1]}`);
-            } catch (e) {}
+            } catch {}
             break;
         case "getDesktopCapturerSources":
             ret = (await desktopCapturer.getSources(args[0])).map((source) => ({

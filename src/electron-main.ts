@@ -97,7 +97,7 @@ async function tryPaths(name: string, root: string, rawPaths: string[]): Promise
         try {
             await afs.stat(p);
             return p + "/";
-        } catch (e) {}
+        } catch {}
     }
     console.log(`Couldn't find ${name} files in any of: `);
     for (const p of paths) {
@@ -137,7 +137,7 @@ async function loadConfig(): Promise<void> {
 
     try {
         global.vectorConfig = loadJsonFile(asarPath, "config.json");
-    } catch (e) {
+    } catch {
         // it would be nice to check the error code here and bail if the config
         // is unparsable, but we get MODULE_NOT_FOUND in the case of a missing
         // file or invalid json, so node is just very unhelpful.
@@ -212,9 +212,11 @@ async function setupGlobals(): Promise<void> {
 
     // The tray icon
     // It's important to call `path.join` so we don't end up with the packaged asar in the final path.
-    const iconFile = `element.${process.platform === "win32" ? "ico" : "png"}`;
+    const colorIconFile = `element.${process.platform === "win32" ? "ico" : "png"}`;
+    const monochromeIconFile = `monochrome.${process.platform === "win32" ? "ico" : "png"}`;
     global.trayConfig = {
-        icon_path: path.join(resPath, "img", iconFile),
+        monochrome_icon_path: path.join(resPath, "img", monochromeIconFile),
+        color_icon_path: path.join(resPath, "img", colorIconFile),
         brand: global.vectorConfig.brand || "Element",
     };
 
@@ -365,7 +367,7 @@ app.on("ready", async () => {
 
     if (argv["devtools"]) {
         try {
-            // eslint-disable-next-line @typescript-eslint/no-var-requires
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
             const { default: installExt, REACT_DEVELOPER_TOOLS, REACT_PERF } = require("electron-devtools-installer");
             installExt(REACT_DEVELOPER_TOOLS)
                 .then((name: string) => console.log(`Added Extension: ${name}`))
@@ -453,7 +455,7 @@ app.on("ready", async () => {
         titleBarStyle: process.platform === "darwin" ? "hidden" : "default",
         trafficLightPosition: { x: 9, y: 8 },
 
-        icon: global.trayConfig.icon_path,
+        icon: global.trayConfig.color_icon_path,
         show: false,
         autoHideMenuBar: global.store.get("autoHideMenuBar", true),
 

@@ -28,6 +28,7 @@ const CHANNELS = [
     "userDownloadAction",
     "openDesktopCapturerSourcePicker",
     "userAccessToken",
+    "homeserverUrl",
     "serverSupportedVersions",
 ];
 

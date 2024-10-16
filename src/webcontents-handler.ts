@@ -176,15 +176,18 @@ function onLinkContextMenu(ev: Event, params: ContextMenuParams, webContents: We
     ev.preventDefault();
 }
 
-function cutCopyPasteSelectContextMenus(params: ContextMenuParams): MenuItemConstructorOptions[] {
+function cutCopyPasteSelectContextMenus(
+    params: ContextMenuParams,
+    webContents: WebContents,
+): MenuItemConstructorOptions[] {
     const options: MenuItemConstructorOptions[] = [];
 
     if (params.misspelledWord) {
         params.dictionarySuggestions.forEach((word) => {
             options.push({
                 label: word,
-                click: (menuItem, browserWindow) => {
-                    browserWindow?.webContents.replaceMisspelling(word);
+                click: () => {
+                    webContents.replaceMisspelling(word);
                 },
             });
         });
@@ -194,8 +197,8 @@ function cutCopyPasteSelectContextMenus(params: ContextMenuParams): MenuItemCons
             },
             {
                 label: _t("right_click_menu|add_to_dictionary"),
-                click: (menuItem, browserWindow) => {
-                    browserWindow?.webContents.session.addWordToSpellCheckerDictionary(params.misspelledWord);
+                click: () => {
+                    webContents.session.addWordToSpellCheckerDictionary(params.misspelledWord);
                 },
             },
             {
@@ -237,8 +240,8 @@ function cutCopyPasteSelectContextMenus(params: ContextMenuParams): MenuItemCons
     return options;
 }
 
-function onSelectedContextMenu(ev: Event, params: ContextMenuParams): void {
-    const items = cutCopyPasteSelectContextMenus(params);
+function onSelectedContextMenu(ev: Event, params: ContextMenuParams, webContents: WebContents): void {
+    const items = cutCopyPasteSelectContextMenus(params, webContents);
     const popupMenu = Menu.buildFromTemplate(items);
 
     // popup() requires an options object even for no options
@@ -246,12 +249,12 @@ function onSelectedContextMenu(ev: Event, params: ContextMenuParams): void {
     ev.preventDefault();
 }
 
-function onEditableContextMenu(ev: Event, params: ContextMenuParams): void {
+function onEditableContextMenu(ev: Event, params: ContextMenuParams, webContents: WebContents): void {
     const items: MenuItemConstructorOptions[] = [
         { role: "undo" },
         { role: "redo", enabled: params.editFlags.canRedo },
         { type: "separator" },
-        ...cutCopyPasteSelectContextMenus(params),
+        ...cutCopyPasteSelectContextMenus(params, webContents),
     ];
 
     const popupMenu = Menu.buildFromTemplate(items);
@@ -286,9 +289,9 @@ export default (webContents: WebContents): void => {
         if (params.linkURL || params.srcURL) {
             onLinkContextMenu(ev, params, webContents);
         } else if (params.selectionText) {
-            onSelectedContextMenu(ev, params);
+            onSelectedContextMenu(ev, params, webContents);
         } else if (params.isEditable) {
-            onEditableContextMenu(ev, params);
+            onEditableContextMenu(ev, params, webContents);
         }
     });
 

@@ -24,7 +24,7 @@ let SeshatRecovery: typeof SeshatRecoveryType;
 let ReindexError: typeof ReindexErrorType;
 
 try {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const seshatModule = require("matrix-seshat");
     Seshat = seshatModule.Seshat;
     SeshatRecovery = seshatModule.SeshatRecovery;
@@ -267,7 +267,7 @@ ipcMain.on("seshat", async function (_ev: IpcMainEvent, payload): Promise<void> 
             else {
                 try {
                     ret = await eventIndex.loadCheckpoints();
-                } catch (e) {
+                } catch {
                     ret = [];
                 }
             }

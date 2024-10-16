@@ -28,6 +28,19 @@ export function destroy(): void {
     }
 }
 
+export function isMonochrome(): boolean {
+    return global.store.get("monochromeIcon", process.platform === "linux");
+}
+
+export function refreshIcon(): void {
+    const monochrome = isMonochrome();
+    if (monochrome) {
+        trayIcon?.setImage(nativeImage.createFromPath(global.trayConfig.monochrome_icon_path));
+    } else {
+        trayIcon?.setImage(nativeImage.createFromPath(global.trayConfig.color_icon_path));
+    }
+}
+
 function toggleWin(): void {
     if (global.mainWindow?.isVisible() && !global.mainWindow.isMinimized() && global.mainWindow.isFocused()) {
         global.mainWindow.hide();
@@ -39,7 +52,8 @@ function toggleWin(): void {
 }
 
 interface IConfig {
-    icon_path: string; // eslint-disable-line camelcase
+    color_icon_path: string; // eslint-disable-line camelcase
+    monochrome_icon_path: string; // eslint-disable-line camelcase
     brand: string;
 }
 
@@ -52,7 +66,9 @@ function getUuid(): string {
 export function create(config: IConfig): void {
     // no trays on darwin
     if (process.platform === "darwin" || trayIcon) return;
-    const defaultIcon = nativeImage.createFromPath(config.icon_path);
+    const defaultIcon = nativeImage.createFromPath(
+        isMonochrome() ? config.monochrome_icon_path : config.color_icon_path,
+    );
 
     let guid: string | undefined;
     if (process.platform === "win32" && app.isPackaged) {

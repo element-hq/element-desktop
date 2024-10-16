@@ -12,7 +12,7 @@ env:
 jobs:
     build:
         name: Docker Build
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-22.04
         permissions:
             contents: read
             packages: write
@@ -23,12 +23,12 @@ jobs:
               uses: docker/setup-qemu-action@49b3bc8e6bdd4a60e6116a5414239cba5943d3cf # v3
 
             - name: Set up Docker Buildx
-              uses: docker/setup-buildx-action@988b5a0280414f521da01fcc63a27aeeb4b104db # v3
+              uses: docker/setup-buildx-action@c47758b77c9736f4b2ef4073d4d51994fabfe349 # v3
               with:
                   install: true
 
             - name: Log in to the Container registry
-              uses: docker/login-action@3b8fed7e4b60203b2aa0ecc6c6d6d91d12c06760
+              uses: docker/login-action@1f36f5b7a2d2f7bfd524795fc966e6d88c37baa9
               with:
                   registry: ${{ env.REGISTRY }}
                   username: ${{ github.actor }}
