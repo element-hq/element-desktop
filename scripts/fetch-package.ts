@@ -28,7 +28,7 @@ async function downloadToFile(url: string, filename: string): Promise<void> {
         console.error(e);
         try {
             await fs.unlink(filename);
-        } catch (_) {}
+        } catch {}
         throw e;
     }
 }
@@ -150,14 +150,14 @@ async function main(): Promise<number | undefined> {
         await fs.opendir(expectedDeployDir);
         console.log(expectedDeployDir + "already exists");
         haveDeploy = true;
-    } catch (e) {}
+    } catch {}
 
     if (!haveDeploy) {
         const outPath = path.join(pkgDir, filename);
         try {
             await fs.stat(outPath);
             console.log("Already have " + filename + ": not redownloading");
-        } catch (e) {
+        } catch {
             try {
                 await downloadToFile(url, outPath);
             } catch (e) {
@@ -170,7 +170,7 @@ async function main(): Promise<number | undefined> {
             try {
                 await fs.stat(outPath + ".asc");
                 console.log("Already have " + filename + ".asc: not redownloading");
-            } catch (e) {
+            } catch {
                 try {
                     await downloadToFile(url + ".asc", outPath + ".asc");
                 } catch (e) {
@@ -206,7 +206,7 @@ async function main(): Promise<number | undefined> {
         await fs.stat(ASAR_PATH);
         console.log(ASAR_PATH + " already present: removing");
         await fs.unlink(ASAR_PATH);
-    } catch (e) {}
+    } catch {}
 
     if (cfgDir.length) {
         const configJsonSource = path.join(cfgDir, "config.json");

@@ -50,7 +50,7 @@ function readStore(): Record<string, string> {
         const s = fs.readFileSync(storePath, { encoding: "utf8" });
         const o = JSON.parse(s);
         return typeof o === "object" ? o : {};
-    } catch (e) {
+    } catch {
         return {};
     }
 }

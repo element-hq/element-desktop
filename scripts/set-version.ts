@@ -12,7 +12,7 @@ import * as childProcess from "child_process";
 export async function versionFromAsar(): Promise<string> {
     try {
         await fs.stat("webapp.asar");
-    } catch (e) {
+    } catch {
         throw new Error("No 'webapp.asar' found. Run 'yarn run fetch'");
     }
 
