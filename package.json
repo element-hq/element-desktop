@@ -82,7 +82,7 @@
         "@electron/asar": "^3.2.3",
         "@electron/fuses": "^1.7.0",
         "@mapbox/node-pre-gyp": "^1.0.11",
-        "@playwright/test": "1.47.1",
+        "@playwright/test": "1.48.0",
         "@types/auto-launch": "^5.0.1",
         "@types/counterpart": "^0.18.1",
         "@types/minimist": "^1.2.1",
