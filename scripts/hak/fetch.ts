@@ -18,7 +18,7 @@ export default async function fetch(hakEnv: HakEnv, moduleInfo: DependencyInfo):
     try {
         const stats = await fsProm.stat(moduleInfo.moduleBuildDir);
         haveModuleBuildDir = stats.isDirectory();
-    } catch (e) {
+    } catch {
         haveModuleBuildDir = false;
     }
 
@@ -41,7 +41,11 @@ export default async function fetch(hakEnv: HakEnv, moduleInfo: DependencyInfo):
             shell: hakEnv.isWin(),
         });
         proc.on("exit", (code) => {
-            code ? reject(code) : resolve();
+            if (code) {
+                reject(code);
+            } else {
+                resolve();
+            }
         });
     });
 

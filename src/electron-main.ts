@@ -97,7 +97,7 @@ async function tryPaths(name: string, root: string, rawPaths: string[]): Promise
         try {
             await afs.stat(p);
             return p + "/";
-        } catch (e) {}
+        } catch {}
     }
     console.log(`Couldn't find ${name} files in any of: `);
     for (const p of paths) {
@@ -137,7 +137,7 @@ async function loadConfig(): Promise<void> {
 
     try {
         global.vectorConfig = loadJsonFile(asarPath, "config.json");
-    } catch (e) {
+    } catch {
         // it would be nice to check the error code here and bail if the config
         // is unparsable, but we get MODULE_NOT_FOUND in the case of a missing
         // file or invalid json, so node is just very unhelpful.
@@ -367,7 +367,7 @@ app.on("ready", async () => {
 
     if (argv["devtools"]) {
         try {
-            // eslint-disable-next-line @typescript-eslint/no-var-requires
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
             const { default: installExt, REACT_DEVELOPER_TOOLS, REACT_PERF } = require("electron-devtools-installer");
             installExt(REACT_DEVELOPER_TOOLS)
                 .then((name: string) => console.log(`Added Extension: ${name}`))

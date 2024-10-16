@@ -30,7 +30,11 @@ export default async function buildKeytar(hakEnv: HakEnv, moduleInfo: Dependency
             },
         );
         proc.on("exit", (code) => {
-            code ? reject(code) : resolve();
+            if (code) {
+                reject(code);
+            } else {
+                resolve();
+            }
         });
     });
 }
