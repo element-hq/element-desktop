@@ -105,7 +105,7 @@
         "eslint-config-prettier": "^9.0.0",
         "eslint-plugin-import": "^2.25.4",
         "eslint-plugin-matrix-org": "^1.0.0",
-        "eslint-plugin-unicorn": "^55.0.0",
+        "eslint-plugin-unicorn": "^56.0.0",
         "glob": "^11.0.0",
         "knip": "^5.0.0",
         "matrix-web-i18n": "^3.2.1",
