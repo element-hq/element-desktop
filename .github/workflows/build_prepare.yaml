@@ -126,8 +126,7 @@ jobs:
                   BUNDLE_HASH=$(npx asar l webapp.asar | grep /bundles/ | head -n 1 | sed 's|.*/||')
                   WEBAPP_VERSION=$(./scripts/get-version.ts)
                   WEB_VERSION=${WEBAPP_VERSION:0:12}
-                  REACT_VERSION=${WEBAPP_VERSION:19:12}
-                  JS_VERSION=${WEBAPP_VERSION:35:12}
+                  JS_VERSION=${WEBAPP_VERSION:16:12}
 
                   echo "### Nightly build ${{ steps.versions.outputs.nightly }}" >> $GITHUB_STEP_SUMMARY
                   echo "" >> $GITHUB_STEP_SUMMARY
@@ -135,7 +134,6 @@ jobs:
                   echo "| ----------- | ------- |" >> $GITHUB_STEP_SUMMARY
                   echo "| Bundle Hash | $BUNDLE_HASH |" >> $GITHUB_STEP_SUMMARY
                   echo "| Element Web | [$WEB_VERSION](https://github.com/element-hq/element-web/commit/$WEB_VERSION) |" >> $GITHUB_STEP_SUMMARY
-                  echo "| React SDK   | [$REACT_VERSION](https://github.com/matrix-org/matrix-react-sdk/commit/$REACT_VERSION) |" >> $GITHUB_STEP_SUMMARY
                   echo "| JS SDK      | [$JS_VERSION](https://github.com/matrix-org/matrix-js-sdk/commit/$JS_VERSION) |" >> $GITHUB_STEP_SUMMARY
 
             - uses: actions/upload-artifact@v4
