@@ -2,7 +2,7 @@
     "name": "element-desktop",
     "productName": "Element",
     "main": "lib/electron-main.js",
-    "version": "1.11.80",
+    "version": "1.11.81",
     "description": "A feature-rich client for Matrix.org",
     "author": "Element",
     "homepage": "https://element.io",
@@ -86,7 +86,7 @@
         "@types/auto-launch": "^5.0.1",
         "@types/counterpart": "^0.18.1",
         "@types/minimist": "^1.2.1",
-        "@types/node": "18.19.54",
+        "@types/node": "18.19.55",
         "@types/pacote": "^11.1.1",
         "@types/tar": "^6.1.3",
         "@types/uuid": "^10.0.0",
@@ -122,7 +122,7 @@
         "keytar": "^7.9.0"
     },
     "resolutions": {
-        "@types/node": "18.19.54",
+        "@types/node": "18.19.55",
         "config-file-ts": "0.2.8-rc1"
     }
 }
