@@ -44,12 +44,18 @@ if (argv["help"]) {
     console.log("  --profile-dir {path}: Path to where to store the profile.");
     console.log("  --profile {name}:     Name of alternate profile to use, allows for running multiple accounts.");
     console.log("  --devtools:           Install and use react-devtools and react-perf.");
+    console.log(
+        `  --config:             Path to the config.json file. May also be specified via the ELEMENT_DESKTOP_CONFIG_JSON environment variable.\n` +
+            `                         Otherwise use the default user location '${app.getPath("userData")}'`,
+    );
     console.log("  --no-update:          Disable automatic updating.");
     console.log("  --hidden:             Start the application hidden in the system tray.");
     console.log("  --help:               Displays this help message.");
     console.log("And more such as --proxy, see:" + "https://electronjs.org/docs/api/command-line-switches");
     app.exit();
 }
+
+const LocalConfigLocation = process.env.ELEMENT_DESKTOP_CONFIG_JSON ?? argv["config"];
 
 // Electron creates the user data directory (with just an empty 'Dictionaries' directory...)
 // as soon as the app path is set, so pick a random path in it that must exist if it's a
@@ -147,7 +153,9 @@ async function loadConfig(): Promise<void> {
 
     try {
         // Load local config and use it to override values from the one baked with the build
-        const localConfig = loadJsonFile(app.getPath("userData"), "config.json");
+        const localConfig = LocalConfigLocation
+            ? loadJsonFile(LocalConfigLocation)
+            : loadJsonFile(app.getPath("userData"), "config.json");
 
         // If the local config has a homeserver defined, don't use the homeserver from the build
         // config. This is to avoid a problem where Riot thinks there are multiple homeservers
