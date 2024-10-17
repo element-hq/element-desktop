@@ -9,7 +9,7 @@ import { resolve } from "node:path";
 
 import { test, expect } from "../../element-desktop-test";
 
-test.describe.only("App config options", () => {
+test.describe("App config options", () => {
     test.describe("Should load custom config via env", () => {
         test.slow();
         test.use({
