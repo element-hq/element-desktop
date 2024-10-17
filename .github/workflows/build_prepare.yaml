@@ -45,7 +45,7 @@ jobs:
     prepare:
         name: Prepare
         environment: ${{ inputs.nightly && 'packages.element.io' || '' }}
-        runs-on: ubuntu-22.04
+        runs-on: ubuntu-24.04
         outputs:
             nightly-version: ${{ steps.versions.outputs.nightly }}
         steps:
@@ -65,7 +65,8 @@ jobs:
             # We split this out to save the build_* scripts having to do it to make use of `hashFiles` in the cache action
             - name: Generate cache hash files
               run: |
-                  yarn run --silent electron --version > electronVersion
+                  # Add --no-sandbox as otherwise it fails because the helper isn't setuid root. It's only getting the version.
+                  yarn run --silent electron --no-sandbox --version > electronVersion
                   cat package.json | jq -c .hakDependencies | sha1sum > hakHash
                   find hak -type f -print0 | xargs -0 sha1sum >> hakHash
                   find scripts/hak -type f -print0 | xargs -0 sha1sum >> hakHash
@@ -126,8 +127,7 @@ jobs:
                   BUNDLE_HASH=$(npx asar l webapp.asar | grep /bundles/ | head -n 1 | sed 's|.*/||')
                   WEBAPP_VERSION=$(./scripts/get-version.ts)
                   WEB_VERSION=${WEBAPP_VERSION:0:12}
-                  REACT_VERSION=${WEBAPP_VERSION:19:12}
-                  JS_VERSION=${WEBAPP_VERSION:35:12}
+                  JS_VERSION=${WEBAPP_VERSION:16:12}
 
                   echo "### Nightly build ${{ steps.versions.outputs.nightly }}" >> $GITHUB_STEP_SUMMARY
                   echo "" >> $GITHUB_STEP_SUMMARY
@@ -135,7 +135,6 @@ jobs:
                   echo "| ----------- | ------- |" >> $GITHUB_STEP_SUMMARY
                   echo "| Bundle Hash | $BUNDLE_HASH |" >> $GITHUB_STEP_SUMMARY
                   echo "| Element Web | [$WEB_VERSION](https://github.com/element-hq/element-web/commit/$WEB_VERSION) |" >> $GITHUB_STEP_SUMMARY
-                  echo "| React SDK   | [$REACT_VERSION](https://github.com/matrix-org/matrix-react-sdk/commit/$REACT_VERSION) |" >> $GITHUB_STEP_SUMMARY
                   echo "| JS SDK      | [$JS_VERSION](https://github.com/matrix-org/matrix-js-sdk/commit/$JS_VERSION) |" >> $GITHUB_STEP_SUMMARY
 
             - uses: actions/upload-artifact@v4

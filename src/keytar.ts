@@ -9,7 +9,7 @@ import type * as Keytar from "keytar"; // Hak dependency type
 
 let keytar: typeof Keytar | undefined;
 try {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     keytar = require("keytar");
 } catch (e) {
     if ((<NodeJS.ErrnoException>e).code === "MODULE_NOT_FOUND") {

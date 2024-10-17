@@ -31,8 +31,9 @@ async function main(): Promise<void> {
     const prefix = path.join(__dirname, "..", "..");
     let packageJson;
     try {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         packageJson = require(path.join(prefix, "package.json"));
-    } catch (e) {
+    } catch {
         console.error("Can't find a package.json!");
         process.exit(1);
     }
@@ -69,8 +70,9 @@ async function main(): Promise<void> {
         const hakJsonPath = path.join(prefix, "hak", dep, "hak.json");
         let hakJson: Record<string, any>;
         try {
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
             hakJson = await require(hakJsonPath);
-        } catch (e) {
+        } catch {
             console.error("No hak.json found for " + dep + ".");
             console.log("Expecting " + hakJsonPath);
             process.exit(1);
