@@ -11,7 +11,16 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import os from "node:os";
 
-export const test = base.extend<{ app: ElectronApplication; tmpDir: string }>({
+interface Fixtures {
+    app: ElectronApplication;
+    tmpDir: string;
+    extraEnv: Record<string, string>;
+    extraArgs: string[];
+}
+
+export const test = base.extend<Fixtures>({
+    extraEnv: {},
+    extraArgs: [],
     // eslint-disable-next-line no-empty-pattern
     tmpDir: async ({}, use) => {
         const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "element-desktop-tests-"));
@@ -19,7 +28,7 @@ export const test = base.extend<{ app: ElectronApplication; tmpDir: string }>({
         await use(tmpDir);
         await fs.rm(tmpDir, { recursive: true });
     },
-    app: async ({ tmpDir }, use) => {
+    app: async ({ tmpDir, extraEnv, extraArgs }, use) => {
         const args = ["--profile-dir", tmpDir];
 
         const executablePath = process.env["ELEMENT_DESKTOP_EXECUTABLE"];
@@ -29,9 +38,12 @@ export const test = base.extend<{ app: ElectronApplication; tmpDir: string }>({
         }
 
         const app = await electron.launch({
-            env: process.env,
+            env: {
+                ...process.env,
+                ...extraEnv,
+            },
             executablePath,
-            args,
+            args: [...args, ...extraArgs],
         });
 
         app.process().stdout.pipe(process.stdout);
