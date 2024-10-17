@@ -50,7 +50,7 @@ jobs:
             matrix:
                 include:
                     - name: macOS Universal
-                      os: macos-latest
+                      os: macos-14
                       artifact: macos
                       executable: "/Users/runner/Applications/Element.app/Contents/MacOS/Element"
                       # We need to mount the DMG and copy the app to the Applications folder as a mounted DMG is
@@ -80,11 +80,11 @@ jobs:
                       executable: "/opt/Element/element-desktop"
                       prepare_cmd: "sudo apt-get -qq update && sudo apt install -y ./dist/*.deb"
                     - name: Windows (x86)
-                      os: windows-latest
+                      os: windows-2022
                       artifact: win-ia32
                       executable: "./dist/win-ia32-unpacked/Element.exe"
                     - name: Windows (x64)
-                      os: windows-latest
+                      os: windows-2022
                       artifact: win-x64
                       executable: "./dist/win-unpacked/Element.exe"
         name: Test ${{ matrix.name }}
@@ -132,7 +132,7 @@ jobs:
                   RUN_AS: ${{ runner.os == 'Linux' && 'sudo' || '' }}
 
             - name: Workaround macOS GHA permission issues
-              if: matrix.os == 'macos-latest'
+              if: runner.os == 'macOS'
               run: |
                   sqlite3 $HOME/Library/Application\ Support/com.apple.TCC/TCC.db "INSERT OR IGNORE INTO access VALUES ('kTCCServiceMicrophone','/usr/local/opt/runner/provisioner/provisioner',1,2,4,1,NULL,NULL,0,'UNUSED',NULL,0,1687786159,NULL,NULL,'UNUSED',1687786159);"
                   sqlite3 $HOME/Library/Application\ Support/com.apple.TCC/TCC.db "INSERT OR IGNORE INTO access VALUES ('kTCCServiceMicrophone','/opt/off/opt/runner/provisioner/provisioner',1,2,4,1,NULL,NULL,0,'UNUSED',NULL,0,1687786159,NULL,NULL,'UNUSED',1687786159);"
