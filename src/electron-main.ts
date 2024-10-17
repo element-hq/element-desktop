@@ -212,11 +212,9 @@ async function setupGlobals(): Promise<void> {
 
     // The tray icon
     // It's important to call `path.join` so we don't end up with the packaged asar in the final path.
-    const colorIconFile = `element.${process.platform === "win32" ? "ico" : "png"}`;
-    const monochromeIconFile = `monochrome.${process.platform === "win32" ? "ico" : "png"}`;
+    const iconFile = `element.${process.platform === "win32" ? "ico" : "png"}`;
     global.trayConfig = {
-        monochrome_icon_path: path.join(resPath, "img", monochromeIconFile),
-        color_icon_path: path.join(resPath, "img", colorIconFile),
+        icon_path: path.join(resPath, "img", iconFile),
         brand: global.vectorConfig.brand || "Element",
     };
 
@@ -455,7 +453,7 @@ app.on("ready", async () => {
         titleBarStyle: process.platform === "darwin" ? "hidden" : "default",
         trafficLightPosition: { x: 9, y: 8 },
 
-        icon: global.trayConfig.color_icon_path,
+        icon: global.trayConfig.icon_path,
         show: false,
         autoHideMenuBar: global.store.get("autoHideMenuBar", true),
 
