@@ -12,9 +12,6 @@ import { flipFuses, FuseVersion, FuseV1Options } from "@electron/fuses";
  *  Passes $ED_SIGNTOOL_THUMBPRINT and $ED_SIGNTOOL_SUBJECT_NAME to
  *      build.win.signingHashAlgorithms and build.win.certificateSubjectName respectively if specified.
  *
- * On macOS:
- *   Passes $ED_NOTARYTOOL_TEAM_ID to build.mac.notarize.notarize if specified
- *
  * On Linux:
  *  Replaces spaces in the product name with dashes as spaces in paths can cause issues
  *  Removes libsqlcipher0 recommended dependency if env SQLCIPHER_BUNDLED is asserted.
@@ -175,16 +172,6 @@ const config: Writable<Configuration> = {
 if (process.env.ED_SIGNTOOL_SUBJECT_NAME && process.env.ED_SIGNTOOL_THUMBPRINT) {
     config.win.certificateSubjectName = process.env.ED_SIGNTOOL_SUBJECT_NAME;
     config.win.certificateSha1 = process.env.ED_SIGNTOOL_THUMBPRINT;
-}
-
-/**
- * Allow specifying macOS notary team id via env var
- * @param {string} process.env.ED_NOTARYTOOL_TEAM_ID
- */
-if (process.env.ED_NOTARYTOOL_TEAM_ID) {
-    config.mac.notarize = {
-        teamId: process.env.ED_NOTARYTOOL_TEAM_ID,
-    };
 }
 
 /**
