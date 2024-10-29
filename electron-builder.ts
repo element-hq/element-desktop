@@ -135,6 +135,8 @@ const config: Writable<Configuration> = {
             "Replaces: riot-desktop (<< 1.7.0), riot-web (<< 1.7.0)",
             "--deb-field",
             "Breaks: riot-desktop (<< 1.7.0), riot-web (<< 1.7.0)",
+            "--deb-pre-depends",
+            "libc6 (>= 2.31)",
         ],
     },
     mac: {
