@@ -3,7 +3,7 @@
 import * as path from "path";
 import { createWriteStream, promises as fs } from "fs";
 import * as childProcess from "child_process";
-import tar from "tar";
+import * as tar from "tar";
 import * as asar from "@electron/asar";
 import fetch from "node-fetch";
 import { promises as stream } from "stream";
