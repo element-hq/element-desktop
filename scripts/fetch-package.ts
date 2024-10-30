@@ -22,7 +22,7 @@ async function downloadToFile(url: string, filename: string): Promise<void> {
         const resp = await fetch(url);
         if (!resp.ok) throw new Error(`unexpected response ${resp.statusText}`);
         if (!resp.body) throw new Error(`unexpected response has no body ${resp.statusText}`);
-        await stream.pipeline(resp.body as unknown as NodeJS.ReadableStream, createWriteStream(filename));
+        await stream.pipeline(resp.body, createWriteStream(filename));
     } catch (e) {
         console.error(e);
         try {
@@ -126,7 +126,7 @@ async function main(): Promise<number | undefined> {
                 .then((resp) => {
                     if (!resp.ok) throw new Error(`unexpected response ${resp.statusText}`);
                     if (!resp.body) throw new Error(`unexpected response has no body ${resp.statusText}`);
-                    stream.pipeline(resp.body as unknown as NodeJS.ReadableStream, gpgProc.stdin!).catch(reject);
+                    stream.pipeline(resp.body, gpgProc.stdin!).catch(reject);
                 })
                 .catch(reject);
         });
