@@ -6,12 +6,11 @@ SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only
 Please see LICENSE files in the repository root for full details.
 */
 
-import fsProm from "fs/promises";
-import childProcess from "child_process";
+import fsProm from "node:fs/promises";
 import pacote from "pacote";
 
-import HakEnv from "./hakEnv";
-import { DependencyInfo } from "./dep";
+import type HakEnv from "./hakEnv.js";
+import type { DependencyInfo } from "./dep.js";
 
 export default async function fetch(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
     let haveModuleBuildDir;
@@ -32,21 +31,8 @@ export default async function fetch(hakEnv: HakEnv, moduleInfo: DependencyInfo):
     });
 
     console.log("Running yarn install in " + moduleInfo.moduleBuildDir);
-    await new Promise<void>((resolve, reject) => {
-        const proc = childProcess.spawn(hakEnv.isWin() ? "yarn.cmd" : "yarn", ["install", "--ignore-scripts"], {
-            stdio: "inherit",
-            cwd: moduleInfo.moduleBuildDir,
-            // We need shell mode on Windows to be able to launch `.cmd` executables
-            // See https://nodejs.org/en/blog/vulnerability/april-2024-security-releases-2
-            shell: hakEnv.isWin(),
-        });
-        proc.on("exit", (code) => {
-            if (code) {
-                reject(code);
-            } else {
-                resolve();
-            }
-        });
+    await hakEnv.spawn("yarn", ["install", "--ignore-scripts"], {
+        cwd: moduleInfo.moduleBuildDir,
     });
 
     // also extract another copy to the output directory at this point

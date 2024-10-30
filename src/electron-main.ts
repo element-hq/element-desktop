@@ -9,31 +9,34 @@ Please see LICENSE files in the repository root for full details.
 */
 
 // Squirrel on windows starts the app with various flags as hooks to tell us when we've been installed/uninstalled etc.
-import "./squirrelhooks";
+import "./squirrelhooks.js";
 import { app, BrowserWindow, Menu, autoUpdater, protocol, dialog, Input, Event, session } from "electron";
+// eslint-disable-next-line n/file-extension-in-import
 import * as Sentry from "@sentry/electron/main";
 import AutoLaunch from "auto-launch";
-import path from "path";
+import path, { dirname } from "node:path";
 import windowStateKeeper from "electron-window-state";
 import Store from "electron-store";
-import fs, { promises as afs } from "fs";
-import { URL } from "url";
+import fs, { promises as afs } from "node:fs";
+import { URL, fileURLToPath } from "node:url";
 import minimist from "minimist";
 
-import "./ipc";
-import "./keytar";
-import "./seshat";
-import "./settings";
-import * as tray from "./tray";
-import { buildMenuTemplate } from "./vectormenu";
-import webContentsHandler from "./webcontents-handler";
-import * as updater from "./updater";
-import { getProfileFromDeeplink, protocolInit } from "./protocol";
-import { _t, AppLocalization } from "./language-helper";
-import { setDisplayMediaCallback } from "./displayMediaCallback";
-import { setupMacosTitleBar } from "./macos-titlebar";
-import { loadJsonFile } from "./utils";
-import { setupMediaAuth } from "./media-auth";
+import "./ipc.js";
+import "./keytar.js";
+import "./seshat.js";
+import "./settings.js";
+import * as tray from "./tray.js";
+import { buildMenuTemplate } from "./vectormenu.js";
+import webContentsHandler from "./webcontents-handler.js";
+import * as updater from "./updater.js";
+import { getProfileFromDeeplink, protocolInit } from "./protocol.js";
+import { _t, AppLocalization } from "./language-helper.js";
+import { setDisplayMediaCallback } from "./displayMediaCallback.js";
+import { setupMacosTitleBar } from "./macos-titlebar.js";
+import { loadJsonFile } from "./utils.js";
+import { setupMediaAuth } from "./media-auth.js";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const argv = minimist(process.argv, {
     alias: { help: "h" },
@@ -373,12 +376,8 @@ app.on("ready", async () => {
 
     if (argv["devtools"]) {
         try {
-            // eslint-disable-next-line @typescript-eslint/no-require-imports
-            const { default: installExt, REACT_DEVELOPER_TOOLS, REACT_PERF } = require("electron-devtools-installer");
+            const { default: installExt, REACT_DEVELOPER_TOOLS } = await import("electron-devtools-installer");
             installExt(REACT_DEVELOPER_TOOLS)
-                .then((name: string) => console.log(`Added Extension: ${name}`))
-                .catch((err: unknown) => console.log("An error occurred: ", err));
-            installExt(REACT_PERF)
                 .then((name: string) => console.log(`Added Extension: ${name}`))
                 .catch((err: unknown) => console.log("An error occurred: ", err));
         } catch (e) {
@@ -453,7 +452,7 @@ app.on("ready", async () => {
         defaultHeight: 768,
     });
 
-    const preloadScript = path.normalize(`${__dirname}/preload.js`);
+    const preloadScript = path.normalize(`${__dirname}/preload.cjs`);
     global.mainWindow = new BrowserWindow({
         // https://www.electronjs.org/docs/faq#the-font-looks-blurry-what-is-this-and-what-can-i-do
         backgroundColor: "#fff",

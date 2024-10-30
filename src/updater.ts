@@ -8,7 +8,7 @@ Please see LICENSE files in the repository root for full details.
 import { app, autoUpdater, ipcMain } from "electron";
 import fs from "node:fs/promises";
 
-import { getSquirrelExecutable } from "./squirrelhooks";
+import { getSquirrelExecutable } from "./squirrelhooks.js";
 
 const UPDATE_POLL_INTERVAL_MS = 60 * 60 * 1000;
 const INITIAL_UPDATE_DELAY_MS = 30 * 1000;

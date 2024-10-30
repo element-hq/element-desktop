@@ -8,7 +8,7 @@ Please see LICENSE files in the repository root for full details.
 
 import { app, shell, Menu, MenuItem, MenuItemConstructorOptions } from "electron";
 
-import { _t } from "./language-helper";
+import { _t } from "./language-helper.js";
 
 const isMac = process.platform === "darwin";
 

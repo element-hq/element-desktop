@@ -6,13 +6,12 @@ SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only
 Please see LICENSE files in the repository root for full details.
 */
 
-import path from "path";
-import os from "os";
-import fsProm from "fs/promises";
-import childProcess from "child_process";
+import path from "node:path";
+import os from "node:os";
+import fsProm from "node:fs/promises";
 
-import HakEnv from "./hakEnv";
-import { DependencyInfo } from "./dep";
+import HakEnv from "./hakEnv.js";
+import { DependencyInfo } from "./dep.js";
 
 export default async function link(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
     const yarnrc = path.join(hakEnv.projectRoot, ".yarnrc");
@@ -39,39 +38,10 @@ export default async function link(hakEnv: HakEnv, moduleInfo: DependencyInfo): 
         );
     }
 
-    const yarnCmd = "yarn" + (hakEnv.isWin() ? ".cmd" : "");
-
-    await new Promise<void>((resolve, reject) => {
-        const proc = childProcess.spawn(yarnCmd, ["link"], {
-            cwd: moduleInfo.moduleOutDir,
-            stdio: "inherit",
-            // We need shell mode on Windows to be able to launch `.cmd` executables
-            // See https://nodejs.org/en/blog/vulnerability/april-2024-security-releases-2
-            shell: hakEnv.isWin(),
-        });
-        proc.on("exit", (code) => {
-            if (code) {
-                reject(code);
-            } else {
-                resolve();
-            }
-        });
+    await hakEnv.spawn("yarn", ["link"], {
+        cwd: moduleInfo.moduleOutDir,
     });
-
-    await new Promise<void>((resolve, reject) => {
-        const proc = childProcess.spawn(yarnCmd, ["link", moduleInfo.name], {
-            cwd: hakEnv.projectRoot,
-            stdio: "inherit",
-            // We need shell mode on Windows to be able to launch `.cmd` executables
-            // See https://nodejs.org/en/blog/vulnerability/april-2024-security-releases-2
-            shell: hakEnv.isWin(),
-        });
-        proc.on("exit", (code) => {
-            if (code) {
-                reject(code);
-            } else {
-                resolve();
-            }
-        });
+    await hakEnv.spawn("yarn", ["link", moduleInfo.name], {
+        cwd: hakEnv.projectRoot,
     });
 }

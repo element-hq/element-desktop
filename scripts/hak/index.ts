@@ -6,11 +6,14 @@ SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only
 Please see LICENSE files in the repository root for full details.
 */
 
-import path from "path";
+import path, { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 
-import HakEnv from "./hakEnv";
-import { TargetId } from "./target";
-import { DependencyInfo } from "./dep";
+import HakEnv from "./hakEnv.js";
+import type { TargetId } from "./target.js";
+import type { DependencyInfo } from "./dep.js";
+import { loadJsonFile } from "../../src/utils.js";
+import packageJson from "../../package.json";
 
 const GENERALCOMMANDS = ["target"];
 
@@ -27,21 +30,15 @@ const METACOMMANDS: Record<string, string[]> = {
 // Scripts valid in a hak.json 'scripts' section
 const HAKSCRIPTS = ["check", "fetch", "build"];
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
 async function main(): Promise<void> {
     const prefix = path.join(__dirname, "..", "..");
-    let packageJson;
-    try {
-        // eslint-disable-next-line @typescript-eslint/no-require-imports
-        packageJson = require(path.join(prefix, "package.json"));
-    } catch {
-        console.error("Can't find a package.json!");
-        process.exit(1);
-    }
 
     const targetIds: TargetId[] = [];
     // Apply `--target <target>` option if specified
     // Can be specified multiple times for the copy command to bundle
-    // multiple archs into a single universal output module)
+    // multiple arches into a single universal output module)
     for (;;) {
         // eslint-disable-line no-constant-condition
         const targetIndex = process.argv.indexOf("--target");
@@ -66,12 +63,11 @@ async function main(): Promise<void> {
 
     const hakDepsCfg = packageJson.hakDependencies || {};
 
-    for (const dep of Object.keys(hakDepsCfg)) {
+    for (const dep in hakDepsCfg) {
         const hakJsonPath = path.join(prefix, "hak", dep, "hak.json");
         let hakJson: Record<string, any>;
         try {
-            // eslint-disable-next-line @typescript-eslint/no-require-imports
-            hakJson = await require(hakJsonPath);
+            hakJson = loadJsonFile(hakJsonPath);
         } catch {
             console.error("No hak.json found for " + dep + ".");
             console.log("Expecting " + hakJsonPath);
@@ -79,7 +75,7 @@ async function main(): Promise<void> {
         }
         deps[dep] = {
             name: dep,
-            version: hakDepsCfg[dep],
+            version: hakDepsCfg[dep as keyof typeof hakDepsCfg],
             cfg: hakJson,
             moduleHakDir: path.join(prefix, "hak", dep),
             moduleDotHakDir: path.join(hakEnv.dotHakDir, dep),
@@ -93,9 +89,9 @@ async function main(): Promise<void> {
         };
 
         for (const s of HAKSCRIPTS) {
-            if (hakJson.scripts && hakJson.scripts[s]) {
-                const scriptModule = await import(path.join(prefix, "hak", dep, hakJson.scripts[s]));
-                if (scriptModule.__esModule) {
+            if (hakJson.scripts?.[s]) {
+                const scriptModule = await import(path.join("file://", prefix, "hak", dep, hakJson.scripts[s]));
+                if (scriptModule.default) {
                     deps[dep].scripts[s] = scriptModule.default;
                 } else {
                     deps[dep].scripts[s] = scriptModule;

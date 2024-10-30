@@ -7,10 +7,14 @@ Please see LICENSE files in the repository root for full details.
 
 import counterpart from "counterpart";
 import { TranslationKey as TKey } from "matrix-web-i18n";
+import { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 
 import type Store from "electron-store";
 import type EN from "./i18n/strings/en_EN.json";
-import { loadJsonFile } from "./utils";
+import { loadJsonFile } from "./utils.js";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const FALLBACK_LOCALE = "en";
 

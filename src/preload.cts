@@ -6,6 +6,8 @@ SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only
 Please see LICENSE files in the repository root for full details.
 */
 
+// This file is compiled to CommonJS rather than ESM otherwise the browser chokes on the import statement.
+
 import { ipcRenderer, contextBridge, IpcRendererEvent } from "electron";
 
 // Expose only expected IPC wrapper APIs to the renderer process to avoid

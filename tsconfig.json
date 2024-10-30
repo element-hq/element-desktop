@@ -2,8 +2,9 @@
     "compilerOptions": {
         "resolveJsonModule": true,
         "esModuleInterop": true,
-        "module": "commonjs",
-        "moduleResolution": "node",
+        "module": "node16",
+        "moduleResolution": "node16",
+        "skipLibCheck": true,
         "target": "es2022",
         "sourceMap": false,
         "outDir": "./lib",
@@ -14,5 +15,5 @@
         "types": ["node"],
         "strict": true
     },
-    "include": ["./src/**/*.ts"]
+    "include": ["./src/**/*.ts", "./src/**/*.cts"]
 }

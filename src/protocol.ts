@@ -7,9 +7,9 @@ Please see LICENSE files in the repository root for full details.
 */
 
 import { app } from "electron";
-import { URL } from "url";
-import path from "path";
-import fs from "fs";
+import { URL } from "node:url";
+import path from "node:path";
+import fs from "node:fs";
 
 const LEGACY_PROTOCOL = "element";
 const PROTOCOL = "io.element.desktop";

@@ -9,7 +9,7 @@ import { BrowserWindow } from "electron";
 import Store from "electron-store";
 import AutoLaunch from "auto-launch";
 
-import { AppLocalization } from "../language-helper";
+import { AppLocalization } from "../language-helper.js";
 
 // global type extensions need to use var for whatever reason
 /* eslint-disable no-var */

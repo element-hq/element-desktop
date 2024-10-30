@@ -9,11 +9,11 @@ Please see LICENSE files in the repository root for full details.
 
 import { app, Tray, Menu, nativeImage } from "electron";
 import pngToIco from "png-to-ico";
-import path from "path";
-import fs from "fs";
+import path from "node:path";
+import fs from "node:fs";
 import { v5 as uuidv5 } from "uuid";
 
-import { _t } from "./language-helper";
+import { _t } from "./language-helper.js";
 
 let trayIcon: Tray | null = null;
 
