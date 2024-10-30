@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "target": "es2022",
+        "sourceMap": false,
+        "outDir": "./lib",
+        "rootDir": "./src",
+        "declaration": true,
+        "lib": ["es2022", "dom"],
+        "strict": true
+    },
+    "include": ["./src/preload.ts"]
+}
