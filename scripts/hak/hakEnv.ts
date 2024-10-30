@@ -108,9 +108,13 @@ export default class HakEnv {
         return !(this.isLinux() || this.isFreeBSD()) || process.env.SQLCIPHER_BUNDLED == "1";
     }
 
-    public spawn(cmd: string, args: string[], options?: SpawnOptions): Promise<void> {
+    public spawn(
+        cmd: string,
+        args: string[],
+        { ignoreWinCmdlet, ...options }: SpawnOptions & { ignoreWinCmdlet?: boolean } = {},
+    ): Promise<void> {
         return new Promise((resolve, reject) => {
-            const proc = childProcess.spawn(cmd + (this.isWin() ? ".cmd" : ""), args, {
+            const proc = childProcess.spawn(cmd + (!ignoreWinCmdlet && this.isWin() ? ".cmd" : ""), args, {
                 stdio: "inherit",
                 // We need shell mode on Windows to be able to launch `.cmd` executables
                 // See https://nodejs.org/en/blog/vulnerability/april-2024-security-releases-2
@@ -131,6 +135,7 @@ export default class HakEnv {
         for (const tool of tools) {
             try {
                 await this.spawn(tool[0], tool.slice(1), {
+                    ignoreWinCmdlet: true,
                     stdio: ["ignore"],
                     shell: false,
                 });
