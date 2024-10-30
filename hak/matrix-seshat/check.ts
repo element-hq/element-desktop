@@ -10,10 +10,11 @@ import childProcess from "node:child_process";
 import fsProm from "node:fs/promises";
 
 import type HakEnv from "../../scripts/hak/hakEnv.js";
+import type { Tool } from "../../scripts/hak/hakEnv.js";
 import type { DependencyInfo } from "../../scripts/hak/dep.js";
 
 export default async function (hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
-    const tools = [
+    const tools: Tool[] = [
         ["rustc", "--version"],
         ["python", "--version"], // node-gyp uses python for reasons beyond comprehension
     ];
@@ -25,21 +26,7 @@ export default async function (hakEnv: HakEnv, moduleInfo: DependencyInfo): Prom
     } else {
         tools.push(["make", "--version"]);
     }
-
-    for (const tool of tools) {
-        await new Promise<void>((resolve, reject) => {
-            const proc = childProcess.spawn(tool[0], tool.slice(1), {
-                stdio: ["ignore"],
-            });
-            proc.on("exit", (code) => {
-                if (code !== 0) {
-                    reject("Can't find " + tool);
-                } else {
-                    resolve();
-                }
-            });
-        });
-    }
+    await hakEnv.checkTools(tools);
 
     // Ensure Rust target exists (nb. we avoid depending on rustup)
     await new Promise((resolve, reject) => {

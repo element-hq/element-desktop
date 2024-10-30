@@ -7,7 +7,6 @@ Please see LICENSE files in the repository root for full details.
 */
 
 import path from "node:path";
-import childProcess from "node:child_process";
 
 import type HakEnv from "../../scripts/hak/hakEnv.js";
 import type { DependencyInfo } from "../../scripts/hak/dep.js";
@@ -16,25 +15,12 @@ export default async function buildKeytar(hakEnv: HakEnv, moduleInfo: Dependency
     const env = hakEnv.makeGypEnv();
 
     console.log("Running yarn with env", env);
-    await new Promise<void>((resolve, reject) => {
-        const proc = childProcess.spawn(
-            path.join(moduleInfo.nodeModuleBinDir, "node-gyp" + (hakEnv.isWin() ? ".cmd" : "")),
-            ["rebuild", "--arch", hakEnv.getTargetArch()],
-            {
-                cwd: moduleInfo.moduleBuildDir,
-                env,
-                stdio: "inherit",
-                // We need shell mode on Windows to be able to launch `.cmd` executables
-                // See https://nodejs.org/en/blog/vulnerability/april-2024-security-releases-2
-                shell: hakEnv.isWin(),
-            },
-        );
-        proc.on("exit", (code) => {
-            if (code) {
-                reject(code);
-            } else {
-                resolve();
-            }
-        });
-    });
+    await hakEnv.spawn(
+        path.join(moduleInfo.nodeModuleBinDir, "node-gyp"),
+        ["rebuild", "--arch", hakEnv.getTargetArch()],
+        {
+            cwd: moduleInfo.moduleBuildDir,
+            env,
+        },
+    );
 }

@@ -10,6 +10,7 @@ import path from "node:path";
 import os from "node:os";
 import nodePreGypVersioning from "@mapbox/node-pre-gyp/lib/util/versioning";
 import { getElectronVersionFromInstalled } from "app-builder-lib/out/electron/electronVersion.js";
+import childProcess, { SpawnOptions } from "node:child_process";
 
 import { Arch, Target, TARGETS, getHost, isHostId, TargetId } from "./target.js";
 
@@ -26,6 +27,8 @@ async function getRuntimeVersion(projectRoot: string): Promise<string> {
         return process.version.substr(1);
     }
 }
+
+export type Tool = [cmd: string, ...args: string[]];
 
 export default class HakEnv {
     public readonly target: Target;
@@ -103,5 +106,37 @@ export default class HakEnv {
 
     public wantsStaticSqlCipher(): boolean {
         return !(this.isLinux() || this.isFreeBSD()) || process.env.SQLCIPHER_BUNDLED == "1";
+    }
+
+    public spawn(cmd: string, args: string[], options?: SpawnOptions): Promise<void> {
+        return new Promise((resolve, reject) => {
+            const proc = childProcess.spawn(cmd + (this.isWin() ? ".cmd" : ""), args, {
+                stdio: "inherit",
+                // We need shell mode on Windows to be able to launch `.cmd` executables
+                // See https://nodejs.org/en/blog/vulnerability/april-2024-security-releases-2
+                shell: this.isWin(),
+                ...options,
+            });
+            proc.on("exit", (code) => {
+                if (code) {
+                    reject(code);
+                } else {
+                    resolve();
+                }
+            });
+        });
+    }
+
+    public async checkTools(tools: Tool[]): Promise<void> {
+        for (const tool of tools) {
+            try {
+                await this.spawn(tool[0], tool.slice(1), {
+                    stdio: ["ignore"],
+                    shell: false,
+                });
+            } catch {
+                throw new Error(`Can't find ${tool}`);
+            }
+        }
     }
 }
