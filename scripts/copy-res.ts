@@ -1,4 +1,4 @@
-#!/usr/bin/env -S npx ts-node
+#!/usr/bin/env -S npx tsx
 
 // copies resources into the lib directory.
 

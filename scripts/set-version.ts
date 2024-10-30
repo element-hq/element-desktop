@@ -1,4 +1,4 @@
-#!/usr/bin/env -S npx ts-node
+#!/usr/bin/env -S npx tsx
 
 /*
  * Checks for the presence of a webapp, inspects its version and sets the
@@ -8,6 +8,7 @@
 import { promises as fs } from "node:fs";
 import * as asar from "@electron/asar";
 import * as childProcess from "node:child_process";
+import * as url from "node:url";
 
 export async function versionFromAsar(): Promise<string> {
     try {
@@ -57,13 +58,16 @@ async function main(args: string[]): Promise<number> {
     return 0;
 }
 
-if (require.main === module) {
-    main(process.argv.slice(2))
-        .then((ret) => {
-            process.exit(ret);
-        })
-        .catch((e) => {
-            console.error(e);
-            process.exit(1);
-        });
+if (import.meta.url.startsWith("file:")) {
+    const modulePath = url.fileURLToPath(import.meta.url);
+    if (process.argv[1] === modulePath) {
+        main(process.argv.slice(2))
+            .then((ret) => {
+                process.exit(ret);
+            })
+            .catch((e) => {
+                console.error(e);
+                process.exit(1);
+            });
+    }
 }

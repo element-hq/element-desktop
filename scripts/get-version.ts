@@ -1,4 +1,4 @@
-#!/usr/bin/env -S npx ts-node
+#!/usr/bin/env -S npx tsx
 
 /*
  * Checks for the presence of a webapp, inspects its version and prints it

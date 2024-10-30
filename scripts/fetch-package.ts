@@ -1,4 +1,4 @@
-#!/usr/bin/env -S npx ts-node --resolveJsonModule
+#!/usr/bin/env -S npx tsx --resolveJsonModule
 
 import * as path from "node:path";
 import { createWriteStream, promises as fs } from "node:fs";

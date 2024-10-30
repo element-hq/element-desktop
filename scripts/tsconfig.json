@@ -9,8 +9,5 @@
         "strict": true,
         "lib": ["es2020", "dom"]
     },
-    "include": ["../src/@types", "./**/*.ts"],
-    "ts-node": {
-        "transpileOnly": true
-    }
+    "include": ["../src/@types", "./**/*.ts"]
 }
