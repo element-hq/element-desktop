@@ -12,6 +12,8 @@ import { fileURLToPath } from "node:url";
 import HakEnv from "./hakEnv.js";
 import type { TargetId } from "./target.js";
 import type { DependencyInfo } from "./dep.js";
+import { loadJsonFile } from "../../src/utils.js";
+import packageJson from "../../package.json";
 
 const GENERALCOMMANDS = ["target"];
 
@@ -32,14 +34,6 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 async function main(): Promise<void> {
     const prefix = path.join(__dirname, "..", "..");
-    let packageJson;
-    try {
-        // eslint-disable-next-line @typescript-eslint/no-require-imports
-        packageJson = require(path.join(prefix, "package.json"));
-    } catch {
-        console.error("Can't find a package.json!");
-        process.exit(1);
-    }
 
     const targetIds: TargetId[] = [];
     // Apply `--target <target>` option if specified
@@ -69,12 +63,11 @@ async function main(): Promise<void> {
 
     const hakDepsCfg = packageJson.hakDependencies || {};
 
-    for (const dep of Object.keys(hakDepsCfg)) {
+    for (const dep in hakDepsCfg) {
         const hakJsonPath = path.join(prefix, "hak", dep, "hak.json");
         let hakJson: Record<string, any>;
         try {
-            // eslint-disable-next-line @typescript-eslint/no-require-imports
-            hakJson = await require(hakJsonPath);
+            hakJson = loadJsonFile(hakJsonPath);
         } catch {
             console.error("No hak.json found for " + dep + ".");
             console.log("Expecting " + hakJsonPath);
@@ -82,7 +75,7 @@ async function main(): Promise<void> {
         }
         deps[dep] = {
             name: dep,
-            version: hakDepsCfg[dep],
+            version: hakDepsCfg[dep as keyof typeof hakDepsCfg],
             cfg: hakJson,
             moduleHakDir: path.join(prefix, "hak", dep),
             moduleDotHakDir: path.join(hakEnv.dotHakDir, dep),

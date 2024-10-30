@@ -376,12 +376,8 @@ app.on("ready", async () => {
 
     if (argv["devtools"]) {
         try {
-            // eslint-disable-next-line @typescript-eslint/no-require-imports
-            const { default: installExt, REACT_DEVELOPER_TOOLS, REACT_PERF } = require("electron-devtools-installer");
+            const { default: installExt, REACT_DEVELOPER_TOOLS } = await import("electron-devtools-installer");
             installExt(REACT_DEVELOPER_TOOLS)
-                .then((name: string) => console.log(`Added Extension: ${name}`))
-                .catch((err: unknown) => console.log("An error occurred: ", err));
-            installExt(REACT_PERF)
                 .then((name: string) => console.log(`Added Extension: ${name}`))
                 .catch((err: unknown) => console.log("An error occurred: ", err));
         } catch (e) {
