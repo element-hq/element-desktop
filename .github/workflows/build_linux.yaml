@@ -144,7 +144,7 @@ jobs:
                       ./scripts/glibc-check.sh $filename
                   done
               env:
-                  MAX_VER: 2.28 # buster-era glibc
+                  MAX_VER: 2.31 # bullseye-era glibc
 
     build:
         needs: hak
