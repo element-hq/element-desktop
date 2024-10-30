@@ -140,7 +140,7 @@ export default class HakEnv {
                     shell: false,
                 });
             } catch {
-                throw new Error(`Can't find ${tool}`);
+                throw new Error(`Can't find ${tool[0]}`);
             }
         }
     }
