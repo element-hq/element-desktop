@@ -38,7 +38,7 @@ async function main(): Promise<void> {
     const targetIds: TargetId[] = [];
     // Apply `--target <target>` option if specified
     // Can be specified multiple times for the copy command to bundle
-    // multiple archs into a single universal output module)
+    // multiple arches into a single universal output module)
     for (;;) {
         // eslint-disable-line no-constant-condition
         const targetIndex = process.argv.indexOf("--target");
@@ -89,8 +89,8 @@ async function main(): Promise<void> {
         };
 
         for (const s of HAKSCRIPTS) {
-            if (hakJson.scripts && hakJson.scripts[s]) {
-                const scriptModule = await import(path.join(prefix, "hak", dep, hakJson.scripts[s]));
+            if (hakJson.scripts?.[s]) {
+                const scriptModule = await import(path.join("file://", prefix, "hak", dep, hakJson.scripts[s]));
                 if (scriptModule.default) {
                     deps[dep].scripts[s] = scriptModule.default;
                 } else {
