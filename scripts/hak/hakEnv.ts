@@ -132,15 +132,15 @@ export default class HakEnv {
     }
 
     public async checkTools(tools: Tool[]): Promise<void> {
-        for (const tool of tools) {
+        for (const [tool, ...args] of tools) {
             try {
-                await this.spawn(tool[0], tool.slice(1), {
+                await this.spawn(tool, args, {
                     ignoreWinCmdlet: true,
                     stdio: ["ignore"],
                     shell: false,
                 });
             } catch {
-                throw new Error(`Can't find ${tool[0]}`);
+                throw new Error(`Can't find ${tool}`);
             }
         }
     }
