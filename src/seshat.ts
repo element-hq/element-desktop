@@ -24,8 +24,7 @@ let SeshatRecovery: typeof SeshatRecoveryType;
 let ReindexError: typeof ReindexErrorType;
 
 try {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const seshatModule = require("matrix-seshat");
+    const seshatModule = await import("matrix-seshat");
     Seshat = seshatModule.Seshat;
     SeshatRecovery = seshatModule.SeshatRecovery;
     ReindexError = seshatModule.ReindexError;
