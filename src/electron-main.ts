@@ -14,11 +14,11 @@ import { app, BrowserWindow, Menu, autoUpdater, protocol, dialog, Input, Event, 
 // eslint-disable-next-line n/file-extension-in-import
 import * as Sentry from "@sentry/electron/main";
 import AutoLaunch from "auto-launch";
-import path from "node:path";
+import path, { dirname } from "node:path";
 import windowStateKeeper from "electron-window-state";
 import Store from "electron-store";
 import fs, { promises as afs } from "node:fs";
-import { URL } from "node:url";
+import { URL, fileURLToPath } from "node:url";
 import minimist from "minimist";
 
 import "./ipc.js";
@@ -35,6 +35,8 @@ import { setDisplayMediaCallback } from "./displayMediaCallback.js";
 import { setupMacosTitleBar } from "./macos-titlebar.js";
 import { loadJsonFile } from "./utils.js";
 import { setupMediaAuth } from "./media-auth.js";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const argv = minimist(process.argv, {
     alias: { help: "h" },

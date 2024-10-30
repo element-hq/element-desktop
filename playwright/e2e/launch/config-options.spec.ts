@@ -5,9 +5,12 @@ SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only
 Please see LICENSE files in the repository root for full details.
 */
 
-import { resolve } from "node:path";
+import { resolve, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 
 import { test, expect } from "../../element-desktop-test.js";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 test.describe("App config options", () => {
     test.describe("Should load custom config via env", () => {

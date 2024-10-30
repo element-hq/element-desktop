@@ -6,7 +6,8 @@ SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only
 Please see LICENSE files in the repository root for full details.
 */
 
-import path from "node:path";
+import path, { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 
 import HakEnv from "./hakEnv.js";
 import type { TargetId } from "./target.js";
@@ -26,6 +27,8 @@ const METACOMMANDS: Record<string, string[]> = {
 
 // Scripts valid in a hak.json 'scripts' section
 const HAKSCRIPTS = ["check", "fetch", "build"];
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 async function main(): Promise<void> {
     const prefix = path.join(__dirname, "..", "..");
