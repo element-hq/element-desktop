@@ -31,8 +31,8 @@ async function safeCheckForUpdate(): Promise<void> {
         // To avoid this we check manually whether an update is available and call the
         // autoUpdater.checkForUpdates() when something new is there.
         try {
-            const res = await global.fetch(feedUrl);
-            const { currentRelease } = await res.json();
+            const res = await fetch(feedUrl);
+            const { currentRelease } = (await res.json()) as { currentRelease: string };
             const latestVersionDownloaded = latestUpdateDownloaded?.releaseName;
             console.info(
                 `Latest version from release download: ${currentRelease} (current: ${app.getVersion()}, most recent downloaded ${latestVersionDownloaded}})`,

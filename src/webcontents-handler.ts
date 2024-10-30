@@ -23,7 +23,6 @@ import {
 } from "electron";
 import url from "node:url";
 import fs from "node:fs";
-import fetch from "node-fetch";
 import { pipeline } from "node:stream/promises";
 import path from "node:path";
 

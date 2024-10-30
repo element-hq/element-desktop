@@ -5,7 +5,6 @@ import { createWriteStream, promises as fs } from "node:fs";
 import * as childProcess from "node:child_process";
 import * as tar from "tar";
 import * as asar from "@electron/asar";
-import fetch from "node-fetch";
 import { promises as stream } from "node:stream";
 
 import riotDesktopPackageJson from "../package.json";
@@ -23,7 +22,7 @@ async function downloadToFile(url: string, filename: string): Promise<void> {
         const resp = await fetch(url);
         if (!resp.ok) throw new Error(`unexpected response ${resp.statusText}`);
         if (!resp.body) throw new Error(`unexpected response has no body ${resp.statusText}`);
-        await stream.pipeline(resp.body, createWriteStream(filename));
+        await stream.pipeline(resp.body as unknown as NodeJS.ReadableStream, createWriteStream(filename));
     } catch (e) {
         console.error(e);
         try {
@@ -125,7 +124,9 @@ async function main(): Promise<number | undefined> {
             });
             fetch(PUB_KEY_URL)
                 .then((resp) => {
-                    stream.pipeline(resp.body, gpgProc.stdin!).catch(reject);
+                    if (!resp.ok) throw new Error(`unexpected response ${resp.statusText}`);
+                    if (!resp.body) throw new Error(`unexpected response has no body ${resp.statusText}`);
+                    stream.pipeline(resp.body as unknown as NodeJS.ReadableStream, gpgProc.stdin!).catch(reject);
                 })
                 .catch(reject);
         });
