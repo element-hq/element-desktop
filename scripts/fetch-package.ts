@@ -1,15 +1,15 @@
 #!/usr/bin/env -S npx ts-node --resolveJsonModule
 
-import * as path from "path";
-import { createWriteStream, promises as fs } from "fs";
-import * as childProcess from "child_process";
+import * as path from "node:path";
+import { createWriteStream, promises as fs } from "node:fs";
+import * as childProcess from "node:child_process";
 import * as tar from "tar";
 import * as asar from "@electron/asar";
 import fetch from "node-fetch";
-import { promises as stream } from "stream";
+import { promises as stream } from "node:stream";
 
 import riotDesktopPackageJson from "../package.json";
-import { setPackageVersion } from "./set-version";
+import { setPackageVersion } from "./set-version.js";
 
 const PUB_KEY_URL = "https://packages.riot.im/element-release-key.asc";
 const PACKAGE_URL_PREFIX = "https://github.com/element-hq/element-web/releases/download/";

@@ -6,12 +6,12 @@ SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only
 Please see LICENSE files in the repository root for full details.
 */
 
-import path from "path";
-import os from "os";
+import path from "node:path";
+import os from "node:os";
 import nodePreGypVersioning from "@mapbox/node-pre-gyp/lib/util/versioning";
-import { getElectronVersionFromInstalled } from "app-builder-lib/out/electron/electronVersion";
+import { getElectronVersionFromInstalled } from "app-builder-lib/out/electron/electronVersion.js";
 
-import { Arch, Target, TARGETS, getHost, isHostId, TargetId } from "./target";
+import { Arch, Target, TARGETS, getHost, isHostId, TargetId } from "./target.js";
 
 async function getRuntime(projectRoot: string): Promise<string> {
     const electronVersion = await getElectronVersionFromInstalled(projectRoot);

@@ -6,15 +6,15 @@ SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only
 Please see LICENSE files in the repository root for full details.
 */
 
-import path from "path";
-import fsProm from "fs/promises";
-import childProcess from "child_process";
+import path from "node:path";
+import fsProm from "node:fs/promises";
+import childProcess from "node:child_process";
 import { rimraf } from "rimraf";
 import { glob } from "glob";
 import { mkdirp } from "mkdirp";
 
-import HakEnv from "./hakEnv";
-import { DependencyInfo } from "./dep";
+import type HakEnv from "./hakEnv.js";
+import type { DependencyInfo } from "./dep.js";
 
 export default async function copy(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
     if (moduleInfo.cfg.prune) {

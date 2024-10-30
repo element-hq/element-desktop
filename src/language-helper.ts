@@ -10,7 +10,7 @@ import { TranslationKey as TKey } from "matrix-web-i18n";
 
 import type Store from "electron-store";
 import type EN from "./i18n/strings/en_EN.json";
-import { loadJsonFile } from "./utils";
+import { loadJsonFile } from "./utils.js";
 
 const FALLBACK_LOCALE = "en";
 

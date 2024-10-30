@@ -21,13 +21,13 @@ import {
     IpcMainEvent,
     Event,
 } from "electron";
-import url from "url";
-import fs from "fs";
+import url from "node:url";
+import fs from "node:fs";
 import fetch from "node-fetch";
-import { pipeline } from "stream/promises";
-import path from "path";
+import { pipeline } from "node:stream/promises";
+import path from "node:path";
 
-import { _t } from "./language-helper";
+import { _t } from "./language-helper.js";
 
 const MAILTO_PREFIX = "mailto:";
 

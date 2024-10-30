@@ -8,8 +8,8 @@ Please see LICENSE files in the repository root for full details.
 
 import { mkdirp } from "mkdirp";
 
-import { DependencyInfo } from "./dep";
-import HakEnv from "./hakEnv";
+import type { DependencyInfo } from "./dep.js";
+import type HakEnv from "./hakEnv.js";
 
 export default async function fetchDeps(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
     await mkdirp(moduleInfo.moduleDotHakDir);

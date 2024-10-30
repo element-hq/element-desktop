@@ -6,13 +6,13 @@ SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only
 Please see LICENSE files in the repository root for full details.
 */
 
-import path from "path";
-import os from "os";
-import fsProm from "fs/promises";
-import childProcess from "child_process";
+import path from "node:path";
+import os from "node:os";
+import fsProm from "node:fs/promises";
+import childProcess from "node:child_process";
 
-import HakEnv from "./hakEnv";
-import { DependencyInfo } from "./dep";
+import HakEnv from "./hakEnv.js";
+import { DependencyInfo } from "./dep.js";
 
 export default async function link(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
     const yarnrc = path.join(hakEnv.projectRoot, ".yarnrc");

@@ -6,11 +6,11 @@ SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only
 Please see LICENSE files in the repository root for full details.
 */
 
-import path from "path";
+import path from "node:path";
 
-import HakEnv from "./hakEnv";
-import { TargetId } from "./target";
-import { DependencyInfo } from "./dep";
+import HakEnv from "./hakEnv.js";
+import type { TargetId } from "./target.js";
+import type { DependencyInfo } from "./dep.js";
 
 const GENERALCOMMANDS = ["target"];
 

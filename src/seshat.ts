@@ -6,8 +6,8 @@ Please see LICENSE files in the repository root for full details.
 */
 
 import { app, ipcMain } from "electron";
-import { promises as afs } from "fs";
-import path from "path";
+import { promises as afs } from "node:fs";
+import path from "node:path";
 
 import type {
     Seshat as SeshatType,
@@ -15,8 +15,8 @@ import type {
     ReindexError as ReindexErrorType,
 } from "matrix-seshat"; // Hak dependency type
 import IpcMainEvent = Electron.IpcMainEvent;
-import { randomArray } from "./utils";
-import { keytar } from "./keytar";
+import { randomArray } from "./utils.js";
+import { keytar } from "./keytar.js";
 
 let seshatSupported = false;
 let Seshat: typeof SeshatType;

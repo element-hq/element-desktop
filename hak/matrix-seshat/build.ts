@@ -6,10 +6,10 @@ SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only
 Please see LICENSE files in the repository root for full details.
 */
 
-import childProcess from "child_process";
+import childProcess from "node:child_process";
 
-import HakEnv from "../../scripts/hak/hakEnv";
-import { DependencyInfo } from "../../scripts/hak/dep";
+import type HakEnv from "../../scripts/hak/hakEnv.js";
+import type { DependencyInfo } from "../../scripts/hak/dep.js";
 
 export default async function (hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
     const env = hakEnv.makeGypEnv();

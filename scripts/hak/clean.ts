@@ -6,11 +6,11 @@ SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only
 Please see LICENSE files in the repository root for full details.
 */
 
-import path from "path";
+import path from "node:path";
 import { rimraf } from "rimraf";
 
-import { DependencyInfo } from "./dep";
-import HakEnv from "./hakEnv";
+import type { DependencyInfo } from "./dep.js";
+import type HakEnv from "./hakEnv.js";
 
 export default async function clean(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
     await rimraf(moduleInfo.moduleDotHakDir);

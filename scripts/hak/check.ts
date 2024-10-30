@@ -6,8 +6,8 @@ SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only
 Please see LICENSE files in the repository root for full details.
 */
 
-import { DependencyInfo } from "./dep";
-import HakEnv from "./hakEnv";
+import type { DependencyInfo } from "./dep.js";
+import type HakEnv from "./hakEnv.js";
 
 export default async function check(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
     if (moduleInfo.scripts.check) {

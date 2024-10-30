@@ -7,7 +7,7 @@ Please see LICENSE files in the repository root for full details.
 
 import { resolve } from "node:path";
 
-import { test, expect } from "../../element-desktop-test";
+import { test, expect } from "../../element-desktop-test.js";
 
 test.describe("App config options", () => {
     test.describe("Should load custom config via env", () => {

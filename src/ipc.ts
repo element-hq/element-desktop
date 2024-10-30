@@ -9,11 +9,11 @@ import { app, autoUpdater, desktopCapturer, ipcMain, powerSaveBlocker, TouchBar,
 import { relaunchApp } from "electron-clear-data";
 
 import IpcMainEvent = Electron.IpcMainEvent;
-import { recordSSOSession } from "./protocol";
-import { randomArray } from "./utils";
-import { Settings } from "./settings";
-import { keytar } from "./keytar";
-import { getDisplayMediaCallback, setDisplayMediaCallback } from "./displayMediaCallback";
+import { recordSSOSession } from "./protocol.js";
+import { randomArray } from "./utils.js";
+import { Settings } from "./settings.js";
+import { keytar } from "./keytar.js";
+import { getDisplayMediaCallback, setDisplayMediaCallback } from "./displayMediaCallback.js";
 
 ipcMain.on("setBadgeCount", function (_ev: IpcMainEvent, count: number): void {
     if (process.platform !== "win32") {
