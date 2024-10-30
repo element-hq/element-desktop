@@ -452,7 +452,7 @@ app.on("ready", async () => {
         defaultHeight: 768,
     });
 
-    const preloadScript = path.normalize(`${__dirname}/preload.js`);
+    const preloadScript = path.normalize(`${__dirname}/preload.cjs`);
     global.mainWindow = new BrowserWindow({
         // https://www.electronjs.org/docs/faq#the-font-looks-blurry-what-is-this-and-what-can-i-do
         backgroundColor: "#fff",
