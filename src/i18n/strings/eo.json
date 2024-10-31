@@ -3,7 +3,7 @@
         "cancel": "Nuligi",
         "close": "Fermi",
         "close_brand": "Fermu %(brand)s",
-        "copy": "Kopiu",
+        "copy": "Kopii",
         "cut": "Tranĉi",
         "delete": "Forigi",
         "edit": "Redakti",
@@ -15,9 +15,9 @@
         "undo": "Malfari"
     },
     "common": {
-        "about": "Informilo",
+        "about": "Prio",
         "help": "Helpo",
-        "preferences": "Preferoj"
+        "preferences": "Agordoj"
     },
     "confirm_quit": "Ĉu vi certas, ke vi volas ĉesi?",
     "edit_menu": {

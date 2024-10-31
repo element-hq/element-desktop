@@ -2,7 +2,7 @@ name: Dockerbuild
 on:
     workflow_dispatch: {}
     push:
-        branches: [master, develop]
+        branches: [master, staging, develop]
         paths:
             - "dockerbuild/**"
 concurrency: ${{ github.workflow }}-${{ github.ref_name }}
@@ -12,15 +12,23 @@ env:
 jobs:
     build:
         name: Docker Build
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
         permissions:
             contents: read
             packages: write
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4
+
+            - name: Set up QEMU
+              uses: docker/setup-qemu-action@49b3bc8e6bdd4a60e6116a5414239cba5943d3cf # v3
+
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@c47758b77c9736f4b2ef4073d4d51994fabfe349 # v3
+              with:
+                  install: true
 
             - name: Log in to the Container registry
-              uses: docker/login-action@1f401f745bf57e30b3a2800ad308a87d2ebdf14b
+              uses: docker/login-action@06895751d15a223ec091bea144ad5c7f50d228d0
               with:
                   registry: ${{ env.REGISTRY }}
                   username: ${{ github.actor }}
@@ -28,16 +36,17 @@ jobs:
 
             - name: Extract metadata for Docker
               id: meta
-              uses: docker/metadata-action@62339db73c56dd749060f65a6ebb93a6e056b755
+              uses: docker/metadata-action@8e5442c4ef9f78752691e2d8f8d19755c6f78e81 # v5
               with:
                   images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
                   tags: |
                       type=ref,event=branch
 
             - name: Build and push Docker image
-              uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5
+              uses: docker/build-push-action@4f58ea79222b3b9dc2c8bbdd6debcef730109a75 # v6
               with:
                   context: dockerbuild
                   push: true
                   tags: ${{ steps.meta.outputs.tags }}
                   labels: ${{ steps.meta.outputs.labels }}
+                  platforms: linux/amd64,linux/arm64

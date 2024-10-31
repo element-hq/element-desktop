@@ -1,17 +1,8 @@
 /*
-Copyright 2021 New Vector Ltd
+Copyright 2021-2024 New Vector Ltd.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only
+Please see LICENSE files in the repository root for full details.
 */
 
 import {
@@ -30,13 +21,13 @@ import {
     IpcMainEvent,
     Event,
 } from "electron";
-import url from "url";
-import fs from "fs";
+import url from "node:url";
+import fs from "node:fs";
 import fetch from "node-fetch";
-import { pipeline } from "stream";
-import path from "path";
+import { pipeline } from "node:stream/promises";
+import path from "node:path";
 
-import { _t } from "./language-helper";
+import { _t } from "./language-helper.js";
 
 const MAILTO_PREFIX = "mailto:";
 
@@ -53,7 +44,7 @@ function safeOpenURL(target: string): void {
         // so we know the url parser has understood all the parts
         // of the input string
         const newTarget = url.format(parsedUrl);
-        shell.openExternal(newTarget);
+        void shell.openExternal(newTarget);
     }
 }
 
@@ -165,11 +156,11 @@ function onLinkContextMenu(ev: Event, params: ContextMenuParams, webContents: We
                             const resp = await fetch(url);
                             if (!resp.ok) throw new Error(`unexpected response ${resp.statusText}`);
                             if (!resp.body) throw new Error(`unexpected response has no body ${resp.statusText}`);
-                            pipeline(resp.body, fs.createWriteStream(filePath));
+                            await pipeline(resp.body, fs.createWriteStream(filePath));
                         }
                     } catch (err) {
                         console.error(err);
-                        dialog.showMessageBox({
+                        void dialog.showMessageBox({
                             type: "error",
                             title: _t("right_click_menu|save_image_as_error_title"),
                             message: _t("right_click_menu|save_image_as_error_description"),
@@ -185,15 +176,18 @@ function onLinkContextMenu(ev: Event, params: ContextMenuParams, webContents: We
     ev.preventDefault();
 }
 
-function cutCopyPasteSelectContextMenus(params: ContextMenuParams): MenuItemConstructorOptions[] {
+function cutCopyPasteSelectContextMenus(
+    params: ContextMenuParams,
+    webContents: WebContents,
+): MenuItemConstructorOptions[] {
     const options: MenuItemConstructorOptions[] = [];
 
     if (params.misspelledWord) {
         params.dictionarySuggestions.forEach((word) => {
             options.push({
                 label: word,
-                click: (menuItem, browserWindow) => {
-                    browserWindow?.webContents.replaceMisspelling(word);
+                click: () => {
+                    webContents.replaceMisspelling(word);
                 },
             });
         });
@@ -203,8 +197,8 @@ function cutCopyPasteSelectContextMenus(params: ContextMenuParams): MenuItemCons
             },
             {
                 label: _t("right_click_menu|add_to_dictionary"),
-                click: (menuItem, browserWindow) => {
-                    browserWindow?.webContents.session.addWordToSpellCheckerDictionary(params.misspelledWord);
+                click: () => {
+                    webContents.session.addWordToSpellCheckerDictionary(params.misspelledWord);
                 },
             },
             {
@@ -246,8 +240,8 @@ function cutCopyPasteSelectContextMenus(params: ContextMenuParams): MenuItemCons
     return options;
 }
 
-function onSelectedContextMenu(ev: Event, params: ContextMenuParams): void {
-    const items = cutCopyPasteSelectContextMenus(params);
+function onSelectedContextMenu(ev: Event, params: ContextMenuParams, webContents: WebContents): void {
+    const items = cutCopyPasteSelectContextMenus(params, webContents);
     const popupMenu = Menu.buildFromTemplate(items);
 
     // popup() requires an options object even for no options
@@ -255,12 +249,12 @@ function onSelectedContextMenu(ev: Event, params: ContextMenuParams): void {
     ev.preventDefault();
 }
 
-function onEditableContextMenu(ev: Event, params: ContextMenuParams): void {
+function onEditableContextMenu(ev: Event, params: ContextMenuParams, webContents: WebContents): void {
     const items: MenuItemConstructorOptions[] = [
         { role: "undo" },
         { role: "redo", enabled: params.editFlags.canRedo },
         { type: "separator" },
-        ...cutCopyPasteSelectContextMenus(params),
+        ...cutCopyPasteSelectContextMenus(params, webContents),
     ];
 
     const popupMenu = Menu.buildFromTemplate(items);
@@ -275,7 +269,7 @@ const userDownloadMap = new Map<number, string>(); // Map from id to path
 ipcMain.on("userDownloadAction", function (ev: IpcMainEvent, { id, open = false }) {
     const path = userDownloadMap.get(id);
     if (open && path) {
-        shell.openPath(path);
+        void shell.openPath(path);
     }
     userDownloadMap.delete(id);
 });
@@ -295,9 +289,9 @@ export default (webContents: WebContents): void => {
         if (params.linkURL || params.srcURL) {
             onLinkContextMenu(ev, params, webContents);
         } else if (params.selectionText) {
-            onSelectedContextMenu(ev, params);
+            onSelectedContextMenu(ev, params, webContents);
         } else if (params.isEditable) {
-            onEditableContextMenu(ev, params);
+            onEditableContextMenu(ev, params, webContents);
         }
     });
 

@@ -6,7 +6,7 @@
         "copy": "Kopírovať",
         "cut": "Vystrihnúť",
         "delete": "Odstrániť",
-        "edit": "Úpravy",
+        "edit": "Upraviť",
         "minimise": "Minimalizovať",
         "paste": "Vložiť",
         "paste_match_style": "Vložiť a prispôsobiť štýl",
@@ -19,10 +19,10 @@
         "zoom_out": "Oddialiť"
     },
     "common": {
-        "about": "O aplikácii",
+        "about": "Informácie",
         "brand_help": "%(brand)s Pomoc",
         "help": "Pomocník",
-        "preferences": "Vlastnosti"
+        "preferences": "Predvoľby"
     },
     "confirm_quit": "Naozaj chcete zavrieť aplikáciu?",
     "edit_menu": {

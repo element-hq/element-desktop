@@ -1,28 +1,19 @@
 /*
-Copyright 2022 New Vector Ltd
+Copyright 2022-2024 New Vector Ltd.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only
+Please see LICENSE files in the repository root for full details.
 */
 
 import { app, autoUpdater, desktopCapturer, ipcMain, powerSaveBlocker, TouchBar, nativeImage } from "electron";
 import { relaunchApp } from "electron-clear-data";
 
 import IpcMainEvent = Electron.IpcMainEvent;
-import { recordSSOSession } from "./protocol";
-import { randomArray } from "./utils";
-import { Settings } from "./settings";
-import { keytar } from "./keytar";
-import { getDisplayMediaCallback, setDisplayMediaCallback } from "./displayMediaCallback";
+import { recordSSOSession } from "./protocol.js";
+import { randomArray } from "./utils.js";
+import { Settings } from "./settings.js";
+import { keytar } from "./keytar.js";
+import { getDisplayMediaCallback, setDisplayMediaCallback } from "./displayMediaCallback.js";
 
 ipcMain.on("setBadgeCount", function (_ev: IpcMainEvent, count: number): void {
     if (process.platform !== "win32") {
@@ -38,13 +29,15 @@ ipcMain.on("setBadgeCount", function (_ev: IpcMainEvent, count: number): void {
 
 let focusHandlerAttached = false;
 ipcMain.on("loudNotification", function (): void {
-    if (process.platform === "win32" && global.mainWindow && !global.mainWindow.isFocused() && !focusHandlerAttached) {
-        global.mainWindow.flashFrame(true);
-        global.mainWindow.once("focus", () => {
-            global.mainWindow?.flashFrame(false);
-            focusHandlerAttached = false;
-        });
-        focusHandlerAttached = true;
+    if (process.platform === "win32" || process.platform === "linux") {
+        if (global.mainWindow && !global.mainWindow.isFocused() && !focusHandlerAttached) {
+            global.mainWindow.flashFrame(true);
+            global.mainWindow.once("focus", () => {
+                global.mainWindow?.flashFrame(false);
+                focusHandlerAttached = false;
+            });
+            focusHandlerAttached = true;
+        }
     }
 });
 
@@ -98,9 +91,8 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
         case "focusWindow":
             if (global.mainWindow.isMinimized()) {
                 global.mainWindow.restore();
-            } else if (!global.mainWindow.isVisible()) {
-                global.mainWindow.show();
             } else {
+                global.mainWindow.show();
                 global.mainWindow.focus();
             }
             break;
@@ -155,7 +147,7 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
                 if (ret === null) {
                     ret = await keytar?.getPassword("riot.im", `${args[0]}|${args[1]}`);
                 }
-            } catch (e) {
+            } catch {
                 // if an error is thrown (e.g. keytar can't connect to the keychain),
                 // then return null, which means the default pickle key will be used
                 ret = null;
@@ -167,7 +159,7 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
                 const pickleKey = await randomArray(32);
                 await keytar?.setPassword("element.io", `${args[0]}|${args[1]}`, pickleKey);
                 ret = pickleKey;
-            } catch (e) {
+            } catch {
                 ret = null;
             }
             break;
@@ -178,7 +170,7 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
                 // migrate from riot.im (remove once we think there will no longer be
                 // logins from the time of riot.im)
                 await keytar?.deletePassword("riot.im", `${args[0]}|${args[1]}`);
-            } catch (e) {}
+            } catch {}
             break;
         case "getDesktopCapturerSources":
             ret = (await desktopCapturer.getSources(args[0])).map((source) => ({
@@ -216,11 +208,11 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
                             label: r.initial,
                             backgroundColor: defaultColors[total % defaultColors.length],
                             click: (): void => {
-                                global.mainWindow?.loadURL(`vector://vector/webapp/#/room/${r.roomId}`);
+                                void global.mainWindow?.loadURL(`vector://vector/webapp/#/room/${r.roomId}`);
                             },
                         });
                         if (r.avatarUrl) {
-                            fetch(r.avatarUrl)
+                            void fetch(r.avatarUrl)
                                 .then((resp) => {
                                     if (!resp.ok) return;
                                     return resp.arrayBuffer();

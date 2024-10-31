@@ -1,11 +1,11 @@
-#!/usr/bin/env -S npx ts-node
+#!/usr/bin/env -S npx tsx
 
 // copies resources into the lib directory.
 
 import parseArgs from "minimist";
 import * as chokidar from "chokidar";
-import * as path from "path";
-import * as fs from "fs";
+import * as path from "node:path";
+import * as fs from "node:fs";
 
 const argv = parseArgs(process.argv.slice(2), {});
 

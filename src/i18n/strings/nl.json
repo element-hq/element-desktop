@@ -55,6 +55,7 @@
     },
     "window_menu": {
         "bring_all_to_front": "Alles naar voren brengen",
-        "label": "Venster"
+        "label": "Venster",
+        "zoom": "Zoom"
     }
 }

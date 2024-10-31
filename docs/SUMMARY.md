@@ -10,6 +10,7 @@
 # Distribution
 
 -   [Updates](updates.md)
+-   [Packaging](packaging.md)
 
 # Setup
 

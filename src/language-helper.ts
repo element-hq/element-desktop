@@ -1,32 +1,24 @@
 /*
-Copyright 2021 New Vector Ltd
+Copyright 2021-2024 New Vector Ltd.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only
+Please see LICENSE files in the repository root for full details.
 */
 
 import counterpart from "counterpart";
 import { TranslationKey as TKey } from "matrix-web-i18n";
+import { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 
 import type Store from "electron-store";
 import type EN from "./i18n/strings/en_EN.json";
+import { loadJsonFile } from "./utils.js";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const FALLBACK_LOCALE = "en";
 
 type TranslationKey = TKey<typeof EN>;
-
-export function _td(text: TranslationKey): TranslationKey {
-    return text;
-}
 
 type SubstitutionValue = number | string;
 
@@ -109,7 +101,7 @@ export class AppLocalization {
     public fetchTranslationJson(locale: string): Record<string, string> {
         try {
             console.log("Fetching translation json for locale: " + locale);
-            return require(`./i18n/strings/${this.denormalize(locale)}.json`);
+            return loadJsonFile(__dirname, "i18n", "strings", `${this.denormalize(locale)}.json`);
         } catch (e) {
             console.log(`Could not fetch translation json for locale: '${locale}'`, e);
             return {};

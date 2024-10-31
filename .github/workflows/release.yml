@@ -1,0 +1,38 @@
+name: Release Process
+on:
+    workflow_dispatch:
+        inputs:
+            mode:
+                description: What type of release
+                required: true
+                default: rc
+                type: choice
+                options:
+                    - rc
+                    - final
+concurrency: ${{ github.workflow }}
+jobs:
+    release:
+        uses: matrix-org/matrix-js-sdk/.github/workflows/release-make.yml@develop
+        secrets:
+            ELEMENT_BOT_TOKEN: ${{ secrets.ELEMENT_BOT_TOKEN }}
+            GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+            GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        with:
+            final: ${{ inputs.mode == 'final' }}
+            gpg-fingerprint: ${{ vars.GPG_FINGERPRINT }}
+            expected-asset-count: 1
+
+    check:
+        name: Post release checks
+        needs: release
+        runs-on: ubuntu-24.04
+        steps:
+            - name: Wait for desktop packaging
+              uses: t3chguy/wait-on-check-action@18541021811b56544d90e0f073401c2b99e249d6 # fork
+              with:
+                  ref: master
+                  repo-token: ${{ secrets.GITHUB_TOKEN }}
+                  wait-interval: 10
+                  check-name: Deploy
+                  allowed-conclusions: success
