@@ -20,6 +20,8 @@
     },
     "common": {
         "about": "Over",
+        "brand_help": "%(brand)s Hulp",
+        "help": "Hulp",
         "preferences": "Voorkeuren"
     },
     "confirm_quit": "Weet u zeker dat u wilt stoppen?",
