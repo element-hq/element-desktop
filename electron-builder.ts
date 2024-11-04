@@ -72,10 +72,12 @@ const config: Writable<Configuration> = {
 
             await flipFuses(electronBinaryPath, {
                 version: FuseVersion.V1,
+                strictlyRequireAllFuses: true,
                 resetAdHocDarwinSignature: context.electronPlatformName === "darwin" && context.arch === Arch.universal,
 
                 [FuseV1Options.EnableCookieEncryption]: true,
                 [FuseV1Options.OnlyLoadAppFromAsar]: true,
+                [FuseV1Options.GrantFileProtocolExtraPrivileges]: true,
 
                 [FuseV1Options.RunAsNode]: false,
                 [FuseV1Options.EnableNodeOptionsEnvironmentVariable]: false,
