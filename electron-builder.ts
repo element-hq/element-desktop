@@ -83,8 +83,7 @@ const config: Writable<Configuration> = {
 
                 // Mac app crashes on arm for us when `LoadBrowserProcessSpecificV8Snapshot` is enabled
                 [FuseV1Options.LoadBrowserProcessSpecificV8Snapshot]: false,
-                // https://github.com/electron/fuses/issues/7
-                [FuseV1Options.EnableEmbeddedAsarIntegrityValidation]: false,
+                [FuseV1Options.EnableEmbeddedAsarIntegrityValidation]: true,
             });
         }
     },
