@@ -182,11 +182,13 @@ if (process.env.ED_SIGNTOOL_SUBJECT_NAME && process.env.ED_SIGNTOOL_THUMBPRINT) 
 /**
  * Allow specifying ElectronTeamID via env vars
  * @param {string} process.env.APPLE_TEAM_ID
+ * Workaround for https://github.com/electron-userland/electron-builder/issues/7995
  */
 if (process.env.APPLE_TEAM_ID) {
     config.mac.extendInfo = {
         ElectronTeamID: process.env.APPLE_TEAM_ID,
     };
+    config.mac.entitlements = "./build/entitlements-sandbox.mac.plist";
 }
 
 /**
