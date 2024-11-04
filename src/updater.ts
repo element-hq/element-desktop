@@ -1,23 +1,14 @@
 /*
-Copyright 2016-2021 New Vector Ltd
+Copyright 2016-2024 New Vector Ltd.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only
+Please see LICENSE files in the repository root for full details.
 */
 
 import { app, autoUpdater, ipcMain } from "electron";
 import fs from "node:fs/promises";
 
-import { getSquirrelExecutable } from "./squirrelhooks";
+import { getSquirrelExecutable } from "./squirrelhooks.js";
 
 const UPDATE_POLL_INTERVAL_MS = 60 * 60 * 1000;
 const INITIAL_UPDATE_DELAY_MS = 30 * 1000;
@@ -40,8 +31,8 @@ async function safeCheckForUpdate(): Promise<void> {
         // To avoid this we check manually whether an update is available and call the
         // autoUpdater.checkForUpdates() when something new is there.
         try {
-            const res = await global.fetch(feedUrl);
-            const { currentRelease } = await res.json();
+            const res = await fetch(feedUrl);
+            const { currentRelease } = (await res.json()) as { currentRelease: string };
             const latestVersionDownloaded = latestUpdateDownloaded?.releaseName;
             console.info(
                 `Latest version from release download: ${currentRelease} (current: ${app.getVersion()}, most recent downloaded ${latestVersionDownloaded}})`,
@@ -79,7 +70,7 @@ async function pollForUpdates(): Promise<void> {
 
 export async function start(updateBaseUrl: string): Promise<void> {
     if (!(await available(updateBaseUrl))) return;
-    if (updateBaseUrl.slice(-1) !== "/") {
+    if (!updateBaseUrl.endsWith("/")) {
         updateBaseUrl = updateBaseUrl + "/";
     }
 

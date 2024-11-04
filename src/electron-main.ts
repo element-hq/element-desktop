@@ -1,47 +1,42 @@
 /*
+Copyright 2018-2024 New Vector Ltd.
+Copyright 2017-2019 Michael Telatynski <7t3chguy@gmail.com>
 Copyright 2016 Aviral Dasgupta
 Copyright 2016 OpenMarket Ltd
-Copyright 2017, 2019 Michael Telatynski <7t3chguy@gmail.com>
-Copyright 2018 - 2021 New Vector Ltd
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only
+Please see LICENSE files in the repository root for full details.
 */
 
 // Squirrel on windows starts the app with various flags as hooks to tell us when we've been installed/uninstalled etc.
-import "./squirrelhooks";
+import "./squirrelhooks.js";
 import { app, BrowserWindow, Menu, autoUpdater, protocol, dialog, Input, Event, session } from "electron";
+// eslint-disable-next-line n/file-extension-in-import
 import * as Sentry from "@sentry/electron/main";
 import AutoLaunch from "auto-launch";
-import path from "path";
+import path, { dirname } from "node:path";
 import windowStateKeeper from "electron-window-state";
 import Store from "electron-store";
-import fs, { promises as afs } from "fs";
-import { URL } from "url";
+import fs, { promises as afs } from "node:fs";
+import { URL, fileURLToPath } from "node:url";
 import minimist from "minimist";
 
-import "./ipc";
-import "./keytar";
-import "./seshat";
-import "./settings";
-import * as tray from "./tray";
-import { buildMenuTemplate } from "./vectormenu";
-import webContentsHandler from "./webcontents-handler";
-import * as updater from "./updater";
-import { getProfileFromDeeplink, protocolInit } from "./protocol";
-import { _t, AppLocalization } from "./language-helper";
-import { setDisplayMediaCallback } from "./displayMediaCallback";
-import { setupMacosTitleBar } from "./macos-titlebar";
-import { loadJsonFile } from "./utils";
+import "./ipc.js";
+import "./keytar.js";
+import "./seshat.js";
+import "./settings.js";
+import * as tray from "./tray.js";
+import { buildMenuTemplate } from "./vectormenu.js";
+import webContentsHandler from "./webcontents-handler.js";
+import * as updater from "./updater.js";
+import { getProfileFromDeeplink, protocolInit } from "./protocol.js";
+import { _t, AppLocalization } from "./language-helper.js";
+import { setDisplayMediaCallback } from "./displayMediaCallback.js";
+import { setupMacosTitleBar } from "./macos-titlebar.js";
+import { loadJsonFile } from "./utils.js";
+import { setupMediaAuth } from "./media-auth.js";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const argv = minimist(process.argv, {
     alias: { help: "h" },
@@ -52,12 +47,18 @@ if (argv["help"]) {
     console.log("  --profile-dir {path}: Path to where to store the profile.");
     console.log("  --profile {name}:     Name of alternate profile to use, allows for running multiple accounts.");
     console.log("  --devtools:           Install and use react-devtools and react-perf.");
+    console.log(
+        `  --config:             Path to the config.json file. May also be specified via the ELEMENT_DESKTOP_CONFIG_JSON environment variable.\n` +
+            `                         Otherwise use the default user location '${app.getPath("userData")}'`,
+    );
     console.log("  --no-update:          Disable automatic updating.");
     console.log("  --hidden:             Start the application hidden in the system tray.");
     console.log("  --help:               Displays this help message.");
     console.log("And more such as --proxy, see:" + "https://electronjs.org/docs/api/command-line-switches");
     app.exit();
 }
+
+const LocalConfigLocation = process.env.ELEMENT_DESKTOP_CONFIG_JSON ?? argv["config"];
 
 // Electron creates the user data directory (with just an empty 'Dictionaries' directory...)
 // as soon as the app path is set, so pick a random path in it that must exist if it's a
@@ -105,7 +106,7 @@ async function tryPaths(name: string, root: string, rawPaths: string[]): Promise
         try {
             await afs.stat(p);
             return p + "/";
-        } catch (e) {}
+        } catch {}
     }
     console.log(`Couldn't find ${name} files in any of: `);
     for (const p of paths) {
@@ -145,7 +146,7 @@ async function loadConfig(): Promise<void> {
 
     try {
         global.vectorConfig = loadJsonFile(asarPath, "config.json");
-    } catch (e) {
+    } catch {
         // it would be nice to check the error code here and bail if the config
         // is unparsable, but we get MODULE_NOT_FOUND in the case of a missing
         // file or invalid json, so node is just very unhelpful.
@@ -155,7 +156,9 @@ async function loadConfig(): Promise<void> {
 
     try {
         // Load local config and use it to override values from the one baked with the build
-        const localConfig = loadJsonFile(app.getPath("userData"), "config.json");
+        const localConfig = LocalConfigLocation
+            ? loadJsonFile(LocalConfigLocation)
+            : loadJsonFile(app.getPath("userData"), "config.json");
 
         // If the local config has a homeserver defined, don't use the homeserver from the build
         // config. This is to avoid a problem where Riot thinks there are multiple homeservers
@@ -373,12 +376,8 @@ app.on("ready", async () => {
 
     if (argv["devtools"]) {
         try {
-            // eslint-disable-next-line @typescript-eslint/no-var-requires
-            const { default: installExt, REACT_DEVELOPER_TOOLS, REACT_PERF } = require("electron-devtools-installer");
+            const { default: installExt, REACT_DEVELOPER_TOOLS } = await import("electron-devtools-installer");
             installExt(REACT_DEVELOPER_TOOLS)
-                .then((name: string) => console.log(`Added Extension: ${name}`))
-                .catch((err: unknown) => console.log("An error occurred: ", err));
-            installExt(REACT_PERF)
                 .then((name: string) => console.log(`Added Extension: ${name}`))
                 .catch((err: unknown) => console.log("An error occurred: ", err));
         } catch (e) {
@@ -453,7 +452,7 @@ app.on("ready", async () => {
         defaultHeight: 768,
     });
 
-    const preloadScript = path.normalize(`${__dirname}/preload.js`);
+    const preloadScript = path.normalize(`${__dirname}/preload.cjs`);
     global.mainWindow = new BrowserWindow({
         // https://www.electronjs.org/docs/faq#the-font-looks-blurry-what-is-this-and-what-can-i-do
         backgroundColor: "#fff",
@@ -549,6 +548,8 @@ app.on("ready", async () => {
         global.mainWindow?.webContents.send("openDesktopCapturerSourcePicker");
         setDisplayMediaCallback(callback);
     });
+
+    setupMediaAuth(global.mainWindow);
 });
 
 app.on("window-all-closed", () => {

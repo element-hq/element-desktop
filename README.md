@@ -143,6 +143,10 @@ $PROFILE` in which case it becomes `Element-$PROFILE`, or it is using one of
 the above created by a pre-1.7 install, in which case it will be `Riot` or
 `Riot-$PROFILE`.
 
+You may also specify a different path entirely for the `config.json` file by
+providing the `--config $YOUR_CONFIG_JSON_FILE` to the process, or via the
+`ELEMENT_DESKTOP_CONFIG_JSON` environment variable.
+
 # Translations
 
 To add a new translation, head to the [translating doc](https://github.com/vector-im/element-web/blob/develop/docs/translating.md).

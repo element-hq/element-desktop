@@ -26,7 +26,7 @@ jobs:
     # We build the hak files on native infrastructure as matrix-seshat fails to cross-compile properly
     # https://github.com/matrix-org/seshat/issues/135
     hak:
-        runs-on: ${{ inputs.arch == 'arm64' && 'dind-l-arm64' || 'ubuntu-latest' }}
+        runs-on: ${{ inputs.arch == 'arm64' && 'dind-l-arm64' || 'ubuntu-22.04' }}
         env:
             HAK_DOCKER_IMAGE: ghcr.io/element-hq/element-desktop-dockerbuild
         outputs:
@@ -38,6 +38,9 @@ jobs:
             - name: Install missing tools
               if: runner.environment == 'self-hosted'
               run: |
+                  # Sanity check that the arch is arm64 as we expect
+                  [[ $(uname -p) == "aarch64" ]] || exit 1
+
                   sudo apt-get -qq update
                   # curl for yarn download, git for tj-actions/changed-files, zstd for actions/cache
                   sudo apt-get install -y curl git zstd
@@ -109,14 +112,14 @@ jobs:
             - name: "Get modified files"
               id: changed_files
               if: steps.cache.outputs.cache-hit != 'true' && github.event_name == 'pull_request'
-              uses: tj-actions/changed-files@d6babd6899969df1a11d14c368283ea4436bca78 # v44
+              uses: tj-actions/changed-files@c3a1bb2c992d77180ae65be6ae6c166cf40f857c # v45
               with:
                   files: |
                       dockerbuild/**
 
             # This allows contributors to test changes to the dockerbuild image within a pull request
             - name: Build docker image
-              uses: docker/build-push-action@ca052bb54ab0790a636c9b5f226502c73d547a25 # v5
+              uses: docker/build-push-action@4f58ea79222b3b9dc2c8bbdd6debcef730109a75 # v6
               if: steps.changed_files.outputs.any_modified == 'true'
               with:
                   context: dockerbuild
@@ -141,11 +144,11 @@ jobs:
                       ./scripts/glibc-check.sh $filename
                   done
               env:
-                  MAX_VER: 2.28 # buster-era glibc
+                  MAX_VER: 2.31 # bullseye-era glibc
 
     build:
         needs: hak
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
         steps:
             - uses: actions/checkout@v4
 

@@ -1,25 +1,29 @@
 /*
+Copyright 2024 New Vector Ltd.
 Copyright 2023 The Matrix.org Foundation C.I.C.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only
+Please see LICENSE files in the repository root for full details.
 */
 
 import { _electron as electron, test as base, expect as baseExpect, type ElectronApplication } from "@playwright/test";
 import fs from "node:fs/promises";
-import path from "node:path";
+import path, { dirname } from "node:path";
 import os from "node:os";
+import { fileURLToPath } from "node:url";
 
-export const test = base.extend<{ app: ElectronApplication; tmpDir: string }>({
+interface Fixtures {
+    app: ElectronApplication;
+    tmpDir: string;
+    extraEnv: Record<string, string>;
+    extraArgs: string[];
+}
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+export const test = base.extend<Fixtures>({
+    extraEnv: {},
+    extraArgs: [],
     // eslint-disable-next-line no-empty-pattern
     tmpDir: async ({}, use) => {
         const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "element-desktop-tests-"));
@@ -27,7 +31,7 @@ export const test = base.extend<{ app: ElectronApplication; tmpDir: string }>({
         await use(tmpDir);
         await fs.rm(tmpDir, { recursive: true });
     },
-    app: async ({ tmpDir }, use) => {
+    app: async ({ tmpDir, extraEnv, extraArgs }, use) => {
         const args = ["--profile-dir", tmpDir];
 
         const executablePath = process.env["ELEMENT_DESKTOP_EXECUTABLE"];
@@ -37,9 +41,12 @@ export const test = base.extend<{ app: ElectronApplication; tmpDir: string }>({
         }
 
         const app = await electron.launch({
-            env: process.env,
+            env: {
+                ...process.env,
+                ...extraEnv,
+            },
             executablePath,
-            args,
+            args: [...args, ...extraArgs],
         });
 
         app.process().stdout.pipe(process.stdout);

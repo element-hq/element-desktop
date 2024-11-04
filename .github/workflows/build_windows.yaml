@@ -2,7 +2,7 @@
 # Due to this extra care must be taken to only ever run all build_* scripts against the same branch to ensure
 # the correct cache scoping, and additional care must be taken to not run untrusted actions on the develop branch.
 
-# window-latest by default uses the pwsh shell which breaks codeSigningCert in the workflow
+# Windows GHA runner by default uses the pwsh shell which breaks codeSigningCert in the workflow
 defaults:
     run:
         shell: powershell
@@ -30,7 +30,7 @@ on:
                 description: "Whether to sign & notarise the build, requires 'packages.element.io' environment"
 jobs:
     build:
-        runs-on: windows-latest
+        runs-on: windows-2022
         environment: ${{ inputs.sign && 'packages.element.io' || '' }}
         env:
             SIGNTOOL_PATH: "C:/Program Files (x86)/Windows Kits/10/bin/10.0.22000.0/x86/signtool.exe"

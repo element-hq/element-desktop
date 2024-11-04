@@ -1,25 +1,18 @@
 /*
-Copyright 2020-2021 The Matrix.org Foundation C.I.C.
+Copyright 2024 New Vector Ltd.
+Copyright 2020, 2021 The Matrix.org Foundation C.I.C.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only
+Please see LICENSE files in the repository root for full details.
 */
 
-import path from "path";
-import os from "os";
+import path from "node:path";
+import os from "node:os";
 import nodePreGypVersioning from "@mapbox/node-pre-gyp/lib/util/versioning";
-import { getElectronVersionFromInstalled } from "app-builder-lib/out/electron/electronVersion";
+import { getElectronVersionFromInstalled } from "app-builder-lib/out/electron/electronVersion.js";
+import childProcess, { SpawnOptions } from "node:child_process";
 
-import { Arch, Target, TARGETS, getHost, isHostId, TargetId } from "./target";
+import { Arch, Target, TARGETS, getHost, isHostId, TargetId } from "./target.js";
 
 async function getRuntime(projectRoot: string): Promise<string> {
     const electronVersion = await getElectronVersionFromInstalled(projectRoot);
@@ -34,6 +27,8 @@ async function getRuntimeVersion(projectRoot: string): Promise<string> {
         return process.version.substr(1);
     }
 }
+
+export type Tool = [cmd: string, ...args: string[]];
 
 export default class HakEnv {
     public readonly target: Target;
@@ -97,18 +92,56 @@ export default class HakEnv {
     }
 
     public makeGypEnv(): Record<string, string | undefined> {
-        return Object.assign({}, process.env, {
+        return {
+            ...process.env,
             npm_config_arch: this.target.arch,
             npm_config_target_arch: this.target.arch,
             npm_config_disturl: "https://electronjs.org/headers",
             npm_config_runtime: this.runtime,
             npm_config_target: this.runtimeVersion,
-            npm_config_build_from_source: true,
+            npm_config_build_from_source: "true",
             npm_config_devdir: path.join(os.homedir(), ".electron-gyp"),
-        });
+        };
     }
 
     public wantsStaticSqlCipher(): boolean {
         return !(this.isLinux() || this.isFreeBSD()) || process.env.SQLCIPHER_BUNDLED == "1";
+    }
+
+    public spawn(
+        cmd: string,
+        args: string[],
+        { ignoreWinCmdlet, ...options }: SpawnOptions & { ignoreWinCmdlet?: boolean } = {},
+    ): Promise<void> {
+        return new Promise((resolve, reject) => {
+            const proc = childProcess.spawn(cmd + (!ignoreWinCmdlet && this.isWin() ? ".cmd" : ""), args, {
+                stdio: "inherit",
+                // We need shell mode on Windows to be able to launch `.cmd` executables
+                // See https://nodejs.org/en/blog/vulnerability/april-2024-security-releases-2
+                shell: this.isWin(),
+                ...options,
+            });
+            proc.on("exit", (code) => {
+                if (code) {
+                    reject(code);
+                } else {
+                    resolve();
+                }
+            });
+        });
+    }
+
+    public async checkTools(tools: Tool[]): Promise<void> {
+        for (const [tool, ...args] of tools) {
+            try {
+                await this.spawn(tool, args, {
+                    ignoreWinCmdlet: true,
+                    stdio: ["ignore"],
+                    shell: false,
+                });
+            } catch {
+                throw new Error(`Can't find ${tool}`);
+            }
+        }
     }
 }

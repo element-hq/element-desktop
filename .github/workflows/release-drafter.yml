@@ -3,8 +3,6 @@ on:
     push:
         branches: [staging]
     workflow_dispatch: {}
-    repository_dispatch:
-        types: [upstream-release-notify]
 concurrency: ${{ github.workflow }}
 jobs:
     draft:
