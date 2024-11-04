@@ -16,6 +16,9 @@ import { flipFuses, FuseVersion, FuseV1Options } from "@electron/fuses";
  *  Replaces spaces in the product name with dashes as spaces in paths can cause issues
  *  Removes libsqlcipher0 recommended dependency if env SQLCIPHER_BUNDLED is asserted.
  *  Passes $ED_DEBIAN_CHANGELOG to build.deb.fpm if specified
+ *
+ * On macOS:
+ *  Passes $APPLE_TEAM_ID to build.mac.extendInfo["ElectronTeamID"] if specified.
  */
 
 const NIGHTLY_APP_ID = "im.riot.nightly";
@@ -174,6 +177,16 @@ const config: Writable<Configuration> = {
 if (process.env.ED_SIGNTOOL_SUBJECT_NAME && process.env.ED_SIGNTOOL_THUMBPRINT) {
     config.win.certificateSubjectName = process.env.ED_SIGNTOOL_SUBJECT_NAME;
     config.win.certificateSha1 = process.env.ED_SIGNTOOL_THUMBPRINT;
+}
+
+/**
+ * Allow specifying ElectronTeamID via env vars
+ * @param {string} process.env.APPLE_TEAM_ID
+ */
+if (process.env.APPLE_TEAM_ID) {
+    config.mac.extendInfo = {
+        ElectronTeamID: process.env.APPLE_TEAM_ID,
+    };
 }
 
 /**
