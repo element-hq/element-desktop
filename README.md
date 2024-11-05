@@ -101,9 +101,6 @@ After running, the packages should be in `dist/`.
 If you'd just like to run the electron app locally for development:
 
 ```
-# Install electron - we don't normally need electron itself as it's provided
-# by electron-builder when building packages
-yarn add electron
 yarn start
 ```
 
