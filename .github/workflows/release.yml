@@ -34,5 +34,5 @@ jobs:
                   ref: master
                   repo-token: ${{ secrets.GITHUB_TOKEN }}
                   wait-interval: 10
-                  check-name: Deploy
+                  check-regexp: Prepare|Linux|macOS|Windows|Deploy|deploy
                   allowed-conclusions: success
