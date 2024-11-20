@@ -3,6 +3,7 @@ on:
     pull_request: {}
     push:
         branches: [develop, master]
+permissions: {} # No permissions needed
 jobs:
     ts_lint:
         name: "Typescript Syntax Check"
