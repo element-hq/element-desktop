@@ -22,6 +22,7 @@ on:
                 description: "How to link sqlcipher, one of 'system' | 'static'"
 env:
     SQLCIPHER_BUNDLED: ${{ inputs.sqlcipher == 'static' && '1' || '' }}
+permissions: {} # No permissions required
 jobs:
     # We build the hak files on native infrastructure as matrix-seshat fails to cross-compile properly
     # https://github.com/matrix-org/seshat/issues/135

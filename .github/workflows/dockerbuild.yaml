@@ -9,6 +9,7 @@ concurrency: ${{ github.workflow }}-${{ github.ref_name }}
 env:
     REGISTRY: ghcr.io
     IMAGE_NAME: ${{ github.repository }}-dockerbuild
+permissions: {}
 jobs:
     build:
         name: Docker Build

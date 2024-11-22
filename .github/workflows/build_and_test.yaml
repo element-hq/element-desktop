@@ -6,9 +6,12 @@ on:
 concurrency:
     group: ${{ github.workflow }}-${{ github.ref }}
     cancel-in-progress: true
+permissions: {} # No permissions required
 jobs:
     fetch:
         uses: ./.github/workflows/build_prepare.yaml
+        permissions:
+            contents: read
         with:
             config: ${{ github.event.pull_request.base.ref == 'develop' && 'element.io/nightly' || 'element.io/release' }}
             version: ${{ github.event.pull_request.base.ref == 'develop' && 'develop' || '' }}
