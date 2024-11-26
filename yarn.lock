@@ -2325,14 +2325,6 @@
     "@typescript-eslint/types" "8.14.0"
     "@typescript-eslint/visitor-keys" "8.14.0"
 
-"@typescript-eslint/scope-manager@8.14.0":
-  version "8.14.0"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/scope-manager/-/scope-manager-8.14.0.tgz#01f37c147a735cd78f0ff355e033b9457da1f373"
-  integrity sha512-aBbBrnW9ARIDn92Zbo7rguLnqQ/pOrUguVpbUwzOhkFg2npFDwTgPGqFqE0H5feXcOoJOfX3SxlJaKEVtq54dw==
-  dependencies:
-    "@typescript-eslint/types" "8.14.0"
-    "@typescript-eslint/visitor-keys" "8.14.0"
-
 "@typescript-eslint/type-utils@8.14.0":
   version "8.14.0"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/type-utils/-/type-utils-8.14.0.tgz#455c6af30c336b24a1af28bc4f81b8dd5d74d94d"
@@ -2348,11 +2340,6 @@
   resolved "https://registry.yarnpkg.com/@typescript-eslint/types/-/types-8.14.0.tgz#0d33d8d0b08479c424e7d654855fddf2c71e4021"
   integrity sha512-yjeB9fnO/opvLJFAsPNYlKPnEM8+z4og09Pk504dkqonT02AyL5Z9SSqlE0XqezS93v6CXn49VHvB2G7XSsl0g==
 
-"@typescript-eslint/types@8.14.0":
-  version "8.14.0"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/types/-/types-8.14.0.tgz#0d33d8d0b08479c424e7d654855fddf2c71e4021"
-  integrity sha512-yjeB9fnO/opvLJFAsPNYlKPnEM8+z4og09Pk504dkqonT02AyL5Z9SSqlE0XqezS93v6CXn49VHvB2G7XSsl0g==
-
 "@typescript-eslint/typescript-estree@8.14.0":
   version "8.14.0"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/typescript-estree/-/typescript-estree-8.14.0.tgz#a7a3a5a53a6c09313e12fb4531d4ff582ee3c312"
@@ -2367,21 +2354,7 @@
     semver "^7.6.0"
     ts-api-utils "^1.3.0"
 
-"@typescript-eslint/typescript-estree@8.14.0":
-  version "8.14.0"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/typescript-estree/-/typescript-estree-8.14.0.tgz#a7a3a5a53a6c09313e12fb4531d4ff582ee3c312"
-  integrity sha512-OPXPLYKGZi9XS/49rdaCbR5j/S14HazviBlUQFvSKz3npr3NikF+mrgK7CFVur6XEt95DZp/cmke9d5i3vtVnQ==
-  dependencies:
-    "@typescript-eslint/types" "8.14.0"
-    "@typescript-eslint/visitor-keys" "8.14.0"
-    debug "^4.3.4"
-    fast-glob "^3.3.2"
-    is-glob "^4.0.3"
-    minimatch "^9.0.4"
-    semver "^7.6.0"
-    ts-api-utils "^1.3.0"
-
-"@typescript-eslint/utils@8.14.0":
+"@typescript-eslint/utils@8.14.0", "@typescript-eslint/utils@^8.12.2":
   version "8.14.0"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/utils/-/utils-8.14.0.tgz#ac2506875e03aba24e602364e43b2dfa45529dbd"
   integrity sha512-OGqj6uB8THhrHj0Fk27DcHPojW7zKwKkPmHXHvQ58pLYp4hy8CSUdTKykKeh+5vFqTTVmjz0zCOOPKRovdsgHA==
@@ -2390,24 +2363,6 @@
     "@typescript-eslint/scope-manager" "8.14.0"
     "@typescript-eslint/types" "8.14.0"
     "@typescript-eslint/typescript-estree" "8.14.0"
-
-"@typescript-eslint/utils@^8.12.2":
-  version "8.14.0"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/utils/-/utils-8.14.0.tgz#ac2506875e03aba24e602364e43b2dfa45529dbd"
-  integrity sha512-OGqj6uB8THhrHj0Fk27DcHPojW7zKwKkPmHXHvQ58pLYp4hy8CSUdTKykKeh+5vFqTTVmjz0zCOOPKRovdsgHA==
-  dependencies:
-    "@eslint-community/eslint-utils" "^4.4.0"
-    "@typescript-eslint/scope-manager" "8.14.0"
-    "@typescript-eslint/types" "8.14.0"
-    "@typescript-eslint/typescript-estree" "8.14.0"
-
-"@typescript-eslint/visitor-keys@8.14.0":
-  version "8.14.0"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/visitor-keys/-/visitor-keys-8.14.0.tgz#2418d5a54669af9658986ade4e6cfb7767d815ad"
-  integrity sha512-vG0XZo8AdTH9OE6VFRwAZldNc7qtJ/6NLGWak+BtENuEUXGZgFpihILPiBvKXvJ2nFu27XNGC6rKiwuaoMbYzQ==
-  dependencies:
-    "@typescript-eslint/types" "8.14.0"
-    eslint-visitor-keys "^3.4.3"
 
 "@typescript-eslint/visitor-keys@8.14.0":
   version "8.14.0"
@@ -5877,10 +5832,10 @@ npm-package-arg@^12.0.0:
     semver "^7.3.5"
     validate-npm-package-name "^6.0.0"
 
-npm-packlist@^9.0.0:
-  version "9.0.0"
-  resolved "https://registry.yarnpkg.com/npm-packlist/-/npm-packlist-9.0.0.tgz#8e9b061bab940de639dd93d65adc95c34412c7d0"
-  integrity sha512-8qSayfmHJQTx3nJWYbbUmflpyarbLMBc6LCAjYsiGtXxDB68HaZpb8re6zeaLGxZzDuMdhsg70jryJe+RrItVQ==
+npm-packlist@^10.0.0:
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/npm-packlist/-/npm-packlist-10.0.0.tgz#35634f0a90f84a811ebdf565eb78d2b36252888c"
+  integrity sha512-rht9U6nS8WOBDc53eipZNPo5qkAV4X2rhKE2Oj1DYUQ3DieXfj0mKkVmjnf3iuNdtMd8WfLdi2L6ASkD/8a+Kg==
   dependencies:
     ignore-walk "^7.0.0"
 
@@ -6113,10 +6068,10 @@ package-json-from-dist@^1.0.0:
   resolved "https://registry.yarnpkg.com/package-json-from-dist/-/package-json-from-dist-1.0.0.tgz#e501cd3094b278495eb4258d4c9f6d5ac3019f00"
   integrity sha512-dATvCeZN/8wQsGywez1mzHtTlP22H8OEfPrVMLNr4/eGa+ijtLn/6M5f0dY8UKNrC2O9UCU6SSoG3qRKnt7STw==
 
-pacote@^20.0.0:
-  version "20.0.0"
-  resolved "https://registry.yarnpkg.com/pacote/-/pacote-20.0.0.tgz#c974373d8e0859d00e8f9158574350f8c1b168e5"
-  integrity sha512-pRjC5UFwZCgx9kUFDVM9YEahv4guZ1nSLqwmWiLUnDbGsjs+U5w7z6Uc8HNR1a6x8qnu5y9xtGE6D1uAuYz+0A==
+pacote@^21.0.0:
+  version "21.0.0"
+  resolved "https://registry.yarnpkg.com/pacote/-/pacote-21.0.0.tgz#5fe3878a9f808ca5c455c4c1d8ca46eb13351f7b"
+  integrity sha512-lcqexq73AMv6QNLo7SOpz0JJoaGdS3rBFgF122NZVl1bApo2mfu+XzUBU/X/XsiJu+iUmKpekRayqQYAs+PhkA==
   dependencies:
     "@npmcli/git" "^6.0.0"
     "@npmcli/installed-package-contents" "^3.0.0"
@@ -6127,7 +6082,7 @@ pacote@^20.0.0:
     fs-minipass "^3.0.0"
     minipass "^7.0.2"
     npm-package-arg "^12.0.0"
-    npm-packlist "^9.0.0"
+    npm-packlist "^10.0.0"
     npm-pick-manifest "^10.0.0"
     npm-registry-fetch "^18.0.0"
     proc-log "^5.0.0"
