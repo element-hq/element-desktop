@@ -5838,10 +5838,10 @@ npm-package-arg@^12.0.0:
     semver "^7.3.5"
     validate-npm-package-name "^6.0.0"
 
-npm-packlist@^9.0.0:
-  version "9.0.0"
-  resolved "https://registry.yarnpkg.com/npm-packlist/-/npm-packlist-9.0.0.tgz#8e9b061bab940de639dd93d65adc95c34412c7d0"
-  integrity sha512-8qSayfmHJQTx3nJWYbbUmflpyarbLMBc6LCAjYsiGtXxDB68HaZpb8re6zeaLGxZzDuMdhsg70jryJe+RrItVQ==
+npm-packlist@^10.0.0:
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/npm-packlist/-/npm-packlist-10.0.0.tgz#35634f0a90f84a811ebdf565eb78d2b36252888c"
+  integrity sha512-rht9U6nS8WOBDc53eipZNPo5qkAV4X2rhKE2Oj1DYUQ3DieXfj0mKkVmjnf3iuNdtMd8WfLdi2L6ASkD/8a+Kg==
   dependencies:
     ignore-walk "^7.0.0"
 
@@ -6074,10 +6074,10 @@ package-json-from-dist@^1.0.0:
   resolved "https://registry.yarnpkg.com/package-json-from-dist/-/package-json-from-dist-1.0.0.tgz#e501cd3094b278495eb4258d4c9f6d5ac3019f00"
   integrity sha512-dATvCeZN/8wQsGywez1mzHtTlP22H8OEfPrVMLNr4/eGa+ijtLn/6M5f0dY8UKNrC2O9UCU6SSoG3qRKnt7STw==
 
-pacote@^20.0.0:
-  version "20.0.0"
-  resolved "https://registry.yarnpkg.com/pacote/-/pacote-20.0.0.tgz#c974373d8e0859d00e8f9158574350f8c1b168e5"
-  integrity sha512-pRjC5UFwZCgx9kUFDVM9YEahv4guZ1nSLqwmWiLUnDbGsjs+U5w7z6Uc8HNR1a6x8qnu5y9xtGE6D1uAuYz+0A==
+pacote@^21.0.0:
+  version "21.0.0"
+  resolved "https://registry.yarnpkg.com/pacote/-/pacote-21.0.0.tgz#5fe3878a9f808ca5c455c4c1d8ca46eb13351f7b"
+  integrity sha512-lcqexq73AMv6QNLo7SOpz0JJoaGdS3rBFgF122NZVl1bApo2mfu+XzUBU/X/XsiJu+iUmKpekRayqQYAs+PhkA==
   dependencies:
     "@npmcli/git" "^6.0.0"
     "@npmcli/installed-package-contents" "^3.0.0"
@@ -6088,7 +6088,7 @@ pacote@^20.0.0:
     fs-minipass "^3.0.0"
     minipass "^7.0.2"
     npm-package-arg "^12.0.0"
-    npm-packlist "^9.0.0"
+    npm-packlist "^10.0.0"
     npm-pick-manifest "^10.0.0"
     npm-registry-fetch "^18.0.0"
     proc-log "^5.0.0"
