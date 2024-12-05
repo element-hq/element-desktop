@@ -72,10 +72,12 @@ const config: Writable<Configuration> = {
 
             await flipFuses(electronBinaryPath, {
                 version: FuseVersion.V1,
+                strictlyRequireAllFuses: true,
                 resetAdHocDarwinSignature: context.electronPlatformName === "darwin" && context.arch === Arch.universal,
 
                 [FuseV1Options.EnableCookieEncryption]: true,
                 [FuseV1Options.OnlyLoadAppFromAsar]: true,
+                [FuseV1Options.GrantFileProtocolExtraPrivileges]: true,
 
                 [FuseV1Options.RunAsNode]: false,
                 [FuseV1Options.EnableNodeOptionsEnvironmentVariable]: false,
@@ -83,8 +85,7 @@ const config: Writable<Configuration> = {
 
                 // Mac app crashes on arm for us when `LoadBrowserProcessSpecificV8Snapshot` is enabled
                 [FuseV1Options.LoadBrowserProcessSpecificV8Snapshot]: false,
-                // https://github.com/electron/fuses/issues/7
-                [FuseV1Options.EnableEmbeddedAsarIntegrityValidation]: false,
+                [FuseV1Options.EnableEmbeddedAsarIntegrityValidation]: true,
             });
         }
     },
