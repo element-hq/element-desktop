@@ -20,7 +20,6 @@ declare global {
                       }
                     | undefined;
                 createPickleKey(userId: string, deviceId: string): Promise<string | null>;
-                getPickleKey(userId: string, deviceId: string): Promise<string | null>;
             };
         };
     }
