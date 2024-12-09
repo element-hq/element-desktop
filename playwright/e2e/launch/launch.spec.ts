@@ -32,10 +32,10 @@ test.describe("App launch", () => {
         await expect(page).toHaveURL("vector://vector/webapp/#/welcome");
         await expect(page).toHaveScreenshot();
 
-        const seshatSupportedPromise = await page.evaluate<boolean>(async () => {
+        const seshatSupportedPromise = page.evaluate<boolean>(async () => {
             return window.mxPlatformPeg.get().getEventIndexingManager()?.supportsEventIndexing();
         });
-        const keytarSupportedPromise = await page.evaluate<boolean>(async () => {
+        const keytarSupportedPromise = page.evaluate<boolean>(async () => {
             return (await window.mxPlatformPeg.get().getPickleKey("@user:server", "ABCDEF")) !== null;
         });
 
