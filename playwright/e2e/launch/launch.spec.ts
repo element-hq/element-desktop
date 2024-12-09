@@ -35,11 +35,11 @@ test.describe("App launch", () => {
         const seshatSupportedPromise = page.evaluate<boolean>(async () => {
             return window.mxPlatformPeg.get().getEventIndexingManager()?.supportsEventIndexing();
         });
-        const keytarSupportedPromise = page.evaluate<boolean>(async () => {
-            return (await window.mxPlatformPeg.get().getPickleKey("@user:server", "ABCDEF")) !== null;
+        const createPickleKeyPromise = page.evaluate<string | null>(async () => {
+            return await window.mxPlatformPeg.get().createPickleKey("@user:server", "ABCDEF");
         });
 
         await expect(seshatSupportedPromise).resolves.toBe(true);
-        await expect(keytarSupportedPromise).resolves.toBe(true);
+        await expect(createPickleKeyPromise).resolves.not.toBeNull();
     });
 });
