@@ -17,6 +17,8 @@ declare global {
                           supportsEventIndexing(): Promise<boolean>;
                       }
                     | undefined;
+                createPickleKey(userId: string, deviceId: string): Promise<string | null>;
+                getPickleKey(userId: string, deviceId: string): Promise<string | null>;
             };
         };
     }
@@ -24,17 +26,20 @@ declare global {
 
 test.describe("App launch", () => {
     test.slow();
-    test("should launch and render the welcome view successfully and support seshat", async ({ page }) => {
+    test("should launch and render the welcome view successfully and support seshat & keytar", async ({ page }) => {
         await page.locator("#matrixchat").waitFor();
         await page.locator(".mx_Welcome").waitFor();
         await expect(page).toHaveURL("vector://vector/webapp/#/welcome");
         await expect(page).toHaveScreenshot();
 
-        const supported = await page.evaluate<boolean>(async () => {
-            const indexManager = window.mxPlatformPeg.get()?.getEventIndexingManager();
-            return await indexManager?.supportsEventIndexing();
+        const seshatSupportedPromise = await page.evaluate<boolean>(async () => {
+            return window.mxPlatformPeg.get().getEventIndexingManager()?.supportsEventIndexing();
+        });
+        const keytarSupportedPromise = await page.evaluate<boolean>(async () => {
+            return (await window.mxPlatformPeg.get().getPickleKey("@user:server", "ABCDEF")) !== null;
         });
 
-        expect(supported).toBe(true);
+        await expect(seshatSupportedPromise).resolves.toBe(true);
+        await expect(keytarSupportedPromise).resolves.toBe(true);
     });
 });
