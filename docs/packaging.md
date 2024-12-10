@@ -17,8 +17,8 @@ Simply go to https://github.com/vector-im/element-desktop/actions/workflows/buil
 
 For releasing Element Desktop, we assume the following prerequisites:
 
--   a tag of `element-desktop` repo with the Element Desktop version to be released set in `package.json`.
--   an Element Web tarball published to GitHub with a matching version number.
+- a tag of `element-desktop` repo with the Element Desktop version to be released set in `package.json`.
+- an Element Web tarball published to GitHub with a matching version number.
 
 **Both of these are done automatically when you run the release automation.**
 
