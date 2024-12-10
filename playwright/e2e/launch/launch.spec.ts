@@ -6,6 +6,8 @@ SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only
 Please see LICENSE files in the repository root for full details.
 */
 
+import { platform } from "node:os";
+
 import { test, expect } from "../../element-desktop-test.js";
 
 declare global {
@@ -17,6 +19,7 @@ declare global {
                           supportsEventIndexing(): Promise<boolean>;
                       }
                     | undefined;
+                createPickleKey(userId: string, deviceId: string): Promise<string | null>;
             };
         };
     }
@@ -24,17 +27,32 @@ declare global {
 
 test.describe("App launch", () => {
     test.slow();
-    test("should launch and render the welcome view successfully and support seshat", async ({ page }) => {
+
+    test.beforeEach(async ({ page }) => {
         await page.locator("#matrixchat").waitFor();
         await page.locator(".mx_Welcome").waitFor();
+    });
+
+    test("should launch and render the welcome view successfully", async ({ page }) => {
         await expect(page).toHaveURL("vector://vector/webapp/#/welcome");
         await expect(page).toHaveScreenshot();
+    });
 
-        const supported = await page.evaluate<boolean>(async () => {
-            const indexManager = window.mxPlatformPeg.get()?.getEventIndexingManager();
-            return await indexManager?.supportsEventIndexing();
-        });
+    test("should launch and render the welcome view successfully and support seshat", async ({ page }) => {
+        await expect(
+            page.evaluate<boolean>(async () => {
+                return window.mxPlatformPeg.get().getEventIndexingManager()?.supportsEventIndexing();
+            }),
+        ).resolves.toBeTruthy();
+    });
 
-        expect(supported).toBe(true);
+    test("should launch and render the welcome view successfully and support keytar", async ({ page }) => {
+        test.skip(platform() === "linux", "This test does not yet support Linux");
+
+        await expect(
+            page.evaluate<string | null>(async () => {
+                return await window.mxPlatformPeg.get().createPickleKey("@user:server", "ABCDEF");
+            }),
+        ).resolves.not.toBeNull();
     });
 });

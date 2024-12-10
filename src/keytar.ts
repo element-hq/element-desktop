@@ -9,7 +9,7 @@ import type * as Keytar from "keytar"; // Hak dependency type
 
 let keytar: typeof Keytar | undefined;
 try {
-    keytar = await import("keytar");
+    ({ default: keytar } = await import("keytar"));
 } catch (e) {
     if ((<NodeJS.ErrnoException>e).code === "MODULE_NOT_FOUND") {
         console.log("Keytar isn't installed; secure key storage is disabled.");

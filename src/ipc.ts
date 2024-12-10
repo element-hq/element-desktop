@@ -157,7 +157,9 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
         case "createPickleKey":
             try {
                 const pickleKey = await randomArray(32);
-                await keytar?.setPassword("element.io", `${args[0]}|${args[1]}`, pickleKey);
+                // We purposefully throw if keytar is not available so the caller can handle it
+                // rather than sending them a pickle key we did not store on their behalf.
+                await keytar!.setPassword("element.io", `${args[0]}|${args[1]}`, pickleKey);
                 ret = pickleKey;
             } catch {
                 ret = null;
