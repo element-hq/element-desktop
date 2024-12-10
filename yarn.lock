@@ -5023,9 +5023,9 @@ jake@^10.8.5:
     minimatch "^3.1.2"
 
 jiti@^2.4.0:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/jiti/-/jiti-2.4.0.tgz#393d595fb6031a11d11171b5e4fc0b989ba3e053"
-  integrity sha512-H5UpaUI+aHOqZXlYOaFP/8AzKsg+guWu+Pr3Y8i7+Y3zr1aXAvCvTAQ1RxSc6oVD8R8c7brgNtTVP91E7upH/g==
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/jiti/-/jiti-2.4.1.tgz#4de9766ccbfa941d9b6390d2b159a4b295a52e6b"
+  integrity sha512-yPBThwecp1wS9DmoA4x4KR2h3QoslacnDR8ypuFM962kI4/456Iy1oHx2RAgh4jfZNdn0bctsdadceiBUgpU1g==
 
 js-tokens@^4.0.0:
   version "4.0.0"
@@ -5155,9 +5155,9 @@ keyv@^4.0.0, keyv@^4.5.3:
     json-buffer "3.0.1"
 
 knip@^5.0.0:
-  version "5.38.0"
-  resolved "https://registry.yarnpkg.com/knip/-/knip-5.38.0.tgz#0a4257e6b2bbafd7ac7453a2cf0921523918173e"
-  integrity sha512-aoxgQKzhoepkTHltu6pgsPbz6tka0y3NT+SVLY4LpyinCsGlMCYxqm1Ki/C0DkfFS4ps1BThPph93tAkB7tVBQ==
+  version "5.39.2"
+  resolved "https://registry.yarnpkg.com/knip/-/knip-5.39.2.tgz#1faacd8d8ef36b509b2f6e396cce85b645abb04e"
+  integrity sha512-BuvuWRllLWV/r2G4m9ggNH+DZ6gouP/dhtJPXVlMbWNF++w9/EfrF6k2g7YBKCwjzCC+PXmYtpH8S2t8RjnY4Q==
   dependencies:
     "@nodelib/fs.walk" "1.2.8"
     "@snyk/github-codeowners" "1.1.0"
@@ -6353,9 +6353,9 @@ prelude-ls@^1.2.1:
   integrity sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==
 
 prettier@^3.0.0:
-  version "3.3.3"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.3.3.tgz#30c54fe0be0d8d12e6ae61dbb10109ea00d53105"
-  integrity sha512-i2tDNA0O5IrMO757lfrdQZCc2jPNDVntV0m/+4whiDfWaTKfMNgR7Qz0NAeGz/nRqF4m5/6CLzbP4/liHt12Ew==
+  version "3.4.2"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.4.2.tgz#a5ce1fb522a588bf2b78ca44c6e6fe5aa5a2b13f"
+  integrity sha512-e9MewbtFo+Fevyuxn/4rrcDAaq0IYxPGLvObpQjiZBMAzB9IGmzlnG9RZy3FFas+eBMu2vA0CszMeduow5dIuQ==
 
 pretty-ms@^9.0.0:
   version "9.2.0"
@@ -7725,6 +7725,6 @@ zod-validation-error@^3.0.3:
   integrity sha512-ZOPR9SVY6Pb2qqO5XHt+MkkTRxGXb4EVtnjc9JpXUOtUB1T9Ru7mZOT361AN3MsetVe7R0a1KZshJDZdgp9miQ==
 
 zod@^3.22.4:
-  version "3.23.8"
-  resolved "https://registry.yarnpkg.com/zod/-/zod-3.23.8.tgz#e37b957b5d52079769fb8097099b592f0ef4067d"
-  integrity sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==
+  version "3.24.0"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-3.24.0.tgz#babb32313f7c5f4a99812feee806d186b4f76bde"
+  integrity sha512-Hz+wiY8yD0VLA2k/+nsg2Abez674dDGTai33SwNvMPuf9uIrBC9eFgIMQxBBbHFxVXi8W+5nX9DcAh9YNSQm/w==
