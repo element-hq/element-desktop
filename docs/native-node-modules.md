@@ -17,9 +17,9 @@ when releasing.
 
 Install the pre-requisites for your system:
 
--   [Windows pre-requisites](https://github.com/vector-im/element-desktop/blob/develop/docs/windows-requirements.md)
--   Linux: TODO
--   OS X: TODO
+- [Windows pre-requisites](https://github.com/vector-im/element-desktop/blob/develop/docs/windows-requirements.md)
+- Linux: TODO
+- OS X: TODO
 
 Then optionally, [add seshat and dependencies to support search in E2E rooms](#adding-seshat-for-search-in-e2e-encrypted-rooms).
 

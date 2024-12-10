@@ -75,10 +75,10 @@ yarn run build
 
 This will do a couple of things:
 
--   Run the `setversion` script to set the local package version to match whatever
-    version of Element you installed above.
--   Run electron-builder to build a package. The package built will match the operating system
-    you're running the build process on.
+- Run the `setversion` script to set the local package version to match whatever
+  version of Element you installed above.
+- Run electron-builder to build a package. The package built will match the operating system
+  you're running the build process on.
 
 ## Docker
 
@@ -131,9 +131,9 @@ Alternatively, a custom location for the profile data can be specified using the
 
 # User-specified config.json
 
--   `%APPDATA%\$NAME\config.json` on Windows
--   `$XDG_CONFIG_HOME/$NAME/config.json` or `~/.config/$NAME/config.json` on Linux
--   `~/Library/Application Support/$NAME/config.json` on macOS
+- `%APPDATA%\$NAME\config.json` on Windows
+- `$XDG_CONFIG_HOME/$NAME/config.json` or `~/.config/$NAME/config.json` on Linux
+- `~/Library/Application Support/$NAME/config.json` on macOS
 
 In the paths above, `$NAME` is typically `Element`, unless you use `--profile
 $PROFILE` in which case it becomes `Element-$PROFILE`, or it is using one of
