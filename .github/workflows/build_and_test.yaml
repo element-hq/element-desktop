@@ -43,6 +43,9 @@ jobs:
         needs: fetch
         name: macOS
         uses: ./.github/workflows/build_macos.yaml
+        secrets: inherit
+        with:
+            sign: true
 
     test:
         needs:
