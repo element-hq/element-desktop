@@ -1,3 +1,14 @@
+Changes in [1.11.89](https://github.com/element-hq/element-desktop/releases/tag/v1.11.89) (2024-12-18)
+======================================================================================================
+* No changes
+
+## 🐛 Bug Fixes
+
+* Upgrade matrix-sdk-crypto-wasm to 1.11.0 (https://github.com/matrix-org/matrix-js-sdk/pull/4593)
+* Fix url preview display ([#28766](https://github.com/element-hq/element-web/pull/28766)).
+
+
+
 Changes in [1.11.88](https://github.com/element-hq/element-desktop/releases/tag/v1.11.88) (2024-12-17)
 ======================================================================================================
 ## ✨ Features
