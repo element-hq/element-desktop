@@ -3,7 +3,7 @@
     "productName": "Element",
     "main": "lib/electron-main.js",
     "exports": "./lib/electron-main.js",
-    "version": "1.11.88",
+    "version": "1.11.89",
     "description": "A feature-rich client for Matrix.org",
     "author": "Element",
     "homepage": "https://element.io",
