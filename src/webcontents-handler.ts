@@ -141,13 +141,17 @@ function onLinkContextMenu(ev: Event, params: ContextMenuParams, webContents: We
                 label: _t("right_click_menu|save_image_as"),
                 accelerator: "s",
                 async click(): Promise<void> {
-                    const targetFileName = params.suggestedFilename || params.altText || "image.png";
+                    const originalFileName = params.suggestedFilename || params.altText || "image.png";
+                    const timestamp = Date.now(); // Get current time in milliseconds
+                    const ext = path.extname(originalFileName);
+                    const baseName = path.basename(originalFileName, ext);
+                    const targetFileName = `${baseName}-${timestamp}${ext}`;
                     const { filePath } = await dialog.showSaveDialog({
                         defaultPath: targetFileName,
                     });
-
+    
                     if (!filePath) return; // user cancelled dialog
-
+    
                     try {
                         if (url.startsWith("data:")) {
                             await writeNativeImage(filePath, nativeImage.createFromDataURL(url));
