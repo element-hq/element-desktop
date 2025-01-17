@@ -155,3 +155,18 @@ For a developer guide, see the [translating dev doc](https://github.com/vector-i
 If you run into any bugs or have feedback you'd like to share, please let us know on GitHub.
 
 To help avoid duplicate issues, please [view existing issues](https://github.com/vector-im/element-web/issues?q=is%3Aopen+is%3Aissue+sort%3Areactions-%2B1-desc) first (and add a +1) or [create a new issue](https://github.com/vector-im/element-web/issues/new/choose) if you can't find it. Please note that this issue tracker is associated with the [element-web](https://github.com/vector-im/element-web) repo, but is also applied to the code in this repo as well.
+
+## Copyright & License
+
+Copyright (c) 2016-2017 OpenMarket Ltd
+Copyright (c) 2017 Vector Creations Ltd
+Copyright (c) 2017-2025 New Vector Ltd
+
+This software is multi licensed by New Vector Ltd (Element). It can be used either:
+
+(1) for free under the terms of the GNU Affero General Public License (as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version); OR
+
+(2) for free under the terms of the GNU General Public License (as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version); OR
+
+(3) under the terms of a paid-for Element Commercial License agreement between you and Element (the terms of which may vary depending on what you and Element have agreed to).
+Unless required by applicable law or agreed to in writing, software distributed under the Licenses is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the Licenses for the specific language governing permissions and limitations under the Licenses.
