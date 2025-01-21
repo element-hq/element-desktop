@@ -22,6 +22,7 @@ on:
                 description: "How to link sqlcipher, one of 'system' | 'static'"
 env:
     SQLCIPHER_BUNDLED: ${{ inputs.sqlcipher == 'static' && '1' || '' }}
+    MAX_GLIBC: 2.31 # bullseye-era glibc, used by glibc-check.sh
 permissions: {} # No permissions required
 jobs:
     # We build the hak files on native infrastructure as matrix-seshat fails to cross-compile properly
@@ -144,8 +145,6 @@ jobs:
                   for filename in ./.hak/hakModules/**/*.node; do
                       ./scripts/glibc-check.sh $filename
                   done
-              env:
-                  MAX_VER: 2.31 # bullseye-era glibc
 
     build:
         needs: hak
