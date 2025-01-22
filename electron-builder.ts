@@ -150,7 +150,9 @@ const config: Writable<Configuration> = {
     },
     win: {
         target: ["squirrel", "msi"],
-        signingHashAlgorithms: ["sha256"],
+        signtoolOptions: {
+            signingHashAlgorithms: ["sha256"],
+        },
         icon: "build/icons/icon.ico",
     },
     msi: {
