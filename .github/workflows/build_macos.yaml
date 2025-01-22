@@ -27,6 +27,7 @@ on:
                 type: string
                 required: false
                 description: "The URL to which the output will be deployed."
+permissions: {} # No permissions required
 jobs:
     build:
         runs-on: macos-14 # M1

@@ -41,9 +41,12 @@ run-name: Element ${{ inputs.mode != 'release' && github.event_name != 'release'
 concurrency: ${{ github.workflow }}
 env:
     R2_BUCKET: ${{ vars.R2_BUCKET }}
+permissions: {} # Uses ELEMENT_BOT_TOKEN
 jobs:
     prepare:
         uses: ./.github/workflows/build_prepare.yaml
+        permissions:
+            contents: read
         with:
             config: element.io/${{ inputs.mode || (github.event_name == 'release' && 'release') || 'nightly' }}
             version: ${{ (inputs.mode != 'release' && github.event_name != 'release') && 'develop' || '' }}

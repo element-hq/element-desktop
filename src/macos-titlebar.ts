@@ -93,7 +93,8 @@ export function setupMacosTitleBar(window: BrowserWindow): void {
             .mx_LeftPanel,
             .mx_RoomView,
             .mx_SpaceRoomView,
-            .mx_AccessibleButton {
+            .mx_AccessibleButton,
+            .mx_Dialog {
                 -webkit-app-region: no-drag;
             }
             /* Exclude context menus and their backgrounds */

@@ -28,6 +28,7 @@ on:
                 type: string
                 required: false
                 description: "Whether to sign & notarise the build, requires 'packages.element.io' environment"
+permissions: {} # No permissions required
 jobs:
     build:
         runs-on: windows-2022

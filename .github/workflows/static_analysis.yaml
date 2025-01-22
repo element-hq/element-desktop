@@ -3,6 +3,7 @@ on:
     pull_request: {}
     push:
         branches: [develop, master]
+permissions: {} # No permissions needed
 jobs:
     ts_lint:
         name: "Typescript Syntax Check"
@@ -25,6 +26,8 @@ jobs:
     i18n_lint:
         name: "i18n Check"
         uses: matrix-org/matrix-web-i18n/.github/workflows/i18n_check.yml@main
+        permissions:
+            pull-requests: read
         with:
             hardcoded-words: "Element"
 
