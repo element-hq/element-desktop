@@ -175,8 +175,8 @@ const config: Writable<Configuration> = {
  * @param {string} process.env.ED_SIGNTOOL_THUMBPRINT
  */
 if (process.env.ED_SIGNTOOL_SUBJECT_NAME && process.env.ED_SIGNTOOL_THUMBPRINT) {
-    config.win.certificateSubjectName = process.env.ED_SIGNTOOL_SUBJECT_NAME;
-    config.win.certificateSha1 = process.env.ED_SIGNTOOL_THUMBPRINT;
+    config.win.signtoolOptions.certificateSubjectName = process.env.ED_SIGNTOOL_SUBJECT_NAME;
+    config.win.signtoolOptions.certificateSha1 = process.env.ED_SIGNTOOL_THUMBPRINT;
 }
 
 /**
