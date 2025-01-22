@@ -53,6 +53,13 @@ export const test = base.extend<Fixtures>({
         app.process().stderr.pipe(process.stderr);
 
         await app.firstWindow();
+
+        // Block matrix.org access to ensure consistent tests
+        const context = app.context();
+        await context.route("https://matrix.org/**", async (route) => {
+            await route.abort();
+        });
+
         await use(app);
     },
     page: async ({ app }, use) => {
