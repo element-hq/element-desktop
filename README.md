@@ -159,7 +159,9 @@ To help avoid duplicate issues, please [view existing issues](https://github.com
 ## Copyright & License
 
 Copyright (c) 2016-2017 OpenMarket Ltd
+
 Copyright (c) 2017 Vector Creations Ltd
+
 Copyright (c) 2017-2025 New Vector Ltd
 
 This software is multi licensed by New Vector Ltd (Element). It can be used either:
