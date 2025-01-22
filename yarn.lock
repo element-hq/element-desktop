@@ -1007,7 +1007,7 @@
     glob "^7.1.6"
     minimatch "^3.0.4"
 
-"@electron/fuses@^1.7.0", "@electron/fuses@^1.8.0":
+"@electron/fuses@^1.8.0":
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/@electron/fuses/-/fuses-1.8.0.tgz#ad34d3cc4703b1258b83f6989917052cfc1490a0"
   integrity sha512-zx0EIq78WlY/lBb1uXlziZmDZI4ubcCXIMJ4uGjXzZW0nS19TjSPeXPAjzzTmKQlJUZm0SbmZhPKP7tuQ1SsEw==
