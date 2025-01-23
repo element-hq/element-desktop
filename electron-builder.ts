@@ -130,6 +130,7 @@ async function setFuses(context: AfterPackContext) {
             // https://github.com/electron/fuses/issues/7
             [FuseV1Options.EnableEmbeddedAsarIntegrityValidation]: false,
         });
+    }
 }
 
 /**
