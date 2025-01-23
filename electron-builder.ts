@@ -1,6 +1,13 @@
-import * as os from "os";
-import * as fs from "fs";
-import { Configuration as BaseConfiguration } from "electron-builder";
+import * as os from "node:os";
+import * as fs from "node:fs";
+import * as path from "node:path";
+import * as plist from "plist";
+import { AfterPackContext, Arch, Configuration as BaseConfiguration, Platform } from "electron-builder";
+import { flipFuses, FuseV1Options, FuseVersion } from "@electron/fuses";
+import { computeData } from "app-builder-lib/out/asar/integrity";
+import { isElectronBased } from "app-builder-lib/out/Framework";
+import { readFile, writeFile } from "node:fs/promises";
+import { NtExecutable, NtExecutableResource } from "resedit";
 
 /**
  * This script has different outputs depending on your os platform.
@@ -42,30 +49,118 @@ interface Configuration extends BaseConfiguration {
     } & BaseConfiguration["deb"];
 }
 
+async function injectAsarIntegrity(context: AfterPackContext) {
+    const packager = context.packager;
+
+    if (packager.platform === Platform.LINUX) return; // no ASAR integrity support on Linux
+    if (packager.platform === Platform.MAC && context.arch !== Arch.universal) return; // We only need to generate asar on universal Mac builds
+
+    const framework = packager.info.framework;
+    const resourcesPath = packager.getResourcesDir(context.appOutDir);
+    const resourcesRelativePath =
+        packager.platform === Platform.MAC ? "Resources" : isElectronBased(framework) ? "resources" : "";
+
+    const asarIntegrity = await computeData({
+        resourcesPath,
+        resourcesRelativePath,
+    });
+
+    if (packager.platform === Platform.WINDOWS) {
+        const executablePath = path.join(context.appOutDir, `${packager.appInfo.productFilename}.exe`);
+
+        const buffer = await readFile(executablePath);
+        const executable = NtExecutable.from(buffer);
+        const resource = NtExecutableResource.from(executable);
+
+        const integrityList = Array.from(Object.entries(asarIntegrity)).map(
+            ([file, { algorithm: alg, hash: value }]) => ({
+                file: path.win32.normalize(file),
+                alg,
+                value,
+            }),
+        );
+
+        // We edit the resource that electron-builder already wrote to ensure it includes all asar files
+        const electronAsarResource = resource.entries.find((entry) => entry.id === "ELECTRONASAR")!;
+        electronAsarResource.bin = Buffer.from(JSON.stringify(integrityList));
+
+        resource.outputResource(executable);
+
+        await writeFile(executablePath, Buffer.from(executable.generate()));
+    } else if (packager.platform === Platform.MAC) {
+        const plistPath = path.join(resourcesPath, "..", "Info.plist");
+        const data = plist.parse(await readFile(plistPath, "utf8")) as unknown as Writable<plist.PlistObject>;
+        data["ElectronAsarIntegrity"] = asarIntegrity as unknown as Writable<plist.PlistValue>;
+        await writeFile(plistPath, plist.build(data));
+    }
+}
+
+async function setFuses(context: AfterPackContext) {
+    if (context.electronPlatformName !== "darwin" || context.arch === Arch.universal) {
+        // Burn in electron fuses for proactive security hardening.
+        // On macOS, we only do this for the universal package, as the constituent arm64 and amd64 packages are embedded within.
+        const ext = (<Record<string, string>>{
+            darwin: ".app",
+            win32: ".exe",
+            linux: "",
+        })[context.electronPlatformName];
+
+        let executableName = context.packager.appInfo.productFilename;
+        if (context.electronPlatformName === "linux") {
+            // Linux uses the package name as the executable name
+            executableName = context.packager.appInfo.name;
+        }
+
+        const electronBinaryPath = path.join(context.appOutDir, `${executableName}${ext}`);
+        console.log(`Flipping fuses for: ${electronBinaryPath}`);
+
+        await flipFuses(electronBinaryPath, {
+            version: FuseVersion.V1,
+            resetAdHocDarwinSignature: context.electronPlatformName === "darwin" && context.arch === Arch.universal,
+
+            [FuseV1Options.EnableCookieEncryption]: true,
+            [FuseV1Options.OnlyLoadAppFromAsar]: true,
+
+            [FuseV1Options.RunAsNode]: false,
+            [FuseV1Options.EnableNodeOptionsEnvironmentVariable]: false,
+            [FuseV1Options.EnableNodeCliInspectArguments]: false,
+
+            // Mac app crashes on arm for us when `LoadBrowserProcessSpecificV8Snapshot` is enabled
+            [FuseV1Options.LoadBrowserProcessSpecificV8Snapshot]: false,
+            // https://github.com/electron/fuses/issues/7
+            [FuseV1Options.EnableEmbeddedAsarIntegrityValidation]: false,
+        });
+}
+
 /**
  * @type {import('electron-builder').Configuration}
  * @see https://www.electron.build/configuration/configuration
  */
 const config: Omit<Writable<Configuration>, "electronFuses"> & {
     // Make all fuses required to ensure they are all explicitly specified
-    electronFuses: Required<Configuration["electronFuses"]>;
+    // electronFuses: Required<Configuration["electronFuses"]>;
 } = {
     appId: "im.riot.app",
     asarUnpack: "**/*.node",
-    electronFuses: {
-        enableCookieEncryption: true,
-        onlyLoadAppFromAsar: true,
-        grantFileProtocolExtraPrivileges: true,
-
-        runAsNode: false,
-        enableNodeOptionsEnvironmentVariable: false,
-        enableNodeCliInspectArguments: false,
-        // We need to reset the signature if we are not signing on darwin otherwise it won't launch
-        resetAdHocDarwinSignature: !process.env.APPLE_TEAM_ID,
-
-        // Mac app crashes on arm for us when `LoadBrowserProcessSpecificV8Snapshot` is enabled
-        loadBrowserProcessSpecificV8Snapshot: false,
-        enableEmbeddedAsarIntegrityValidation: true,
+    // XXX: Currently broken due to https://github.com/electron-userland/electron-builder/issues/8798
+    // electronFuses: {
+    //     enableCookieEncryption: true,
+    //     onlyLoadAppFromAsar: true,
+    //     grantFileProtocolExtraPrivileges: true,
+    //
+    //     runAsNode: false,
+    //     enableNodeOptionsEnvironmentVariable: false,
+    //     enableNodeCliInspectArguments: false,
+    //     // We need to reset the signature if we are not signing on darwin otherwise it won't launch
+    //     resetAdHocDarwinSignature: !process.env.APPLE_TEAM_ID,
+    //
+    //     // Mac app crashes on arm for us when `LoadBrowserProcessSpecificV8Snapshot` is enabled
+    //     loadBrowserProcessSpecificV8Snapshot: false,
+    //     enableEmbeddedAsarIntegrityValidation: true,
+    // },
+    afterPack: async (context: AfterPackContext) => {
+        await injectAsarIntegrity(context);
+        await setFuses(context);
     },
     files: [
         "package.json",
