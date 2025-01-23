@@ -5,6 +5,7 @@ on:
         branches: [master, staging, develop]
         paths:
             - "dockerbuild/**"
+    pull_request:
 concurrency: ${{ github.workflow }}-${{ github.ref_name }}
 env:
     REGISTRY: ghcr.io
@@ -30,6 +31,7 @@ jobs:
 
             - name: Log in to the Container registry
               uses: docker/login-action@7ca345011ac4304463197fac0e56eab1bc7e6af0
+              if: github.event_name != 'pull_request'
               with:
                   registry: ${{ env.REGISTRY }}
                   username: ${{ github.actor }}
@@ -47,7 +49,7 @@ jobs:
               uses: docker/build-push-action@48aba3b46d1b1fec4febb7c5d0c644b249a11355 # v6
               with:
                   context: dockerbuild
-                  push: true
+                  push: ${{ github.event_name != 'pull_request' }}
                   tags: ${{ steps.meta.outputs.tags }}
                   labels: ${{ steps.meta.outputs.labels }}
                   platforms: linux/amd64,linux/arm64
