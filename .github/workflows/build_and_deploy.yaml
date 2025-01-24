@@ -206,6 +206,8 @@ jobs:
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
                   R2_URL: ${{ vars.CF_R2_S3_API }}
                   DEPLOYMENT_DIR: ${{ needs.prepare.outputs.packages-dir }}
+                  # Workaround for https://www.cloudflarestatus.com/incidents/t5nrjmpxc1cj
+                  AWS_REQUEST_CHECKSUM_CALCULATION: when_required
 
             - name: Notify packages.element.io of new files
               if: needs.prepare.outputs.deploy == 'true'
