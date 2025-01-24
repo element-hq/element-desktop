@@ -285,3 +285,5 @@ jobs:
                   done
               env:
                   VERSION: ${{ github.event.release.tag_name }}
+                  # Workaround for https://www.cloudflarestatus.com/incidents/t5nrjmpxc1cj
+                  AWS_REQUEST_CHECKSUM_CALCULATION: when_required
