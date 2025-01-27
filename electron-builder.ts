@@ -13,7 +13,7 @@ import { readFile, writeFile } from "node:fs/promises";
  * On Windows:
  *  Prefixes the nightly version with `0.0.1-nightly.` as it breaks if it is not semver
  *  Passes $ED_SIGNTOOL_THUMBPRINT and $ED_SIGNTOOL_SUBJECT_NAME to
- *      build.win.signingHashAlgorithms and build.win.certificateSubjectName respectively if specified.
+ *      build.win.signtoolOptions.signingHashAlgorithms and build.win.signtoolOptions.certificateSubjectName respectively if specified.
  *
  * On Linux:
  *  Replaces spaces in the product name with dashes as spaces in paths can cause issues
@@ -51,7 +51,7 @@ async function injectAsarIntegrity(context: AfterPackContext) {
     const packager = context.packager;
 
     // We only need to re-generate asar on universal Mac builds, due to https://github.com/electron/universal/issues/116
-    if (packager.platform === Platform.MAC && context.arch !== Arch.universal) return;
+    if (packager.platform !== Platform.MAC || context.arch !== Arch.universal) return;
 
     const framework = packager.info.framework;
     const resourcesPath = packager.getResourcesDir(context.appOutDir);
