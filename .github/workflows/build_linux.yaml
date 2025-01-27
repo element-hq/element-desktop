@@ -27,14 +27,10 @@ permissions: {} # No permissions required
 jobs:
     # We build the hak files on native infrastructure as matrix-seshat fails to cross-compile properly
     # https://github.com/matrix-org/seshat/issues/135
-    hak:
+    build:
         runs-on: ${{ inputs.arch == 'arm64' && 'ubuntu-22.04-arm' || 'ubuntu-22.04' }}
         env:
             HAK_DOCKER_IMAGE: ghcr.io/element-hq/element-desktop-dockerbuild
-        outputs:
-            cache-key: ${{ steps.cache-key.outputs.key }}
-            arch: ${{ steps.config.outputs.arch }}
-            build-args: ${{ steps.config.outputs.build-args }}
         steps:
             - name: Resolve docker image tag for push
               if: github.event_name == 'push'
@@ -97,6 +93,17 @@ jobs:
             - name: Install Deps
               run: "yarn install --frozen-lockfile"
 
+            - name: "[Nightly] Resolve version"
+              if: inputs.version != ''
+              run: |
+                  echo "ED_NIGHTLY=${{ inputs.version }}" >> $GITHUB_ENV
+
+            - name: Generate debian files and arguments
+              run: |
+                  if [ -f changelog.Debian ]; then
+                      echo "ED_DEBIAN_CHANGELOG=changelog.Debian" >> $GITHUB_ENV
+                  fi
+
             - name: "Get modified files"
               id: changed_files
               if: steps.cache.outputs.cache-hit != 'true' && github.event_name == 'pull_request'
@@ -124,63 +131,17 @@ jobs:
                     $HAK_DOCKER_IMAGE \
                     yarn build:native
 
-            - name: Check native libraries
-              run: |
-                  shopt -s globstar
-
-                  for filename in ./.hak/hakModules/**/*.node; do
-                      ./scripts/glibc-check.sh $filename
-                  done
-
-    build:
-        needs: hak
-        runs-on: ubuntu-24.04
-        steps:
-            - uses: actions/checkout@v4
-
-            - uses: actions/download-artifact@v4
-              with:
-                  name: webapp
-
-            - name: Load .hak
-              id: cache
-              uses: actions/cache/restore@v4
-              with:
-                  key: ${{ needs.hak.outputs.cache-key }}
-                  fail-on-cache-miss: true
-                  path: |
-                      ./.hak
-
-            - uses: actions/setup-node@v4
-              with:
-                  node-version-file: package.json
-                  cache: "yarn"
-              env:
-                  # Workaround for https://github.com/actions/setup-node/issues/317
-                  FORCE_COLOR: 0
-
-            # Does not need branch matching as only analyses this layer
-            - name: Install Deps
-              run: "yarn install --frozen-lockfile"
-
-            - name: "[Nightly] Resolve version"
-              if: inputs.version != ''
-              run: |
-                  echo "ED_NIGHTLY=${{ inputs.version }}" >> $GITHUB_ENV
-
-            - name: Generate debian files and arguments
-              run: |
-                  if [ -f changelog.Debian ]; then
-                      echo "ED_DEBIAN_CHANGELOG=changelog.Debian" >> $GITHUB_ENV
-                  fi
-
             - name: Build App
-              run: yarn build --publish never -l ${{ needs.hak.outputs.build-args }}
+              run: yarn build --publish never -l ${{ steps.config.outputs.build-args }}
 
             - name: Check native libraries
               run: |
                   set -x
                   shopt -s globstar
+
+                  for filename in ./.hak/hakModules/**/*.node; do
+                      ./scripts/glibc-check.sh $filename
+                  done
 
                   FILES=$(file dist/**/*.node)
                   echo "$FILES"
@@ -203,7 +164,7 @@ jobs:
 
                   ./scripts/glibc-check.sh dist/linux-*unpacked/element-desktop*
               env:
-                  ARCH: ${{ needs.hak.outputs.arch }}
+                  ARCH: ${{ steps.config.outputs.arch }}
 
             # We exclude *-unpacked as it loses permissions and the tarball contains it with correct permissions
             - name: Upload Artifacts
