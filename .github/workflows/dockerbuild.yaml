@@ -51,6 +51,7 @@ jobs:
               with:
                   context: dockerbuild
                   push: ${{ github.event_name != 'pull_request' }}
+                  load: ${{ github.event_name == 'pull_request' }}
                   tags: ${{ steps.meta.outputs.tags }}
                   labels: ${{ steps.meta.outputs.labels }}
                   platforms: linux/amd64,linux/arm64
