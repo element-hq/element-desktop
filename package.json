@@ -11,7 +11,7 @@
         "type": "git",
         "url": "https://github.com/vector-im/element-desktop"
     },
-    "license": "AGPL-3.0-only OR GPL-3.0-only",
+    "license": "SEE LICENSE IN README.md",
     "type": "module",
     "files": [],
     "engines": {
@@ -80,7 +80,7 @@
         "@types/auto-launch": "^5.0.1",
         "@types/counterpart": "^0.18.1",
         "@types/minimist": "^1.2.1",
-        "@types/node": "18.19.70",
+        "@types/node": "18.19.71",
         "@types/pacote": "^11.1.1",
         "@types/yargs": "^17.0.32",
         "@typescript-eslint/eslint-plugin": "^8.0.0",
@@ -88,13 +88,13 @@
         "app-builder-lib": "25.1.8",
         "chokidar": "^4.0.0",
         "detect-libc": "^2.0.0",
-        "electron": "32.0.0",
+        "electron": "34.0.1",
         "electron-builder": "25.1.8",
         "electron-builder-squirrel-windows": "25.1.8",
         "electron-devtools-installer": "^4.0.0",
         "eslint": "^8.26.0",
         "eslint-config-google": "^0.14.0",
-        "eslint-config-prettier": "^9.0.0",
+        "eslint-config-prettier": "^10.0.0",
         "eslint-plugin-import": "^2.25.4",
         "eslint-plugin-matrix-org": "^2.0.1",
         "eslint-plugin-n": "^17.12.0",
@@ -117,7 +117,7 @@
         "keytar": "^7.9.0"
     },
     "resolutions": {
-        "@types/node": "18.19.70",
+        "@types/node": "18.19.71",
         "config-file-ts": "0.2.8-rc1"
     }
 }

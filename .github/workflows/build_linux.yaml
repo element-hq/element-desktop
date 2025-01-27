@@ -22,6 +22,7 @@ on:
                 description: "How to link sqlcipher, one of 'system' | 'static'"
 env:
     SQLCIPHER_BUNDLED: ${{ inputs.sqlcipher == 'static' && '1' || '' }}
+    MAX_GLIBC: 2.31 # bullseye-era glibc, used by glibc-check.sh
 permissions: {} # No permissions required
 jobs:
     # We build the hak files on native infrastructure as matrix-seshat fails to cross-compile properly
@@ -120,7 +121,7 @@ jobs:
 
             # This allows contributors to test changes to the dockerbuild image within a pull request
             - name: Build docker image
-              uses: docker/build-push-action@48aba3b46d1b1fec4febb7c5d0c644b249a11355 # v6
+              uses: docker/build-push-action@67a2d409c0a876cbe6b11854e3e25193efe4e62d # v6
               if: steps.changed_files.outputs.any_modified == 'true'
               with:
                   context: dockerbuild
@@ -144,8 +145,6 @@ jobs:
                   for filename in ./.hak/hakModules/**/*.node; do
                       ./scripts/glibc-check.sh $filename
                   done
-              env:
-                  MAX_VER: 2.31 # bullseye-era glibc
 
     build:
         needs: hak
