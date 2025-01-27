@@ -5,6 +5,7 @@ on:
         branches: [master, staging, develop]
         paths:
             - "dockerbuild/**"
+    pull_request:
 concurrency: ${{ github.workflow }}-${{ github.ref_name }}
 env:
     REGISTRY: ghcr.io
@@ -28,8 +29,21 @@ jobs:
               with:
                   install: true
 
+            - name: Build test image
+              uses: docker/build-push-action@67a2d409c0a876cbe6b11854e3e25193efe4e62d # v6
+              with:
+                  context: dockerbuild
+                  push: false
+                  load: true
+                  tags: element-desktop-dockerbuild
+                  platforms: linux/amd64
+
+            - name: Test image
+              run: docker run -v $PWD:/project element-desktop-dockerbuild yarn install
+
             - name: Log in to the Container registry
               uses: docker/login-action@327cd5a69de6c009b9ce71bce8395f28e651bf99
+              if: github.event_name != 'pull_request'
               with:
                   registry: ${{ env.REGISTRY }}
                   username: ${{ github.actor }}
@@ -37,13 +51,16 @@ jobs:
 
             - name: Extract metadata for Docker
               id: meta
+              if: github.event_name != 'pull_request'
               uses: docker/metadata-action@369eb591f429131d6889c46b94e711f089e6ca96 # v5
               with:
                   images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
                   tags: |
                       type=ref,event=branch
+                      type=ref,event=pr
 
             - name: Build and push Docker image
+              if: github.event_name != 'pull_request'
               uses: docker/build-push-action@67a2d409c0a876cbe6b11854e3e25193efe4e62d # v6
               with:
                   context: dockerbuild
