@@ -39,8 +39,7 @@ jobs:
                   platforms: linux/amd64
 
             - name: Test image
-              if: github.event_name == 'pull_request'
-              run: yarn docker:install
+              run: docker run -v $PWD:/project element-desktop-dockerbuild yarn install
 
             - name: Log in to the Container registry
               uses: docker/login-action@327cd5a69de6c009b9ce71bce8395f28e651bf99
@@ -52,6 +51,7 @@ jobs:
 
             - name: Extract metadata for Docker
               id: meta
+              if: github.event_name != 'pull_request'
               uses: docker/metadata-action@369eb591f429131d6889c46b94e711f089e6ca96 # v5
               with:
                   images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
