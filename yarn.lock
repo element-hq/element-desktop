@@ -2547,10 +2547,10 @@ app-builder-bin@5.0.0-alpha.12:
   resolved "https://registry.yarnpkg.com/app-builder-bin/-/app-builder-bin-5.0.0-alpha.12.tgz#2daf82f8badc698e0adcc95ba36af4ff0650dc80"
   integrity sha512-j87o0j6LqPL3QRr8yid6c+Tt5gC7xNfYo6uQIQkorAC6MpeayVMZrEDzKmJJ/Hlv7EnOQpaRm53k6ktDYZyB6w==
 
-app-builder-lib@26.0.0-alpha.10, app-builder-lib@next:
-  version "26.0.0-alpha.10"
-  resolved "https://registry.yarnpkg.com/app-builder-lib/-/app-builder-lib-26.0.0-alpha.10.tgz#3eb3f64ffa5e995595ad61497c5e7a0c2d64b817"
-  integrity sha512-9K3MulGK7j+En4KjH3aq7AzDqe8nn35x7O9l5kwl16nWFdBthcdy1IKsx9CgjMSF+eTNctOZlXwnYiPiGzY+GQ==
+app-builder-lib@26.0.0, app-builder-lib@^26.0.0:
+  version "26.0.0"
+  resolved "https://registry.yarnpkg.com/app-builder-lib/-/app-builder-lib-26.0.0.tgz#726b8b2c058f04f854aba70c7245d48454905980"
+  integrity sha512-vZTt6Nc401IHBHISqspcO9tUF80ddOP5ehh2B4goLefM+zdT75CvuQUuqz7yzRgW16pHLqCvKMws0FbJQfLB5w==
   dependencies:
     "@develar/schema-utils" "~2.6.5"
     "@electron/asar" "3.2.18"
@@ -2563,15 +2563,15 @@ app-builder-lib@26.0.0-alpha.10, app-builder-lib@next:
     "@types/fs-extra" "9.0.13"
     async-exit-hook "^2.0.1"
     bluebird-lst "^1.0.9"
-    builder-util "26.0.0-alpha.10"
-    builder-util-runtime "9.3.0-alpha.0"
+    builder-util "26.0.0"
+    builder-util-runtime "9.3.0"
     chromium-pickle-js "^0.2.0"
     config-file-ts "0.2.8-rc1"
     debug "^4.3.4"
     dotenv "^16.4.5"
     dotenv-expand "^11.0.6"
     ejs "^3.1.8"
-    electron-publish "26.0.0-alpha.10"
+    electron-publish "26.0.0"
     fs-extra "^10.1.0"
     hosted-git-info "^4.1.0"
     is-ci "^3.0.0"
@@ -2885,24 +2885,24 @@ buffer@^5.1.0, buffer@^5.5.0:
     base64-js "^1.3.1"
     ieee754 "^1.1.13"
 
-builder-util-runtime@9.3.0-alpha.0:
-  version "9.3.0-alpha.0"
-  resolved "https://registry.yarnpkg.com/builder-util-runtime/-/builder-util-runtime-9.3.0-alpha.0.tgz#c4639ae24a74d2e0f4eb324100af3040300bae62"
-  integrity sha512-EriE6Uf15niqdkyjBOS09OrXlhEV0HKhnATlI9n63vCoisnvvRTQNgoR2MV9vnBmNGhavBPZXPWPItv4QMDVfw==
+builder-util-runtime@9.3.0:
+  version "9.3.0"
+  resolved "https://registry.yarnpkg.com/builder-util-runtime/-/builder-util-runtime-9.3.0.tgz#58d97c279bb8626a10d779e1cf22fea0eb25f5e8"
+  integrity sha512-wR81YIybr41JITLSltwtTsZXkgTwcpBol7LGOyB5A8fKCcZaYLDWgUqDwmsjhlgADD6sGD5ieyzS/5wbL2l/qQ==
   dependencies:
     debug "^4.3.4"
     sax "^1.2.4"
 
-builder-util@26.0.0-alpha.10:
-  version "26.0.0-alpha.10"
-  resolved "https://registry.yarnpkg.com/builder-util/-/builder-util-26.0.0-alpha.10.tgz#f445a530c28da6e3650b93e92263c06c6f89a2cc"
-  integrity sha512-RMVOAgdd+tzwpyF5C8gx9KjzwdUvkUEubpsHTvb2JwlQnBcyBc6hyVCU2gt2MivQCLbjCOEgsUX1/zHrWDqGfg==
+builder-util@26.0.0:
+  version "26.0.0"
+  resolved "https://registry.yarnpkg.com/builder-util/-/builder-util-26.0.0.tgz#e5bc122f3e9e94fa2e3afd2e837e81ce9f177359"
+  integrity sha512-iLN4R0UAzSz4MxPmz+6vnXMqaY5BMd2FSNlM9f7eHSRYqZrsoTHCSrd7W4Kr4qFIdUxLlRz3X2npATapXzomIg==
   dependencies:
     "7zip-bin" "~5.2.0"
     "@types/debug" "^4.1.6"
     app-builder-bin "5.0.0-alpha.12"
     bluebird-lst "^1.0.9"
-    builder-util-runtime "9.3.0-alpha.0"
+    builder-util-runtime "9.3.0"
     chalk "^4.1.2"
     cross-spawn "^7.0.6"
     debug "^4.3.4"
@@ -3494,14 +3494,14 @@ dir-compare@^4.2.0:
     minimatch "^3.0.5"
     p-limit "^3.1.0 "
 
-dmg-builder@26.0.0-alpha.10:
-  version "26.0.0-alpha.10"
-  resolved "https://registry.yarnpkg.com/dmg-builder/-/dmg-builder-26.0.0-alpha.10.tgz#d4d908922005a0c852d0919a7dd0b8f77d3c4bd0"
-  integrity sha512-RWzCNLLu4dGIvBf8kBzjF/zI5aMOSA149S1V2NgAA4La8f8ghdJAm/DI5crSb2zDijFLyTNmUGTtvU6eHgiZyQ==
+dmg-builder@26.0.0:
+  version "26.0.0"
+  resolved "https://registry.yarnpkg.com/dmg-builder/-/dmg-builder-26.0.0.tgz#6dc81be31f7ffe9f8a5fc77ce7f83eba33ae9aa7"
+  integrity sha512-NyyTgm1U56ytpFvuGjj63PYug3v+oYYbPc8e08EiHP6G4TvMwYabmSzFtanfoO1iI7xOljpW/fW7SNCHHElsfw==
   dependencies:
-    app-builder-lib "26.0.0-alpha.10"
-    builder-util "26.0.0-alpha.10"
-    builder-util-runtime "9.3.0-alpha.0"
+    app-builder-lib "26.0.0"
+    builder-util "26.0.0"
+    builder-util-runtime "9.3.0"
     fs-extra "^10.1.0"
     iconv-lite "^0.6.2"
     js-yaml "^4.1.0"
@@ -3585,26 +3585,26 @@ ejs@^3.1.8:
   dependencies:
     jake "^10.8.5"
 
-electron-builder-squirrel-windows@next:
-  version "26.0.0-alpha.10"
-  resolved "https://registry.yarnpkg.com/electron-builder-squirrel-windows/-/electron-builder-squirrel-windows-26.0.0-alpha.10.tgz#1c9b59c49e907c7faab55ad4c88b7eb566a1412a"
-  integrity sha512-+YhWQxFuugckE1HOybpDESSdGMkPZRWi9OiPcfxZ5feHMCseDM3I2dB6iYsrKEBrh6rUEXYUjcTG4tQ1GUgDCw==
+electron-builder-squirrel-windows@^26.0.0:
+  version "26.0.0"
+  resolved "https://registry.yarnpkg.com/electron-builder-squirrel-windows/-/electron-builder-squirrel-windows-26.0.0.tgz#61fdbd7bc7db5e20572da9f1c06e5fdc62a25fb1"
+  integrity sha512-vZEHiTw05ROwvpDWps6as2xgYijCS4BVg0sHNeifXohE/gY0TSUgL9w/Nx0wz6/qmIFHvsPgU6x9pMuvKzBWeQ==
   dependencies:
-    app-builder-lib "26.0.0-alpha.10"
+    app-builder-lib "26.0.0"
     archiver "^5.3.1"
-    builder-util "26.0.0-alpha.10"
+    builder-util "26.0.0"
     fs-extra "^10.1.0"
 
-electron-builder@next:
-  version "26.0.0-alpha.10"
-  resolved "https://registry.yarnpkg.com/electron-builder/-/electron-builder-26.0.0-alpha.10.tgz#6f629f5f1f3340286af71cabd12d94edc53f15ea"
-  integrity sha512-QTitqOlP5aZ/8zhnxqjRb6BxSR7Kvwv07PoBGeIXADwSPHQhKhZ+S+GRFzUSYQrMTTJLGzUHbnAes6fZ3uThEA==
+electron-builder@^26.0.0:
+  version "26.0.0"
+  resolved "https://registry.yarnpkg.com/electron-builder/-/electron-builder-26.0.0.tgz#f5c03b049e3e9b0d3da7737f93bf1a830d1f17bb"
+  integrity sha512-R1ZNTCtwjApiELkE4LTNIF6UkV+FMgyDIjILlsVvFak8Jr60cI9gu4q3lVALYzGBcFyzHKn2RPp6j0gl5kuVow==
   dependencies:
-    app-builder-lib "26.0.0-alpha.10"
-    builder-util "26.0.0-alpha.10"
-    builder-util-runtime "9.3.0-alpha.0"
+    app-builder-lib "26.0.0"
+    builder-util "26.0.0"
+    builder-util-runtime "9.3.0"
     chalk "^4.1.2"
-    dmg-builder "26.0.0-alpha.10"
+    dmg-builder "26.0.0"
     fs-extra "^10.1.0"
     is-ci "^3.0.0"
     lazy-val "^1.0.5"
@@ -3623,14 +3623,14 @@ electron-devtools-installer@^4.0.0:
   dependencies:
     unzip-crx-3 "^0.2.0"
 
-electron-publish@26.0.0-alpha.10:
-  version "26.0.0-alpha.10"
-  resolved "https://registry.yarnpkg.com/electron-publish/-/electron-publish-26.0.0-alpha.10.tgz#16ac95acca2d796ca00c7a90ca27ebf31855f284"
-  integrity sha512-yUkCJD7MLN57d6PJ8PMcBCR35xytA+jHyrOiS/H0hlmTOWq1sXN+tIBylX4h0dD/C6mn75/y5eE156Pe2nccPw==
+electron-publish@26.0.0:
+  version "26.0.0"
+  resolved "https://registry.yarnpkg.com/electron-publish/-/electron-publish-26.0.0.tgz#f37b9babe62885c2ee552af2817bf2048b566637"
+  integrity sha512-0MOeYp1IRDj+jdkWluEVMer8fpc/htwWJZdGQUMbbbhgMnX8AvDdwHuR0UdaPFLDJ076E9YHd2urkeFyLm7PUQ==
   dependencies:
     "@types/fs-extra" "^9.0.11"
-    builder-util "26.0.0-alpha.10"
-    builder-util-runtime "9.3.0-alpha.0"
+    builder-util "26.0.0"
+    builder-util-runtime "9.3.0"
     chalk "^4.1.2"
     form-data "^4.0.0"
     fs-extra "^10.1.0"
@@ -6251,11 +6251,6 @@ pe-library@^0.4.1:
   resolved "https://registry.yarnpkg.com/pe-library/-/pe-library-0.4.1.tgz#e269be0340dcb13aa6949d743da7d658c3e2fbea"
   integrity sha512-eRWB5LBz7PpDu4PUlwT0PhnQfTQJlDDdPa35urV4Osrm0t0AqQFGn+UIkU3klZvwJ8KPO3VbBFsXquA6p6kqZw==
 
-pe-library@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/pe-library/-/pe-library-1.0.1.tgz#02735430885a622576a53cd8827658b7d2fada0e"
-  integrity sha512-nh39Mo1eGWmZS7y+mK/dQIqg7S1lp38DpRxkyoHf0ZcUs/HDc+yyTjuOtTvSMZHmfSLuSQaX945u05Y2Q6UWZg==
-
 pend@~1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/pend/-/pend-1.2.0.tgz#7a57eb550a6783f9115331fcf4663d5c8e007a50"
@@ -6654,13 +6649,6 @@ resedit@^1.7.0:
   integrity sha512-vHjcY2MlAITJhC0eRD/Vv8Vlgmu9Sd3LX9zZvtGzU5ZImdTN3+d6e/4mnTyV8vEbyf1sgNIrWxhWlrys52OkEA==
   dependencies:
     pe-library "^0.4.1"
-
-resedit@^2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/resedit/-/resedit-2.0.3.tgz#5145a9faabca44b917d5636dbe8e67ec7f62c6f2"
-  integrity sha512-oTeemxwoMuxxTYxXUwjkrOPfngTQehlv0/HoYFNkB4uzsP1Un1A9nI8JQKGOFkxpqkC7qkMs0lUsGrvUlbLNUA==
-  dependencies:
-    pe-library "^1.0.1"
 
 resolve-alpn@^1.0.0:
   version "1.2.1"
