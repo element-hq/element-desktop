@@ -53,14 +53,10 @@ async function injectAsarIntegrity(context: AfterPackContext) {
     // We only need to re-generate asar on universal Mac builds, due to https://github.com/electron/universal/issues/116
     if (packager.platform !== Platform.MAC || context.arch !== Arch.universal) return;
 
-    const framework = packager.info.framework;
     const resourcesPath = packager.getResourcesDir(context.appOutDir);
-    const resourcesRelativePath =
-        packager.platform === Platform.MAC ? "Resources" : isElectronBased(framework) ? "resources" : "";
-
     const asarIntegrity = await computeData({
         resourcesPath,
-        resourcesRelativePath,
+        resourcesRelativePath: "Resources",
         resourcesDestinationPath: resourcesPath,
         extraResourceMatchers: [],
     });
