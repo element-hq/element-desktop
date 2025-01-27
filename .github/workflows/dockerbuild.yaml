@@ -44,6 +44,7 @@ jobs:
                   images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
                   tags: |
                       type=ref,event=branch
+                      type=ref,event=pr
 
             - name: Build and push Docker image
               uses: docker/build-push-action@67a2d409c0a876cbe6b11854e3e25193efe4e62d # v6
@@ -57,3 +58,5 @@ jobs:
             - name: Test image
               if: github.event_name == 'pull_request'
               run: yarn docker:install
+              env:
+                  DOCKER_IMAGE_NAME: ${{ steps.meta.outputs.tags }}
