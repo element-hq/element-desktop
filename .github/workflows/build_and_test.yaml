@@ -73,12 +73,12 @@ jobs:
                       executable: "/opt/Element/element-desktop"
                       prepare_cmd: "sudo apt-get -qq update && sudo apt install ./dist/*.deb"
                     - name: "Linux (arm64) (sqlcipher: system)"
-                      os: dind-l-arm64
+                      os: ubuntu-22.04-arm
                       artifact: linux-arm64-sqlcipher-system
                       executable: "/opt/Element/element-desktop"
                       prepare_cmd: "sudo apt-get -qq update && sudo apt install -y ./dist/*.deb"
                     - name: "Linux (arm64) (sqlcipher: static)"
-                      os: dind-l-arm64
+                      os: ubuntu-22.04-arm
                       artifact: linux-arm64-sqlcipher-static
                       executable: "/opt/Element/element-desktop"
                       prepare_cmd: "sudo apt-get -qq update && sudo apt install -y ./dist/*.deb"
@@ -93,19 +93,6 @@ jobs:
         name: Test ${{ matrix.name }}
         runs-on: ${{ matrix.os }}
         steps:
-            # Workaround for self-hosted runners lacking yarn
-            - name: Install Yarn
-              if: runner.environment == 'self-hosted'
-              run: |
-                  # Sanity check that the arch is arm64 as we expect
-                  [[ $(uname -p) == "aarch64" ]] || exit 1
-
-                  sudo apt-get -qq update
-                  sudo apt-get install -y curl
-                  curl -fsSL --create-dirs -o $HOME/bin/yarn https://github.com/yarnpkg/yarn/releases/download/v1.22.19/yarn-1.22.19.js
-                  chmod +x $HOME/bin/yarn
-                  echo "$HOME/bin" >> $GITHUB_PATH
-
             - uses: actions/checkout@v4
 
             - uses: actions/setup-node@v4
