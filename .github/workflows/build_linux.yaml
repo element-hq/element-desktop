@@ -28,7 +28,7 @@ jobs:
     # We build the hak files on native infrastructure as matrix-seshat fails to cross-compile properly
     # https://github.com/matrix-org/seshat/issues/135
     hak:
-        runs-on: ${{ inputs.arch == 'arm64' && 'dind-l-arm64' || 'ubuntu-22.04' }}
+        runs-on: ${{ inputs.arch == 'arm64' && 'ubuntu-22.04-arm' || 'ubuntu-22.04' }}
         env:
             HAK_DOCKER_IMAGE: ghcr.io/element-hq/element-desktop-dockerbuild
         outputs:
@@ -36,20 +36,6 @@ jobs:
             arch: ${{ steps.config.outputs.arch }}
             build-args: ${{ steps.config.outputs.build-args }}
         steps:
-            # Workaround for self-hosted runners lacking tools
-            - name: Install missing tools
-              if: runner.environment == 'self-hosted'
-              run: |
-                  # Sanity check that the arch is arm64 as we expect
-                  [[ $(uname -p) == "aarch64" ]] || exit 1
-
-                  sudo apt-get -qq update
-                  # curl for yarn download, git for tj-actions/changed-files, zstd for actions/cache
-                  sudo apt-get install -y curl git zstd
-                  curl -fsSL --create-dirs -o $HOME/bin/yarn https://github.com/yarnpkg/yarn/releases/download/v1.22.19/yarn-1.22.19.js
-                  chmod +x $HOME/bin/yarn
-                  echo "$HOME/bin" >> $GITHUB_PATH
-
             - name: Resolve docker image tag for push
               if: github.event_name == 'push'
               run: echo "HAK_DOCKER_IMAGE=$HAK_DOCKER_IMAGE:$GITHUB_REF_NAME" >> $GITHUB_ENV
