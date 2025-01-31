@@ -1,8 +1,6 @@
-import * as os from "os";
-import * as fs from "fs";
-import * as path from "path";
-import { Arch, Configuration as BaseConfiguration, AfterPackContext } from "electron-builder";
-import { flipFuses, FuseVersion, FuseV1Options } from "@electron/fuses";
+import * as os from "node:os";
+import * as fs from "node:fs";
+import { Configuration as BaseConfiguration } from "electron-builder";
 
 /**
  * This script has different outputs depending on your os platform.
@@ -10,7 +8,7 @@ import { flipFuses, FuseVersion, FuseV1Options } from "@electron/fuses";
  * On Windows:
  *  Prefixes the nightly version with `0.0.1-nightly.` as it breaks if it is not semver
  *  Passes $ED_SIGNTOOL_THUMBPRINT and $ED_SIGNTOOL_SUBJECT_NAME to
- *      build.win.signingHashAlgorithms and build.win.certificateSubjectName respectively if specified.
+ *      build.win.signtoolOptions.signingHashAlgorithms and build.win.signtoolOptions.certificateSubjectName respectively if specified.
  *
  * On Linux:
  *  Replaces spaces in the product name with dashes as spaces in paths can cause issues
@@ -48,45 +46,26 @@ interface Configuration extends BaseConfiguration {
  * @type {import('electron-builder').Configuration}
  * @see https://www.electron.build/configuration/configuration
  */
-const config: Writable<Configuration> = {
+const config: Omit<Writable<Configuration>, "electronFuses"> & {
+    // Make all fuses required to ensure they are all explicitly specified
+    electronFuses: Required<Configuration["electronFuses"]>;
+} = {
     appId: "im.riot.app",
     asarUnpack: "**/*.node",
-    afterPack: async (context: AfterPackContext) => {
-        if (context.electronPlatformName !== "darwin" || context.arch === Arch.universal) {
-            // Burn in electron fuses for proactive security hardening.
-            // On macOS, we only do this for the universal package, as the constituent arm64 and amd64 packages are embedded within.
-            const ext = (<Record<string, string>>{
-                darwin: ".app",
-                win32: ".exe",
-                linux: "",
-            })[context.electronPlatformName];
+    electronFuses: {
+        enableCookieEncryption: true,
+        onlyLoadAppFromAsar: true,
+        grantFileProtocolExtraPrivileges: false,
 
-            let executableName = context.packager.appInfo.productFilename;
-            if (context.electronPlatformName === "linux") {
-                // Linux uses the package name as the executable name
-                executableName = context.packager.appInfo.name;
-            }
+        runAsNode: false,
+        enableNodeOptionsEnvironmentVariable: false,
+        enableNodeCliInspectArguments: false,
+        // We need to reset the signature if we are not signing on darwin otherwise it won't launch
+        resetAdHocDarwinSignature: !process.env.APPLE_TEAM_ID,
 
-            const electronBinaryPath = path.join(context.appOutDir, `${executableName}${ext}`);
-            console.log(`Flipping fuses for: ${electronBinaryPath}`);
-
-            await flipFuses(electronBinaryPath, {
-                version: FuseVersion.V1,
-                resetAdHocDarwinSignature: context.electronPlatformName === "darwin" && context.arch === Arch.universal,
-
-                [FuseV1Options.EnableCookieEncryption]: true,
-                [FuseV1Options.OnlyLoadAppFromAsar]: true,
-
-                [FuseV1Options.RunAsNode]: false,
-                [FuseV1Options.EnableNodeOptionsEnvironmentVariable]: false,
-                [FuseV1Options.EnableNodeCliInspectArguments]: false,
-
-                // Mac app crashes on arm for us when `LoadBrowserProcessSpecificV8Snapshot` is enabled
-                [FuseV1Options.LoadBrowserProcessSpecificV8Snapshot]: false,
-                // https://github.com/electron/fuses/issues/7
-                [FuseV1Options.EnableEmbeddedAsarIntegrityValidation]: false,
-            });
-        }
+        loadBrowserProcessSpecificV8Snapshot: false,
+        // https://github.com/electron/fuses/issues/7
+        enableEmbeddedAsarIntegrityValidation: false,
     },
     files: [
         "package.json",
@@ -144,12 +123,16 @@ const config: Writable<Configuration> = {
         darkModeSupport: true,
         hardenedRuntime: true,
         gatekeeperAssess: true,
+        strictVerify: true,
         entitlements: "./build/entitlements.mac.plist",
         icon: "build/icons/icon.icns",
+        mergeASARs: true,
     },
     win: {
         target: ["squirrel", "msi"],
-        signingHashAlgorithms: ["sha256"],
+        signtoolOptions: {
+            signingHashAlgorithms: ["sha256"],
+        },
         icon: "build/icons/icon.ico",
     },
     msi: {
@@ -172,8 +155,8 @@ const config: Writable<Configuration> = {
  * @param {string} process.env.ED_SIGNTOOL_THUMBPRINT
  */
 if (process.env.ED_SIGNTOOL_SUBJECT_NAME && process.env.ED_SIGNTOOL_THUMBPRINT) {
-    config.win.certificateSubjectName = process.env.ED_SIGNTOOL_SUBJECT_NAME;
-    config.win.certificateSha1 = process.env.ED_SIGNTOOL_THUMBPRINT;
+    config.win.signtoolOptions!.certificateSubjectName = process.env.ED_SIGNTOOL_SUBJECT_NAME;
+    config.win.signtoolOptions!.certificateSha1 = process.env.ED_SIGNTOOL_THUMBPRINT;
 }
 
 /**
