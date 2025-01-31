@@ -4,7 +4,6 @@ import * as path from "node:path";
 import * as plist from "plist";
 import { AfterPackContext, Arch, Configuration as BaseConfiguration, Platform } from "electron-builder";
 import { computeData } from "app-builder-lib/out/asar/integrity";
-import { isElectronBased } from "app-builder-lib/out/Framework";
 import { readFile, writeFile } from "node:fs/promises";
 
 /**
