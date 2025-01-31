@@ -79,7 +79,7 @@ const config: Omit<Writable<Configuration>, "electronFuses"> & {
     electronFuses: {
         enableCookieEncryption: true,
         onlyLoadAppFromAsar: true,
-        grantFileProtocolExtraPrivileges: true,
+        grantFileProtocolExtraPrivileges: false,
 
         runAsNode: false,
         enableNodeOptionsEnvironmentVariable: false,
