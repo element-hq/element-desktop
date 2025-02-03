@@ -123,7 +123,8 @@ const config: Omit<Writable<Configuration>, "electronFuses"> & {
         darkModeSupport: true,
         hardenedRuntime: true,
         gatekeeperAssess: true,
-        strictVerify: true,
+        // @ts-expect-error - due to https://github.com/electron/osx-sign/issues/344
+        strictVerify: "strict",
         entitlements: "./build/entitlements.mac.plist",
         icon: "build/icons/icon.icns",
         mergeASARs: true,
