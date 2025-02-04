@@ -14,6 +14,7 @@ If you want to build native modules, make sure that the following tools are inst
 - [NASM](https://www.nasm.us/)
 
 You can install the above tools using [Chocolatey](https://chocolatey.org/install):
+
 ```cmd
 choco install --no-progress -y git nodejs-lts yarn python StrawberryPerl rustup.install nasm magicsplat-tcl-tk
 ```
