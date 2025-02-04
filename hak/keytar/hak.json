@@ -1,4 +1,8 @@
 {
+    "scripts": {
+        "check": "check.ts",
+        "build": "build.ts"
+    },
     "copy": "build/Release/keytar.node",
     "dependencies": {
         "libsecret": "0.20.3"

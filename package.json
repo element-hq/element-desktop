@@ -53,8 +53,7 @@
         "test": "playwright test",
         "test:open": "yarn test --ui",
         "test:screenshots:build": "docker build playwright -t element-desktop-playwright --platform linux/amd64",
-        "test:screenshots:run": "docker run --rm --network host -v $(pwd):/work/element-desktop -v /var/run/docker.sock:/var/run/docker.sock --platform linux/amd64 -it element-desktop-playwright",
-        "postinstall": "patch-package"
+        "test:screenshots:run": "docker run --rm --network host -v $(pwd):/work/element-desktop -v /var/run/docker.sock:/var/run/docker.sock --platform linux/amd64 -it element-desktop-playwright"
     },
     "dependencies": {
         "@sentry/electron": "^5.0.0",
@@ -64,9 +63,7 @@
         "electron-store": "^10.0.0",
         "electron-window-state": "^5.0.3",
         "minimist": "^1.2.6",
-        "patch-package": "^8.0.0",
         "png-to-ico": "^2.1.1",
-        "postinstall-postinstall": "^2.1.0",
         "uuid": "^11.0.0"
     },
     "devDependencies": {
@@ -115,7 +112,7 @@
         "typescript": "5.7.3"
     },
     "hakDependencies": {
-        "matrix-seshat": "^4.0.0",
+        "matrix-seshat": "https://gitpkg.vercel.app/matrix-org/seshat/seshat-node?t3chguy/bump-openssl",
         "keytar": "^7.9.0"
     },
     "resolutions": {

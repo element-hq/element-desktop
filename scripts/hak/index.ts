@@ -89,20 +89,13 @@ async function main(): Promise<void> {
         };
 
         for (const s of HAKSCRIPTS) {
-            try {
+            if (hakJson.scripts?.[s]) {
                 // Shockingly, using path.join and backslashes here doesn't work on Windows
-                const scriptModule = await import(`../../hak/${dep}/${s}.ts`);
+                const scriptModule = await import(`../../hak/${dep}/${hakJson.scripts[s]}`);
                 if (scriptModule.default) {
                     deps[dep].scripts[s] = scriptModule.default;
                 } else {
                     deps[dep].scripts[s] = scriptModule;
-                }
-            } catch (e) {
-                if (e instanceof Error) {
-                    const { code } = e as unknown as { code: string };
-                    if (code !== "ERR_MODULE_NOT_FOUND" && code !== "ERR_PACKAGE_PATH_NOT_EXPORTED") {
-                        throw e;
-                    }
                 }
             }
         }
