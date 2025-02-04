@@ -80,7 +80,6 @@
         "@types/minimist": "^1.2.1",
         "@types/node": "18.19.71",
         "@types/pacote": "^11.1.1",
-        "@types/yargs": "^17.0.32",
         "@typescript-eslint/eslint-plugin": "^8.0.0",
         "@typescript-eslint/parser": "^8.0.0",
         "app-builder-lib": "^26.0.1",
