@@ -7,9 +7,8 @@ export default {
         // Brought in via hak scripts
         "keytar",
         "matrix-seshat",
-        // Needed by `electron-builder`
-        "electron-builder-squirrel-windows",
-        "@types/yargs",
+        // Needed by `patch-package`
+        "postinstall-postinstall",
         // Required for `action-validator`
         "@action-validator/*",
         // Used for git pre-commit hooks
