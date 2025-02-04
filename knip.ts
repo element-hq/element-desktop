@@ -7,8 +7,6 @@ export default {
         // Brought in via hak scripts
         "keytar",
         "matrix-seshat",
-        // Needed by `patch-package`
-        "postinstall-postinstall",
         // Required for `action-validator`
         "@action-validator/*",
         // Used for git pre-commit hooks

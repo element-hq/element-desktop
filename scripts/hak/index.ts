@@ -15,8 +15,6 @@ import type { DependencyInfo } from "./dep.js";
 import { loadJsonFile } from "../../src/utils.js";
 import packageJson from "../../package.json";
 
-const GENERALCOMMANDS = ["target"];
-
 // These can only be run on specific modules
 const MODULECOMMANDS = ["check", "fetch", "link", "build", "copy", "clean"];
 
@@ -120,13 +118,6 @@ async function main(): Promise<void> {
     if (modules.length === 0) modules = Object.keys(deps);
 
     for (const cmd of cmds) {
-        if (GENERALCOMMANDS.includes(cmd)) {
-            if (cmd === "target") {
-                console.log(hakEnv.getNodeTriple());
-            }
-            return;
-        }
-
         if (!MODULECOMMANDS.includes(cmd)) {
             console.error("Unknown command: " + cmd);
             console.log("Commands I know about:");

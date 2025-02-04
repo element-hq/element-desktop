@@ -8,31 +8,24 @@ Please see LICENSE files in the repository root for full details.
 
 import path from "node:path";
 import os from "node:os";
-import nodePreGypVersioning from "@mapbox/node-pre-gyp/lib/util/versioning";
 import { getElectronVersionFromInstalled } from "app-builder-lib/out/electron/electronVersion.js";
 import childProcess, { SpawnOptions } from "node:child_process";
 
 import { Arch, Target, TARGETS, getHost, isHostId, TargetId } from "./target.js";
 
-async function getRuntime(projectRoot: string): Promise<string> {
-    const electronVersion = await getElectronVersionFromInstalled(projectRoot);
-    return electronVersion ? "electron" : "node-webkit";
-}
-
 async function getRuntimeVersion(projectRoot: string): Promise<string> {
     const electronVersion = await getElectronVersionFromInstalled(projectRoot);
-    if (electronVersion) {
-        return electronVersion;
-    } else {
-        return process.version.substr(1);
+    if (!electronVersion) {
+        throw new Error("Can't determine Electron version");
     }
+    return electronVersion;
 }
 
 export type Tool = [cmd: string, ...args: string[]];
 
 export default class HakEnv {
     public readonly target: Target;
-    public runtime?: string;
+    public runtime: string = "electron";
     public runtimeVersion?: string;
     public dotHakDir: string;
 
@@ -50,17 +43,7 @@ export default class HakEnv {
     }
 
     public async init(): Promise<void> {
-        this.runtime = await getRuntime(this.projectRoot);
         this.runtimeVersion = await getRuntimeVersion(this.projectRoot);
-    }
-
-    public getRuntimeAbi(): string {
-        return nodePreGypVersioning.get_runtime_abi(this.runtime!, this.runtimeVersion!);
-    }
-
-    // {node_abi}-{platform}-{arch}
-    public getNodeTriple(): string {
-        return this.getRuntimeAbi() + "-" + this.target.platform + "-" + this.target.arch;
     }
 
     public getTargetId(): TargetId {
