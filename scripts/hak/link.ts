@@ -10,8 +10,8 @@ import path from "node:path";
 import os from "node:os";
 import fsProm from "node:fs/promises";
 
-import HakEnv from "./hakEnv.js";
-import { DependencyInfo } from "./dep.js";
+import type HakEnv from "./hakEnv.js";
+import { type DependencyInfo } from "./dep.js";
 
 export default async function link(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
     const yarnrc = path.join(hakEnv.projectRoot, ".yarnrc");

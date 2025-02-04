@@ -10,9 +10,9 @@ import path from "node:path";
 import os from "node:os";
 import nodePreGypVersioning from "@mapbox/node-pre-gyp/lib/util/versioning";
 import { getElectronVersionFromInstalled } from "app-builder-lib/out/electron/electronVersion.js";
-import childProcess, { SpawnOptions } from "node:child_process";
+import childProcess, { type SpawnOptions } from "node:child_process";
 
-import { Arch, Target, TARGETS, getHost, isHostId, TargetId } from "./target.js";
+import { type Arch, type Target, TARGETS, getHost, isHostId, type TargetId } from "./target.js";
 
 async function getRuntime(projectRoot: string): Promise<string> {
     const electronVersion = await getElectronVersionFromInstalled(projectRoot);

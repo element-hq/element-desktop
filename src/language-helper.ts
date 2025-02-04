@@ -6,7 +6,7 @@ Please see LICENSE files in the repository root for full details.
 */
 
 import counterpart from "counterpart";
-import { TranslationKey as TKey } from "matrix-web-i18n";
+import { type TranslationKey as TKey } from "matrix-web-i18n";
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
