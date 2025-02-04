@@ -1,20 +1,12 @@
 /*
+Copyright 2024 New Vector Ltd.
 Copyright 2021 The Matrix.org Foundation C.I.C.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Commercial
+Please see LICENSE files in the repository root for full details.
 */
 
-import { GLIBC, MUSL, family as processLibC } from "detect-libc";
+import { GLIBC, MUSL, familySync as processLibC } from "detect-libc";
 
 // We borrow Rust's target naming scheme as a way of expressing all target
 // details in a single string.
@@ -26,6 +18,9 @@ export type TargetId =
     | "i686-pc-windows-msvc"
     | "x86_64-pc-windows-msvc"
     | "aarch64-pc-windows-msvc"
+    | "i686-unknown-freebsd"
+    | "x86_64-unknown-freebsd"
+    | "aarch64-unknown-freebsd"
     | "i686-unknown-linux-musl"
     | "i686-unknown-linux-gnu"
     | "x86_64-unknown-linux-musl"
@@ -36,7 +31,7 @@ export type TargetId =
     | "powerpc64le-unknown-linux-gnu";
 
 // Values are expected to match those used in `process.platform`.
-export type Platform = "darwin" | "linux" | "win32";
+export type Platform = "darwin" | "freebsd" | "linux" | "win32";
 
 // Values are expected to match those used in `process.arch`.
 export type Arch = "arm64" | "ia32" | "x64" | "ppc64" | "universal";
@@ -58,7 +53,7 @@ export type WindowsTarget = Target & {
 
 export type LinuxTarget = Target & {
     platform: "linux";
-    libC: typeof processLibC;
+    libC: typeof GLIBC | typeof MUSL;
 };
 
 export type UniversalTarget = Target & {
@@ -104,6 +99,24 @@ const aarch64WindowsMsvc: WindowsTarget = {
     platform: "win32",
     arch: "arm64",
     vcVarsArch: "arm64",
+};
+
+const i686UnknownFreebsd: Target = {
+    id: "i686-unknown-freebsd",
+    platform: "freebsd",
+    arch: "ia32",
+};
+
+const x8664UnknownFreebsd: Target = {
+    id: "x86_64-unknown-freebsd",
+    platform: "freebsd",
+    arch: "x64",
+};
+
+const aarch64UnknownFreebsd: Target = {
+    id: "aarch64-unknown-freebsd",
+    platform: "freebsd",
+    arch: "arm64",
 };
 
 const x8664UnknownLinuxGnu: LinuxTarget = {
@@ -171,6 +184,10 @@ export const TARGETS: Record<TargetId, Target> = {
     "i686-pc-windows-msvc": i686PcWindowsMsvc,
     "x86_64-pc-windows-msvc": x8664PcWindowsMsvc,
     "aarch64-pc-windows-msvc": aarch64WindowsMsvc,
+    // FreeBSD
+    "i686-unknown-freebsd": i686UnknownFreebsd,
+    "x86_64-unknown-freebsd": x8664UnknownFreebsd,
+    "aarch64-unknown-freebsd": aarch64UnknownFreebsd,
     // Linux
     "i686-unknown-linux-musl": i686UnknownLinuxMusl,
     "i686-unknown-linux-gnu": i686UnknownLinuxGnu,
@@ -187,7 +204,7 @@ export function getHost(): Target | undefined {
         (target) =>
             target.platform === process.platform &&
             target.arch === process.arch &&
-            (process.platform !== "linux" || (target as LinuxTarget).libC === processLibC),
+            (process.platform !== "linux" || (target as LinuxTarget).libC === processLibC()),
     );
 }
 

@@ -1,26 +1,19 @@
 /*
+Copyright 2024 New Vector Ltd.
 Copyright 2017 Karl Glatz <karl@glatz.biz>
 Copyright 2017 OpenMarket Ltd
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Commercial
+Please see LICENSE files in the repository root for full details.
 */
 
 import { app, Tray, Menu, nativeImage } from "electron";
 import pngToIco from "png-to-ico";
-import path from "path";
-import fs from "fs";
+import path from "node:path";
+import fs from "node:fs";
+import { v5 as uuidv5 } from "uuid";
 
-import { _t } from "./language-helper";
+import { _t } from "./language-helper.js";
 
 let trayIcon: Tray | null = null;
 
@@ -50,12 +43,30 @@ interface IConfig {
     brand: string;
 }
 
+function getUuid(): string {
+    // The uuid field is optional and only needed on unsigned Windows packages where the executable path changes
+    // The hardcoded uuid is an arbitrary v4 uuid generated on https://www.uuidgenerator.net/version4
+    return global.vectorConfig["uuid"] || "eba84003-e499-4563-8e9d-166e34b5cc25";
+}
+
 export function create(config: IConfig): void {
     // no trays on darwin
     if (process.platform === "darwin" || trayIcon) return;
     const defaultIcon = nativeImage.createFromPath(config.icon_path);
 
-    trayIcon = new Tray(defaultIcon);
+    let guid: string | undefined;
+    if (process.platform === "win32" && app.isPackaged) {
+        // Providing a GUID lets Windows be smarter about maintaining user's tray preferences
+        // https://github.com/electron/electron/pull/21891
+        // Ideally we would only specify it for signed packages but determining whether the app is signed sufficiently
+        // is non-trivial. So instead we have an escape hatch that unsigned packages can iterate the `uuid` in
+        // config.json to prevent Windows refusing GUID-reuse if their executable path changes.
+        guid = uuidv5(`${app.getName()}-${app.getPath("userData")}`, getUuid());
+    }
+
+    // Passing guid=undefined on Windows will cause it to throw `Error: Invalid GUID format`
+    // The type here is wrong, the param must be omitted, never undefined.
+    trayIcon = guid ? new Tray(defaultIcon, guid) : new Tray(defaultIcon);
     trayIcon.setToolTip(config.brand);
     initApplicationMenu();
     trayIcon.on("click", toggleWin);
@@ -104,12 +115,12 @@ export function initApplicationMenu(): void {
 
     const contextMenu = Menu.buildFromTemplate([
         {
-            label: _t("Show/Hide"),
+            label: _t("action|show_hide"),
             click: toggleWin,
         },
         { type: "separator" },
         {
-            label: _t("Quit"),
+            label: _t("action|quit"),
             click: function (): void {
                 app.quit();
             },

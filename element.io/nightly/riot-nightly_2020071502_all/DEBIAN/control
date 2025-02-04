@@ -1,9 +1,0 @@
-Package: riot-nightly
-Version: 2020071502
-Depends: element-nightly
-Maintainer: packages@element.io
-Architecture: all
-Priority: optional
-Section: oldlibs
-Description: transitional package
- This is a transitional package. It can safely be removed.

@@ -1,7 +1,0 @@
-signing_id: releases@riot.im
-subprojects:
-    element-web:
-        includeByDefault: true
-        # Because element-web is not in our dependencies, but the versions
-        # follow those of this project (well, vice-versa really)
-        mirrorVersion: true
