@@ -75,7 +75,7 @@
         "@electron/asar": "3.2.18",
         "@mapbox/node-pre-gyp": "^1.0.11",
         "@playwright/test": "1.50.1",
-        "@stylistic/eslint-plugin": "^2.9.0",
+        "@stylistic/eslint-plugin": "^3.0.0",
         "@types/auto-launch": "^5.0.1",
         "@types/counterpart": "^0.18.1",
         "@types/minimist": "^1.2.1",
