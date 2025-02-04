@@ -89,12 +89,20 @@ async function main(): Promise<void> {
         };
 
         for (const s of HAKSCRIPTS) {
-            if (hakJson.scripts?.[s]) {
-                const scriptModule = await import(path.join("..", "..", "hak", dep, hakJson.scripts[s]));
+            try {
+                // We add a "?" to the end to trick tsx into not using `.ts` which breaks on Windows with ERR_MODULE_NOT_FOUND
+                const scriptModule = await import(path.join("..", "..", "hak", dep, s + ".js?"));
                 if (scriptModule.default) {
                     deps[dep].scripts[s] = scriptModule.default;
                 } else {
                     deps[dep].scripts[s] = scriptModule;
+                }
+            } catch (e) {
+                if (e instanceof Error) {
+                    const { code } = e as unknown as { code: string };
+                    if (code !== "ERR_MODULE_NOT_FOUND" && code !== "ERR_PACKAGE_PATH_NOT_EXPORTED") {
+                        throw e;
+                    }
                 }
             }
         }

@@ -1,7 +1,3 @@
 {
-    "scripts": {
-        "check": "check",
-        "build": "build"
-    },
     "copy": "index.node"
 }
