@@ -90,7 +90,8 @@ async function main(): Promise<void> {
 
         for (const s of HAKSCRIPTS) {
             try {
-                const scriptModule = await import(path.join("..", "..", "hak", dep, s + ".ts"));
+                // Shockingly, using path.join and backslashes here doesn't work on Windows
+                const scriptModule = await import(`../../hak/${dep}/${s}.ts`);
                 if (scriptModule.default) {
                     deps[dep].scripts[s] = scriptModule.default;
                 } else {
