@@ -1,7 +1,7 @@
 {
     "scripts": {
-        "check": "check.js",
-        "build": "build.js"
+        "check": "check",
+        "build": "build"
     },
     "copy": "index.node"
 }
