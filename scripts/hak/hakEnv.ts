@@ -8,7 +8,6 @@ Please see LICENSE files in the repository root for full details.
 
 import path from "node:path";
 import os from "node:os";
-import { getAbi, Runtime } from "node-abi";
 import { getElectronVersionFromInstalled } from "app-builder-lib/out/electron/electronVersion.js";
 import childProcess, { SpawnOptions } from "node:child_process";
 
@@ -26,7 +25,7 @@ export type Tool = [cmd: string, ...args: string[]];
 
 export default class HakEnv {
     public readonly target: Target;
-    public runtime: Runtime = "electron";
+    public runtime: string = "electron";
     public runtimeVersion?: string;
     public dotHakDir: string;
 
@@ -45,15 +44,6 @@ export default class HakEnv {
 
     public async init(): Promise<void> {
         this.runtimeVersion = await getRuntimeVersion(this.projectRoot);
-    }
-
-    public getRuntimeAbi(): string {
-        return getAbi(this.runtimeVersion!, this.runtime!);
-    }
-
-    // {node_abi}-{platform}-{arch}
-    public getNodeTriple(): string {
-        return this.getRuntimeAbi() + "-" + this.target.platform + "-" + this.target.arch;
     }
 
     public getTargetId(): TargetId {
