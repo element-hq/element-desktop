@@ -90,7 +90,7 @@ async function main(): Promise<void> {
 
         for (const s of HAKSCRIPTS) {
             if (hakJson.scripts?.[s]) {
-                const scriptModule = await import(path.join("file://", prefix, "hak", dep, hakJson.scripts[s]));
+                const scriptModule = await import(path.join(prefix, "hak", dep, hakJson.scripts[s]));
                 if (scriptModule.default) {
                     deps[dep].scripts[s] = scriptModule.default;
                 } else {
