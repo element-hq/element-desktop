@@ -90,7 +90,8 @@ async function main(): Promise<void> {
 
         for (const s of HAKSCRIPTS) {
             if (hakJson.scripts?.[s]) {
-                const scriptModule = await import(path.join("file://", prefix, "hak", dep, hakJson.scripts[s]));
+                // Shockingly, using path.join and backslashes here doesn't work on Windows
+                const scriptModule = await import(`../../hak/${dep}/${hakJson.scripts[s]}`);
                 if (scriptModule.default) {
                     deps[dep].scripts[s] = scriptModule.default;
                 } else {
