@@ -82,7 +82,6 @@ jobs:
                   # Workaround for https://github.com/actions/setup-node/issues/317
                   FORCE_COLOR: 0
 
-            # Does not need branch matching as only analyses this layer
             - name: Install Deps
               run: "yarn install --frozen-lockfile"
 
@@ -114,11 +113,7 @@ jobs:
                     yarn build:native
 
             - name: Fix permissions on .hak
-              run: |
-                  ls -lah /home/runner/work/element-desktop/element-desktop/.hak
-                  ls -lah /home/runner/work/element-desktop/element-desktop/.hak/hakModules/keytar
-                  ls -lah /home/runner/work/element-desktop/element-desktop/.hak/hakModules/keytar/src/async.cc
-                  sudo chown -R $USER:$USER .hak
+              run: sudo chown -R $USER:$USER .hak
 
             - name: Check native libraries in hak dependencies
               run: |
@@ -127,10 +122,6 @@ jobs:
                   for filename in ./.hak/hakModules/**/*.node; do
                       ./scripts/glibc-check.sh $filename
                   done
-
-            # Does not need branch matching as only analyses this layer
-            - name: Install Deps
-              run: "yarn install --frozen-lockfile"
 
             - name: "[Nightly] Resolve version"
               if: inputs.version != ''
@@ -153,9 +144,6 @@ jobs:
 
             - name: Build App
               run: yarn build --publish never -l ${{ steps.config.outputs.build-args }}
-              env:
-                  TMPDIR: ${{ runner.temp }}
-                  APP_BUILDER_TMP_DIR: ${{ runner.temp }}
 
             - name: Check native libraries
               run: |
