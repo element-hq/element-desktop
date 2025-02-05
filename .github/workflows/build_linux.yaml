@@ -113,11 +113,12 @@ jobs:
                     $HAK_DOCKER_IMAGE \
                     yarn build:native
 
-            # This is only needed on the new ARM64 runners
-            # normally the permissions out of the docker run step are fine
-            - name: Fix permissions
-              if: inputs.arch == 'arm64'
-              run: sudo chown -R $USER:$USER .hak
+            - name: Fix permissions on .hak
+              run: |
+                  ls -lah /home/runner/work/element-desktop/element-desktop/.hak
+                  ls -lah /home/runner/work/element-desktop/element-desktop/.hak/hakModules/keytar
+                  ls -lah /home/runner/work/element-desktop/element-desktop/.hak/hakModules/keytar/src/async.cc
+                  sudo chown -R $USER:$USER .hak
 
             - name: Check native libraries in hak dependencies
               run: |
