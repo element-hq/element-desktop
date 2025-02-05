@@ -13,13 +13,13 @@ import {
     shell,
     dialog,
     ipcMain,
-    NativeImage,
-    WebContents,
-    ContextMenuParams,
-    DownloadItem,
-    MenuItemConstructorOptions,
-    IpcMainEvent,
-    Event,
+    type NativeImage,
+    type WebContents,
+    type ContextMenuParams,
+    type DownloadItem,
+    type MenuItemConstructorOptions,
+    type IpcMainEvent,
+    type Event,
 } from "electron";
 import url from "node:url";
 import fs from "node:fs";
