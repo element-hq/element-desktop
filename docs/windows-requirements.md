@@ -12,6 +12,13 @@ If you want to build native modules, make sure that the following tools are inst
 - [Strawberry Perl](https://strawberryperl.com/)
 - [Rustup](https://rustup.rs/)
 - [NASM](https://www.nasm.us/)
+
+You can install the above tools using [Chocolatey](https://chocolatey.org/install):
+
+```cmd
+choco install --no-progress -y git nodejs-lts yarn python StrawberryPerl rustup.install nasm magicsplat-tcl-tk
+```
+
 - [Build Tools for Visual Studio 2019](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2019) with the following configuration:
     - On the Workloads tab:
         - Desktop & Mobile -> C++ build tools
