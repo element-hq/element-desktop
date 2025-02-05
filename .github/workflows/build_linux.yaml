@@ -140,6 +140,7 @@ jobs:
               run: yarn build --publish never -l ${{ steps.config.outputs.build-args }}
               env:
                   TMPDIR: ${{ env.RUNNER_TEMP }}
+                  APP_BUILDER_TMP_DIR: ${{ env.RUNNER_TEMP }}
 
             - name: Check native libraries
               run: |
