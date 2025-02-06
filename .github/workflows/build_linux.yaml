@@ -25,16 +25,12 @@ env:
     MAX_GLIBC: 2.31 # bullseye-era glibc, used by glibc-check.sh
 permissions: {} # No permissions required
 jobs:
-    # We build the hak files on native infrastructure as matrix-seshat fails to cross-compile properly
-    # https://github.com/matrix-org/seshat/issues/135
-    hak:
+    build:
+        # We build on native infrastructure as matrix-seshat fails to cross-compile properly
+        # https://github.com/matrix-org/seshat/issues/135
         runs-on: ${{ inputs.arch == 'arm64' && 'ubuntu-22.04-arm' || 'ubuntu-22.04' }}
         env:
             HAK_DOCKER_IMAGE: ghcr.io/element-hq/element-desktop-dockerbuild
-        outputs:
-            cache-key: ${{ steps.cache-key.outputs.key }}
-            arch: ${{ steps.config.outputs.arch }}
-            build-args: ${{ steps.config.outputs.build-args }}
         steps:
             - name: Resolve docker image tag for push
               if: github.event_name == 'push'
@@ -70,18 +66,11 @@ jobs:
               with:
                   name: webapp
 
-            - name: Calculate cache key
-              id: cache-key
-              run: |
-                  echo "key=$CACHE_KEY" >> $GITHUB_OUTPUT
-              env:
-                  CACHE_KEY: ${{ runner.os }}-${{ github.ref_name }}-${{ inputs.sqlcipher }}-${{ inputs.arch }}-${{ hashFiles('hakHash', 'electronVersion', 'dockerbuild/*') }}
-
             - name: Cache .hak
               id: cache
               uses: actions/cache@v4
               with:
-                  key: ${{ steps.cache-key.outputs.key }}
+                  key: ${{ runner.os }}-${{ github.ref_name }}-${{ inputs.sqlcipher }}-${{ inputs.arch }}-${{ hashFiles('hakHash', 'electronVersion', 'dockerbuild/*') }}
                   path: |
                       ./.hak
 
@@ -93,7 +82,6 @@ jobs:
                   # Workaround for https://github.com/actions/setup-node/issues/317
                   FORCE_COLOR: 0
 
-            # Does not need branch matching as only analyses this layer
             - name: Install Deps
               run: "yarn install --frozen-lockfile"
 
@@ -124,44 +112,16 @@ jobs:
                     $HAK_DOCKER_IMAGE \
                     yarn build:native
 
-            - name: Check native libraries
+            - name: Fix permissions on .hak
+              run: sudo chown -R $USER:$USER .hak
+
+            - name: Check native libraries in hak dependencies
               run: |
                   shopt -s globstar
 
                   for filename in ./.hak/hakModules/**/*.node; do
                       ./scripts/glibc-check.sh $filename
                   done
-
-    build:
-        needs: hak
-        runs-on: ubuntu-24.04
-        steps:
-            - uses: actions/checkout@v4
-
-            - uses: actions/download-artifact@v4
-              with:
-                  name: webapp
-
-            - name: Load .hak
-              id: cache
-              uses: actions/cache/restore@v4
-              with:
-                  key: ${{ needs.hak.outputs.cache-key }}
-                  fail-on-cache-miss: true
-                  path: |
-                      ./.hak
-
-            - uses: actions/setup-node@v4
-              with:
-                  node-version-file: package.json
-                  cache: "yarn"
-              env:
-                  # Workaround for https://github.com/actions/setup-node/issues/317
-                  FORCE_COLOR: 0
-
-            # Does not need branch matching as only analyses this layer
-            - name: Install Deps
-              run: "yarn install --frozen-lockfile"
 
             - name: "[Nightly] Resolve version"
               if: inputs.version != ''
@@ -174,8 +134,16 @@ jobs:
                       echo "ED_DEBIAN_CHANGELOG=changelog.Debian" >> $GITHUB_ENV
                   fi
 
+            # Workaround for https://github.com/electron-userland/electron-builder/issues/6116
+            - name: Install fpm
+              if: inputs.arch == 'arm64'
+              run: |
+                  sudo apt-get install ruby-dev build-essential
+                  sudo gem install fpm
+                  echo "USE_SYSTEM_FPM=true" >> $GITHUB_ENV
+
             - name: Build App
-              run: yarn build --publish never -l ${{ needs.hak.outputs.build-args }}
+              run: yarn build --publish never -l ${{ steps.config.outputs.build-args }}
 
             - name: Check native libraries
               run: |
@@ -203,7 +171,7 @@ jobs:
 
                   ./scripts/glibc-check.sh dist/linux-*unpacked/element-desktop*
               env:
-                  ARCH: ${{ needs.hak.outputs.arch }}
+                  ARCH: ${{ steps.config.outputs.arch }}
 
             # We exclude *-unpacked as it loses permissions and the tarball contains it with correct permissions
             - name: Upload Artifacts
