@@ -36,7 +36,7 @@ jobs:
         env:
             SIGNTOOL_PATH: "C:/Program Files (x86)/Windows Kits/10/bin/10.0.22000.0/x86/signtool.exe"
             # electron-windows-sign of electron-winstaller uses a different env var
-            #WINDOWS_SIGNTOOL_PATH: "C:/Program Files (x86)/Windows Kits/10/bin/10.0.22000.0/x86/signtool.exe"
+            WINDOWS_SIGNTOOL_PATH: "C:/Program Files (x86)/Windows Kits/10/bin/10.0.22000.0/x86/signtool.exe"
             DEBUG: electron-builder
         steps:
             - uses: nbucic/variable-mapper@0673f6891a0619ba7c002ecfed0f9f4f39017b6f
@@ -152,6 +152,7 @@ jobs:
 
                   echo "ED_SIGNTOOL_THUMBPRINT=$Thumbprint" >> $env:GITHUB_ENV
                   echo "ED_SIGNTOOL_SUBJECT_NAME=$SubjectName" >> $env:GITHUB_ENV
+                  echo "WINDOWS_SIGN_WITH_PARAMS=/sha1 $Thumbprint" >> $env:GITHUB_ENV
               env:
                   ESIGNER_URL: https://github.com/SSLcom/eSignerCKA/releases/download/v1.0.6/SSL.COM-eSigner-CKA_1.0.6.zip
                   INSTALL_DIR: C:\Users\runneradmin\eSignerCKA
