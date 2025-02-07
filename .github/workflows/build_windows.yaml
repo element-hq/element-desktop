@@ -3,6 +3,8 @@
 # the correct cache scoping, and additional care must be taken to not run untrusted actions on the develop branch.
 
 # Windows GHA runner by default uses the pwsh shell which breaks codeSigningCert in the workflow
+# We always sign using eSignerCKA to ensure it keeps working, but aside from release & nightlies we use demo credentials
+# which do not yield trusted signatures.
 defaults:
     run:
         shell: powershell
@@ -173,6 +175,7 @@ jobs:
                   yarn electron-builder --publish never -w ${{ steps.config.outputs.build-args }}
 
             - name: Check app was signed successfully
+              if: inputs.sign
               run: |
                   . "$env:SIGNTOOL_PATH" verify /pa (get-item ./dist/squirrel-windows*/*.exe)
 
