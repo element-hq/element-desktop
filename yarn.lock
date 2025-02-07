@@ -2041,6 +2041,11 @@
     ignore "^5.1.8"
     p-map "^4.0.0"
 
+"@standardnotes/electron-clear-data@^1.0.5":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@standardnotes/electron-clear-data/-/electron-clear-data-1.1.1.tgz#45eab118ed5d1ee9369b540d7e62a9ca96778335"
+  integrity sha512-R0YivtSwSQpNt5nPOi7YRTGlk6kpcz6/2/sAQZf6ZCU8vIGm1cBMo++6kkGQcDEumkwbmagxmLWinL9d1W5g3Q==
+
 "@stylistic/eslint-plugin@^3.0.0":
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/@stylistic/eslint-plugin/-/eslint-plugin-3.0.1.tgz#ec85816a3b4e75c34293160b2784e6a4bdce6664"
@@ -3490,11 +3495,6 @@ electron-builder@^26.0.1:
     lazy-val "^1.0.5"
     simple-update-notifier "2.0.0"
     yargs "^17.6.2"
-
-electron-clear-data@^1.0.5:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/electron-clear-data/-/electron-clear-data-1.0.5.tgz#bc636f6850f57b1e8ed3fe2e57ca877e30d31bc9"
-  integrity sha512-vynYILZ2F+S5qnc81bnTOfh8uCVlxP6j42T7h/ELaDL+vxmlT1QNgte8KNuXb+s9ed+Qx4IIRbMRUcbAJa/8rA==
 
 electron-devtools-installer@^4.0.0:
   version "4.0.0"
