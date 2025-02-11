@@ -3,6 +3,8 @@
 # the correct cache scoping, and additional care must be taken to not run untrusted actions on the develop branch.
 
 # Windows GHA runner by default uses the pwsh shell which breaks codeSigningCert in the workflow
+# We always sign using eSignerCKA to ensure it keeps working, but aside from release & nightlies we use demo credentials
+# which do not yield trusted signatures.
 defaults:
     run:
         shell: powershell
@@ -116,7 +118,6 @@ jobs:
                   yarn build:native --target ${{ steps.config.outputs.target }}
 
             - name: Install and configure eSigner CKA
-              if: inputs.sign
               run: |
                   Set-StrictMode -Version 'Latest'
 
@@ -134,8 +135,13 @@ jobs:
                   $LogConfig[0] = '<log4net threshold="OFF">'
                   $LogConfig | Set-Content -Path ${{ env.INSTALL_DIR }}/log4net.config
 
-                  # Configure
-                  ${{ env.INSTALL_DIR }}/eSignerCKATool.exe config -mode product -user "${{ secrets.ESIGNER_USER_NAME }}" -pass "${{ secrets.ESIGNER_USER_PASSWORD }}" -totp "${{ secrets.ESIGNER_USER_TOTP }}" -key "${{ env.MASTER_KEY_FILE }}" -r
+                  # Configure - default credentials from https://www.ssl.com/guide/esigner-demo-credentials-and-certificates/
+                  ${{ env.INSTALL_DIR }}/eSignerCKATool.exe config `
+                      -mode ${{ vars.ESIGNER_MODE || 'sandbox' }} `
+                      -user "${{ secrets.ESIGNER_USER_NAME || 'esigner_demo' }}" `
+                      -pass "${{ secrets.ESIGNER_USER_PASSWORD || 'esignerDemo#1' }}" `
+                      -totp "${{ secrets.ESIGNER_USER_TOTP || 'RDXYgV9qju+6/7GnMf1vCbKexXVJmUVr+86Wq/8aIGg=' }}" `
+                      -key "${{ env.MASTER_KEY_FILE }}" -r
                   ${{ env.INSTALL_DIR }}/eSignerCKATool.exe unload
                   ${{ env.INSTALL_DIR }}/eSignerCKATool.exe load
 
@@ -169,7 +175,7 @@ jobs:
                   yarn electron-builder --publish never -w ${{ steps.config.outputs.build-args }}
 
             - name: Check app was signed successfully
-              if: inputs.sign != ''
+              if: inputs.sign
               run: |
                   . "$env:SIGNTOOL_PATH" verify /pa (get-item ./dist/squirrel-windows*/*.exe)
 
