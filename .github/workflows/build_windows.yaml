@@ -37,6 +37,10 @@ jobs:
         environment: ${{ inputs.sign && 'packages.element.io' || '' }}
         env:
             SIGNTOOL_PATH: "C:/Program Files (x86)/Windows Kits/10/bin/10.0.22000.0/x86/signtool.exe"
+            ESIGNER_URL: https://github.com/SSLcom/eSignerCKA/releases/download/v1.0.6/SSL.COM-eSigner-CKA_1.0.6.zip
+            SSLCOM_DEV_CRT: https://raw.githubusercontent.com/adrelanos/codesigner-test/refs/heads/main/SSLcom-DEV.crt
+            INSTALL_DIR: C:\Users\runneradmin\eSignerCKA
+            MASTER_KEY_FILE: C:\Users\runneradmin\eSignerCKA\master.key
             DEBUG: "electron-builder,electron-windows-sign"
         steps:
             - uses: nbucic/variable-mapper@0673f6891a0619ba7c002ecfed0f9f4f39017b6f
@@ -156,10 +160,6 @@ jobs:
 
                   echo "ED_SIGNTOOL_THUMBPRINT=$Thumbprint" >> $env:GITHUB_ENV
                   echo "ED_SIGNTOOL_SUBJECT_NAME=$SubjectName" >> $env:GITHUB_ENV
-              env:
-                  ESIGNER_URL: https://github.com/SSLcom/eSignerCKA/releases/download/v1.0.6/SSL.COM-eSigner-CKA_1.0.6.zip
-                  INSTALL_DIR: C:\Users\runneradmin\eSignerCKA
-                  MASTER_KEY_FILE: C:\Users\runneradmin\eSignerCKA\master.key
 
             - name: "[Nightly] Resolve version"
               if: inputs.version != ''
@@ -175,10 +175,28 @@ jobs:
               run: |
                   yarn electron-builder --publish never -w ${{ steps.config.outputs.build-args }}
 
-            - name: Check app was signed successfully
-              if: inputs.sign
+            - name: Assert all expected files are present
               run: |
+                  Test-Path './dist/win-*unpacked/Element*.exe'
+                  Test-Path './dist/squirrel-windows*/Element Setup*.exe'
+                  Test-Path './dist/squirrel-windows*/element-desktop-*-full.nupkg'
+                  Test-Path './dist/squirrel-windows*/RELEASES'
+                  Test-Path './dist/Element*.msi'
+
+            - name: Trust eSigner demo cert
+              if: inputs.sign == ''
+              run: |
+                  Invoke-WebRequest -OutFile SSLcom-DEV.crt "$env:SSLCOM_DEV_CRT"
+                  Import-Certificate -CertStoreLocation Cert:\CurrentUser\Root -FilePath .\SSLcom-DEV.crt
+              env:
+                  INSTALL_DIR: C:\Users\runneradmin\eSignerCKA
+                  MASTER_KEY_FILE: C:\Users\runneradmin\eSignerCKA\master.key
+
+            - name: Check app was signed successfully
+              run: |
+                  . "$env:SIGNTOOL_PATH" verify /pa (get-item ./dist/win-*unpacked/*.exe)
                   . "$env:SIGNTOOL_PATH" verify /pa (get-item ./dist/squirrel-windows*/*.exe)
+                  . "$env:SIGNTOOL_PATH" verify /pa (get-item ./dist/*.msi)
 
             - name: Upload Artifacts
               uses: actions/upload-artifact@v4

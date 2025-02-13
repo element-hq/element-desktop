@@ -35,7 +35,8 @@ jobs:
                     - name: Windows (x64)
                       os: windows-2022
                       artifact: win-x64
-                      executable: "./dist/win-unpacked/Element.exe"
+                      executable: "%LOCALAPPDATA%\element-desktop*\Element.exe"
+                      prepare_cmd: "./dist/squirrel-windows*/Element Setup*.exe"
         name: Test ${{ matrix.name }}
         runs-on: ${{ matrix.os }}
         steps:
