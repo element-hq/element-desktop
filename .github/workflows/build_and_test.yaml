@@ -89,7 +89,7 @@ jobs:
                     - name: Windows (x86) MSI
                       os: windows-2022
                       artifact: win-ia32
-                      executable: "C:/Program Files (x86)/Element/Element*.exe"
+                      executable: "C:/Program Files/Element/Element*.exe"
                       prepare_cmd: "msiexec ./dist/Element*.msi"
                     - name: Windows (x64) Squirrel
                       os: windows-2022
