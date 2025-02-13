@@ -1,8 +1,24 @@
 diff --git a/node_modules/electron-builder-squirrel-windows/out/SquirrelWindowsTarget.js b/node_modules/electron-builder-squirrel-windows/out/SquirrelWindowsTarget.js
-index 15312f4..07e8c52 100644
+index 15312f4..1d7a8d6 100644
 --- a/node_modules/electron-builder-squirrel-windows/out/SquirrelWindowsTarget.js
 +++ b/node_modules/electron-builder-squirrel-windows/out/SquirrelWindowsTarget.js
-@@ -93,24 +93,26 @@ class SquirrelWindowsTarget extends app_builder_lib_1.Target {
+@@ -38,7 +38,15 @@ class SquirrelWindowsTarget extends app_builder_lib_1.Target {
+         if (distOptions.vendorDirectory) {
+             this.select7zipArch(distOptions.vendorDirectory, arch);
+         }
++        distOptions.fixUpPaths = true;
++        if (this.options.msi) {
++            distOptions.setupMsi = setupFile;
++        }
++        else {
++            distOptions.setupExe = setupFile;
++        }
+         await (0, electron_winstaller_1.createWindowsInstaller)(distOptions);
++        await packager.signAndEditResources(artifactPath, arch, installerOutDir);
+         await packager.info.callArtifactBuildCompleted({
+             file: artifactPath,
+             target: this,
+@@ -93,24 +101,26 @@ class SquirrelWindowsTarget extends app_builder_lib_1.Target {
          const appInfo = packager.appInfo;
          // If not specified will use the Squirrel.Windows that is shipped with electron-installer(https://github.com/electron/windows-installer/tree/main/vendor)
          // After https://github.com/electron-userland/electron-builder-binaries/pull/56 merged, will add `electron-builder-binaries` to get the latest version of squirrel.
@@ -32,7 +48,7 @@ index 15312f4..07e8c52 100644
          };
          const projectUrl = await appInfo.computePackageUrl();
          if (projectUrl != null) {
-@@ -121,13 +123,20 @@ class SquirrelWindowsTarget extends app_builder_lib_1.Target {
+@@ -121,13 +131,19 @@ class SquirrelWindowsTarget extends app_builder_lib_1.Target {
              await (0, promises_1.writeFile)(nuspecTemplate, templateContent);
              options.nuspecTemplate = nuspecTemplate;
          }
@@ -46,10 +62,9 @@ index 15312f4..07e8c52 100644
 +        // Copy entire vendor directory to temp directory
 +        await fs.promises.cp(vendorDirectory, tmpVendorDirectory, { recursive: true });
 +        builder_util_1.log.debug({ from: vendorDirectory, to: tmpVendorDirectory }, "copied vendor directory");
-+        // Find and sign all executables in the temp vendor directory
 +        const files = await fs.promises.readdir(tmpVendorDirectory);
 +        for (const file of files) {
-+            if (file.endsWith(".exe") || file.endsWith(".dll")) {
++            if (["Squirrel.exe", "StubExecutable.exe"].includes(file)) {
 +                const filePath = path.join(tmpVendorDirectory, file);
 +                builder_util_1.log.debug({ file: filePath }, "signing vendor executable");
 +                await packager.sign(filePath);
