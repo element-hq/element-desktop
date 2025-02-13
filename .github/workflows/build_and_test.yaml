@@ -120,7 +120,7 @@ jobs:
                   path: dist
 
             - name: Prepare for tests
-              run: ${{ matrix.prepare_cmd }}
+              run: . "${{ matrix.prepare_cmd }}"
               if: matrix.prepare_cmd
 
             # We previously disabled the `EnableNodeCliInspectArguments` fuse, but Playwright requires
