@@ -82,15 +82,15 @@ jobs:
                       artifact: linux-arm64-sqlcipher-static
                       executable: "/opt/Element/element-desktop"
                       prepare_cmd: "sudo apt-get -qq update && sudo apt install -y ./dist/*.deb"
-                    - name: Windows (x86) Squirrel
-                      os: windows-2022
-                      artifact: win-ia32
-                      executable: "./dist/win-ia32-unpacked/Element.exe"
-                    - name: Windows (x86) MSI
-                      os: windows-2022
-                      artifact: win-ia32
-                      executable: "C:/Program Files (x86)/Element/Element*.exe"
-                      prepare_cmd: "msiexec ./dist/Element*.msi"
+                    #                    - name: Windows (x86) Squirrel
+                    #                      os: windows-2022
+                    #                      artifact: win-ia32
+                    #                      executable: "./dist/win-ia32-unpacked/Element.exe"
+                    #                    - name: Windows (x86) MSI
+                    #                      os: windows-2022
+                    #                      artifact: win-ia32
+                    #                      executable: "C:/Program Files (x86)/Element/Element*.exe"
+                    #                      prepare_cmd: "msiexec ./dist/Element*.msi"
                     - name: Windows (x64) Squirrel
                       os: windows-2022
                       artifact: win-x64
