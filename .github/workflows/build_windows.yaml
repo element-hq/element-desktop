@@ -177,8 +177,12 @@ jobs:
             - name: Trust eSigner sandbox cert
               if: inputs.sign == ''
               run: |
-                  $Cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2 (get-item ./dist/win-*unpacked/*.exe)
+                  Set-StrictMode -Version 'Latest'
+                  $Cert = Get-ChildItem Cert:\CurrentUser\My -CodeSigningCert | Select-Object -First 1
+                  echo Certificate: $Cert
                   $Chain = New-Object System.Security.Cryptography.X509Certificates.X509Chain
+                  echo Chain: $Chain
+                  echo Root: $Chain.ChainElements[2].Certificate
                   [void]$Chain.Build($Cert)
                   $Chain.ChainElements[2].Certificate | Export-Certificate -Type CERT -FilePath SSLcom-sandbox-root.crt
                   certutil.exe -addstore root ./SSLcom-sandbox-root.crt
