@@ -126,7 +126,7 @@ jobs:
             # We previously disabled the `EnableNodeCliInspectArguments` fuse, but Playwright requires
             # it to be enabled to test Electron apps, so turn it back on.
             - name: Set EnableNodeCliInspectArguments fuse enabled
-              run: $RUN_AS npx @electron/fuses write --app ${{ matrix.executable }} EnableNodeCliInspectArguments=on
+              run: $RUN_AS npx @electron/fuses write --app "${{ matrix.executable }}" EnableNodeCliInspectArguments=on
               shell: bash
               env:
                   # We need sudo on Linux as it is installed in /opt/
