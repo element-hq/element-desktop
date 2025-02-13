@@ -173,14 +173,6 @@ jobs:
               env:
                   ARCH: ${{ steps.config.outputs.arch }}
 
-            - name: Assert all required files are present
-              run: |
-                  set -x
-                  test -f ./dist/element-desktop*$ARCH.deb
-                  test -f ./dist/element-desktop*.tar.gz
-              env:
-                  ARCH: ${{ inputs.arch }}
-
             # We exclude *-unpacked as it loses permissions and the tarball contains it with correct permissions
             - name: Upload Artifacts
               uses: actions/upload-artifact@v4
@@ -190,3 +182,10 @@ jobs:
                       dist
                       !dist/*-unpacked/**
                   retention-days: 1
+
+            - name: Assert all required files are present
+              run: |
+                  test -f ./dist/element-desktop*$ARCH.deb
+                  test -f ./dist/element-desktop*.tar.gz
+              env:
+                  ARCH: ${{ inputs.arch }}

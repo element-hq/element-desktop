@@ -175,19 +175,11 @@ jobs:
               run: |
                   yarn electron-builder --publish never -w ${{ steps.config.outputs.build-args }}
 
-            - name: Assert all required files are present
-              run: |
-                  Test-Path './dist/win-*unpacked/Element*.exe'
-                  Test-Path './dist/squirrel-windows*/Element Setup*.exe'
-                  Test-Path './dist/squirrel-windows*/element-desktop-*-full.nupkg'
-                  Test-Path './dist/squirrel-windows*/RELEASES'
-                  Test-Path './dist/Element*.msi'
-
             - name: Trust eSigner demo cert
               if: inputs.sign == ''
               run: |
                   Invoke-WebRequest -OutFile SSLcom-DEV.crt "$env:SSLCOM_DEV_CRT"
-                  Import-Certificate -CertStoreLocation Cert:\CurrentUser\Root -FilePath .\SSLcom-DEV.crt
+                  Import-Certificate -CertStoreLocation Cert:\CurrentUser\My -FilePath ./SSLcom-DEV.crt
               env:
                   INSTALL_DIR: C:\Users\runneradmin\eSignerCKA
                   MASTER_KEY_FILE: C:\Users\runneradmin\eSignerCKA\master.key
@@ -205,3 +197,11 @@ jobs:
                   path: |
                       dist
                   retention-days: 1
+
+            - name: Assert all required files are present
+              run: |
+                  Test-Path './dist/win-*unpacked/Element*.exe'
+                  Test-Path './dist/squirrel-windows*/Element Setup*.exe'
+                  Test-Path './dist/squirrel-windows*/element-desktop-*-full.nupkg'
+                  Test-Path './dist/squirrel-windows*/RELEASES'
+                  Test-Path './dist/Element*.msi'
