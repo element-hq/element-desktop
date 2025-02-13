@@ -182,3 +182,10 @@ jobs:
                       dist
                       !dist/*-unpacked/**
                   retention-days: 1
+
+            - name: Assert all required files are present
+              run: |
+                  test -f ./dist/element-desktop*$ARCH.deb
+                  test -f ./dist/element-desktop*.tar.gz
+              env:
+                  ARCH: ${{ inputs.arch }}

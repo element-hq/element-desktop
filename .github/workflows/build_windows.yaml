@@ -174,10 +174,20 @@ jobs:
               run: |
                   yarn electron-builder --publish never -w ${{ steps.config.outputs.build-args }}
 
+            - name: Trust eSigner sandbox cert
+              if: inputs.sign == ''
+              run: |
+                  Set-StrictMode -Version 'Latest'
+                  Import-Certificate -CertStoreLocation Cert:\LocalMachine\Root -FilePath .github/SSLcom-sandbox.crt
+
             - name: Check app was signed successfully
               if: inputs.sign
               run: |
-                  . "$env:SIGNTOOL_PATH" verify /pa (get-item ./dist/squirrel-windows*/*.exe)
+                  Set-StrictMode -Version 'Latest'
+                  Get-ChildItem `
+                  -Recurse dist `
+                  -Include *.exe, *.msi `
+                  | ForEach-Object -Process {. 'C:\Program Files (x86)\Windows Kits\10\bin\10.0.22000.0\x64\signtool.exe' verify /pa $_.FullName; if(!$?) { throw }}
 
             - name: Upload Artifacts
               uses: actions/upload-artifact@v4
@@ -186,3 +196,11 @@ jobs:
                   path: |
                       dist
                   retention-days: 1
+
+            - name: Assert all required files are present
+              run: |
+                  Test-Path './dist/win-*unpacked/Element*.exe'
+                  Test-Path './dist/squirrel-windows*/Element Setup*.exe'
+                  Test-Path './dist/squirrel-windows*/element-desktop-*-full.nupkg'
+                  Test-Path './dist/squirrel-windows*/RELEASES'
+                  Test-Path './dist/Element*.msi'
