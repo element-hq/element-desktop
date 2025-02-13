@@ -173,8 +173,9 @@ jobs:
               env:
                   ARCH: ${{ steps.config.outputs.arch }}
 
-            - name: Assert all expected files are present
+            - name: Assert all required files are present
               run: |
+                  set -x
                   test -f ./dist/element-desktop*$ARCH.deb
                   test -f ./dist/element-desktop*.tar.gz
               env:

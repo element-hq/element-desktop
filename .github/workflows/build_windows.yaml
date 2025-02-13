@@ -175,7 +175,7 @@ jobs:
               run: |
                   yarn electron-builder --publish never -w ${{ steps.config.outputs.build-args }}
 
-            - name: Assert all expected files are present
+            - name: Assert all required files are present
               run: |
                   Test-Path './dist/win-*unpacked/Element*.exe'
                   Test-Path './dist/squirrel-windows*/Element Setup*.exe'
