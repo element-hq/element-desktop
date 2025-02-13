@@ -177,10 +177,10 @@ jobs:
             - name: Trust eSigner sandbox cert
               if: inputs.sign == ''
               run: |
-                  $cert = (Get-AuthenticodeSignature -FilePath (get-item ./dist/win-*unpacked/*.exe)).SignerCertificate
-                  $chain = New-Object -TypeName System.Security.Cryptography.X509Certificates.X509Chain
-                  $chain.Build($cert)
-                  $chain.ChainElements[2].Certificate | Export-Certificate -Type CERT -FilePath SSLcom-sandbox-root.crt
+                  $Cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2 (get-item ./dist/win-*unpacked/*.exe)
+                  $Chain = New-Object System.Security.Cryptography.X509Certificates.X509Chain
+                  [void]$Chain.Build($Cert)
+                  $Chain.ChainElements[2].Certificate | Export-Certificate -Type CERT -FilePath SSLcom-sandbox-root.crt
                   certutil.exe -addstore root ./SSLcom-sandbox-root.crt
               env:
                   INSTALL_DIR: C:\Users\runneradmin\eSignerCKA
