@@ -86,23 +86,23 @@ jobs:
                     - name: Windows (x86) Squirrel
                       os: windows-2022
                       artifact: win-ia32
-                      executable: "$env:LOCALAPPDATA/element-desktop*/Element.exe"
+                      executable: "$LOCALAPPDATA/element-desktop*/Element.exe"
                       prepare_cmd: ". './dist/squirrel-windows*/Element Setup*.exe'"
                     - name: Windows (x86) MSI
                       os: windows-2022
                       artifact: win-ia32
                       executable: "C:/Program Files (x86)/Element*/Element*.exe"
-                      prepare_cmd: "msiexec ./dist/Element*.msi"
+                      prepare_cmd: "start /wait msiexec -i ./dist/Element*.msi"
                     - name: Windows (x64) Squirrel
                       os: windows-2022
                       artifact: win-x64
-                      executable: "$env:LOCALAPPDATA/element-desktop*/Element.exe"
+                      executable: "$LOCALAPPDATA/element-desktop*/Element.exe"
                       prepare_cmd: ". './dist/squirrel-windows*/Element Setup*.exe'"
                     - name: Windows (x64) MSI
                       os: windows-2022
                       artifact: win-x64
                       executable: "C:/Program Files/Element*/Element*.exe"
-                      prepare_cmd: "msiexec ./dist/Element*.msi"
+                      prepare_cmd: "start /wait msiexec -i ./dist/Element*.msi"
         name: Test ${{ matrix.name }}
         runs-on: ${{ matrix.os }}
         steps:
