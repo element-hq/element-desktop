@@ -134,6 +134,13 @@ jobs:
               env:
                   VERSION: ${{ inputs.version }}
 
+            - name: Assert all expected files are present
+              run: |
+                  test -f ./dist/Element*.dmg
+                  test -f ./dist/Element*-mac.zip
+                  test -f ./dist/releases.json
+                  test -f ./dist/releases-legacy.json
+
             # We exclude mac-universal as the unpacked app takes forever to upload and zip and dmg already contains it
             - name: Upload Artifacts
               uses: actions/upload-artifact@v4

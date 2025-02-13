@@ -35,12 +35,12 @@ jobs:
                     - name: Windows (x64) Squirrel
                       os: windows-2022
                       artifact: win-x64
-                      executable: "%LOCALAPPDATA%\element-desktop*\Element.exe"
+                      executable: "%LOCALAPPDATA%/element-desktop*/Element.exe"
                       prepare_cmd: "./dist/squirrel-windows*/Element Setup*.exe"
                     - name: Windows (x64) MSI
                       os: windows-2022
                       artifact: win-x64
-                      executable: "C:\Program Files*\Element\Element*.exe"
+                      executable: "C:/Program Files*/Element/Element*.exe"
                       prepare_cmd: "msiexec ./dist/Element*.msi"
         name: Test ${{ matrix.name }}
         runs-on: ${{ matrix.os }}
