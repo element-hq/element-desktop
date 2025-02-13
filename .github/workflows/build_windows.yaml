@@ -37,8 +37,8 @@ jobs:
         environment: ${{ inputs.sign && 'packages.element.io' || '' }}
         env:
             SIGNTOOL_PATH: "C:/Program Files (x86)/Windows Kits/10/bin/10.0.22000.0/x86/signtool.exe"
+            CERTUTIL_PATH: "C:/Program Files (x86)/Windows Kits/10/bin/10.0.22000.0/x86/certutil.exe"
             ESIGNER_URL: https://github.com/SSLcom/eSignerCKA/releases/download/v1.0.6/SSL.COM-eSigner-CKA_1.0.6.zip
-            SSLCOM_DEV_CRT: https://raw.githubusercontent.com/adrelanos/codesigner-test/refs/heads/main/SSLcom-DEV.crt
             INSTALL_DIR: C:\Users\runneradmin\eSignerCKA
             MASTER_KEY_FILE: C:\Users\runneradmin\eSignerCKA\master.key
             DEBUG: "electron-builder,electron-windows-sign"
@@ -175,11 +175,14 @@ jobs:
               run: |
                   yarn electron-builder --publish never -w ${{ steps.config.outputs.build-args }}
 
-            - name: Trust eSigner demo cert
+            - name: Trust eSigner sandbox cert
               if: inputs.sign == ''
               run: |
-                  Invoke-WebRequest -OutFile SSLcom-DEV.crt "$env:SSLCOM_DEV_CRT"
-                  Import-Certificate -CertStoreLocation Cert:\CurrentUser\My -FilePath ./SSLcom-DEV.crt
+                  $cert = (Get-AuthenticodeSignature -FilePath (get-item ./dist/win-*unpacked/*.exe)).SignerCertificate
+                  $chain = New-Object -TypeName System.Security.Cryptography.X509Certificates.X509Chain
+                  $chain.Build($cert)
+                  $chain.ChainElements[2].Certificate | Export-Certificate -Type CERT -FilePath SSLcom-sandbox-root.crt
+                  . "$env:CERTUTIL_PATH" -addstore root ./SSLcom-sandbox-root.crt
               env:
                   INSTALL_DIR: C:\Users\runneradmin\eSignerCKA
                   MASTER_KEY_FILE: C:\Users\runneradmin\eSignerCKA\master.key
