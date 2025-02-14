@@ -1,0 +1,63 @@
+{
+    "action": {
+        "cancel": "Diddymu",
+        "close": "Cau",
+        "close_brand": "Cau %(brand)s",
+        "copy": "Copïo",
+        "cut": "Torri",
+        "delete": "Dileu",
+        "edit": "Golygu",
+        "minimise": "Lleihau",
+        "paste": "Gludo",
+        "paste_match_style": "Gludo a Chyfateb Arddull",
+        "quit": "Gadael",
+        "redo": "Ail-wneud",
+        "select_all": "Dewis y Cyfan",
+        "show_hide": "Dangos/Cuddio",
+        "undo": "Dadwneud",
+        "zoom_in": "Chwyddo i Mewn",
+        "zoom_out": "Chwyddo Allan"
+    },
+    "common": {
+        "about": "Ynghylch",
+        "brand_help": "%(brand)s Cymorth",
+        "help": "Cymorth",
+        "preferences": "Dewisiadau"
+    },
+    "confirm_quit": "Ydych chi'n siŵr eich bod am roi'r gorau iddi?",
+    "edit_menu": {
+        "speech": "Lleferydd",
+        "speech_start_speaking": "Cychwyn Llefaru",
+        "speech_stop_speaking": "Peidio Llefaru"
+    },
+    "file_menu": {
+        "label": "Ffeil"
+    },
+    "menu": {
+        "hide": "Cuddio",
+        "hide_others": "Cuddio'r Gweddill",
+        "services": "Gwasanaethau",
+        "unhide": "Datguddio"
+    },
+    "right_click_menu": {
+        "add_to_dictionary": "Ychwanegu i'r Geiriadur",
+        "copy_email": "Copïo cyfeiriad e-bost",
+        "copy_image": "Copïo delwedd",
+        "copy_image_url": "Copïo cyfeiriad delwedd",
+        "copy_link_url": "Copïo cyfeiriad y ddolen",
+        "save_image_as": "Cadw delwedd fel...",
+        "save_image_as_error_description": "Methodd y ddelwedd â chadw",
+        "save_image_as_error_title": "Wedi methu cadw'r ddelwedd"
+    },
+    "view_menu": {
+        "actual_size": "Maint Gwirioneddol",
+        "toggle_developer_tools": "Toggle Developer Tools",
+        "toggle_full_screen": "Toglo Sgrin Lawn",
+        "view": "Golwg"
+    },
+    "window_menu": {
+        "bring_all_to_front": "Popeth i'r Blaen",
+        "label": "Ffenestr",
+        "zoom": "Chwyddo"
+    }
+}

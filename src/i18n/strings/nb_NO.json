@@ -1,0 +1,63 @@
+{
+    "action": {
+        "cancel": "Avbryt",
+        "close": "Lukk",
+        "close_brand": "Avslutt %(brand)s",
+        "copy": "Kopier",
+        "cut": "Klipp",
+        "delete": "Slett",
+        "edit": "Rediger",
+        "minimise": "Minimere",
+        "paste": "Lim inn",
+        "paste_match_style": "Lim inn og match stil",
+        "quit": "Avslutt",
+        "redo": "Gjør om",
+        "select_all": "Velg alle",
+        "show_hide": "Vis/Skjul",
+        "undo": "Angre",
+        "zoom_in": "Zoom inn",
+        "zoom_out": "Zoom ut"
+    },
+    "common": {
+        "about": "Om",
+        "brand_help": "%(brand)s Hjelp",
+        "help": "Hjelp",
+        "preferences": "Brukervalg"
+    },
+    "confirm_quit": "Er du sikker på at du vil slutte?",
+    "edit_menu": {
+        "speech": "Tale",
+        "speech_start_speaking": "Begynn å snakke",
+        "speech_stop_speaking": "Slutt å snakke"
+    },
+    "file_menu": {
+        "label": "Fil"
+    },
+    "menu": {
+        "hide": "Skjul",
+        "hide_others": "Skjul andre",
+        "services": "Tjenester",
+        "unhide": "Slutt å skjule"
+    },
+    "right_click_menu": {
+        "add_to_dictionary": "Legg til i ordbok",
+        "copy_email": "Kopier e-postadressen",
+        "copy_image": "Kopier bildet",
+        "copy_image_url": "Kopier bildeadresse",
+        "copy_link_url": "Kopier link adresse",
+        "save_image_as": "Lagre bildet som...",
+        "save_image_as_error_description": "Bildet kunne ikke lagres",
+        "save_image_as_error_title": "Kunne ikke lagre bildet"
+    },
+    "view_menu": {
+        "actual_size": "Faktisk størrelse",
+        "toggle_developer_tools": "Veksle Utvikleralternativer",
+        "toggle_full_screen": "Veksle Fullskjerm",
+        "view": "Vis"
+    },
+    "window_menu": {
+        "bring_all_to_front": "Flytt Alt Frem",
+        "label": "Vindu",
+        "zoom": "Forstørr"
+    }
+}
