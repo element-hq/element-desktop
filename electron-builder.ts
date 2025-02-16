@@ -18,6 +18,9 @@ import { readFile, writeFile } from "node:fs/promises";
  *  Replaces spaces in the product name with dashes as spaces in paths can cause issues
  *  Removes libsqlcipher0 recommended dependency if env SQLCIPHER_BUNDLED is asserted.
  *  Passes $ED_DEBIAN_CHANGELOG to build.deb.fpm if specified
+ *
+ * On macOS:
+ *  Passes $APPLE_TEAM_ID to build.mac.extendInfo["ElectronTeamID"] if specified.
  */
 
 const NIGHTLY_APP_ID = "im.riot.nightly";
@@ -184,6 +187,18 @@ const config: Omit<Writable<Configuration>, "electronFuses"> & {
 if (process.env.ED_SIGNTOOL_SUBJECT_NAME && process.env.ED_SIGNTOOL_THUMBPRINT) {
     config.win.signtoolOptions!.certificateSubjectName = process.env.ED_SIGNTOOL_SUBJECT_NAME;
     config.win.signtoolOptions!.certificateSha1 = process.env.ED_SIGNTOOL_THUMBPRINT;
+}
+
+/**
+ * Allow specifying ElectronTeamID via env vars
+ * @param {string} process.env.APPLE_TEAM_ID
+ * Workaround for https://github.com/electron-userland/electron-builder/issues/7995
+ */
+if (process.env.APPLE_TEAM_ID) {
+    config.mac.extendInfo = {
+        ElectronTeamID: process.env.APPLE_TEAM_ID,
+    };
+    config.mac.entitlements = "./build/entitlements-sandbox.mac.plist";
 }
 
 /**
