@@ -93,10 +93,11 @@ jobs:
                     - name: Windows (x86) MSI
                       os: windows-2022
                       artifact: win-ia32
-                      executable: "C:/Program Files (x86)/Element/Element.exe"
+                      # We avoid installing to Program Files as then we lack privileges to modify fuses for Playwright testing
+                      executable: "${{ env.RUNNER_TEMP }}/Element/Element.exe"
                       prepare_cmd: |
                           $file = Get-Item ./dist/*.msi | Select -First 1 -ExpandProperty FullName
-                          Start-Process $file -ArgumentList '/quiet' -Wait
+                          Start-Process $file -ArgumentList '/quiet APPLICATIONFOLDER="${{ env.RUNNER_TEMP }}/Element"' -Wait
                     - name: Windows (x64) Squirrel
                       os: windows-2022
                       artifact: win-x64
@@ -107,10 +108,11 @@ jobs:
                     - name: Windows (x64) MSI
                       os: windows-2022
                       artifact: win-x64
-                      executable: "C:/Program Files/Element/Element.exe"
+                      # We avoid installing to Program Files as then we lack privileges to modify fuses for Playwright testing
+                      executable: "${{ env.RUNNER_TEMP }}/Element/Element.exe"
                       prepare_cmd: |
                           $file = Get-Item ./dist/*.msi | Select -First 1 -ExpandProperty FullName
-                          Start-Process $file -ArgumentList '/quiet' -Wait
+                          Start-Process $file -ArgumentList '/quiet APPLICATIONFOLDER="${{ env.RUNNER_TEMP }}/Element"' -Wait
         name: Test ${{ matrix.name }}
         runs-on: ${{ matrix.os }}
         steps:
@@ -136,8 +138,11 @@ jobs:
             # We previously disabled the `EnableNodeCliInspectArguments` fuse, but Playwright requires
             # it to be enabled to test Electron apps, so turn it back on.
             - name: Set EnableNodeCliInspectArguments fuse enabled
-              run: sudo npx @electron/fuses write --app "${{ matrix.executable }}" EnableNodeCliInspectArguments=on
+              run: $RUN_AS npx @electron/fuses write --app ${{ matrix.executable }} EnableNodeCliInspectArguments=on
               shell: bash
+              env:
+                  # We need sudo on Linux as it is installed in /opt/
+                  RUN_AS: ${{ runner.os == 'Linux' && 'sudo' || '' }}
 
             - name: Run tests
               uses: coactions/setup-xvfb@6b00cf1889f4e1d5a48635647013c0508128ee1a
