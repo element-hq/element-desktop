@@ -21,6 +21,7 @@ jobs:
         name: Windows
         uses: ./.github/workflows/build_windows.yaml
         strategy:
+            fail-fast: false
             matrix:
                 arch: [x64, ia32, arm64]
         with:
