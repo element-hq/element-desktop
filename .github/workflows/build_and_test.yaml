@@ -50,6 +50,7 @@ jobs:
             - linux
             - windows
         strategy:
+            fail-fast: false
             matrix:
                 include:
                     - name: macOS Universal
@@ -82,14 +83,43 @@ jobs:
                       artifact: linux-arm64-sqlcipher-static
                       executable: "/opt/Element/element-desktop"
                       prepare_cmd: "sudo apt-get -qq update && sudo apt install -y ./dist/*.deb"
-                    - name: Windows (x86)
+                    - name: Windows (x86) Squirrel
                       os: windows-2022
                       artifact: win-ia32
-                      executable: "./dist/win-ia32-unpacked/Element.exe"
-                    - name: Windows (x64)
+                      executable: "$LOCALAPPDATA/element-desktop/app-1.11.91/Element.exe"
+                      prepare_cmd: |
+                          . "./dist/squirrel-windows*/Element Setup*.exe"
+                          Start-Sleep -Seconds 30
+                    - name: Windows (x86) MSI
+                      os: windows-2022
+                      artifact: win-ia32
+                      # We avoid installing to Program Files as then we lack privileges to modify fuses for Playwright testing
+                      executable: "$RUNNER_TEMP/Element/Element.exe"
+                      prepare_cmd: |
+                          $file = Get-Item ./dist/*.msi | Select -First 1 -ExpandProperty FullName
+                          Start-Process $file -ArgumentList "/quiet APPLICATIONFOLDER=$env:RUNNER_TEMP/Element" -Wait
+                    - name: Windows (x64) Squirrel
+                      os: windows-2022  ≥0∫≤1
+                      artifact: win-x64
+                      executable: "$LOCALAPPDATA/element-desktop/app-1.11.91/Element.exe"
+                      prepare_cmd: |
+                          . "./dist/squirrel-windows*/Element Setup*.exe"
+                          Start-Sleep -Seconds 30
+                          ls $env:LOCALAPPDATA
+                          ls $env:LOCALAPPDATA/element-desktop
+                    - name: Windows (x64) MSI
                       os: windows-2022
                       artifact: win-x64
-                      executable: "./dist/win-unpacked/Element.exe"
+                      # We avoid installing to Program Files as then we lack privileges to modify fuses for Playwright testing
+                      executable: "$RUNNER_TEMP/Element/Element.exe"
+                      prepare_cmd: |
+                          $file = Get-Item ./dist/*.msi | Select -First 1 -ExpandProperty FullName
+                          Start-Process $file -ArgumentList "/quiet APPLICATIONFOLDER=$env:RUNNER_TEMP/Element" -Wait
+                          ls $env:RUNNER_TEMP
+                          ls $env:RUNNER_TEMP/Element
+                          Start-Sleep -Seconds 30
+                          ls $env:RUNNER_TEMP
+                          ls $env:RUNNER_TEMP/Element
         name: Test ${{ matrix.name }}
         runs-on: ${{ matrix.os }}
         steps:
@@ -120,12 +150,6 @@ jobs:
               env:
                   # We need sudo on Linux as it is installed in /opt/
                   RUN_AS: ${{ runner.os == 'Linux' && 'sudo' || '' }}
-
-            - name: Workaround macOS GHA permission issues
-              if: runner.os == 'macOS'
-              run: |
-                  sqlite3 $HOME/Library/Application\ Support/com.apple.TCC/TCC.db "INSERT OR IGNORE INTO access VALUES ('kTCCServiceMicrophone','/usr/local/opt/runner/provisioner/provisioner',1,2,4,1,NULL,NULL,0,'UNUSED',NULL,0,1687786159,NULL,NULL,'UNUSED',1687786159);"
-                  sqlite3 $HOME/Library/Application\ Support/com.apple.TCC/TCC.db "INSERT OR IGNORE INTO access VALUES ('kTCCServiceMicrophone','/opt/off/opt/runner/provisioner/provisioner',1,2,4,1,NULL,NULL,0,'UNUSED',NULL,0,1687786159,NULL,NULL,'UNUSED',1687786159);"
 
             - name: Run tests
               uses: coactions/setup-xvfb@6b00cf1889f4e1d5a48635647013c0508128ee1a
