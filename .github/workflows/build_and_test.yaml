@@ -86,29 +86,31 @@ jobs:
                     - name: Windows (x86) Squirrel
                       os: windows-2022
                       artifact: win-ia32
-                      executable: "$LOCALAPPDATA/element-desktop/Element.exe"
-                      prepare_cmd: '. "./dist/squirrel-windows*/Element Setup*.exe"; Start-Sleep -Seconds 30'
+                      executable: "$LOCALAPPDATA/element-desktop/app-*/Element.exe"
+                      prepare_cmd: |
+                          . "./dist/squirrel-windows*/Element Setup*.exe"
+                          Start-Sleep -Seconds 30
                     - name: Windows (x86) MSI
                       os: windows-2022
                       artifact: win-ia32
                       executable: "C:/Program Files (x86)/Element/Element.exe"
                       prepare_cmd: |
                           $file = Get-Item ./dist/*.msi | Select -First 1 -ExpandProperty FullName
-                          $procMain = Start-Process "msiexec" "/i `"$file`" /qn /l*! `"$log`"" -NoNewWindow -PassThru
-                          $procMain.WaitForExit()
+                          Start-Process $file -ArgumentList '/quiet' -Wait
                     - name: Windows (x64) Squirrel
                       os: windows-2022
                       artifact: win-x64
-                      executable: "$LOCALAPPDATA/element-desktop/Element.exe"
-                      prepare_cmd: '. "./dist/squirrel-windows*/Element Setup*.exe"; Wait-Process -Name setup'
+                      executable: "$LOCALAPPDATA/element-desktop/app-*/Element.exe"
+                      prepare_cmd: |
+                          . "./dist/squirrel-windows*/Element Setup*.exe"
+                          Start-Sleep -Seconds 30
                     - name: Windows (x64) MSI
                       os: windows-2022
                       artifact: win-x64
                       executable: "C:/Program Files/Element/Element.exe"
                       prepare_cmd: |
                           $file = Get-Item ./dist/*.msi | Select -First 1 -ExpandProperty FullName
-                          $procMain = Start-Process "msiexec" "/i `"$file`" /qn /l*! `"$log`"" -NoNewWindow -PassThru
-                          $procMain.WaitForExit()
+                          Start-Process $file -ArgumentList '/quiet' -Wait
         name: Test ${{ matrix.name }}
         runs-on: ${{ matrix.os }}
         steps:
