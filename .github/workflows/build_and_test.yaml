@@ -105,6 +105,8 @@ jobs:
                       prepare_cmd: |
                           . "./dist/squirrel-windows*/Element Setup*.exe"
                           Start-Sleep -Seconds 30
+                          ls $env:LOCALAPPDATA
+                          ls $env:LOCALAPPDATA/element-desktop
                     - name: Windows (x64) MSI
                       os: windows-2022
                       artifact: win-x64
@@ -113,6 +115,11 @@ jobs:
                       prepare_cmd: |
                           $file = Get-Item ./dist/*.msi | Select -First 1 -ExpandProperty FullName
                           Start-Process $file -ArgumentList '/quiet APPLICATIONFOLDER="$env:RUNNER_TEMP/Element"' -Wait
+                          ls $env:RUNNER_TEMP
+                          ls $env:RUNNER_TEMP/Element
+                          Start-Sleep -Seconds 30
+                          ls $env:RUNNER_TEMP
+                          ls $env:RUNNER_TEMP/Element
         name: Test ${{ matrix.name }}
         runs-on: ${{ matrix.os }}
         steps:
