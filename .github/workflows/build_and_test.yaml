@@ -86,7 +86,7 @@ jobs:
                     - name: Windows (x86) Squirrel
                       os: windows-2022
                       artifact: win-ia32
-                      executable: "$LOCALAPPDATA/element-desktop/app-1.11.92/Element.exe"
+                      executable: "$LOCALAPPDATA/element-desktop/app-1.11.91/Element.exe"
                       prepare_cmd: |
                           . "./dist/squirrel-windows*/Element Setup*.exe"
                           Start-Sleep -Seconds 30
@@ -99,9 +99,9 @@ jobs:
                           $file = Get-Item ./dist/*.msi | Select -First 1 -ExpandProperty FullName
                           Start-Process $file -ArgumentList "/quiet APPLICATIONFOLDER=$env:RUNNER_TEMP/Element" -Wait
                     - name: Windows (x64) Squirrel
-                      os: windows-2022
+                      os: windows-2022  ≥0∫≤1
                       artifact: win-x64
-                      executable: "$LOCALAPPDATA/element-desktop/app-1.11.92/Element.exe"
+                      executable: "$LOCALAPPDATA/element-desktop/app-1.11.91/Element.exe"
                       prepare_cmd: |
                           . "./dist/squirrel-windows*/Element Setup*.exe"
                           Start-Sleep -Seconds 30
@@ -114,7 +114,7 @@ jobs:
                       executable: "$RUNNER_TEMP/Element/Element.exe"
                       prepare_cmd: |
                           $file = Get-Item ./dist/*.msi | Select -First 1 -ExpandProperty FullName
-                          Start-Process $file -ArgumentList '/quiet APPLICATIONFOLDER="$env:RUNNER_TEMP/Element"' -Wait
+                          Start-Process $file -ArgumentList "/quiet APPLICATIONFOLDER=$env:RUNNER_TEMP/Element" -Wait
                           ls $env:RUNNER_TEMP
                           ls $env:RUNNER_TEMP/Element
                           Start-Sleep -Seconds 30
