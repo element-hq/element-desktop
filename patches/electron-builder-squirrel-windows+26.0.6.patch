@@ -1,8 +1,8 @@
 diff --git a/node_modules/electron-builder-squirrel-windows/out/SquirrelWindowsTarget.js b/node_modules/electron-builder-squirrel-windows/out/SquirrelWindowsTarget.js
-index 15312f4..06ac3d0 100644
+index 15312f4..7695162 100644
 --- a/node_modules/electron-builder-squirrel-windows/out/SquirrelWindowsTarget.js
 +++ b/node_modules/electron-builder-squirrel-windows/out/SquirrelWindowsTarget.js
-@@ -1,11 +1,10 @@
+@@ -1,11 +1,11 @@
  "use strict";
  Object.defineProperty(exports, "__esModule", { value: true });
  const builder_util_1 = require("builder-util");
@@ -12,10 +12,11 @@ index 15312f4..06ac3d0 100644
  const path = require("path");
  const fs = require("fs");
 -const promises_1 = require("fs/promises");
++const os = require("os");
  const electron_winstaller_1 = require("electron-winstaller");
  class SquirrelWindowsTarget extends app_builder_lib_1.Target {
      constructor(packager, outDir) {
-@@ -14,8 +13,28 @@ class SquirrelWindowsTarget extends app_builder_lib_1.Target {
+@@ -14,8 +14,28 @@ class SquirrelWindowsTarget extends app_builder_lib_1.Target {
          this.outDir = outDir;
          //tslint:disable-next-line:no-object-literal-type-assertion
          this.options = { ...this.packager.platformSpecificBuildOptions, ...this.packager.config.squirrelWindows };
@@ -46,7 +47,7 @@ index 15312f4..06ac3d0 100644
      }
      async build(appOutDir, arch) {
          const packager = this.packager;
-@@ -24,28 +43,35 @@ class SquirrelWindowsTarget extends app_builder_lib_1.Target {
+@@ -24,28 +44,35 @@ class SquirrelWindowsTarget extends app_builder_lib_1.Target {
          const setupFile = packager.expandArtifactNamePattern(this.options, "exe", arch, "${productName} Setup ${version}.${ext}");
          const installerOutDir = path.join(this.outDir, `squirrel-windows${(0, app_builder_lib_1.getArchSuffix)(arch)}`);
          const artifactPath = path.join(installerOutDir, setupFile);
@@ -92,16 +93,20 @@ index 15312f4..06ac3d0 100644
          const packagePrefix = `${this.appName}-${(0, electron_winstaller_1.convertVersion)(version)}-`;
          packager.info.dispatchArtifactCreated({
              file: path.join(installerOutDir, `${packagePrefix}full.nupkg`),
-@@ -73,11 +99,24 @@ class SquirrelWindowsTarget extends app_builder_lib_1.Target {
+@@ -71,13 +98,28 @@ class SquirrelWindowsTarget extends app_builder_lib_1.Target {
+     get appName() {
+         return this.options.name || this.packager.appInfo.name;
      }
-     select7zipArch(vendorDirectory, arch) {
-         // Copy the 7-Zip executable for the configured architecture.
+-    select7zipArch(vendorDirectory, arch) {
+-        // Copy the 7-Zip executable for the configured architecture.
 -        const resolvedArch = (0, app_builder_lib_1.getArchSuffix)(arch) === "" ? process.arch : (0, app_builder_lib_1.getArchSuffix)(arch);
--        fs.copyFileSync(path.join(vendorDirectory, `7z-${resolvedArch}.exe`), path.join(vendorDirectory, "7z.exe"));
--        fs.copyFileSync(path.join(vendorDirectory, `7z-${resolvedArch}.dll`), path.join(vendorDirectory, "7z.dll"));
-+        const resolvedArch = (0, app_builder_lib_1.getArchSuffix)(arch) || `-${process.arch}`;
-+        fs.copyFileSync(path.join(vendorDirectory, `7z${resolvedArch}.exe`), path.join(vendorDirectory, "7z.exe"));
-+        fs.copyFileSync(path.join(vendorDirectory, `7z${resolvedArch}.dll`), path.join(vendorDirectory, "7z.dll"));
++    select7zipArch(vendorDirectory) {
++        // https://github.com/electron/windows-installer/blob/main/script/select-7z-arch.js
++        // Even if we're cross-compiling for a different arch like arm64,
++        // we still need to use the 7-Zip executable for the host arch
++        const resolvedArch = os.arch;
+         fs.copyFileSync(path.join(vendorDirectory, `7z-${resolvedArch}.exe`), path.join(vendorDirectory, "7z.exe"));
+         fs.copyFileSync(path.join(vendorDirectory, `7z-${resolvedArch}.dll`), path.join(vendorDirectory, "7z.dll"));
      }
 -    async computeEffectiveDistOptions() {
 +    async createNuspecTemplateWithProjectUrl() {
@@ -121,7 +126,7 @@ index 15312f4..06ac3d0 100644
          const packager = this.packager;
          let iconUrl = this.options.iconUrl;
          if (iconUrl == null) {
-@@ -91,42 +130,27 @@ class SquirrelWindowsTarget extends app_builder_lib_1.Target {
+@@ -91,42 +133,27 @@ class SquirrelWindowsTarget extends app_builder_lib_1.Target {
          }
          checkConflictingOptions(this.options);
          const appInfo = packager.appInfo;
@@ -168,7 +173,7 @@ index 15312f4..06ac3d0 100644
 -                },
 -            };
 +        options.vendorDirectory = await this.prepareSignedVendorDirectory();
-+        this.select7zipArch(options.vendorDirectory, arch);
++        this.select7zipArch(options.vendorDirectory);
 +        options.fixUpPaths = true;
 +        options.setupExe = setupFile;
 +        if (this.options.msi) {
