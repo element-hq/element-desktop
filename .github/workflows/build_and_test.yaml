@@ -94,10 +94,10 @@ jobs:
                       os: windows-2022
                       artifact: win-ia32
                       # We avoid installing to Program Files as then we lack privileges to modify fuses for Playwright testing
-                      executable: "${{ env.RUNNER_TEMP }}/Element/Element.exe"
+                      executable: "$RUNNER_TEMP/Element/Element.exe"
                       prepare_cmd: |
                           $file = Get-Item ./dist/*.msi | Select -First 1 -ExpandProperty FullName
-                          Start-Process $file -ArgumentList '/quiet APPLICATIONFOLDER="${{ env.RUNNER_TEMP }}/Element"' -Wait
+                          Start-Process $file -ArgumentList "/quiet APPLICATIONFOLDER=$env:RUNNER_TEMP/Element" -Wait
                     - name: Windows (x64) Squirrel
                       os: windows-2022
                       artifact: win-x64
@@ -109,10 +109,10 @@ jobs:
                       os: windows-2022
                       artifact: win-x64
                       # We avoid installing to Program Files as then we lack privileges to modify fuses for Playwright testing
-                      executable: "${{ env.RUNNER_TEMP }}/Element/Element.exe"
+                      executable: "$RUNNER_TEMP/Element/Element.exe"
                       prepare_cmd: |
                           $file = Get-Item ./dist/*.msi | Select -First 1 -ExpandProperty FullName
-                          Start-Process $file -ArgumentList '/quiet APPLICATIONFOLDER="${{ env.RUNNER_TEMP }}/Element"' -Wait
+                          Start-Process $file -ArgumentList '/quiet APPLICATIONFOLDER="$env:RUNNER_TEMP/Element"' -Wait
         name: Test ${{ matrix.name }}
         runs-on: ${{ matrix.os }}
         steps:
