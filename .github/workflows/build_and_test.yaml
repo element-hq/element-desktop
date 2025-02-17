@@ -87,21 +87,22 @@ jobs:
                       os: windows-2022
                       artifact: win-ia32
                       executable: "$LOCALAPPDATA/element-desktop*/Element.exe"
-                      prepare_cmd: '. "./dist/squirrel-windows*/Element Setup*.exe"; Wait-Process -Name setup'
+                      prepare_cmd: '. "./dist/squirrel-windows*/Element Setup*.exe"; Start-Sleep -Seconds 15'
                     - name: Windows (x86) MSI
                       os: windows-2022
                       artifact: win-ia32
-                      executable: "C:/Program Files (x86)/Element*/Element*.exe"
+                      executable: "C:/Program File*/Elemen*/Element.exe"
+                      #                      executable: "C:/Program Files (x86)/Element*/Element*.exe"
                       prepare_cmd: 'Start-Process msiexec "/i ./dist/Element*.msi /qn"'
                     - name: Windows (x64) Squirrel
                       os: windows-2022
                       artifact: win-x64
                       executable: "$LOCALAPPDATA/element-desktop*/Element.exe"
-                      prepare_cmd: '. "./dist/squirrel-windows*/Element Setup*.exe"; Wait-Process -Name setup'
+                      prepare_cmd: '. "./dist/squirrel-windows*/Element Setup*.exe"; Wait-Process -Name Setup'
                     - name: Windows (x64) MSI
                       os: windows-2022
                       artifact: win-x64
-                      executable: "C:/Program Files/Element*/Element*.exe"
+                      executable: "C:/Program File*/Elemen*/Element.exe"
                       prepare_cmd: 'Start-Process msiexec "/i ./dist/Element*.msi /qn"'
         name: Test ${{ matrix.name }}
         runs-on: ${{ matrix.os }}
