@@ -37,7 +37,6 @@ jobs:
         environment: ${{ inputs.sign && 'packages.element.io' || '' }}
         env:
             SIGNTOOL_PATH: "C:/Program Files (x86)/Windows Kits/10/bin/10.0.22000.0/x86/signtool.exe"
-            DEBUG: "electron-builder,electron-windows-sign"
         steps:
             - uses: nbucic/variable-mapper@0673f6891a0619ba7c002ecfed0f9f4f39017b6f
               id: config
@@ -82,26 +81,26 @@ jobs:
 
             # ActiveTCL package on choco is from 2015,
             # this one is newer but includes more than we need
-            #            - name: Choco install tclsh
-            #              if: steps.cache.outputs.cache-hit != 'true'
-            #              shell: pwsh
-            #              run: |
-            #                  choco install -y magicsplat-tcl-tk --no-progress
-            #                  echo "${HOME}/AppData/Local/Apps/Tcl86/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+            - name: Choco install tclsh
+              if: steps.cache.outputs.cache-hit != 'true'
+              shell: pwsh
+              run: |
+                  choco install -y magicsplat-tcl-tk --no-progress
+                  echo "${HOME}/AppData/Local/Apps/Tcl86/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
-            #            - name: Choco install NetWide Assembler
-            #              if: steps.cache.outputs.cache-hit != 'true'
-            #              shell: pwsh
-            #              run: |
-            #                  choco install -y nasm --no-progress
-            #                  echo "C:/Program Files/NASM" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+            - name: Choco install NetWide Assembler
+              if: steps.cache.outputs.cache-hit != 'true'
+              shell: pwsh
+              run: |
+                  choco install -y nasm --no-progress
+                  echo "C:/Program Files/NASM" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
-            #            - name: Install Rust
-            #              if: steps.cache.outputs.cache-hit != 'true'
-            #              run: |
-            #                  rustup toolchain install stable --profile minimal --no-self-update
-            #                  rustup default stable
-            #                  rustup target add ${{ steps.config.outputs.target }}
+            - name: Install Rust
+              if: steps.cache.outputs.cache-hit != 'true'
+              run: |
+                  rustup toolchain install stable --profile minimal --no-self-update
+                  rustup default stable
+                  rustup target add ${{ steps.config.outputs.target }}
 
             - uses: actions/setup-node@v4
               with:
@@ -112,11 +111,11 @@ jobs:
             - name: Install Deps
               run: "yarn install --frozen-lockfile"
 
-            #            - name: Build Natives
-            #              if: steps.cache.outputs.cache-hit != 'true'
-            #              run: |
-            #                  refreshenv
-            #                  yarn build:native --target ${{ steps.config.outputs.target }}
+            - name: Build Natives
+              if: steps.cache.outputs.cache-hit != 'true'
+              run: |
+                  refreshenv
+                  yarn build:native --target ${{ steps.config.outputs.target }}
 
             - name: Install and configure eSigner CKA
               run: |
