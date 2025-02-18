@@ -160,12 +160,6 @@ jobs:
                   INSTALL_DIR: C:\Users\runneradmin\eSignerCKA
                   MASTER_KEY_FILE: C:\Users\runneradmin\eSignerCKA\master.key
 
-            - name: "[Nightly] Resolve version"
-              if: inputs.version != ''
-              shell: bash
-              run: |
-                  echo "ED_NIGHTLY=${{ inputs.version }}" >> $GITHUB_ENV
-
             # XXX: For whatever reason if we use `yarn build ...` it freezes, but splitting it into parts it is fine
             - run: yarn run build:ts
             - run: yarn run build:res
@@ -173,6 +167,9 @@ jobs:
             - name: Build App
               run: |
                   yarn electron-builder --publish never -w ${{ steps.config.outputs.build-args }}
+              env:
+                  # Only set for Nightly builds
+                  ED_NIGHTLY: ${{ inputs.version }}
 
             - name: Check app was signed successfully
               if: inputs.sign

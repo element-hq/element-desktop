@@ -76,11 +76,6 @@ jobs:
                   pip3 install setuptools
                   yarn build:native:universal
 
-            - name: "[Nightly] Resolve version"
-              if: inputs.version != ''
-              run: |
-                  echo "ED_NIGHTLY=${{ inputs.version }}" >> $GITHUB_ENV
-
             # We split these because electron-builder gets upset if we set CSC_LINK even to an empty string
             - name: "[Signed] Build App"
               if: inputs.sign != ''
@@ -107,6 +102,8 @@ jobs:
                   yarn build:universal --publish never
               env:
                   CSC_IDENTITY_AUTO_DISCOVERY: false
+                  # Only set for Nightly builds
+                  ED_NIGHTLY: ${{ inputs.version }}
 
             - name: Generate releases.json
               if: inputs.base-url
