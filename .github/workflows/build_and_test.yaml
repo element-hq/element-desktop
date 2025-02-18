@@ -50,7 +50,6 @@ jobs:
             - linux
             - windows
         strategy:
-            fail-fast: false
             matrix:
                 include:
                     - name: macOS Universal
@@ -83,43 +82,14 @@ jobs:
                       artifact: linux-arm64-sqlcipher-static
                       executable: "/opt/Element/element-desktop"
                       prepare_cmd: "sudo apt-get -qq update && sudo apt install -y ./dist/*.deb"
-                    - name: Windows (x86) Squirrel
+                    - name: Windows (x86)
                       os: windows-2022
                       artifact: win-ia32
-                      executable: "$LOCALAPPDATA/element-desktop/app-1.11.91/Element.exe"
-                      prepare_cmd: |
-                          & "./dist/squirrel-windows-ia32/Element Setup*.exe" --silent
-                          Start-Sleep -Seconds 60
-                    - name: Windows (x86) MSI
-                      os: windows-2022
-                      artifact: win-ia32
-                      # We avoid installing to Program Files as then we lack privileges to modify fuses for Playwright testing
-                      executable: "$RUNNER_TEMP/Element/Element.exe"
-                      prepare_cmd: |
-                          $file = Get-Item ./dist/*.msi | Select -First 1 -ExpandProperty FullName
-                          Start-Process $file -ArgumentList "/quiet" -Wait
-                    - name: Windows (x64) Squirrel
+                      executable: "./dist/win-ia32-unpacked/Element.exe"
+                    - name: Windows (x64)
                       os: windows-2022
                       artifact: win-x64
-                      executable: "$LOCALAPPDATA/element-desktop/app-1.11.91/Element.exe"
-                      prepare_cmd: |
-                          & "./dist/squirrel-windows/Element Setup*.exe" --silent
-                          Start-Sleep -Seconds 60
-                          ls $env:LOCALAPPDATA
-                          ls $env:LOCALAPPDATA/element-desktop
-                    - name: Windows (x64) MSI
-                      os: windows-2022
-                      artifact: win-x64
-                      # We avoid installing to Program Files as then we lack privileges to modify fuses for Playwright testing
-                      executable: "$RUNNER_TEMP/Element/Element.exe"
-                      prepare_cmd: |
-                          $file = Get-Item ./dist/*.msi | Select -First 1 -ExpandProperty FullName
-                          echo $file
-                          Start-Process $file -ArgumentList "/quiet APPLICATIONFOLDER=$env:RUNNER_TEMP/Element" -Wait
-                          ls $env:RUNNER_TEMP
-                          Start-Sleep -Seconds 60
-                          ls $env:RUNNER_TEMP
-                          ls $env:RUNNER_TEMP/Element
+                      executable: "./dist/win-unpacked/Element.exe"
         name: Test ${{ matrix.name }}
         runs-on: ${{ matrix.os }}
         steps:
