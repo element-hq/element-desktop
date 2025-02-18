@@ -107,7 +107,6 @@ jobs:
                   node-version-file: package.json
                   cache: "yarn"
 
-            # Does not need branch matching as only analyses this layer
             - name: Install Deps
               run: "yarn install --frozen-lockfile"
 
