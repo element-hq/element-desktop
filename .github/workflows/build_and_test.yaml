@@ -21,9 +21,8 @@ jobs:
         name: Windows
         uses: ./.github/workflows/build_windows.yaml
         strategy:
-            fail-fast: false
             matrix:
-                arch: [x64, ia32, arm64]
+                arch: [x64, ia32]
         with:
             arch: ${{ matrix.arch }}
 
@@ -83,10 +82,10 @@ jobs:
                       artifact: linux-arm64-sqlcipher-static
                       executable: "/opt/Element/element-desktop"
                       prepare_cmd: "sudo apt-get -qq update && sudo apt install -y ./dist/*.deb"
-                    #                    - name: Windows (x86)
-                    #                      os: windows-2022
-                    #                      artifact: win-ia32
-                    #                      executable: "./dist/win-ia32-unpacked/Element.exe"
+                    - name: Windows (x86)
+                      os: windows-2022
+                      artifact: win-ia32
+                      executable: "./dist/win-ia32-unpacked/Element.exe"
                     - name: Windows (x64)
                       os: windows-2022
                       artifact: win-x64
