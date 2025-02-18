@@ -181,12 +181,11 @@ jobs:
                   Import-Certificate -CertStoreLocation Cert:\LocalMachine\Root -FilePath .github/SSLcom-sandbox.crt
 
             - name: Check app was signed successfully
-              if: inputs.sign
               run: |
                   Set-StrictMode -Version 'Latest'
                   Get-ChildItem `
-                  -Recurse dist `
-                  -Include *.exe, *.msi `
+                      -Recurse dist `
+                      -Include *.exe, *.msi `
                   | ForEach-Object -Process {. 'C:\Program Files (x86)\Windows Kits\10\bin\10.0.22000.0\x64\signtool.exe' verify /pa $_.FullName; if(!$?) { throw }}
 
             - name: Upload Artifacts
