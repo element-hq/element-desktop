@@ -160,13 +160,8 @@ jobs:
                   INSTALL_DIR: C:\Users\runneradmin\eSignerCKA
                   MASTER_KEY_FILE: C:\Users\runneradmin\eSignerCKA\master.key
 
-            # XXX: For whatever reason if we use `yarn build ...` it freezes, but splitting it into parts it is fine
-            - run: yarn run build:ts
-            - run: yarn run build:res
-
             - name: Build App
-              run: |
-                  yarn electron-builder --publish never -w ${{ steps.config.outputs.build-args }}
+              run: yarn build --publish never -w ${{ steps.config.outputs.build-args }}
               env:
                   # Only set for Nightly builds
                   ED_NIGHTLY: ${{ inputs.version }}
