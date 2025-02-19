@@ -123,11 +123,6 @@ jobs:
                       ./scripts/glibc-check.sh $filename
                   done
 
-            - name: "[Nightly] Resolve version"
-              if: inputs.version != ''
-              run: |
-                  echo "ED_NIGHTLY=${{ inputs.version }}" >> $GITHUB_ENV
-
             - name: Generate debian files and arguments
               run: |
                   if [ -f changelog.Debian ]; then
@@ -144,6 +139,9 @@ jobs:
 
             - name: Build App
               run: yarn build --publish never -l ${{ steps.config.outputs.build-args }}
+              env:
+                  # Only set for Nightly builds
+                  ED_NIGHTLY: ${{ inputs.version }}
 
             - name: Check native libraries
               run: |
