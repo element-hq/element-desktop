@@ -139,3 +139,8 @@ jobs:
                       dist
                       !dist/mac-universal/**
                   retention-days: 1
+
+            - name: Assert all required files are present
+              run: |
+                  test -f ./dist/Element*.dmg
+                  test -f ./dist/Element*-mac.zip
