@@ -74,11 +74,6 @@ jobs:
                   path: |
                       ./.hak
 
-            - name: Set up build tools
-              uses: ilammy/msvc-dev-cmd@0b201ec74fa43914dc39ae48a89fd1d8cb592756 # v1.13.0
-              with:
-                  arch: ${{ steps.config.outputs.arch || inputs.arch }}
-
             # ActiveTCL package on choco is from 2015,
             # this one is newer but includes more than we need
             - name: Choco install tclsh
@@ -109,6 +104,18 @@ jobs:
 
             - name: Install Deps
               run: "yarn install --frozen-lockfile"
+
+            - name: Set up sqlcipher macros
+              if: steps.cache.outputs.cache-hit != 'true' && contains(inputs.arch, 'arm')
+              shell: pwsh
+              run: |
+                  echo "NCC=${{ github.workspace }}\scripts\cl.bat" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+            - name: Set up build tools
+              if: steps.cache.outputs.cache-hit != 'true'
+              uses: ilammy/msvc-dev-cmd@0b201ec74fa43914dc39ae48a89fd1d8cb592756 # v1.13.0
+              with:
+                  arch: ${{ steps.config.outputs.arch || inputs.arch }}
 
             - name: Build Natives
               if: steps.cache.outputs.cache-hit != 'true'

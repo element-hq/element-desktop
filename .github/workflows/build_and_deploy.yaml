@@ -62,7 +62,7 @@ jobs:
         name: Windows ${{ matrix.arch }}
         strategy:
             matrix:
-                arch: [ia32, x64]
+                arch: [ia32, x64, arm64]
         uses: ./.github/workflows/build_windows.yaml
         secrets: inherit
         with:
