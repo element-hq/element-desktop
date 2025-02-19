@@ -88,7 +88,7 @@ jobs:
             - name: "Get modified files"
               id: changed_files
               if: steps.cache.outputs.cache-hit != 'true' && github.event_name == 'pull_request'
-              uses: tj-actions/changed-files@d6e91a2266cdb9d62096cebf1e8546899c6aa18f # v45
+              uses: tj-actions/changed-files@dcc7a0cba800f454d79fff4b993e8c3555bcc0a8 # v45
               with:
                   files: |
                       dockerbuild/**
@@ -123,11 +123,6 @@ jobs:
                       ./scripts/glibc-check.sh $filename
                   done
 
-            - name: "[Nightly] Resolve version"
-              if: inputs.version != ''
-              run: |
-                  echo "ED_NIGHTLY=${{ inputs.version }}" >> $GITHUB_ENV
-
             - name: Generate debian files and arguments
               run: |
                   if [ -f changelog.Debian ]; then
@@ -144,6 +139,9 @@ jobs:
 
             - name: Build App
               run: yarn build --publish never -l ${{ steps.config.outputs.build-args }}
+              env:
+                  # Only set for Nightly builds
+                  ED_NIGHTLY: ${{ inputs.version }}
 
             - name: Check native libraries
               run: |
