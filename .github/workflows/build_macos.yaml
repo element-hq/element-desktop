@@ -86,6 +86,8 @@ jobs:
                   APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
                   CSC_KEY_PASSWORD: ${{ secrets.APPLE_CSC_KEY_PASSWORD }}
                   CSC_LINK: ${{ secrets.APPLE_CSC_LINK }}
+                  # Only set for Nightly builds
+                  ED_NIGHTLY: ${{ inputs.version }}
 
             - name: Check app was signed & notarised successfully
               if: inputs.sign != ''
@@ -101,8 +103,6 @@ jobs:
                   yarn build:universal --publish never
               env:
                   CSC_IDENTITY_AUTO_DISCOVERY: false
-                  # Only set for Nightly builds
-                  ED_NIGHTLY: ${{ inputs.version }}
 
             - name: Generate releases.json
               if: inputs.base-url
