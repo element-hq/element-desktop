@@ -112,6 +112,8 @@ jobs:
 
             - name: Prepare artifacts for deployment
               run: |
+                  set -x
+
                   # Windows
                   for arch in x64 ia32 arm64
                   do
@@ -145,6 +147,8 @@ jobs:
             - name: "[Nightly] Strip version from installer file"
               if: needs.prepare.outputs.nightly-version != ''
               run: |
+                  set -x
+
                   # Windows
                   for arch in x64 ia32 arm64
                   do
@@ -161,6 +165,8 @@ jobs:
             - name: "[Release] Prepare release latest symlink"
               if: needs.prepare.outputs.nightly-version == ''
               run: |
+                  set -x
+
                   # Windows
                   for arch in x64 ia32 arm64
                   do
@@ -208,6 +214,7 @@ jobs:
             - name: Deploy artifacts
               if: needs.prepare.outputs.deploy == 'true'
               run: |
+                  set -x
                   aws s3 cp --recursive packages.element.io/ s3://$R2_BUCKET/$DEPLOYMENT_DIR --endpoint-url $R2_URL --region auto
               env:
                   AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
@@ -227,6 +234,8 @@ jobs:
               id: deb
               if: needs.linux.result == 'success'
               run: |
+                  set -x
+
                   for arch in amd64 arm64
                   do
                       echo "$arch=$(ls linux-$arch-sqlcipher-static/*.deb | tail -n1)" >> $GITHUB_OUTPUT
@@ -286,6 +295,8 @@ jobs:
 
             - name: Copy files to S3
               run: |
+                  set -x
+
                   PREFIX="${VERSION%.*}"
                   for file in win-*/*.msi; do
                       filename=$(basename "$file")
