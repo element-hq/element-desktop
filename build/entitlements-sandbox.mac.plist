@@ -24,7 +24,7 @@
     <key>com.apple.security.files.user-selected.read-write</key>
     <true/>
 
-    <!-- Access to camera & microphone for calls ->
+    <!-- Access to camera & microphone for calls -->
     <key>com.apple.security.device.camera</key>
     <true/>
     <key>com.apple.security.device.audio-input</key>
