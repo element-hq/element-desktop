@@ -1,12 +1,12 @@
 /*
 Copyright 2021-2024 New Vector Ltd.
 
-SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only
+SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Commercial
 Please see LICENSE files in the repository root for full details.
 */
 
 import counterpart from "counterpart";
-import { TranslationKey as TKey } from "matrix-web-i18n";
+import { type TranslationKey as TKey } from "matrix-web-i18n";
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 

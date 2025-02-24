@@ -22,32 +22,16 @@ on:
                 description: "How to link sqlcipher, one of 'system' | 'static'"
 env:
     SQLCIPHER_BUNDLED: ${{ inputs.sqlcipher == 'static' && '1' || '' }}
+    MAX_GLIBC: 2.31 # bullseye-era glibc, used by glibc-check.sh
+permissions: {} # No permissions required
 jobs:
-    # We build the hak files on native infrastructure as matrix-seshat fails to cross-compile properly
-    # https://github.com/matrix-org/seshat/issues/135
-    hak:
-        runs-on: ${{ inputs.arch == 'arm64' && 'dind-l-arm64' || 'ubuntu-22.04' }}
+    build:
+        # We build on native infrastructure as matrix-seshat fails to cross-compile properly
+        # https://github.com/matrix-org/seshat/issues/135
+        runs-on: ${{ inputs.arch == 'arm64' && 'ubuntu-22.04-arm' || 'ubuntu-22.04' }}
         env:
             HAK_DOCKER_IMAGE: ghcr.io/element-hq/element-desktop-dockerbuild
-        outputs:
-            cache-key: ${{ steps.cache-key.outputs.key }}
-            arch: ${{ steps.config.outputs.arch }}
-            build-args: ${{ steps.config.outputs.build-args }}
         steps:
-            # Workaround for self-hosted runners lacking tools
-            - name: Install missing tools
-              if: runner.environment == 'self-hosted'
-              run: |
-                  # Sanity check that the arch is arm64 as we expect
-                  [[ $(uname -p) == "aarch64" ]] || exit 1
-
-                  sudo apt-get -qq update
-                  # curl for yarn download, git for tj-actions/changed-files, zstd for actions/cache
-                  sudo apt-get install -y curl git zstd
-                  curl -fsSL --create-dirs -o $HOME/bin/yarn https://github.com/yarnpkg/yarn/releases/download/v1.22.19/yarn-1.22.19.js
-                  chmod +x $HOME/bin/yarn
-                  echo "$HOME/bin" >> $GITHUB_PATH
-
             - name: Resolve docker image tag for push
               if: github.event_name == 'push'
               run: echo "HAK_DOCKER_IMAGE=$HAK_DOCKER_IMAGE:$GITHUB_REF_NAME" >> $GITHUB_ENV
@@ -82,18 +66,11 @@ jobs:
               with:
                   name: webapp
 
-            - name: Calculate cache key
-              id: cache-key
-              run: |
-                  echo "key=$CACHE_KEY" >> $GITHUB_OUTPUT
-              env:
-                  CACHE_KEY: ${{ runner.os }}-${{ github.ref_name }}-${{ inputs.sqlcipher }}-${{ inputs.arch }}-${{ hashFiles('hakHash', 'electronVersion', 'dockerbuild/*') }}
-
             - name: Cache .hak
               id: cache
               uses: actions/cache@v4
               with:
-                  key: ${{ steps.cache-key.outputs.key }}
+                  key: ${{ runner.os }}-${{ github.ref_name }}-${{ inputs.sqlcipher }}-${{ inputs.arch }}-${{ hashFiles('hakHash', 'electronVersion', 'dockerbuild/*') }}
                   path: |
                       ./.hak
 
@@ -105,21 +82,20 @@ jobs:
                   # Workaround for https://github.com/actions/setup-node/issues/317
                   FORCE_COLOR: 0
 
-            # Does not need branch matching as only analyses this layer
             - name: Install Deps
               run: "yarn install --frozen-lockfile"
 
             - name: "Get modified files"
               id: changed_files
               if: steps.cache.outputs.cache-hit != 'true' && github.event_name == 'pull_request'
-              uses: tj-actions/changed-files@c3a1bb2c992d77180ae65be6ae6c166cf40f857c # v45
+              uses: tj-actions/changed-files@dcc7a0cba800f454d79fff4b993e8c3555bcc0a8 # v45
               with:
                   files: |
                       dockerbuild/**
 
             # This allows contributors to test changes to the dockerbuild image within a pull request
             - name: Build docker image
-              uses: docker/build-push-action@4f58ea79222b3b9dc2c8bbdd6debcef730109a75 # v6
+              uses: docker/build-push-action@ca877d9245402d1537745e0e356eab47c3520991 # v6
               if: steps.changed_files.outputs.any_modified == 'true'
               with:
                   context: dockerbuild
@@ -136,51 +112,16 @@ jobs:
                     $HAK_DOCKER_IMAGE \
                     yarn build:native
 
-            - name: Check native libraries
+            - name: Fix permissions on .hak
+              run: sudo chown -R $USER:$USER .hak
+
+            - name: Check native libraries in hak dependencies
               run: |
                   shopt -s globstar
 
                   for filename in ./.hak/hakModules/**/*.node; do
                       ./scripts/glibc-check.sh $filename
                   done
-              env:
-                  MAX_VER: 2.31 # bullseye-era glibc
-
-    build:
-        needs: hak
-        runs-on: ubuntu-24.04
-        steps:
-            - uses: actions/checkout@v4
-
-            - uses: actions/download-artifact@v4
-              with:
-                  name: webapp
-
-            - name: Load .hak
-              id: cache
-              uses: actions/cache/restore@v4
-              with:
-                  key: ${{ needs.hak.outputs.cache-key }}
-                  fail-on-cache-miss: true
-                  path: |
-                      ./.hak
-
-            - uses: actions/setup-node@v4
-              with:
-                  node-version-file: package.json
-                  cache: "yarn"
-              env:
-                  # Workaround for https://github.com/actions/setup-node/issues/317
-                  FORCE_COLOR: 0
-
-            # Does not need branch matching as only analyses this layer
-            - name: Install Deps
-              run: "yarn install --frozen-lockfile"
-
-            - name: "[Nightly] Resolve version"
-              if: inputs.version != ''
-              run: |
-                  echo "ED_NIGHTLY=${{ inputs.version }}" >> $GITHUB_ENV
 
             - name: Generate debian files and arguments
               run: |
@@ -188,8 +129,19 @@ jobs:
                       echo "ED_DEBIAN_CHANGELOG=changelog.Debian" >> $GITHUB_ENV
                   fi
 
+            # Workaround for https://github.com/electron-userland/electron-builder/issues/6116
+            - name: Install fpm
+              if: inputs.arch == 'arm64'
+              run: |
+                  sudo apt-get install ruby-dev build-essential
+                  sudo gem install fpm
+                  echo "USE_SYSTEM_FPM=true" >> $GITHUB_ENV
+
             - name: Build App
-              run: yarn build --publish never -l ${{ needs.hak.outputs.build-args }}
+              run: yarn build --publish never -l ${{ steps.config.outputs.build-args }}
+              env:
+                  # Only set for Nightly builds
+                  ED_NIGHTLY: ${{ inputs.version }}
 
             - name: Check native libraries
               run: |
@@ -217,7 +169,7 @@ jobs:
 
                   ./scripts/glibc-check.sh dist/linux-*unpacked/element-desktop*
               env:
-                  ARCH: ${{ needs.hak.outputs.arch }}
+                  ARCH: ${{ steps.config.outputs.arch }}
 
             # We exclude *-unpacked as it loses permissions and the tarball contains it with correct permissions
             - name: Upload Artifacts
@@ -228,3 +180,10 @@ jobs:
                       dist
                       !dist/*-unpacked/**
                   retention-days: 1
+
+            - name: Assert all required files are present
+              run: |
+                  test -f ./dist/element-desktop*$ARCH.deb
+                  test -f ./dist/element-desktop*.tar.gz
+              env:
+                  ARCH: ${{ inputs.arch }}

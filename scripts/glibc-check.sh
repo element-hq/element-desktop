@@ -3,7 +3,7 @@
 # Source https://gist.github.com/vladimyr/9a03481154cd3048a486bdf71e5e1535/57e57a6ace6fb2c8bba948bce726df7a96c3f99f
 # This scripts lets you check which minimum GLIBC version an executable requires.
 # Simply run './glibc-check.sh path/to/your/binary'
-MAX_VER="${MAX_VER:-2.28}"
+MAX_GLIBC="${MAX_GLIBC:-2.28}"
 
 BINARY="$1"
 
@@ -39,10 +39,10 @@ IFS="
 VERS=$(objdump -T "$BINARY" | grep GLIBC_ | sed 's/.*GLIBC_\([.0-9]*\).*/\1/g' | sort -u)
 
 for VER in $VERS; do
-  vercomp "$VER" "$MAX_VER"
+  vercomp "$VER" "$MAX_GLIBC"
   COMP=$?
   if [[ $COMP -eq 1 ]]; then
-    echo "Error! ${BINARY} requests GLIBC ${VER}, which is higher than target ${MAX_VER}"
+    echo "Error! ${BINARY} requests GLIBC ${VER}, which is higher than target ${MAX_GLIBC}"
     echo "Affected symbols:"
     objdump -T "$BINARY" | grep -F "GLIBC_${VER}"
     echo "Looking for symbols in libraries..."

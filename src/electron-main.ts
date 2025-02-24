@@ -4,13 +4,13 @@ Copyright 2017-2019 Michael Telatynski <7t3chguy@gmail.com>
 Copyright 2016 Aviral Dasgupta
 Copyright 2016 OpenMarket Ltd
 
-SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only
+SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Commercial
 Please see LICENSE files in the repository root for full details.
 */
 
 // Squirrel on windows starts the app with various flags as hooks to tell us when we've been installed/uninstalled etc.
 import "./squirrelhooks.js";
-import { app, BrowserWindow, Menu, autoUpdater, protocol, dialog, Input, Event, session } from "electron";
+import { app, BrowserWindow, Menu, autoUpdater, protocol, dialog, type Input, type Event, session } from "electron";
 // eslint-disable-next-line n/file-extension-in-import
 import * as Sentry from "@sentry/electron/main";
 import AutoLaunch from "auto-launch";
@@ -376,9 +376,9 @@ app.on("ready", async () => {
 
     if (argv["devtools"]) {
         try {
-            const { default: installExt, REACT_DEVELOPER_TOOLS } = await import("electron-devtools-installer");
-            installExt(REACT_DEVELOPER_TOOLS)
-                .then((name: string) => console.log(`Added Extension: ${name}`))
+            const { installExtension, REACT_DEVELOPER_TOOLS } = await import("electron-devtools-installer");
+            installExtension(REACT_DEVELOPER_TOOLS)
+                .then((ext) => console.log(`Added Extension: ${ext.name}`))
                 .catch((err: unknown) => console.log("An error occurred: ", err));
         } catch (e) {
             console.log(e);

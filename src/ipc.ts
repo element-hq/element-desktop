@@ -1,12 +1,12 @@
 /*
 Copyright 2022-2024 New Vector Ltd.
 
-SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only
+SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Commercial
 Please see LICENSE files in the repository root for full details.
 */
 
 import { app, autoUpdater, desktopCapturer, ipcMain, powerSaveBlocker, TouchBar, nativeImage } from "electron";
-import { relaunchApp } from "electron-clear-data";
+import { relaunchApp } from "@standardnotes/electron-clear-data";
 
 import IpcMainEvent = Electron.IpcMainEvent;
 import { recordSSOSession } from "./protocol.js";
@@ -157,7 +157,9 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
         case "createPickleKey":
             try {
                 const pickleKey = await randomArray(32);
-                await keytar?.setPassword("element.io", `${args[0]}|${args[1]}`, pickleKey);
+                // We purposefully throw if keytar is not available so the caller can handle it
+                // rather than sending them a pickle key we did not store on their behalf.
+                await keytar!.setPassword("element.io", `${args[0]}|${args[1]}`, pickleKey);
                 ret = pickleKey;
             } catch {
                 ret = null;

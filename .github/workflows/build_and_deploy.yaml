@@ -41,9 +41,12 @@ run-name: Element ${{ inputs.mode != 'release' && github.event_name != 'release'
 concurrency: ${{ github.workflow }}
 env:
     R2_BUCKET: ${{ vars.R2_BUCKET }}
+permissions: {} # Uses ELEMENT_BOT_TOKEN
 jobs:
     prepare:
         uses: ./.github/workflows/build_prepare.yaml
+        permissions:
+            contents: read
         with:
             config: element.io/${{ inputs.mode || (github.event_name == 'release' && 'release') || 'nightly' }}
             version: ${{ (inputs.mode != 'release' && github.event_name != 'release') && 'develop' || '' }}
@@ -59,7 +62,7 @@ jobs:
         name: Windows ${{ matrix.arch }}
         strategy:
             matrix:
-                arch: [ia32, x64]
+                arch: [ia32, x64, arm64]
         uses: ./.github/workflows/build_windows.yaml
         secrets: inherit
         with:
@@ -193,6 +196,14 @@ jobs:
               with:
                   name: packages.element.io
                   path: packages.element.io
+
+            # Workaround for https://www.cloudflarestatus.com/incidents/t5nrjmpxc1cj
+            - uses: unfor19/install-aws-cli-action@e8b481e524a99f37fbd39fdc1dcb3341ab091367 # v1
+              if: needs.prepare.outputs.deploy == 'true'
+              with:
+                  version: 2.22.35
+                  verbose: false
+                  arch: amd64
 
             - name: Deploy artifacts
               if: needs.prepare.outputs.deploy == 'true'

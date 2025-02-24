@@ -27,6 +27,7 @@ on:
                 type: string
                 required: false
                 description: "The URL to which the output will be deployed."
+permissions: {} # No permissions required
 jobs:
     build:
         runs-on: macos-14 # M1
@@ -64,7 +65,6 @@ jobs:
                   node-version-file: package.json
                   cache: "yarn"
 
-            # Does not need branch matching as only analyses this layer
             - name: Install Deps
               run: "yarn install --frozen-lockfile"
 
@@ -74,11 +74,6 @@ jobs:
                   # Python 3.12 drops distutils which keytar relies on
                   pip3 install setuptools
                   yarn build:native:universal
-
-            - name: "[Nightly] Resolve version"
-              if: inputs.version != ''
-              run: |
-                  echo "ED_NIGHTLY=${{ inputs.version }}" >> $GITHUB_ENV
 
             # We split these because electron-builder gets upset if we set CSC_LINK even to an empty string
             - name: "[Signed] Build App"
@@ -108,6 +103,8 @@ jobs:
                   yarn build:universal --publish never
               env:
                   CSC_IDENTITY_AUTO_DISCOVERY: false
+                  # Only set for Nightly builds
+                  ED_NIGHTLY: ${{ inputs.version }}
 
             - name: Generate releases.json
               if: inputs.base-url
@@ -144,3 +141,8 @@ jobs:
                       dist
                       !dist/mac-universal/**
                   retention-days: 1
+
+            - name: Assert all required files are present
+              run: |
+                  test -f ./dist/Element*.dmg
+                  test -f ./dist/Element*-mac.zip

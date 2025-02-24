@@ -2,7 +2,7 @@
     "action": {
         "cancel": "Mégse",
         "close": "Bezárás",
-        "close_brand": "%(brand)s bezárása",
+        "close_brand": "Az %(brand)s bezárása",
         "copy": "Másolás",
         "cut": "Kivágás",
         "delete": "Törlés",
@@ -56,7 +56,7 @@
         "view": "Megtekintés"
     },
     "window_menu": {
-        "bring_all_to_front": "Mindent előtérbe hoz",
+        "bring_all_to_front": "Minden előtérbe hozása",
         "label": "Ablak",
         "zoom": "Nagyítás"
     }

@@ -4,6 +4,8 @@ on:
     issues:
         types: [opened]
 
+permissions: {} # Uses ELEMENT_BOT_TOKEN
+
 jobs:
     automate-project-columns-next:
         runs-on: ubuntu-24.04

@@ -1,7 +1,7 @@
 /*
 Copyright 2023, 2024 New Vector Ltd.
 
-SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only
+SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Commercial
 Please see LICENSE files in the repository root for full details.
 */
 
@@ -93,7 +93,8 @@ export function setupMacosTitleBar(window: BrowserWindow): void {
             .mx_LeftPanel,
             .mx_RoomView,
             .mx_SpaceRoomView,
-            .mx_AccessibleButton {
+            .mx_AccessibleButton,
+            .mx_Dialog {
                 -webkit-app-region: no-drag;
             }
             /* Exclude context menus and their backgrounds */

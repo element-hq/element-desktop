@@ -3,6 +3,8 @@
 # the correct cache scoping, and additional care must be taken to not run untrusted actions on the develop branch.
 
 # Windows GHA runner by default uses the pwsh shell which breaks codeSigningCert in the workflow
+# We always sign using eSignerCKA to ensure it keeps working, but aside from release & nightlies we use demo credentials
+# which do not yield trusted signatures.
 defaults:
     run:
         shell: powershell
@@ -28,6 +30,7 @@ on:
                 type: string
                 required: false
                 description: "Whether to sign & notarise the build, requires 'packages.element.io' environment"
+permissions: {} # No permissions required
 jobs:
     build:
         runs-on: windows-2022
@@ -71,11 +74,6 @@ jobs:
                   path: |
                       ./.hak
 
-            - name: Set up build tools
-              uses: ilammy/msvc-dev-cmd@0b201ec74fa43914dc39ae48a89fd1d8cb592756 # v1.13.0
-              with:
-                  arch: ${{ steps.config.outputs.arch || inputs.arch }}
-
             # ActiveTCL package on choco is from 2015,
             # this one is newer but includes more than we need
             - name: Choco install tclsh
@@ -104,9 +102,20 @@ jobs:
                   node-version-file: package.json
                   cache: "yarn"
 
-            # Does not need branch matching as only analyses this layer
             - name: Install Deps
               run: "yarn install --frozen-lockfile"
+
+            - name: Set up sqlcipher macros
+              if: steps.cache.outputs.cache-hit != 'true' && contains(inputs.arch, 'arm')
+              shell: pwsh
+              run: |
+                  echo "NCC=${{ github.workspace }}\scripts\cl.bat" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+            - name: Set up build tools
+              if: steps.cache.outputs.cache-hit != 'true'
+              uses: ilammy/msvc-dev-cmd@0b201ec74fa43914dc39ae48a89fd1d8cb592756 # v1.13.0
+              with:
+                  arch: ${{ steps.config.outputs.arch || inputs.arch }}
 
             - name: Build Natives
               if: steps.cache.outputs.cache-hit != 'true'
@@ -115,7 +124,6 @@ jobs:
                   yarn build:native --target ${{ steps.config.outputs.target }}
 
             - name: Install and configure eSigner CKA
-              if: inputs.sign
               run: |
                   Set-StrictMode -Version 'Latest'
 
@@ -133,8 +141,13 @@ jobs:
                   $LogConfig[0] = '<log4net threshold="OFF">'
                   $LogConfig | Set-Content -Path ${{ env.INSTALL_DIR }}/log4net.config
 
-                  # Configure
-                  ${{ env.INSTALL_DIR }}/eSignerCKATool.exe config -mode product -user "${{ secrets.ESIGNER_USER_NAME }}" -pass "${{ secrets.ESIGNER_USER_PASSWORD }}" -totp "${{ secrets.ESIGNER_USER_TOTP }}" -key "${{ env.MASTER_KEY_FILE }}" -r
+                  # Configure - default credentials from https://www.ssl.com/guide/esigner-demo-credentials-and-certificates/
+                  ${{ env.INSTALL_DIR }}/eSignerCKATool.exe config `
+                      -mode ${{ vars.ESIGNER_MODE || 'sandbox' }} `
+                      -user "${{ secrets.ESIGNER_USER_NAME || 'esigner_demo' }}" `
+                      -pass "${{ secrets.ESIGNER_USER_PASSWORD || 'esignerDemo#1' }}" `
+                      -totp "${{ secrets.ESIGNER_USER_TOTP || 'RDXYgV9qju+6/7GnMf1vCbKexXVJmUVr+86Wq/8aIGg=' }}" `
+                      -key "${{ env.MASTER_KEY_FILE }}" -r
                   ${{ env.INSTALL_DIR }}/eSignerCKATool.exe unload
                   ${{ env.INSTALL_DIR }}/eSignerCKATool.exe load
 
@@ -153,24 +166,25 @@ jobs:
                   INSTALL_DIR: C:\Users\runneradmin\eSignerCKA
                   MASTER_KEY_FILE: C:\Users\runneradmin\eSignerCKA\master.key
 
-            - name: "[Nightly] Resolve version"
-              if: inputs.version != ''
-              shell: bash
-              run: |
-                  echo "ED_NIGHTLY=${{ inputs.version }}" >> $GITHUB_ENV
-
-            # XXX: For whatever reason if we use `yarn build ...` it freezes, but splitting it into parts it is fine
-            - run: yarn run build:ts
-            - run: yarn run build:res
-
             - name: Build App
+              run: yarn build --publish never -w ${{ steps.config.outputs.build-args }}
+              env:
+                  # Only set for Nightly builds
+                  ED_NIGHTLY: ${{ inputs.version }}
+
+            - name: Trust eSigner sandbox cert
+              if: inputs.sign == ''
               run: |
-                  yarn electron-builder --publish never -w ${{ steps.config.outputs.build-args }}
+                  Set-StrictMode -Version 'Latest'
+                  Import-Certificate -CertStoreLocation Cert:\LocalMachine\Root -FilePath .github/SSLcom-sandbox.crt
 
             - name: Check app was signed successfully
-              if: inputs.sign != ''
               run: |
-                  . "$env:SIGNTOOL_PATH" verify /pa (get-item ./dist/squirrel-windows*/*.exe)
+                  Set-StrictMode -Version 'Latest'
+                  Get-ChildItem `
+                      -Recurse dist `
+                      -Include *.exe, *.msi `
+                  | ForEach-Object -Process {. $env:SIGNTOOL_PATH verify /pa $_.FullName; if(!$?) { throw }}
 
             - name: Upload Artifacts
               uses: actions/upload-artifact@v4
@@ -179,3 +193,11 @@ jobs:
                   path: |
                       dist
                   retention-days: 1
+
+            - name: Assert all required files are present
+              run: |
+                  Test-Path './dist/win-*unpacked/Element*.exe'
+                  Test-Path './dist/squirrel-windows*/Element Setup*.exe'
+                  Test-Path './dist/squirrel-windows*/element-desktop-*-full.nupkg'
+                  Test-Path './dist/squirrel-windows*/RELEASES'
+                  Test-Path './dist/Element*.msi'
