@@ -203,19 +203,11 @@ jobs:
                   name: packages.element.io
                   path: packages.element.io
 
-            # Workaround for https://www.cloudflarestatus.com/incidents/t5nrjmpxc1cj
-            - uses: unfor19/install-aws-cli-action@e8b481e524a99f37fbd39fdc1dcb3341ab091367 # v1
-              if: needs.prepare.outputs.deploy == 'true'
-              with:
-                  version: 2.22.35
-                  verbose: false
-                  arch: amd64
-
             - name: Deploy artifacts
               if: needs.prepare.outputs.deploy == 'true'
               run: |
                   set -x
-                  aws s3 cp --recursive packages.element.io/ s3://$R2_BUCKET/$DEPLOYMENT_DIR --endpoint-url $R2_URL --region auto
+                  aws s3 cp --recursive packages.element.io/ s3://$R2_BUCKET/$DEPLOYMENT_DIR --endpoint-url $R2_URL --region auto --checksum-algorithm CRC32
               env:
                   AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
