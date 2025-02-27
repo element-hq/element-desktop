@@ -62,7 +62,7 @@ jobs:
 
             - name: Install WinGet
               uses: Cyberboss/install-winget@v1
-            - run: winget install -e --silent --accept-source-agreements --accept-package-agreements --id Microsoft.VisualStudio.2022.Enterprise -v "17.12.3"
+            - run: winget install -e --silent --accept-source-agreements --accept-package-agreements --id Microsoft.VisualStudio.2022.Enterprise -v "17.12.3" --force
 
             - uses: actions/checkout@v4
 
