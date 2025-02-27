@@ -63,6 +63,7 @@ jobs:
             # - name: Install WinGet
             #   uses: Cyberboss/install-winget@v1
             # - run: winget install -e --silent --accept-source-agreements --accept-package-agreements --id Microsoft.VisualStudio.2022.Enterprise -v "17.12.3" --force
+            - run: choco upgrade visualstudio2022enterprise --version=117.12.4
 
             - uses: actions/checkout@v4
 
@@ -125,9 +126,7 @@ jobs:
               if: steps.cache.outputs.cache-hit != 'true'
               run: |
                   refreshenv
-                  yarn docker:setup
-                  yarn docker:install
-                  yarn docker:build:native --target ${{ steps.config.outputs.target }}
+                  yarn build:native --target ${{ steps.config.outputs.target }}
 
             - name: Install and configure eSigner CKA
               run: |
