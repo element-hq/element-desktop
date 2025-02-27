@@ -60,10 +60,8 @@ jobs:
                         }
                       }
 
-            # - name: Install WinGet
-            #   uses: Cyberboss/install-winget@v1
-            # - run: winget install -e --silent --accept-source-agreements --accept-package-agreements --id Microsoft.VisualStudio.2022.Enterprise -v "17.12.3" --force
-            - run: choco upgrade visualstudio2022enterprise --version=117.12.4
+            - name: Install VS2022 BuildTools 17.9.7
+              run: choco install -y visualstudio2022buildtools --version=117.9.7.0 --params "--add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --installChannelUri https://aka.ms/vs/17/release/180911598_-255012421/channel"
 
             - uses: actions/checkout@v4
 
