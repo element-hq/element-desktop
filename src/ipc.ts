@@ -7,12 +7,12 @@ Please see LICENSE files in the repository root for full details.
 
 import { app, autoUpdater, desktopCapturer, ipcMain, powerSaveBlocker, TouchBar, nativeImage } from "electron";
 import { relaunchApp } from "@standardnotes/electron-clear-data";
+import * as keytar from "keytar";
 
 import IpcMainEvent = Electron.IpcMainEvent;
 import { recordSSOSession } from "./protocol.js";
 import { randomArray } from "./utils.js";
 import { Settings } from "./settings.js";
-import { keytar } from "./keytar.js";
 import { getDisplayMediaCallback, setDisplayMediaCallback } from "./displayMediaCallback.js";
 
 ipcMain.on("setBadgeCount", function (_ev: IpcMainEvent, count: number): void {

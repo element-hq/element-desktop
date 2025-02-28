@@ -8,6 +8,7 @@ Please see LICENSE files in the repository root for full details.
 import { app, ipcMain } from "electron";
 import { promises as afs } from "node:fs";
 import path from "node:path";
+import * as keytar from "keytar";
 
 import type {
     Seshat as SeshatType,
@@ -16,7 +17,6 @@ import type {
 } from "matrix-seshat"; // Hak dependency type
 import IpcMainEvent = Electron.IpcMainEvent;
 import { randomArray } from "./utils.js";
-import { keytar } from "./keytar.js";
 
 let seshatSupported = false;
 let Seshat: typeof SeshatType;

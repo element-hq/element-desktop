@@ -22,7 +22,6 @@ import { URL, fileURLToPath } from "node:url";
 import minimist from "minimist";
 
 import "./ipc.js";
-import "./keytar.js";
 import "./seshat.js";
 import "./settings.js";
 import * as tray from "./tray.js";
