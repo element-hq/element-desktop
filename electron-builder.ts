@@ -127,6 +127,7 @@ const config: Omit<Writable<Configuration>, "electronFuses"> & {
         entitlements: "./build/entitlements.mac.plist",
         icon: "build/icons/icon.icns",
         mergeASARs: true,
+        x64ArchFiles: "*.node", // hak already runs lipo
     },
     win: {
         target: ["squirrel", "msi"],
