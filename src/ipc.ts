@@ -161,7 +161,8 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
                 // rather than sending them a pickle key we did not store on their behalf.
                 await keytar!.setPassword("element.io", `${args[0]}|${args[1]}`, pickleKey);
                 ret = pickleKey;
-            } catch {
+            } catch (e) {
+                console.error("Failed to create pickle key", e);
                 ret = null;
             }
             break;
