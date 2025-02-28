@@ -15,7 +15,7 @@
     "type": "module",
     "files": [],
     "engines": {
-        "node": ">=18.0.0 <=22.13.1 || >22"
+        "node": ">=18.0.0 <=22.13.1"
     },
     "scripts": {
         "i18n": "matrix-gen-i18n && yarn i18n:sort && yarn i18n:lint",
