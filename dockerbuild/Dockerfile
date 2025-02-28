@@ -23,5 +23,5 @@ WORKDIR /project
 
 ARG TARGETOS
 ARG TARGETARCH
-COPY .node-version setup.sh /
+COPY .node-version dockerbuild/setup.sh /
 RUN /setup.sh
