@@ -21,8 +21,7 @@ ENV FORCE_COLOR true
 
 WORKDIR /project
 
-ENV NODE_VERSION 20.18.2
 ARG TARGETOS
 ARG TARGETARCH
-COPY setup.sh /setup.sh
+COPY .node-version dockerbuild/setup.sh /
 RUN /setup.sh
