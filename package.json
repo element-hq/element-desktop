@@ -111,8 +111,8 @@
         "typescript": "5.7.3"
     },
     "hakDependencies": {
-        "matrix-seshat": "^4.0.1",
-        "keytar-forked": "^7.9.0"
+        "matrix-seshat": "4.0.1",
+        "keytar-forked": "7.10.0"
     },
     "resolutions": {
         "@types/node": "18.19.76",
