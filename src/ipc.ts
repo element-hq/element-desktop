@@ -7,7 +7,7 @@ Please see LICENSE files in the repository root for full details.
 
 import { app, autoUpdater, desktopCapturer, ipcMain, powerSaveBlocker, TouchBar, nativeImage } from "electron";
 import { relaunchApp } from "@standardnotes/electron-clear-data";
-import * as keytar from "keytar";
+import keytar from "keytar";
 
 import IpcMainEvent = Electron.IpcMainEvent;
 import { recordSSOSession } from "./protocol.js";
@@ -141,11 +141,11 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
 
         case "getPickleKey":
             try {
-                ret = await keytar?.getPassword("element.io", `${args[0]}|${args[1]}`);
+                ret = await keytar.getPassword("element.io", `${args[0]}|${args[1]}`);
                 // migrate from riot.im (remove once we think there will no longer be
                 // logins from the time of riot.im)
                 if (ret === null) {
-                    ret = await keytar?.getPassword("riot.im", `${args[0]}|${args[1]}`);
+                    ret = await keytar.getPassword("riot.im", `${args[0]}|${args[1]}`);
                 }
             } catch {
                 // if an error is thrown (e.g. keytar can't connect to the keychain),
@@ -169,10 +169,10 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
 
         case "destroyPickleKey":
             try {
-                await keytar?.deletePassword("element.io", `${args[0]}|${args[1]}`);
+                await keytar.deletePassword("element.io", `${args[0]}|${args[1]}`);
                 // migrate from riot.im (remove once we think there will no longer be
                 // logins from the time of riot.im)
-                await keytar?.deletePassword("riot.im", `${args[0]}|${args[1]}`);
+                await keytar.deletePassword("riot.im", `${args[0]}|${args[1]}`);
             } catch {}
             break;
         case "getDesktopCapturerSources":

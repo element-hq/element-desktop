@@ -8,7 +8,7 @@ Please see LICENSE files in the repository root for full details.
 import { app, ipcMain } from "electron";
 import { promises as afs } from "node:fs";
 import path from "node:path";
-import * as keytar from "keytar";
+import keytar from "keytar";
 
 import type {
     Seshat as SeshatType,
