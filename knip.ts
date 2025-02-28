@@ -5,7 +5,6 @@ export default {
     project: ["**/*.{js,ts}"],
     ignoreDependencies: [
         // Brought in via hak scripts
-        "keytar",
         "matrix-seshat",
         // Required for `action-validator`
         "@action-validator/*",
