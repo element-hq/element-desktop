@@ -99,9 +99,7 @@ jobs:
 
             - uses: actions/setup-node@v4
               with:
-                  # node-version-file: package.json
-                  # For https://github.com/element-hq/element-desktop/issues/2161
-                  node-version: 22.13.1
+                  node-version-file: .node-version
                   cache: "yarn"
 
             - name: Install Deps
