@@ -2,7 +2,7 @@
 # with broader compatibility, down to Debian bullseye & Ubuntu focal.
 FROM rust:bullseye
 
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 
 RUN curl --proto "=https" -L https://yarnpkg.com/latest.tar.gz | tar xvz && mv yarn-* /yarn && ln -s /yarn/bin/yarn /usr/bin/yarn
 RUN apt-get -qq update && apt-get -y -qq dist-upgrade && \
@@ -16,8 +16,8 @@ RUN apt-get -qq update && apt-get -y -qq dist-upgrade && \
   apt-get purge -y --auto-remove && rm -rf /var/lib/apt/lists/*
 RUN ln -s /usr/bin/python3 /usr/bin/python & ln -s /usr/bin/pip3 /usr/bin/pip
 
-ENV DEBUG_COLORS true
-ENV FORCE_COLOR true
+ENV DEBUG_COLORS=true
+ENV FORCE_COLOR=true
 
 WORKDIR /project
 
