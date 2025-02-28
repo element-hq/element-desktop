@@ -76,7 +76,7 @@ jobs:
 
             - uses: actions/setup-node@v4
               with:
-                  node-version-file: package.json
+                  node-version-file: .node-version
                   cache: "yarn"
               env:
                   # Workaround for https://github.com/actions/setup-node/issues/317
@@ -98,7 +98,7 @@ jobs:
               uses: docker/build-push-action@ca877d9245402d1537745e0e356eab47c3520991 # v6
               if: steps.changed_files.outputs.any_modified == 'true'
               with:
-                  context: dockerbuild
+                  file: dockerbuild/Dockerfile
                   load: true
                   platforms: linux/${{ inputs.arch }}
                   tags: ${{ env.HAK_DOCKER_IMAGE }}
