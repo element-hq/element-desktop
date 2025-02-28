@@ -101,7 +101,7 @@ jobs:
               with:
                   # node-version-file: package.json
                   # For https://github.com/element-hq/element-desktop/issues/2161
-                  node-version: 22.13.1
+                  node-version: 23.9.0
                   cache: "yarn"
 
             - name: Install Deps
