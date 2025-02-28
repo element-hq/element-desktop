@@ -2,7 +2,7 @@
 // Definitions by: Milan Burda <https://github.com/miniak>, Brendan Forster <https://github.com/shiftkey>, Hari Juturu <https://github.com/juturu>
 // Adapted from DefinitelyTyped: https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/keytar/index.d.ts
 
-declare module "keytar" {
+declare module "keytar-forked" {
     /**
      * Get the stored password for the service and account.
      *
