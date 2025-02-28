@@ -10,7 +10,5 @@ import type { DependencyInfo } from "./dep.js";
 import type HakEnv from "./hakEnv.js";
 
 export default async function check(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
-    if (moduleInfo.scripts.check) {
-        await moduleInfo.scripts.check(hakEnv, moduleInfo);
-    }
+    await moduleInfo.scripts.check?.(hakEnv, moduleInfo);
 }
