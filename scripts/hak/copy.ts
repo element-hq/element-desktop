@@ -9,7 +9,6 @@ Please see LICENSE files in the repository root for full details.
 import path from "node:path";
 import fsProm from "node:fs/promises";
 import childProcess from "node:child_process";
-import { rimraf } from "rimraf";
 import { glob } from "glob";
 import { mkdirp } from "mkdirp";
 
@@ -17,20 +16,6 @@ import type HakEnv from "./hakEnv.js";
 import type { DependencyInfo } from "./dep.js";
 
 export default async function copy(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
-    if (moduleInfo.cfg.prune) {
-        console.log("Removing " + moduleInfo.cfg.prune + " from " + moduleInfo.moduleOutDir);
-        // rimraf doesn't have a 'cwd' option: it always uses process.cwd()
-        // (and if you set glob.cwd it just breaks because it can't find the files)
-        const oldCwd = process.cwd();
-        try {
-            await mkdirp(moduleInfo.moduleOutDir);
-            process.chdir(moduleInfo.moduleOutDir);
-            await rimraf(moduleInfo.cfg.prune);
-        } finally {
-            process.chdir(oldCwd);
-        }
-    }
-
     if (moduleInfo.cfg.copy) {
         // If there are multiple moduleBuildDirs, singular moduleBuildDir
         // is the same as moduleBuildDirs[0], so we're just listing the contents
