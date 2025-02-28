@@ -19,7 +19,7 @@ import packageJson from "../../package.json";
 const MODULECOMMANDS = ["check", "fetch", "link", "build", "copy", "clean"];
 
 // Shortcuts for multiple commands at once (useful for building universal binaries
-// because you can run the fetch/fetchDeps/build for each arch and then copy/link once)
+// because you can run the fetch/build for each arch and then copy/link once)
 const METACOMMANDS: Record<string, string[]> = {
     fetchandbuild: ["check", "fetch", "build"],
     copyandlink: ["copy", "link"],
