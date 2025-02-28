@@ -1,10 +1,6 @@
 import * as os from "node:os";
 import * as fs from "node:fs";
-import * as path from "node:path";
-import * as plist from "plist";
-import { AfterPackContext, Arch, Configuration as BaseConfiguration, Platform } from "electron-builder";
-import { computeData } from "app-builder-lib/out/asar/integrity";
-import { readFile, writeFile } from "node:fs/promises";
+import { Configuration as BaseConfiguration } from "electron-builder";
 
 /**
  * This script has different outputs depending on your os platform.
@@ -46,26 +42,6 @@ interface Configuration extends BaseConfiguration {
     } & BaseConfiguration["deb"];
 }
 
-async function injectAsarIntegrity(context: AfterPackContext) {
-    const packager = context.packager;
-
-    // We only need to re-generate asar on universal Mac builds, due to https://github.com/electron/universal/issues/116
-    if (packager.platform !== Platform.MAC || context.arch !== Arch.universal) return;
-
-    const resourcesPath = packager.getResourcesDir(context.appOutDir);
-    const asarIntegrity = await computeData({
-        resourcesPath,
-        resourcesRelativePath: "Resources",
-        resourcesDestinationPath: resourcesPath,
-        extraResourceMatchers: [],
-    });
-
-    const plistPath = path.join(resourcesPath, "..", "Info.plist");
-    const data = plist.parse(await readFile(plistPath, "utf8")) as unknown as Writable<plist.PlistObject>;
-    data["ElectronAsarIntegrity"] = asarIntegrity as unknown as Writable<plist.PlistValue>;
-    await writeFile(plistPath, plist.build(data));
-}
-
 /**
  * @type {import('electron-builder').Configuration}
  * @see https://www.electron.build/configuration/configuration
@@ -89,9 +65,6 @@ const config: Omit<Writable<Configuration>, "electronFuses"> & {
 
         loadBrowserProcessSpecificV8Snapshot: false,
         enableEmbeddedAsarIntegrityValidation: true,
-    },
-    afterPack: async (context: AfterPackContext) => {
-        await injectAsarIntegrity(context);
     },
     files: [
         "package.json",
