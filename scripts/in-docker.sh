@@ -17,7 +17,6 @@ docker run --rm -ti \
  --env ELECTRON_BUILDER_CACHE="/root/.cache/electron-builder" \
  -v ${PWD}:/project \
  -v ${PWD}/docker/node_modules:/project/node_modules \
- -v ${PWD}/docker/.hak:/project/.hak \
  -v ${PWD}/docker/.gnupg:/root/.gnupg \
  -v ~/.cache/electron:/root/.cache/electron \
  -v ~/.cache/electron-builder:/root/.cache/electron-builder \

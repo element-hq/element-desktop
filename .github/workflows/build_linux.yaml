@@ -66,14 +66,6 @@ jobs:
               with:
                   name: webapp
 
-            - name: Cache .hak
-              id: cache
-              uses: actions/cache@v4
-              with:
-                  key: ${{ runner.os }}-${{ github.ref_name }}-${{ inputs.sqlcipher }}-${{ inputs.arch }}-${{ hashFiles('hakHash', 'electronVersion', 'dockerbuild/*') }}
-                  path: |
-                      ./.hak
-
             - uses: actions/setup-node@v4
               with:
                   node-version-file: .node-version
@@ -103,23 +95,11 @@ jobs:
                   platforms: linux/${{ inputs.arch }}
                   tags: ${{ env.HAK_DOCKER_IMAGE }}
 
-            - name: Build Natives
-              if: steps.cache.outputs.cache-hit != 'true'
-              run: |
-                  docker run \
-                    -v ${{ github.workspace }}:/work -w /work \
-                    -e SQLCIPHER_BUNDLED \
-                    $HAK_DOCKER_IMAGE \
-                    yarn build:native
-
-            - name: Fix permissions on .hak
-              run: sudo chown -R $USER:$USER .hak
-
             - name: Check native libraries in hak dependencies
               run: |
                   shopt -s globstar
 
-                  for filename in ./.hak/hakModules/**/*.node; do
+                  for filename in ./node_modules/**/*.node; do
                       ./scripts/glibc-check.sh $filename
                   done
 

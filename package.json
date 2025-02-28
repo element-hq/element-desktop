@@ -27,17 +27,14 @@
         "asar-webapp": "asar p webapp webapp.asar",
         "start": "yarn run build:ts && yarn run build:res && electron .",
         "lint": "yarn lint:types && yarn lint:js && yarn lint:workflows",
-        "lint:js": "eslint --max-warnings 0 src hak playwright scripts && prettier --check .",
-        "lint:js-fix": "eslint --fix --max-warnings 0 src hak playwright scripts && prettier --log-level=warn --write .",
-        "lint:types": "yarn lint:types:src && yarn lint:types:test && yarn lint:types:scripts && yarn lint:types:hak",
+        "lint:js": "eslint --max-warnings 0 src playwright scripts && prettier --check .",
+        "lint:js-fix": "eslint --fix --max-warnings 0 src playwright scripts && prettier --log-level=warn --write .",
+        "lint:types": "yarn lint:types:src && yarn lint:types:test && yarn lint:types:scripts",
         "lint:types:src": "tsc --noEmit",
         "lint:types:test": "tsc --noEmit -p playwright/tsconfig.json",
         "lint:types:scripts": "tsc --noEmit -p scripts/tsconfig.json",
-        "lint:types:hak": "tsc --noEmit -p hak/tsconfig.json",
         "lint:workflows": "find .github/workflows -type f \\( -iname '*.yaml' -o -iname '*.yml' \\) | xargs -I {} sh -c 'echo \"Linting {}\"; action-validator \"{}\"'",
         "lint:knip": "knip",
-        "build:native": "yarn run hak",
-        "build:native:universal": "yarn run hak --target x86_64-apple-darwin fetchandbuild && yarn run hak --target aarch64-apple-darwin fetchandbuild && yarn run hak --target x86_64-apple-darwin --target aarch64-apple-darwin copyandlink",
         "build:32": "yarn run build:ts && yarn run build:res && electron-builder --ia32",
         "build:64": "yarn run build:ts && yarn run build:res && electron-builder --x64",
         "build:universal": "yarn run build:ts && yarn run build:res && electron-builder --universal",
@@ -45,7 +42,6 @@
         "build:ts": "tsc",
         "build:res": "tsx scripts/copy-res.ts",
         "docker:setup": "docker build --platform linux/amd64 -t element-desktop-dockerbuild -f dockerbuild/Dockerfile .",
-        "docker:build:native": "scripts/in-docker.sh yarn run hak",
         "docker:build": "scripts/in-docker.sh yarn run build",
         "docker:install": "scripts/in-docker.sh yarn install",
         "clean": "rimraf webapp.asar dist packages deploys lib",
@@ -64,6 +60,7 @@
         "electron-store": "^10.0.0",
         "electron-window-state": "^5.0.3",
         "keytar-forked": "7.10.0",
+        "matrix-seshat": "https://gitpkg.vercel.app/matrix-org/seshat/seshat-node?t3chguy/binding-gyp",
         "minimist": "^1.2.6",
         "png-to-ico": "^2.1.1",
         "uuid": "^11.0.0"
@@ -111,9 +108,6 @@
         "tar": "^7.0.0",
         "tsx": "^4.19.2",
         "typescript": "5.7.3"
-    },
-    "hakDependencies": {
-        "matrix-seshat": "^4.0.1"
     },
     "resolutions": {
         "@types/node": "18.19.76",

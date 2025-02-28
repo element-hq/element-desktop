@@ -93,14 +93,7 @@ const config: Omit<Writable<Configuration>, "electronFuses"> & {
     afterPack: async (context: AfterPackContext) => {
         await injectAsarIntegrity(context);
     },
-    files: [
-        "package.json",
-        {
-            from: ".hak/hakModules",
-            to: "node_modules",
-        },
-        "lib/**",
-    ],
+    files: ["package.json", "lib/**"],
     extraResources: [
         {
             from: "res/img",

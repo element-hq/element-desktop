@@ -5369,6 +5369,10 @@ math-intrinsics@^1.1.0:
   resolved "https://registry.yarnpkg.com/math-intrinsics/-/math-intrinsics-1.1.0.tgz#a0dd74be81e2aa5c2f27e65ce283605ee4e2b7f9"
   integrity sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g==
 
+"matrix-seshat@https://gitpkg.vercel.app/matrix-org/seshat/seshat-node?t3chguy/binding-gyp":
+  version "4.0.1"
+  resolved "https://gitpkg.vercel.app/matrix-org/seshat/seshat-node?t3chguy/binding-gyp#96cc77502e880d7eb163caaad75c2cbcb3733c6b"
+
 matrix-web-i18n@^3.2.1:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/matrix-web-i18n/-/matrix-web-i18n-3.3.0.tgz#a9f9d87d18ef96f75171883abbf201952cbfbe22"

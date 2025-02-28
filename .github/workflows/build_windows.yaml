@@ -66,14 +66,6 @@ jobs:
               with:
                   name: webapp
 
-            - name: Cache .hak
-              id: cache
-              uses: actions/cache@v4
-              with:
-                  key: ${{ runner.os }}-${{ inputs.arch }}-${{ hashFiles('hakHash', 'electronVersion') }}
-                  path: |
-                      ./.hak
-
             # ActiveTCL package on choco is from 2015,
             # this one is newer but includes more than we need
             - name: Choco install tclsh
@@ -116,12 +108,6 @@ jobs:
               uses: ilammy/msvc-dev-cmd@0b201ec74fa43914dc39ae48a89fd1d8cb592756 # v1.13.0
               with:
                   arch: ${{ steps.config.outputs.arch || inputs.arch }}
-
-            - name: Build Natives
-              if: steps.cache.outputs.cache-hit != 'true'
-              run: |
-                  refreshenv
-                  yarn build:native --target ${{ steps.config.outputs.target }}
 
             - name: Install and configure eSigner CKA
               run: |
