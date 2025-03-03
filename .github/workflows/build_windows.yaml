@@ -60,7 +60,11 @@ jobs:
                         "ia32": {
                           "target": "i686-pc-windows-msvc",
                           "build-args": "--ia32",
-                          "arch": "x86"
+                          "arch": "x86",
+                          "extra_config": {
+                            "title": "Element will no longer be available for this platform soon",
+                            "description": "Support for 32-bit Windows installations will be removed in the next release."
+                          }
                         }
                       }
 
@@ -110,14 +114,14 @@ jobs:
               run: "yarn install --frozen-lockfile"
 
             - name: Insert config snippet
-              if: inputs.extra_config != ''
+              if: steps.config.outputs.extra_config != ''
               shell: bash
               run: |
                 mkdir config-edit
                 yarn asar extract webapp.asar config-edit
                 cd config-edit
                 mv config.json old-config.json
-                echo ${{ inputs.extra_config }} | jq -s '.[0] * .[1]' old-config.json - > config.json
+                echo ${{ steps.config.outputs.extra_config }} | jq -s '.[0] * .[1]' old-config.json - > config.json
                 rm old-config.json
                 cd ..
                 rm webapp.asar
