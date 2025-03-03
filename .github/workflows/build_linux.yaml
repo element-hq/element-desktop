@@ -8,10 +8,6 @@ on:
                 type: string
                 required: true
                 description: "The architecture to build for, one of 'amd64' | 'arm64'"
-            config:
-                type: string
-                required: true
-                description: "The config directory to use"
             version:
                 type: string
                 required: false
