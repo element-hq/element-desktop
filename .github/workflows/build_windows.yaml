@@ -22,10 +22,6 @@ on:
                 type: string
                 required: true
                 description: "The architecture to build for, one of 'x64' | 'ia32' | 'arm64'"
-            extra_config:
-                type: string
-                required: false
-                description: "Additional configuration for config.json to be inserted for this build."
             version:
                 type: string
                 required: false
@@ -62,8 +58,10 @@ jobs:
                           "build-args": "--ia32",
                           "arch": "x86",
                           "extra_config": {
-                            "title": "Element will no longer be available for this platform soon",
-                            "description": "Support for 32-bit Windows installations will be removed in the next release."
+                            "user_notice": {
+                              "title": "Element will no longer be available for this platform soon",
+                              "description": "Support for 32-bit Windows installations will be removed in the next release."
+                            }
                           }
                         }
                       }
