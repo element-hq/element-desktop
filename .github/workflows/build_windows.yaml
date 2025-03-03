@@ -118,7 +118,7 @@ jobs:
                   rm old-config.json
                   cd ..
                   rm webapp.asar
-                  yarn asar pack config-edit/ webpack.asar
+                  yarn asar pack config-edit/ webapp.asar
 
             - name: Set up sqlcipher macros
               if: steps.cache.outputs.cache-hit != 'true' && contains(inputs.arch, 'arm')
