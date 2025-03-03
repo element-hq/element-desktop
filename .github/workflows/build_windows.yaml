@@ -119,8 +119,8 @@ jobs:
                 mv config.json old-config.json
                 echo ${{ inputs.extra_config }} | jq -s '.[0] * .[1]' old-config.json - > config.json
                 rm old-config.json
-                rm webapp.asar
                 cd ..
+                rm webapp.asar
                 yarn asar pack config-edit/ webpack.asar
 
             - name: Set up sqlcipher macros
