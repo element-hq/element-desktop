@@ -67,6 +67,21 @@ jobs:
               with:
                   name: webapp
 
+            - name: Insert config snippet
+              if: steps.config.outputs.extra_config != ''
+              shell: bash
+              run: |
+                mkdir config-edit
+                yarn asar extract webapp.asar config-edit
+                cd config-edit
+                mv config.json old-config.json
+                echo '${{ steps.config.outputs.extra_config }}' | jq -s '.[0] * .[1]' old-config.json - > config.json
+                rm old-config.json
+                cd ..
+                rm webapp.asar
+                yarn asar pack config-edit/ webpack.asar
+
+
             - name: Cache .hak
               id: cache
               uses: actions/cache@v4
@@ -105,20 +120,6 @@ jobs:
 
             - name: Install Deps
               run: "yarn install --frozen-lockfile"
-
-            - name: Insert config snippet
-              if: steps.config.outputs.extra_config != ''
-              shell: bash
-              run: |
-                mkdir config-edit
-                yarn asar extract webapp.asar config-edit
-                cd config-edit
-                mv config.json old-config.json
-                echo ${{ steps.config.outputs.extra_config }} | jq -s '.[0] * .[1]' old-config.json - > config.json
-                rm old-config.json
-                cd ..
-                rm webapp.asar
-                yarn asar pack config-edit/ webpack.asar
 
             - name: Set up sqlcipher macros
               if: steps.cache.outputs.cache-hit != 'true' && contains(inputs.arch, 'arm')
