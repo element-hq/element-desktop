@@ -63,18 +63,10 @@ jobs:
         strategy:
             matrix:
                 arch: [ia32, x64, arm64]
-                include:
-                    - arch: ia32
-                      extra_config: |-
-                        "user_notice": {
-                            "title": "Element will no longer be available for this platform soon",
-                            "description": "Support for 32-bit Windows installations will be removed in the next release."
-                        }
         uses: ./.github/workflows/build_windows.yaml
         secrets: inherit
         with:
             sign: true
-            extra_config: ${{ matrix.extra_config }}
             arch: ${{ matrix.arch }}
             version: ${{ needs.prepare.outputs.nightly-version }}
 
