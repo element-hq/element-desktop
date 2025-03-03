@@ -22,6 +22,10 @@ on:
                 type: string
                 required: true
                 description: "The architecture to build for, one of 'x64' | 'ia32' | 'arm64'"
+            extra_config:
+                type: string
+                required: false
+                description: "Additional configuration for config.json to be inserted for this build."
             version:
                 type: string
                 required: false
@@ -104,6 +108,20 @@ jobs:
 
             - name: Install Deps
               run: "yarn install --frozen-lockfile"
+
+            - name: Insert config snippet
+              if: inputs.extra_config != ''
+              shell: bash
+              run: |
+                mkdir config-edit
+                yarn asar extract webapp.asar config-edit
+                cd config-edit
+                mv config.json old-config.json
+                echo ${{ inputs.extra_config }} | jq -s '.[0] * .[1]' old-config.json - > config.json
+                rm old-config.json
+                rm webapp.asar
+                cd ..
+                yarn asar pack config-edit/ webpack.asar
 
             - name: Set up sqlcipher macros
               if: steps.cache.outputs.cache-hit != 'true' && contains(inputs.arch, 'arm')
