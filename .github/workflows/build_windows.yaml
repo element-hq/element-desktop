@@ -57,7 +57,7 @@ jobs:
                           "target": "i686-pc-windows-msvc",
                           "build-args": "--ia32",
                           "arch": "x86",
-                          "extra_config": "{\"user_notice\": {\"title\": \"Element will no longer be available for this platform soon\",\"description\": \"Support for 32-bit Windows installations will be removed in the next release.\"}}"
+                          "extra_config": "{\"user_notice\": {\"title\": \"Your desktop support ends soon\",\"description\": \"Support for 32-bit Windows installations will end soon, this impacts you. Transition to the web or mobile app for continued access.\"}}"
                         }
                       }
 
