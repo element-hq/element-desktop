@@ -35,7 +35,6 @@ jobs:
                 sqlcipher: [system, static]
                 arch: [amd64, arm64]
         with:
-            config: ${{ github.event.pull_request.base.ref == 'develop' && 'element.io/nightly' || 'element.io/release' }}
             sqlcipher: ${{ matrix.sqlcipher }}
             arch: ${{ matrix.arch }}
 

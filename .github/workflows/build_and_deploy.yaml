@@ -92,7 +92,6 @@ jobs:
         uses: ./.github/workflows/build_linux.yaml
         with:
             arch: ${{ matrix.arch }}
-            config: ${{ needs.prepare.outputs.config }}
             sqlcipher: ${{ matrix.sqlcipher }}
             version: ${{ needs.prepare.outputs.nightly-version }}
 
