@@ -67,14 +67,14 @@ Hak is divided into lifecycle stages, in order:
 
 # hak.json
 
-The scripts section contains scripts used for lifecycle stages that need them (fetch, fetchDeps, build).
+The scripts section contains scripts used for lifecycle stages that need them (fetch, build).
 It also contains 'prune' and 'copy' which are globs of files to delete from the output module directory
 and copy over from the module build directory to the output module directory, respectively.
 
 # Shortcomings
 
 Hak doesn't know about dependencies between lifecycle stages, ie. it doesn't know that you need to
-'fetch' and 'fetchDeps' before you can 'build', etc. You get to run each individually, and remember
+'fetch' before you can 'build', etc. You get to run each individually, and remember
 the right order.
 
 There is also a _lot_ of duplication in the command execution: we should abstract away

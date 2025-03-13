@@ -34,12 +34,9 @@ on:
             packages-dir:
                 description: "The directory non-deb packages for this run should live in within packages.element.io"
                 value: ${{ inputs.nightly && 'nightly' || 'desktop' }}
-            # These are just simple pass-throughs of the input to simplify reuse of complex inline conditions
-            config:
-                description: "The relative path to the config file for this run"
-                value: ${{ inputs.config }}
+            # This is just a simple pass-through of the input to simplify reuse of complex inline conditions
             deploy:
-                description: "The relative path to the config file for this run"
+                description: "Whether the build should be deployed to production"
                 value: ${{ inputs.deploy }}
 permissions: {}
 jobs:
@@ -56,7 +53,7 @@ jobs:
 
             - uses: actions/setup-node@v4
               with:
-                  node-version-file: package.json
+                  node-version-file: .node-version
                   cache: "yarn"
 
             - name: Install Deps

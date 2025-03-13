@@ -62,18 +62,19 @@ jobs:
 
             - uses: actions/setup-node@v4
               with:
-                  node-version-file: package.json
+                  node-version-file: .node-version
                   cache: "yarn"
 
             - name: Install Deps
               run: "yarn install --frozen-lockfile"
 
+            # Python 3.12 drops distutils which keytar relies on
+            - name: Install setuptools
+              run: pip3 install setuptools
+
             - name: Build Natives
               if: steps.cache.outputs.cache-hit != 'true'
-              run: |
-                  # Python 3.12 drops distutils which keytar relies on
-                  pip3 install setuptools
-                  yarn build:native:universal
+              run: yarn build:native:universal
 
             # We split these because electron-builder gets upset if we set CSC_LINK even to an empty string
             - name: "[Signed] Build App"

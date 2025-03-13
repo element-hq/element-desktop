@@ -148,6 +148,9 @@ const config: Omit<Writable<Configuration>, "electronFuses"> & {
             schemes: ["io.element.desktop", "element"],
         },
     ],
+    nativeRebuilder: "sequential",
+    nodeGypRebuild: false,
+    npmRebuild: true,
 };
 
 /**

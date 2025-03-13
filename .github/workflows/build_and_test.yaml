@@ -35,7 +35,6 @@ jobs:
                 sqlcipher: [system, static]
                 arch: [amd64, arm64]
         with:
-            config: ${{ github.event.pull_request.base.ref == 'develop' && 'element.io/nightly' || 'element.io/release' }}
             sqlcipher: ${{ matrix.sqlcipher }}
             arch: ${{ matrix.arch }}
 
@@ -97,7 +96,7 @@ jobs:
 
             - uses: actions/setup-node@v4
               with:
-                  node-version-file: package.json
+                  node-version-file: .node-version
                   cache: "yarn"
 
             - name: Install Deps
