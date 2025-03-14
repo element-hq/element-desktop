@@ -978,7 +978,7 @@
     ajv "^6.12.0"
     ajv-keywords "^3.4.1"
 
-"@electron/asar@3.2.18", "@electron/asar@^3.2.7":
+"@electron/asar@3.2.18":
   version "3.2.18"
   resolved "https://registry.yarnpkg.com/@electron/asar/-/asar-3.2.18.tgz#fa607f829209bab8b9e0ce6658d3fe81b2cba517"
   integrity sha512-2XyvMe3N3Nrs8cV39IKELRHTYUWFKrmqqSY1U+GMlc0jvqjIVnoxhNd2H4JolWQncbJi1DCvb5TNxZuI2fEjWg==
@@ -987,7 +987,7 @@
     glob "^7.1.6"
     minimatch "^3.0.4"
 
-"@electron/asar@3.3.1", "@electron/asar@^3.2.1":
+"@electron/asar@3.3.1", "@electron/asar@^3.2.1", "@electron/asar@^3.3.1":
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/@electron/asar/-/asar-3.3.1.tgz#cd14e897770d9844673dd7c1dc8944e086e1e0ea"
   integrity sha512-WtpC/+34p0skWZiarRjLAyqaAX78DofhDxnREy/V5XHfu1XEXbFCSSMcDQ6hNCPJFaPy8/NnUgYuf9uiCkvKPg==
@@ -1076,12 +1076,12 @@
     tar "^6.0.5"
     yargs "^17.0.1"
 
-"@electron/universal@2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@electron/universal/-/universal-2.0.1.tgz#7b070ab355e02957388f3dbd68e2c3cd08c448ae"
-  integrity sha512-fKpv9kg4SPmt+hY7SVBnIYULE9QJl8L3sCfcBsnqbJwwBwAeTLokJ9TRt9y7bK0JAzIW2y78TVVjvnQEms/yyA==
+"@electron/universal@2.0.1", "@electron/universal@2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@electron/universal/-/universal-2.0.2.tgz#834466e6b117fdb94048bcbde5c91d2d4571e718"
+  integrity sha512-mqY1szx5/d5YLvfCDWWoJdkSIjIz+NdWN4pN0r78lYiE7De+slLpuF3lVxIT+hlJnwk5sH2wFRMl6/oUgUVO3A==
   dependencies:
-    "@electron/asar" "^3.2.7"
+    "@electron/asar" "^3.3.1"
     "@malept/cross-spawn-promise" "^2.0.0"
     debug "^4.3.1"
     dir-compare "^4.2.0"
