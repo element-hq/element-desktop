@@ -6204,7 +6204,7 @@ playwright@1.51.0:
   optionalDependencies:
     fsevents "2.3.2"
 
-plist@3.1.0, plist@^3.0.4, plist@^3.0.5, plist@^3.1.0, plist@^3.10:
+plist@3.1.0, plist@^3.0.4, plist@^3.0.5, plist@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/plist/-/plist-3.1.0.tgz#797a516a93e62f5bde55e0b9cc9c967f860893c9"
   integrity sha512-uysumyrvkUX0rX/dEVqt8gC3sTBzd4zoWfLeS29nb53imdaXVvLINYXTI2GNqzaMuvacNx4uJQ8+b3zXR0pkgQ==
