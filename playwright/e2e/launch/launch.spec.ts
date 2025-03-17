@@ -55,4 +55,16 @@ test.describe("App launch", () => {
             }),
         ).resolves.not.toBeNull();
     });
+
+    test.describe("--no-update", () => {
+        test.use({
+            extraArgs: ["--no-update"],
+        });
+
+        // XXX: this test works fine locally but in CI the app start races with the test plumbing up the stdout/stderr pipes
+        // which means the logs are missed, disabling for now.
+        test.skip("should respect option", async ({ page, stdout }) => {
+            expect(stdout.data.toString()).toContain("Auto update disabled via command line flag");
+        });
+    });
 });
