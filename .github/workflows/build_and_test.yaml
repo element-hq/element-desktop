@@ -49,6 +49,7 @@ jobs:
             - linux
             - windows
         strategy:
+            fail-fast: false
             matrix:
                 include:
                     - name: macOS Universal
