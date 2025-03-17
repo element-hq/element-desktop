@@ -203,6 +203,7 @@ jobs:
                   name: packages.element.io
                   path: packages.element.io
 
+            # Checksum algorithm specified as per https://developers.cloudflare.com/r2/examples/aws/aws-cli/
             - name: Deploy artifacts
               if: needs.prepare.outputs.deploy == 'true'
               run: |
