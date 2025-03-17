@@ -436,8 +436,8 @@ app.on("ready", async () => {
         });
     });
 
-    if (argv["no-update"]) {
-        console.log('Auto update disabled via command line flag "--no-update"');
+    if (argv["update"] === false) {
+        console.log("Auto update disabled via command line flag");
     } else if (global.vectorConfig["update_base_url"]) {
         console.log(`Starting auto update with base URL: ${global.vectorConfig["update_base_url"]}`);
         void updater.start(global.vectorConfig["update_base_url"]);
