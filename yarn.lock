@@ -3491,9 +3491,9 @@ ejs@^3.1.8:
   dependencies:
     jake "^10.8.5"
 
-"electron-builder-squirrel-windows@https://gitpkg.vercel.app/beyondkmp/electron-builder/packages/electron-builder-squirrel-windows?StubExecutable&scripts.prepare=tsc%20--build":
+"electron-builder-squirrel-windows@file:./electron-builder-squirrel-windows-26.0.11-pr8959.tgz":
   version "26.0.11"
-  resolved "https://gitpkg.vercel.app/beyondkmp/electron-builder/packages/electron-builder-squirrel-windows?StubExecutable&scripts.prepare=tsc%20--build#b0fb57b809ffb9b9e4e03844e56e9c034af2d46a"
+  resolved "file:./electron-builder-squirrel-windows-26.0.11-pr8959.tgz#da118af897ac7d561efdb8f8dabf7e3abc478af7"
   dependencies:
     app-builder-lib "workspace:*"
     builder-util "workspace:*"
