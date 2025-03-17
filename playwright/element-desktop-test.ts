@@ -11,12 +11,37 @@ import fs from "node:fs/promises";
 import path, { dirname } from "node:path";
 import os from "node:os";
 import { fileURLToPath } from "node:url";
+import { PassThrough } from "node:stream";
+
+/**
+ * A PassThrough stream that captures all data written to it.
+ */
+class CapturedPassThrough extends PassThrough {
+    private _chunks = [];
+
+    public constructor() {
+        super();
+        super.on("data", this.onData);
+    }
+
+    private onData = (chunk): void => {
+        this._chunks.push(chunk);
+    };
+
+    public get data(): Buffer {
+        return Buffer.concat(this._chunks);
+    }
+}
 
 interface Fixtures {
     app: ElectronApplication;
     tmpDir: string;
     extraEnv: Record<string, string>;
     extraArgs: string[];
+
+    // Utilities to capture stdout and stderr for tests to make assertions against
+    stdout: CapturedPassThrough;
+    stderr: CapturedPassThrough;
 }
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -24,6 +49,16 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 export const test = base.extend<Fixtures>({
     extraEnv: {},
     extraArgs: [],
+
+    // eslint-disable-next-line no-empty-pattern
+    stdout: async ({}, use) => {
+        await use(new CapturedPassThrough());
+    },
+    // eslint-disable-next-line no-empty-pattern
+    stderr: async ({}, use) => {
+        await use(new CapturedPassThrough());
+    },
+
     // eslint-disable-next-line no-empty-pattern
     tmpDir: async ({}, use) => {
         const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "element-desktop-tests-"));
@@ -31,7 +66,7 @@ export const test = base.extend<Fixtures>({
         await use(tmpDir);
         await fs.rm(tmpDir, { recursive: true });
     },
-    app: async ({ tmpDir, extraEnv, extraArgs }, use) => {
+    app: async ({ tmpDir, extraEnv, extraArgs, stdout, stderr }, use) => {
         const args = ["--profile-dir", tmpDir];
 
         const executablePath = process.env["ELEMENT_DESKTOP_EXECUTABLE"];
@@ -49,8 +84,8 @@ export const test = base.extend<Fixtures>({
             args: [...args, ...extraArgs],
         });
 
-        app.process().stdout.pipe(process.stdout);
-        app.process().stderr.pipe(process.stderr);
+        app.process().stdout.pipe(stdout).pipe(process.stdout);
+        app.process().stderr.pipe(stderr).pipe(process.stderr);
 
         await app.firstWindow();
 

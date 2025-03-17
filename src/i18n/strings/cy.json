@@ -9,7 +9,7 @@
         "edit": "Golygu",
         "minimise": "Lleihau",
         "paste": "Gludo",
-        "paste_match_style": "Gludo a Chyfateb Arddull",
+        "paste_match_style": "Arddull Gludo a Chyfateb",
         "quit": "Gadael",
         "redo": "Ail-wneud",
         "select_all": "Dewis y Cyfan",
@@ -20,7 +20,7 @@
     },
     "common": {
         "about": "Ynghylch",
-        "brand_help": "%(brand)s Cymorth",
+        "brand_help": "Cymorth %(brand)s",
         "help": "Cymorth",
         "preferences": "Dewisiadau"
     },
@@ -40,18 +40,18 @@
         "unhide": "Datguddio"
     },
     "right_click_menu": {
-        "add_to_dictionary": "Ychwanegu i'r Geiriadur",
+        "add_to_dictionary": "Ychwanegu at y geiriadur",
         "copy_email": "Copïo cyfeiriad e-bost",
         "copy_image": "Copïo delwedd",
         "copy_image_url": "Copïo cyfeiriad delwedd",
         "copy_link_url": "Copïo cyfeiriad y ddolen",
         "save_image_as": "Cadw delwedd fel...",
-        "save_image_as_error_description": "Methodd y ddelwedd â chadw",
-        "save_image_as_error_title": "Wedi methu cadw'r ddelwedd"
+        "save_image_as_error_description": "Methodd cadw'r ddelwedd",
+        "save_image_as_error_title": "Methodd cadw'r ddelwedd"
     },
     "view_menu": {
         "actual_size": "Maint Gwirioneddol",
-        "toggle_developer_tools": "Toggle Developer Tools",
+        "toggle_developer_tools": "Toglo Offer Datblygwyr",
         "toggle_full_screen": "Toglo Sgrin Lawn",
         "view": "Golwg"
     },
