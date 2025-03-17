@@ -55,4 +55,14 @@ test.describe("App launch", () => {
             }),
         ).resolves.not.toBeNull();
     });
+
+    test.describe("--no-update", () => {
+        test.use({
+            extraArgs: ["--no-update"],
+        });
+
+        test("should respect option", async ({ page, stdout }) => {
+            expect(stdout.data.toString()).toContain("Auto update disabled via command line flag");
+        });
+    });
 });
