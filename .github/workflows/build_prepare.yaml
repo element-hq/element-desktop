@@ -90,8 +90,6 @@ jobs:
               env:
                   AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
-                  # Workaround for https://www.cloudflarestatus.com/incidents/t5nrjmpxc1cj
-                  AWS_REQUEST_CHECKSUM_CALCULATION: when_required
                   R2_BUCKET: ${{ vars.R2_BUCKET }}
                   R2_URL: ${{ vars.CF_R2_S3_API }}
 
