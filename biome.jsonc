@@ -1,0 +1,204 @@
+{
+    "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+    "formatter": {
+        "enabled": true,
+        "useEditorconfig": true,
+        "formatWithErrors": false,
+        "indentStyle": "space",
+        "indentWidth": 4,
+        "lineEnding": "lf",
+        "lineWidth": 120,
+        "attributePosition": "auto",
+        "bracketSpacing": true,
+        "ignore": [
+            "../element-web",
+            "./build/",
+            "./docker/",
+            "./dist/**",
+            "./.hak/**",
+            "./dockerbuild/",
+            "./lib/",
+            "./node_modules/",
+            "./packages.elememt.io/",
+            "./webapp",
+            "./src/i18n/strings",
+            "./CHANGELOG.md",
+            "./package-lock.json",
+            "./yarn.lock",
+            "./playwright/html-report",
+            "./playwright/test-results",
+            "**/.idea",
+            "**/.vscode",
+            "**/.vscode/",
+            "**/.tmp",
+            "**/.env",
+            "./coverage",
+            "./.npmrc",
+            "./*.log"
+        ]
+    },
+    "organizeImports": { "enabled": false },
+    "linter": {
+        "enabled": false,
+        "rules": {
+            "recommended": false,
+            "complexity": {
+                "noExtraBooleanCast": "error",
+                "noMultipleSpacesInRegularExpressionLiterals": "error",
+                "noUselessCatch": "off",
+                "noWith": "error"
+            },
+            "correctness": {
+                "noConstAssign": "error",
+                "noConstantCondition": "error",
+                "noEmptyCharacterClassInRegex": "error",
+                "noEmptyPattern": "error",
+                "noGlobalObjectCalls": "error",
+                "noInnerDeclarations": "error",
+                "noInvalidConstructorSuper": "error",
+                "noNewSymbol": "error",
+                "noNonoctalDecimalEscape": "error",
+                "noPrecisionLoss": "error",
+                "noSelfAssign": "error",
+                "noSetterReturn": "error",
+                "noSwitchDeclarations": "error",
+                "noUndeclaredVariables": "error",
+                "noUnreachable": "error",
+                "noUnreachableSuper": "error",
+                "noUnsafeFinally": "error",
+                "noUnsafeOptionalChaining": "error",
+                "noUnusedLabels": "error",
+                "noUnusedVariables": "error",
+                "useArrayLiterals": "error",
+                "useIsNan": "error",
+                "useValidForDirection": "error",
+                "useYield": "error"
+            },
+            "style": {
+                "noArguments": "error",
+                "noVar": "error",
+                "useBlockStatements": "error",
+                "useConsistentBuiltinInstantiation": "error",
+                "useConst": "error",
+                "useNodejsImportProtocol": "error",
+                "useSingleVarDeclarator": "error",
+                "useThrowOnlyError": "error"
+            },
+            "suspicious": {
+                "noAssignInExpressions": "error",
+                "noAsyncPromiseExecutor": "off",
+                "noCatchAssign": "error",
+                "noClassAssign": "error",
+                "noCompareNegZero": "error",
+                "noConsole": "off",
+                "noControlCharactersInRegex": "error",
+                "noDebugger": "error",
+                "noDuplicateCase": "error",
+                "noDuplicateClassMembers": "error",
+                "noDuplicateObjectKeys": "error",
+                "noDuplicateParameters": "error",
+                "noEmptyBlockStatements": "error",
+                "noFallthroughSwitchClause": "error",
+                "noFunctionAssign": "error",
+                "noGlobalAssign": "error",
+                "noImportAssign": "error",
+                "noMisleadingCharacterClass": "error",
+                "noPrototypeBuiltins": "off",
+                "noRedeclare": "error",
+                "noShadowRestrictedNames": "error",
+                "noSparseArray": "error",
+                "noUnsafeNegation": "error",
+                "useGetterReturn": "error",
+                "useIsArray": "error",
+                "useValidTypeof": "error"
+            }
+        }
+    },
+    "javascript": {
+        "formatter": {
+            "jsxQuoteStyle": "double",
+            "quoteProperties": "asNeeded",
+            "trailingCommas": "all",
+            "semicolons": "always",
+            "arrowParentheses": "always",
+            "bracketSameLine": false,
+            "quoteStyle": "double",
+            "attributePosition": "auto",
+            "bracketSpacing": true
+        }
+    },
+    "overrides": [
+        {
+            "include": ["src/**/*.ts"],
+            "linter": {
+                "rules": {
+                    "style": { "noNonNullAssertion": "off" },
+                    "suspicious": { "noExplicitAny": "off" }
+                }
+            }
+        },
+        {
+            "include": ["hak/**/*.ts"],
+            "linter": {
+                "rules": {
+                    "style": { "noNonNullAssertion": "off" },
+                    "suspicious": { "noExplicitAny": "off" }
+                }
+            }
+        },
+        {
+            "include": ["scripts/**/*.ts"],
+            "linter": {
+                "rules": {
+                    "style": { "noNonNullAssertion": "off" },
+                    "suspicious": { "noExplicitAny": "off" }
+                }
+            }
+        },
+        {
+            "include": ["playwright/**/*.ts"],
+            "linter": {
+                "rules": {
+                    "style": { "noNonNullAssertion": "off" },
+                    "suspicious": { "noExplicitAny": "off" }
+                }
+            }
+        },
+        {
+            "include": ["src/**/*.ts"],
+            "linter": {
+                "rules": {
+                    "style": { "noNonNullAssertion": "off" },
+                    "suspicious": { "noExplicitAny": "off" }
+                }
+            }
+        },
+        {
+            "include": ["hak/**/*.ts"],
+            "linter": {
+                "rules": {
+                    "style": { "noNonNullAssertion": "off" },
+                    "suspicious": { "noExplicitAny": "off" }
+                }
+            }
+        },
+        {
+            "include": ["scripts/**/*.ts"],
+            "linter": {
+                "rules": {
+                    "style": { "noNonNullAssertion": "off" },
+                    "suspicious": { "noExplicitAny": "off" }
+                }
+            }
+        },
+        {
+            "include": ["playwright/**/*.ts"],
+            "linter": {
+                "rules": {
+                    "style": { "noNonNullAssertion": "off" },
+                    "suspicious": { "noExplicitAny": "off" }
+                }
+            }
+        }
+    ]
+}

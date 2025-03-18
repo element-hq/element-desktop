@@ -568,7 +568,7 @@ function beforeQuit(): void {
 app.on("before-quit", beforeQuit);
 autoUpdater.on("before-quit-for-update", beforeQuit);
 
-app.on("second-instance", (ev, commandLine, workingDirectory) => {
+app.on("second-instance", (_ev, commandLine) => {
     // If other instance launched with --hidden then skip showing window
     if (commandLine.includes("--hidden")) return;
 

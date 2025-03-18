@@ -13,7 +13,7 @@ import type HakEnv from "../../scripts/hak/hakEnv.js";
 import type { Tool } from "../../scripts/hak/hakEnv.js";
 import type { DependencyInfo } from "../../scripts/hak/dep.js";
 
-export default async function (hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
+export default async function (hakEnv: HakEnv, _moduleInfo: DependencyInfo): Promise<void> {
     const tools: Tool[] = [
         ["rustc", "--version"],
         ["python", "--version"], // node-gyp uses python for reasons beyond comprehension
@@ -33,7 +33,7 @@ export default async function (hakEnv: HakEnv, moduleInfo: DependencyInfo): Prom
         const rustc = childProcess.execFile(
             "rustc",
             ["--target", hakEnv.getTargetId(), "--emit=obj", "-o", "tmp", "-"],
-            (err, out) => {
+            (err) => {
                 if (err) {
                     reject(
                         "rustc can't build for target " +
