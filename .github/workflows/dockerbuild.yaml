@@ -42,7 +42,7 @@ jobs:
               run: docker run -v $PWD:/project element-desktop-dockerbuild yarn install
 
             - name: Log in to the Container registry
-              uses: docker/login-action@327cd5a69de6c009b9ce71bce8395f28e651bf99
+              uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772
               if: github.event_name != 'pull_request'
               with:
                   registry: ${{ env.REGISTRY }}
