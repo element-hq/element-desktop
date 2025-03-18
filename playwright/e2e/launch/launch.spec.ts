@@ -8,7 +8,7 @@ Please see LICENSE files in the repository root for full details.
 
 import { platform } from "node:os";
 
-import { test, expect } from "../../element-desktop-test.js";
+import { expect, test } from "../../element-desktop-test.js";
 
 declare global {
     interface Window {

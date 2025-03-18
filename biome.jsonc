@@ -1,5 +1,14 @@
 {
     "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+    "vcs": {
+        "enabled": true,
+        "clientKind": "git",
+        "useIgnoreFile": true
+    },
+    "files": {
+        "ignoreUnknown": false,
+        "ignore": []
+    },
     "formatter": {
         "enabled": true,
         "useEditorconfig": true,
@@ -9,43 +18,17 @@
         "lineEnding": "lf",
         "lineWidth": 120,
         "attributePosition": "auto",
-        "bracketSpacing": true,
-        "ignore": [
-            "../element-web",
-            "./build/",
-            "./docker/",
-            "./dist/**",
-            "./.hak/**",
-            "./dockerbuild/",
-            "./lib/",
-            "./node_modules/",
-            "./packages.elememt.io/",
-            "./webapp",
-            "./src/i18n/strings",
-            "./CHANGELOG.md",
-            "./package-lock.json",
-            "./yarn.lock",
-            "./playwright/html-report",
-            "./playwright/test-results",
-            "**/.idea",
-            "**/.vscode",
-            "**/.vscode/",
-            "**/.tmp",
-            "**/.env",
-            "./coverage",
-            "./.npmrc",
-            "./*.log"
-        ]
+        "bracketSpacing": true
     },
-    "organizeImports": { "enabled": false },
+    "organizeImports": { "enabled": true },
     "linter": {
-        "enabled": false,
+        "enabled": true,
         "rules": {
             "recommended": false,
             "complexity": {
                 "noExtraBooleanCast": "error",
                 "noMultipleSpacesInRegularExpressionLiterals": "error",
-                "noUselessCatch": "off",
+                "noUselessCatch": "error",
                 "noWith": "error"
             },
             "correctness": {
@@ -77,16 +60,18 @@
             "style": {
                 "noArguments": "error",
                 "noVar": "error",
-                "useBlockStatements": "error",
+                "useBlockStatements": "off",
                 "useConsistentBuiltinInstantiation": "error",
                 "useConst": "error",
                 "useNodejsImportProtocol": "error",
                 "useSingleVarDeclarator": "error",
-                "useThrowOnlyError": "error"
+                "useThrowOnlyError": "error",
+                "useImportType": "error",
+                "useExportType": "error"
             },
             "suspicious": {
                 "noAssignInExpressions": "error",
-                "noAsyncPromiseExecutor": "off",
+                "noAsyncPromiseExecutor": "error",
                 "noCatchAssign": "error",
                 "noClassAssign": "error",
                 "noCompareNegZero": "error",
@@ -103,7 +88,7 @@
                 "noGlobalAssign": "error",
                 "noImportAssign": "error",
                 "noMisleadingCharacterClass": "error",
-                "noPrototypeBuiltins": "off",
+                "noPrototypeBuiltins": "error",
                 "noRedeclare": "error",
                 "noShadowRestrictedNames": "error",
                 "noSparseArray": "error",
@@ -129,25 +114,7 @@
     },
     "overrides": [
         {
-            "include": ["src/**/*.ts"],
-            "linter": {
-                "rules": {
-                    "style": { "noNonNullAssertion": "off" },
-                    "suspicious": { "noExplicitAny": "off" }
-                }
-            }
-        },
-        {
-            "include": ["hak/**/*.ts"],
-            "linter": {
-                "rules": {
-                    "style": { "noNonNullAssertion": "off" },
-                    "suspicious": { "noExplicitAny": "off" }
-                }
-            }
-        },
-        {
-            "include": ["scripts/**/*.ts"],
+            "include": ["src/**/*.ts", "hak/**/*.ts", "scripts/**/*.ts", "playwright/**/*.ts"],
             "linter": {
                 "rules": {
                     "style": { "noNonNullAssertion": "off" },
@@ -159,44 +126,9 @@
             "include": ["playwright/**/*.ts"],
             "linter": {
                 "rules": {
-                    "style": { "noNonNullAssertion": "off" },
-                    "suspicious": { "noExplicitAny": "off" }
-                }
-            }
-        },
-        {
-            "include": ["src/**/*.ts"],
-            "linter": {
-                "rules": {
-                    "style": { "noNonNullAssertion": "off" },
-                    "suspicious": { "noExplicitAny": "off" }
-                }
-            }
-        },
-        {
-            "include": ["hak/**/*.ts"],
-            "linter": {
-                "rules": {
-                    "style": { "noNonNullAssertion": "off" },
-                    "suspicious": { "noExplicitAny": "off" }
-                }
-            }
-        },
-        {
-            "include": ["scripts/**/*.ts"],
-            "linter": {
-                "rules": {
-                    "style": { "noNonNullAssertion": "off" },
-                    "suspicious": { "noExplicitAny": "off" }
-                }
-            }
-        },
-        {
-            "include": ["playwright/**/*.ts"],
-            "linter": {
-                "rules": {
-                    "style": { "noNonNullAssertion": "off" },
-                    "suspicious": { "noExplicitAny": "off" }
+                    "correctness": {
+                        "noEmptyPattern": "off"
+                    }
                 }
             }
         }

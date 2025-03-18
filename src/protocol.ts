@@ -6,10 +6,10 @@ SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Com
 Please see LICENSE files in the repository root for full details.
 */
 
-import { app } from "electron";
-import { URL } from "node:url";
-import path from "node:path";
 import fs from "node:fs";
+import path from "node:path";
+import { URL } from "node:url";
+import { app } from "electron";
 
 const LEGACY_PROTOCOL = "element";
 const PROTOCOL = "io.element.desktop";
@@ -115,7 +115,7 @@ export function protocolInit(): void {
         });
     } else {
         // Protocol handler for win32/Linux
-        app.on("second-instance", (ev, commandLine) => {
+        app.on("second-instance", (_ev, commandLine) => {
             const url = commandLine[commandLine.length - 1];
             if (!url.startsWith(`${PROTOCOL}://`) && !url.startsWith(`${LEGACY_PROTOCOL}://`)) return;
             processUrl(url);

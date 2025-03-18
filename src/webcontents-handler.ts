@@ -5,26 +5,26 @@ SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Com
 Please see LICENSE files in the repository root for full details.
 */
 
+import fs from "node:fs";
+import path from "node:path";
+import { pipeline } from "node:stream/promises";
+import url from "node:url";
 import {
-    clipboard,
-    nativeImage,
-    Menu,
-    MenuItem,
-    shell,
-    dialog,
-    ipcMain,
-    type NativeImage,
-    type WebContents,
     type ContextMenuParams,
     type DownloadItem,
-    type MenuItemConstructorOptions,
-    type IpcMainEvent,
     type Event,
+    type IpcMainEvent,
+    Menu,
+    MenuItem,
+    type MenuItemConstructorOptions,
+    type NativeImage,
+    type WebContents,
+    clipboard,
+    dialog,
+    ipcMain,
+    nativeImage,
+    shell,
 } from "electron";
-import url from "node:url";
-import fs from "node:fs";
-import { pipeline } from "node:stream/promises";
-import path from "node:path";
 
 import { _t } from "./language-helper.js";
 
@@ -75,7 +75,7 @@ function onLinkContextMenu(ev: Event, params: ContextMenuParams, webContents: We
     if (url.startsWith("vector://vector/webapp")) {
         // Avoid showing a context menu for app icons
         if (params.hasImageContents) return;
-        const baseUrl = vectorConfig.web_base_url ?? "https://app.element.io/";
+        const baseUrl = global.vectorConfig.web_base_url ?? "https://app.element.io/";
         // Rewrite URL so that it can be used outside the app
         url = baseUrl + url.substring(23);
     }
@@ -265,7 +265,7 @@ function onEditableContextMenu(ev: Event, params: ContextMenuParams, webContents
 
 let userDownloadIndex = 0;
 const userDownloadMap = new Map<number, string>(); // Map from id to path
-ipcMain.on("userDownloadAction", function (ev: IpcMainEvent, { id, open = false }) {
+ipcMain.on("userDownloadAction", function (_ev: IpcMainEvent, { id, open = false }) {
     const path = userDownloadMap.get(id);
     if (open && path) {
         void shell.openPath(path);
@@ -294,8 +294,8 @@ export default (webContents: WebContents): void => {
         }
     });
 
-    webContents.session.on("will-download", (event: Event, item: DownloadItem): void => {
-        item.once("done", (event, state) => {
+    webContents.session.on("will-download", (_event: Event, item: DownloadItem): void => {
+        item.once("done", (_event, state) => {
             if (state === "completed") {
                 const savePath = item.getSavePath();
                 const id = userDownloadIndex++;

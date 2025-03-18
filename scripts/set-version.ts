@@ -5,10 +5,10 @@
  * version metadata of the package to match.
  */
 
-import { promises as fs } from "node:fs";
-import * as asar from "@electron/asar";
 import * as childProcess from "node:child_process";
+import { promises as fs } from "node:fs";
 import * as url from "node:url";
+import * as asar from "@electron/asar";
 
 export async function versionFromAsar(): Promise<string> {
     try {

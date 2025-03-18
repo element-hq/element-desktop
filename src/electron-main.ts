@@ -10,30 +10,29 @@ Please see LICENSE files in the repository root for full details.
 
 // Squirrel on windows starts the app with various flags as hooks to tell us when we've been installed/uninstalled etc.
 import "./squirrelhooks.js";
-import { app, BrowserWindow, Menu, autoUpdater, protocol, dialog, type Input, type Event, session } from "electron";
-// eslint-disable-next-line n/file-extension-in-import
+import fs, { promises as afs } from "node:fs";
+import path, { dirname } from "node:path";
+import { URL, fileURLToPath } from "node:url";
 import * as Sentry from "@sentry/electron/main";
 import AutoLaunch from "auto-launch";
-import path, { dirname } from "node:path";
-import windowStateKeeper from "electron-window-state";
+import { BrowserWindow, type Event, type Input, Menu, app, autoUpdater, dialog, protocol, session } from "electron";
 import Store from "electron-store";
-import fs, { promises as afs } from "node:fs";
-import { URL, fileURLToPath } from "node:url";
+import windowStateKeeper from "electron-window-state";
 import minimist from "minimist";
 
 import "./ipc.js";
 import "./seshat.js";
 import "./settings.js";
+import { setDisplayMediaCallback } from "./displayMediaCallback.js";
+import { AppLocalization, _t } from "./language-helper.js";
+import { setupMacosTitleBar } from "./macos-titlebar.js";
+import { setupMediaAuth } from "./media-auth.js";
+import { getProfileFromDeeplink, protocolInit } from "./protocol.js";
 import * as tray from "./tray.js";
+import * as updater from "./updater.js";
+import { loadJsonFile } from "./utils.js";
 import { buildMenuTemplate } from "./vectormenu.js";
 import webContentsHandler from "./webcontents-handler.js";
-import * as updater from "./updater.js";
-import { getProfileFromDeeplink, protocolInit } from "./protocol.js";
-import { _t, AppLocalization } from "./language-helper.js";
-import { setDisplayMediaCallback } from "./displayMediaCallback.js";
-import { setupMacosTitleBar } from "./macos-titlebar.js";
-import { loadJsonFile } from "./utils.js";
-import { setupMediaAuth } from "./media-auth.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -105,7 +104,9 @@ async function tryPaths(name: string, root: string, rawPaths: string[]): Promise
         try {
             await afs.stat(p);
             return p + "/";
-        } catch {}
+        } catch {
+            // ignore
+        }
     }
     console.log(`Couldn't find ${name} files in any of: `);
     for (const p of paths) {
@@ -528,7 +529,7 @@ app.on("ready", async () => {
 
     if (process.platform === "win32") {
         // Handle forward/backward mouse buttons in Windows
-        global.mainWindow.on("app-command", (e, cmd) => {
+        global.mainWindow.on("app-command", (_e, cmd) => {
             if (cmd === "browser-backward" && global.mainWindow?.webContents.canGoBack()) {
                 global.mainWindow.webContents.goBack();
             } else if (cmd === "browser-forward" && global.mainWindow?.webContents.canGoForward()) {

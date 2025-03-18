@@ -5,10 +5,10 @@ SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Com
 Please see LICENSE files in the repository root for full details.
 */
 
-import counterpart from "counterpart";
-import { type TranslationKey as TKey } from "matrix-web-i18n";
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import counterpart from "counterpart";
+import type { TranslationKey as TKey } from "matrix-web-i18n";
 
 import type Store from "electron-store";
 import type EN from "./i18n/strings/en_EN.json";
@@ -79,7 +79,6 @@ export class AppLocalization {
         this.store = store;
         if (this.store.has(AppLocalization.STORE_KEY)) {
             const locales = this.store.get(AppLocalization.STORE_KEY);
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             this.setAppLocale(locales!);
         }
 

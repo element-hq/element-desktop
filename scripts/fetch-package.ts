@@ -1,11 +1,11 @@
 #!/usr/bin/env -S npx tsx --resolveJsonModule
 
-import * as path from "node:path";
-import { createWriteStream, promises as fs } from "node:fs";
 import * as childProcess from "node:child_process";
-import * as tar from "tar";
-import * as asar from "@electron/asar";
+import { promises as fs, createWriteStream } from "node:fs";
+import * as path from "node:path";
 import { promises as stream } from "node:stream";
+import * as asar from "@electron/asar";
+import * as tar from "tar";
 
 import riotDesktopPackageJson from "../package.json";
 import { setPackageVersion } from "./set-version.js";
@@ -27,7 +27,9 @@ async function downloadToFile(url: string, filename: string): Promise<void> {
         console.error(e);
         try {
             await fs.unlink(filename);
-        } catch {}
+        } catch {
+            // ignore
+        }
         throw e;
     }
 }
@@ -151,7 +153,9 @@ async function main(): Promise<number | undefined> {
         await fs.opendir(expectedDeployDir);
         console.log(expectedDeployDir + "already exists");
         haveDeploy = true;
-    } catch {}
+    } catch {
+        // ignore
+    }
 
     if (!haveDeploy) {
         const outPath = path.join(pkgDir, filename);
@@ -207,7 +211,9 @@ async function main(): Promise<number | undefined> {
         await fs.stat(ASAR_PATH);
         console.log(ASAR_PATH + " already present: removing");
         await fs.unlink(ASAR_PATH);
-    } catch {}
+    } catch {
+        // ignore
+    }
 
     if (cfgDir.length) {
         const configJsonSource = path.join(cfgDir, "config.json");

@@ -5,15 +5,23 @@ SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Com
 Please see LICENSE files in the repository root for full details.
 */
 
-import { app, autoUpdater, desktopCapturer, ipcMain, powerSaveBlocker, TouchBar, nativeImage } from "electron";
 import { relaunchApp } from "@standardnotes/electron-clear-data";
+import {
+    type IpcMainEvent,
+    TouchBar,
+    app,
+    autoUpdater,
+    desktopCapturer,
+    ipcMain,
+    nativeImage,
+    powerSaveBlocker,
+} from "electron";
 import keytar from "keytar-forked";
 
-import IpcMainEvent = Electron.IpcMainEvent;
-import { recordSSOSession } from "./protocol.js";
-import { randomArray } from "./utils.js";
-import { Settings } from "./settings.js";
 import { getDisplayMediaCallback, setDisplayMediaCallback } from "./displayMediaCallback.js";
+import { recordSSOSession } from "./protocol.js";
+import { Settings } from "./settings.js";
+import { randomArray } from "./utils.js";
 
 ipcMain.on("setBadgeCount", function (_ev: IpcMainEvent, count: number): void {
     if (process.platform !== "win32") {
@@ -173,7 +181,9 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
                 // migrate from riot.im (remove once we think there will no longer be
                 // logins from the time of riot.im)
                 await keytar.deletePassword("riot.im", `${args[0]}|${args[1]}`);
-            } catch {}
+            } catch (e) {
+                console.error("Failed to destroy pickle key", e);
+            }
             break;
         case "getDesktopCapturerSources":
             ret = (await desktopCapturer.getSources(args[0])).map((source) => ({

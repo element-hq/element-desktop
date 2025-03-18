@@ -6,12 +6,12 @@ SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Com
 Please see LICENSE files in the repository root for full details.
 */
 
-import path from "node:path";
-import os from "node:os";
-import { getElectronVersionFromInstalled } from "app-builder-lib/out/electron/electronVersion.js";
 import childProcess, { type SpawnOptions } from "node:child_process";
+import os from "node:os";
+import path from "node:path";
+import { getElectronVersionFromInstalled } from "app-builder-lib/out/electron/electronVersion.js";
 
-import { type Arch, type Target, TARGETS, getHost, isHostId, type TargetId } from "./target.js";
+import { type Arch, TARGETS, type Target, type TargetId, getHost, isHostId } from "./target.js";
 
 async function getRuntimeVersion(projectRoot: string): Promise<string> {
     const electronVersion = await getElectronVersionFromInstalled(projectRoot);

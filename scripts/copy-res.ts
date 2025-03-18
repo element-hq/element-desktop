@@ -2,10 +2,10 @@
 
 // copies resources into the lib directory.
 
-import parseArgs from "minimist";
-import * as chokidar from "chokidar";
-import * as path from "node:path";
 import * as fs from "node:fs";
+import * as path from "node:path";
+import * as chokidar from "chokidar";
+import parseArgs from "minimist";
 
 const argv = parseArgs(process.argv.slice(2), {});
 

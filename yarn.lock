@@ -1854,46 +1854,6 @@
   dependencies:
     "@opentelemetry/core" "^1.1.0"
 
-"@oxlint/darwin-arm64@0.16.0":
-  version "0.16.0"
-  resolved "https://registry.yarnpkg.com/@oxlint/darwin-arm64/-/darwin-arm64-0.16.0.tgz#a7d69d0bd29a8d99c1a744adda7d5635822f408d"
-  integrity sha512-t4v+WxVuU+cQNZuDDZ+I9p6FTuSrQpTs787UspcB3j3E50lw6+aDWiLx/Snvkn5C214B8hp+z8lnwYkgWoFqiw==
-
-"@oxlint/darwin-x64@0.16.0":
-  version "0.16.0"
-  resolved "https://registry.yarnpkg.com/@oxlint/darwin-x64/-/darwin-x64-0.16.0.tgz#4dac005e8ca0ca11592d906116efa864bf8dd339"
-  integrity sha512-CbV7VHpO7OpBXgBZRaNMOgVlnZ29gocjaFbrbEv/23XqeeDLQP3++O7i1Q7SEmeaELxM6NYW1u9+OcvX3uudwQ==
-
-"@oxlint/linux-arm64-gnu@0.16.0":
-  version "0.16.0"
-  resolved "https://registry.yarnpkg.com/@oxlint/linux-arm64-gnu/-/linux-arm64-gnu-0.16.0.tgz#dd8a8798a16a43dd3103368d1aa6399aeb6b26f6"
-  integrity sha512-wwwTsSk62vFAYYsj4Et/leb9VndZwZBf1R6Nta1yWhljkSVq1GBKJ9SeU3it833QEJuFth2A2L5xdfiGkZZIYg==
-
-"@oxlint/linux-arm64-musl@0.16.0":
-  version "0.16.0"
-  resolved "https://registry.yarnpkg.com/@oxlint/linux-arm64-musl/-/linux-arm64-musl-0.16.0.tgz#5645e52baa284dea52221be60ffbd9df566ffd1a"
-  integrity sha512-YW7g8hG/XJ+g2RgDvhjY/GUaq/p8xIldsQD9AZkFJAaBsmN3tTi1VUS2orhxBi7feXE7FhP85LqQk+WJxarUSw==
-
-"@oxlint/linux-x64-gnu@0.16.0":
-  version "0.16.0"
-  resolved "https://registry.yarnpkg.com/@oxlint/linux-x64-gnu/-/linux-x64-gnu-0.16.0.tgz#b1bcba9644fcb4f8ba2a86d03893068c59b6ccfe"
-  integrity sha512-QY8W3724Fv9W5Mh42/EdV5j4qfwFnV1rouLzvWgUz/g51nROt/6rMbv65ssJo2yBUHHj5KGMfmC97VJZAF9TKA==
-
-"@oxlint/linux-x64-musl@0.16.0":
-  version "0.16.0"
-  resolved "https://registry.yarnpkg.com/@oxlint/linux-x64-musl/-/linux-x64-musl-0.16.0.tgz#f8320a9a40eb6705d4baf3de2849b15f15530ada"
-  integrity sha512-adH6bJipJL/WjaMAc8JNevTgU7IpY5nh8a8tM/DAZdUyt7e/zd+vDw+o3NCBGcCWKu3VcY+XsMZK2NMqnyzeig==
-
-"@oxlint/win32-arm64@0.16.0":
-  version "0.16.0"
-  resolved "https://registry.yarnpkg.com/@oxlint/win32-arm64/-/win32-arm64-0.16.0.tgz#7b4c5bc84ea748edb7b82b3992a35398643b984e"
-  integrity sha512-0GPNs354IHKdbvqsdjf1YGqaKbFWcT/ngly9+oAUSsDC5/Rg4sZj4glZCVDhZUFMQ1kyClAYxX+vbKbTW/cOmQ==
-
-"@oxlint/win32-x64@0.16.0":
-  version "0.16.0"
-  resolved "https://registry.yarnpkg.com/@oxlint/win32-x64/-/win32-x64-0.16.0.tgz#a0f579ffc86897ca3fb014f0bd3c19ddab757acc"
-  integrity sha512-0Lb599lav9THJRiUYkNugueq98VliinY92yzv5u2NDiIsq5aqqHIjmpJ8L051zCEhyzcbw8KBRV3FofqnroJTA==
-
 "@pkgjs/parseargs@^0.11.0":
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
@@ -4900,20 +4860,6 @@ ora@^5.1.0:
     log-symbols "^4.1.0"
     strip-ansi "^6.0.0"
     wcwidth "^1.0.1"
-
-oxlint@^0.16.0:
-  version "0.16.0"
-  resolved "https://registry.yarnpkg.com/oxlint/-/oxlint-0.16.0.tgz#aa564afdd71a300d0e608dfa0a345b576374df9d"
-  integrity sha512-Kx3ehMy+F0sIvg8PPKB967SB7cjjj98vxVOpQaAfKFIYrQFkM10usb3aQKqk1HXYivMvs6axdZM1sLq2fvjbKw==
-  optionalDependencies:
-    "@oxlint/darwin-arm64" "0.16.0"
-    "@oxlint/darwin-x64" "0.16.0"
-    "@oxlint/linux-arm64-gnu" "0.16.0"
-    "@oxlint/linux-arm64-musl" "0.16.0"
-    "@oxlint/linux-x64-gnu" "0.16.0"
-    "@oxlint/linux-x64-musl" "0.16.0"
-    "@oxlint/win32-arm64" "0.16.0"
-    "@oxlint/win32-x64" "0.16.0"
 
 p-cancelable@^2.0.0:
   version "2.1.1"

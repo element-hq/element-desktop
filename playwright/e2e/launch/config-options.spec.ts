@@ -5,10 +5,10 @@ SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Com
 Please see LICENSE files in the repository root for full details.
 */
 
-import { resolve, dirname } from "node:path";
+import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { test, expect } from "../../element-desktop-test.js";
+import { expect, test } from "../../element-desktop-test.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 

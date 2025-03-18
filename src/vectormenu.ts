@@ -6,7 +6,7 @@ SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Com
 Please see LICENSE files in the repository root for full details.
 */
 
-import { app, shell, Menu, type MenuItem, type MenuItemConstructorOptions } from "electron";
+import { Menu, type MenuItem, type MenuItemConstructorOptions, app, shell } from "electron";
 
 import { _t } from "./language-helper.js";
 

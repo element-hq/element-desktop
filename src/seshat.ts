@@ -5,17 +5,16 @@ SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Com
 Please see LICENSE files in the repository root for full details.
 */
 
-import { app, ipcMain } from "electron";
 import { promises as afs } from "node:fs";
 import path from "node:path";
+import { type IpcMainEvent, app, ipcMain } from "electron";
 import keytar from "keytar-forked";
 
 import type {
-    Seshat as SeshatType,
-    SeshatRecovery as SeshatRecoveryType,
     ReindexError as ReindexErrorType,
+    SeshatRecovery as SeshatRecoveryType,
+    Seshat as SeshatType,
 } from "matrix-seshat"; // Hak dependency type
-import IpcMainEvent = Electron.IpcMainEvent;
 import { randomArray } from "./utils.js";
 
 let seshatSupported = false;
