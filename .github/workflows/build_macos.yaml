@@ -58,7 +58,7 @@ jobs:
             # M1 macos-14 comes without Python preinstalled
             - uses: actions/setup-python@v5
               with:
-                  python-version: "3.12"
+                  python-version: "3.13"
 
             - uses: actions/setup-node@v4
               with:
