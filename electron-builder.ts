@@ -1,10 +1,10 @@
-import * as os from "node:os";
 import * as fs from "node:fs";
-import * as path from "node:path";
-import * as plist from "plist";
-import { AfterPackContext, Arch, Configuration as BaseConfiguration, Platform } from "electron-builder";
-import { computeData } from "app-builder-lib/out/asar/integrity";
 import { readFile, writeFile } from "node:fs/promises";
+import * as os from "node:os";
+import * as path from "node:path";
+import { computeData } from "app-builder-lib/out/asar/integrity";
+import { type AfterPackContext, Arch, type Configuration as BaseConfiguration, Platform } from "electron-builder";
+import * as plist from "plist";
 
 /**
  * This script has different outputs depending on your os platform.

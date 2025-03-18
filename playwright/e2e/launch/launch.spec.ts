@@ -8,7 +8,7 @@ Please see LICENSE files in the repository root for full details.
 
 import { platform } from "node:os";
 
-import { test, expect } from "../../element-desktop-test.js";
+import { expect, test } from "../../element-desktop-test.js";
 
 declare global {
     interface Window {
@@ -63,7 +63,7 @@ test.describe("App launch", () => {
 
         // XXX: this test works fine locally but in CI the app start races with the test plumbing up the stdout/stderr pipes
         // which means the logs are missed, disabling for now.
-        test.skip("should respect option", async ({ page, stdout }) => {
+        test.skip("should respect option", async ({ page: _page, stdout }) => {
             expect(stdout.data.toString()).toContain("Auto update disabled via command line flag");
         });
     });

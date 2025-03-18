@@ -1,4 +1,4 @@
-import { KnipConfig } from "knip";
+import type { KnipConfig } from "knip";
 
 export default {
     entry: ["src/electron-main.ts", "src/preload.ts", "electron-builder.ts", ".eslintrc-*.js", "scripts/**", "hak/**"],

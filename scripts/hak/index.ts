@@ -9,11 +9,11 @@ Please see LICENSE files in the repository root for full details.
 import path, { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import packageJson from "../../package.json";
+import { loadJsonFile } from "../../src/utils.js";
+import type { DependencyInfo } from "./dep.js";
 import HakEnv from "./hakEnv.js";
 import type { TargetId } from "./target.js";
-import type { DependencyInfo } from "./dep.js";
-import { loadJsonFile } from "../../src/utils.js";
-import packageJson from "../../package.json";
 
 // These can only be run on specific modules
 const MODULECOMMANDS = ["check", "fetch", "link", "build", "copy", "clean"];
@@ -38,7 +38,6 @@ async function main(): Promise<void> {
     // Can be specified multiple times for the copy command to bundle
     // multiple arches into a single universal output module)
     for (;;) {
-        // eslint-disable-line no-constant-condition
         const targetIndex = process.argv.indexOf("--target");
         if (targetIndex === -1) break;
 

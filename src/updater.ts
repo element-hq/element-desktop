@@ -5,8 +5,8 @@ SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Com
 Please see LICENSE files in the repository root for full details.
 */
 
-import { app, autoUpdater, ipcMain } from "electron";
 import fs from "node:fs/promises";
+import { app, autoUpdater, ipcMain } from "electron";
 
 import { getSquirrelExecutable } from "./squirrelhooks.js";
 
@@ -165,7 +165,7 @@ autoUpdater
         ipcChannelSendUpdateStatus(error.message);
     });
 
-autoUpdater.on("update-downloaded", (ev, releaseNotes, releaseName, releaseDate, updateURL) => {
+autoUpdater.on("update-downloaded", (_ev, releaseNotes, releaseName, releaseDate, updateURL) => {
     // forward to renderer
     latestUpdateDownloaded = { releaseNotes, releaseName, releaseDate, updateURL };
     global.mainWindow?.webContents.send("update-downloaded", latestUpdateDownloaded);

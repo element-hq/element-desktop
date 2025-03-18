@@ -7,10 +7,10 @@ SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Com
 Please see LICENSE files in the repository root for full details.
 */
 
-import { app, Tray, Menu, nativeImage } from "electron";
-import pngToIco from "png-to-ico";
-import path from "node:path";
 import fs from "node:fs";
+import path from "node:path";
+import { Menu, Tray, app, nativeImage } from "electron";
+import pngToIco from "png-to-ico";
 import { v5 as uuidv5 } from "uuid";
 
 import { _t } from "./language-helper.js";
@@ -39,7 +39,7 @@ function toggleWin(): void {
 }
 
 interface IConfig {
-    icon_path: string; // eslint-disable-line camelcase
+    icon_path: string;
     brand: string;
 }
 
@@ -72,7 +72,7 @@ export function create(config: IConfig): void {
     trayIcon.on("click", toggleWin);
 
     let lastFavicon: string | null = null;
-    global.mainWindow?.webContents.on("page-favicon-updated", async function (ev, favicons) {
+    global.mainWindow?.webContents.on("page-favicon-updated", async function (_ev, favicons) {
         if (!favicons || favicons.length <= 0 || !favicons[0].startsWith("data:")) {
             if (lastFavicon !== null) {
                 global.mainWindow?.setIcon(defaultIcon);
@@ -103,7 +103,7 @@ export function create(config: IConfig): void {
         global.mainWindow?.setIcon(newFavicon);
     });
 
-    global.mainWindow?.webContents.on("page-title-updated", function (ev, title) {
+    global.mainWindow?.webContents.on("page-title-updated", function (_ev, title) {
         trayIcon?.setToolTip(title);
     });
 }
