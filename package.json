@@ -89,7 +89,7 @@
         "detect-libc": "^2.0.0",
         "electron": "35.0.3",
         "electron-builder": "26.0.11",
-        "electron-builder-squirrel-windows": "26.0.11",
+        "electron-builder-squirrel-windows": "file:./electron-builder-squirrel-windows-26.0.11-pr8959.tgz",
         "electron-devtools-installer": "^4.0.0",
         "eslint": "^8.26.0",
         "eslint-config-google": "^0.14.0",
