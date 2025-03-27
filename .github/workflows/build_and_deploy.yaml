@@ -62,7 +62,7 @@ jobs:
         name: Windows ${{ matrix.arch }}
         strategy:
             matrix:
-                arch: [ia32, x64, arm64]
+                arch: [x64, arm64]
         uses: ./.github/workflows/build_windows.yaml
         secrets: inherit
         with:
@@ -114,7 +114,7 @@ jobs:
                   set -x
 
                   # Windows
-                  for arch in x64 ia32 arm64
+                  for arch in x64 arm64
                   do
                       if [ -d "win-$arch" ]; then
                           mkdir -p packages.element.io/{install,update}/win32/$arch
@@ -149,7 +149,7 @@ jobs:
                   set -x
 
                   # Windows
-                  for arch in x64 ia32 arm64
+                  for arch in x64 arm64
                   do
                       [ -d "win-$arch" ] && mv packages.element.io/install/win32/$arch/{*,"Element Nightly Setup"}.exe
                   done
@@ -167,7 +167,7 @@ jobs:
                   set -x
 
                   # Windows
-                  for arch in x64 ia32 arm64
+                  for arch in x64 arm64
                   do
                       if [ -d "win-$arch" ]; then
                           pushd packages.element.io/install/win32/$arch
