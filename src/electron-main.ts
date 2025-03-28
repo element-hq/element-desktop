@@ -322,10 +322,10 @@ app.enableSandbox();
 // We disable media controls here. We do this because calls use audio and video elements and they sometimes capture the media keys. See https://github.com/vector-im/element-web/issues/15704
 app.commandLine.appendSwitch("disable-features", "HardwareMediaKeyHandling,MediaSessionService");
 
-const store = new Store();
+global.store = new Store();
 
 // Disable hardware acceleration if the setting has been set.
-if (store.get("disableHardwareAcceleration") === true) {
+if (global.store.get("disableHardwareAcceleration") === true) {
     console.log("Disabling hardware acceleration.");
     app.disableHardwareAcceleration();
 }
@@ -436,7 +436,7 @@ app.on("ready", async () => {
 
         icon: global.trayConfig.icon_path,
         show: false,
-        autoHideMenuBar: store.get("autoHideMenuBar"),
+        autoHideMenuBar: global.store.get("autoHideMenuBar"),
 
         x: mainWindowState.x,
         y: mainWindowState.y,
@@ -458,10 +458,10 @@ app.on("ready", async () => {
 
     // Handle spellchecker
     // For some reason spellCheckerEnabled isn't persisted, so we have to use the store here
-    global.mainWindow.webContents.session.setSpellCheckerEnabled(store.get("spellCheckerEnabled", true));
+    global.mainWindow.webContents.session.setSpellCheckerEnabled(global.store.get("spellCheckerEnabled", true));
 
     // Create trayIcon icon
-    if (store.get("minimizeToTray")) tray.create(global.trayConfig);
+    if (global.store.get("minimizeToTray")) tray.create(global.trayConfig);
 
     global.mainWindow.once("ready-to-show", () => {
         if (!global.mainWindow) return;
@@ -476,7 +476,7 @@ app.on("ready", async () => {
     });
 
     global.mainWindow.webContents.on("before-input-event", (event: Event, input: Input): void => {
-        const shouldWarnBeforeExit = store.get("warnBeforeExit", true);
+        const shouldWarnBeforeExit = global.store.get("warnBeforeExit", true);
         const exitShortcutPressed =
             input.type === "keyDown" && exitShortcuts.some((shortcutFn) => shortcutFn(input, process.platform));
 
@@ -538,7 +538,7 @@ app.on("ready", async () => {
     webContentsHandler(global.mainWindow.webContents);
 
     global.appLocalization = new AppLocalization({
-        store,
+        store: global.store,
         components: [(): void => tray.initApplicationMenu(), (): void => Menu.setApplicationMenu(buildMenuTemplate())],
     });
 
