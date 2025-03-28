@@ -12,7 +12,7 @@ import { fileURLToPath } from "node:url";
 
 import type EN from "./i18n/strings/en_EN.json";
 import { loadJsonFile } from "./utils.js";
-import { Store } from "./store.js";
+import { type Store } from "./store.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
