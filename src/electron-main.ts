@@ -257,6 +257,8 @@ async function moveAutoLauncher(): Promise<void> {
     }
 }
 
+global.store = new Store();
+
 global.appQuitting = false;
 
 const exitShortcuts: Array<(input: Input, platform: string) => boolean> = [
@@ -265,6 +267,32 @@ const exitShortcuts: Array<(input: Input, platform: string) => boolean> = [
     (input, platform): boolean =>
         platform === "darwin" && input.meta && !input.control && input.key.toUpperCase() === "Q",
 ];
+
+const warnBeforeExit = (event: Event, input: Input): void => {
+    const shouldWarnBeforeExit = global.store.get("warnBeforeExit", true);
+    const exitShortcutPressed =
+        input.type === "keyDown" && exitShortcuts.some((shortcutFn) => shortcutFn(input, process.platform));
+
+    if (shouldWarnBeforeExit && exitShortcutPressed && global.mainWindow) {
+        const shouldCancelCloseRequest =
+            dialog.showMessageBoxSync(global.mainWindow, {
+                type: "question",
+                buttons: [
+                    _t("action|cancel"),
+                    _t("action|close_brand", {
+                        brand: global.vectorConfig.brand || "Element",
+                    }),
+                ],
+                message: _t("confirm_quit"),
+                defaultId: 1,
+                cancelId: 0,
+            }) === 0;
+
+        if (shouldCancelCloseRequest) {
+            event.preventDefault();
+        }
+    }
+};
 
 void configureSentry();
 
@@ -321,8 +349,6 @@ app.enableSandbox();
 
 // We disable media controls here. We do this because calls use audio and video elements and they sometimes capture the media keys. See https://github.com/vector-im/element-web/issues/15704
 app.commandLine.appendSwitch("disable-features", "HardwareMediaKeyHandling,MediaSessionService");
-
-global.store = new Store();
 
 // Disable hardware acceleration if the setting has been set.
 if (global.store.get("disableHardwareAcceleration") === true) {
@@ -475,31 +501,7 @@ app.on("ready", async () => {
         }
     });
 
-    global.mainWindow.webContents.on("before-input-event", (event: Event, input: Input): void => {
-        const shouldWarnBeforeExit = global.store.get("warnBeforeExit", true);
-        const exitShortcutPressed =
-            input.type === "keyDown" && exitShortcuts.some((shortcutFn) => shortcutFn(input, process.platform));
-
-        if (shouldWarnBeforeExit && exitShortcutPressed && global.mainWindow) {
-            const shouldCancelCloseRequest =
-                dialog.showMessageBoxSync(global.mainWindow, {
-                    type: "question",
-                    buttons: [
-                        _t("action|cancel"),
-                        _t("action|close_brand", {
-                            brand: global.vectorConfig.brand || "Element",
-                        }),
-                    ],
-                    message: _t("confirm_quit"),
-                    defaultId: 1,
-                    cancelId: 0,
-                }) === 0;
-
-            if (shouldCancelCloseRequest) {
-                event.preventDefault();
-            }
-        }
-    });
+    global.mainWindow.webContents.on("before-input-event", warnBeforeExit);
 
     global.mainWindow.on("closed", () => {
         global.mainWindow = null;
