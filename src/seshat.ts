@@ -8,7 +8,6 @@ Please see LICENSE files in the repository root for full details.
 import { app, ipcMain } from "electron";
 import { promises as afs } from "node:fs";
 import path from "node:path";
-import keytar from "keytar-forked";
 
 import type {
     Seshat as SeshatType,
@@ -41,19 +40,17 @@ let eventIndex: SeshatType | null = null;
 
 const seshatDefaultPassphrase = "DEFAULT_PASSPHRASE";
 async function getOrCreatePassphrase(key: string): Promise<string> {
-    if (keytar) {
-        try {
-            const storedPassphrase = await keytar.getPassword("element.io", key);
-            if (storedPassphrase !== null) {
-                return storedPassphrase;
-            } else {
-                const newPassphrase = await randomArray(32);
-                await keytar.setPassword("element.io", key, newPassphrase);
-                return newPassphrase;
-            }
-        } catch (e) {
-            console.log("Error getting the event index passphrase out of the secret store", e);
+    try {
+        const storedPassphrase = await global.store.getSecret(key);
+        if (storedPassphrase !== null) {
+            return storedPassphrase;
+        } else {
+            const newPassphrase = await randomArray(32);
+            await global.store.setSecret(key, newPassphrase);
+            return newPassphrase;
         }
+    } catch (e) {
+        console.log("Error getting the event index passphrase out of the secret store", e);
     }
     return seshatDefaultPassphrase;
 }

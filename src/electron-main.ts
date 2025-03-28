@@ -16,7 +16,6 @@ import * as Sentry from "@sentry/electron/main";
 import AutoLaunch from "auto-launch";
 import path, { dirname } from "node:path";
 import windowStateKeeper from "electron-window-state";
-import Store from "electron-store";
 import fs, { promises as afs } from "node:fs";
 import { URL, fileURLToPath } from "node:url";
 import minimist from "minimist";
@@ -25,6 +24,7 @@ import "./ipc.js";
 import "./seshat.js";
 import "./settings.js";
 import * as tray from "./tray.js";
+import { Store } from "./store.js";
 import { buildMenuTemplate } from "./vectormenu.js";
 import webContentsHandler from "./webcontents-handler.js";
 import * as updater from "./updater.js";
@@ -257,7 +257,7 @@ async function moveAutoLauncher(): Promise<void> {
     }
 }
 
-global.store = new Store({ name: "electron-config" });
+global.store = new Store();
 
 global.appQuitting = false;
 
@@ -351,7 +351,7 @@ app.enableSandbox();
 app.commandLine.appendSwitch("disable-features", "HardwareMediaKeyHandling,MediaSessionService");
 
 // Disable hardware acceleration if the setting has been set.
-if (global.store.get("disableHardwareAcceleration", false) === true) {
+if (global.store.get("disableHardwareAcceleration") === true) {
     console.log("Disabling hardware acceleration.");
     app.disableHardwareAcceleration();
 }
@@ -462,7 +462,7 @@ app.on("ready", async () => {
 
         icon: global.trayConfig.icon_path,
         show: false,
-        autoHideMenuBar: global.store.get("autoHideMenuBar", true),
+        autoHideMenuBar: global.store.get("autoHideMenuBar"),
 
         x: mainWindowState.x,
         y: mainWindowState.y,
@@ -487,7 +487,7 @@ app.on("ready", async () => {
     global.mainWindow.webContents.session.setSpellCheckerEnabled(global.store.get("spellCheckerEnabled", true));
 
     // Create trayIcon icon
-    if (global.store.get("minimizeToTray", true)) tray.create(global.trayConfig);
+    if (global.store.get("minimizeToTray")) tray.create(global.trayConfig);
 
     global.mainWindow.once("ready-to-show", () => {
         if (!global.mainWindow) return;

@@ -27,7 +27,7 @@ export const Settings: Record<string, Setting> = {
     },
     "Electron.warnBeforeExit": {
         async read(): Promise<any> {
-            return global.store.get("warnBeforeExit", true);
+            return global.store.get("warnBeforeExit");
         },
         async write(value: any): Promise<void> {
             global.store.set("warnBeforeExit", value);
@@ -61,7 +61,7 @@ export const Settings: Record<string, Setting> = {
     },
     "Electron.enableHardwareAcceleration": {
         async read(): Promise<any> {
-            return !global.store.get("disableHardwareAcceleration", false);
+            return !global.store.get("disableHardwareAcceleration");
         },
         async write(value: any): Promise<void> {
             global.store.set("disableHardwareAcceleration", !value);

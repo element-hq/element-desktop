@@ -7,9 +7,9 @@ Please see LICENSE files in the repository root for full details.
 
 import { type BrowserWindow } from "electron";
 
-import type Store from "electron-store";
 import type AutoLaunch from "auto-launch";
 import { type AppLocalization } from "../language-helper.js";
+import { type Store } from "../store.js";
 
 // global type extensions need to use var for whatever reason
 /* eslint-disable no-var */
@@ -24,13 +24,6 @@ declare global {
         icon_path: string;
         brand: string;
     };
-    var store: Store<{
-        warnBeforeExit?: boolean;
-        minimizeToTray?: boolean;
-        spellCheckerEnabled?: boolean;
-        autoHideMenuBar?: boolean;
-        locale?: string | string[];
-        disableHardwareAcceleration?: boolean;
-    }>;
+    var store: Store;
 }
 /* eslint-enable no-var */

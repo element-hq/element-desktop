@@ -7,7 +7,6 @@ Please see LICENSE files in the repository root for full details.
 
 import { app, autoUpdater, desktopCapturer, ipcMain, powerSaveBlocker, TouchBar, nativeImage } from "electron";
 import { relaunchApp } from "@standardnotes/electron-clear-data";
-import keytar from "keytar-forked";
 
 import IpcMainEvent = Electron.IpcMainEvent;
 import { recordSSOSession } from "./protocol.js";
@@ -117,7 +116,7 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
             break;
 
         case "getSpellCheckEnabled":
-            ret = global.store.get("spellCheckerEnabled", true);
+            ret = global.store.get("spellCheckerEnabled");
             break;
 
         case "setSpellCheckLanguages":
@@ -141,12 +140,7 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
 
         case "getPickleKey":
             try {
-                ret = await keytar.getPassword("element.io", `${args[0]}|${args[1]}`);
-                // migrate from riot.im (remove once we think there will no longer be
-                // logins from the time of riot.im)
-                if (ret === null) {
-                    ret = await keytar.getPassword("riot.im", `${args[0]}|${args[1]}`);
-                }
+                ret = await global.store.getSecret(`${args[0]}|${args[1]}`);
             } catch {
                 // if an error is thrown (e.g. keytar can't connect to the keychain),
                 // then return null, which means the default pickle key will be used
@@ -157,9 +151,7 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
         case "createPickleKey":
             try {
                 const pickleKey = await randomArray(32);
-                // We purposefully throw if keytar is not available so the caller can handle it
-                // rather than sending them a pickle key we did not store on their behalf.
-                await keytar!.setPassword("element.io", `${args[0]}|${args[1]}`, pickleKey);
+                await global.store.setSecret(`${args[0]}|${args[1]}`, pickleKey);
                 ret = pickleKey;
             } catch (e) {
                 console.error("Failed to create pickle key", e);
@@ -169,11 +161,10 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
 
         case "destroyPickleKey":
             try {
-                await keytar.deletePassword("element.io", `${args[0]}|${args[1]}`);
-                // migrate from riot.im (remove once we think there will no longer be
-                // logins from the time of riot.im)
-                await keytar.deletePassword("riot.im", `${args[0]}|${args[1]}`);
-            } catch {}
+                await global.store.deleteSecret(`${args[0]}|${args[1]}`);
+            } catch (e) {
+                console.error("Failed to destroy pickle key", e);
+            }
             break;
         case "getDesktopCapturerSources":
             ret = (await desktopCapturer.getSources(args[0])).map((source) => ({
