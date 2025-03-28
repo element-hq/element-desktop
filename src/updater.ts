@@ -1,20 +1,14 @@
 /*
-Copyright 2016-2021 New Vector Ltd
+Copyright 2016-2024 New Vector Ltd.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Commercial
+Please see LICENSE files in the repository root for full details.
 */
 
 import { app, autoUpdater, ipcMain } from "electron";
+import fs from "node:fs/promises";
+
+import { getSquirrelExecutable } from "./squirrelhooks.js";
 
 const UPDATE_POLL_INTERVAL_MS = 60 * 60 * 1000;
 const INITIAL_UPDATE_DELAY_MS = 30 * 1000;
@@ -37,8 +31,8 @@ async function safeCheckForUpdate(): Promise<void> {
         // To avoid this we check manually whether an update is available and call the
         // autoUpdater.checkForUpdates() when something new is there.
         try {
-            const res = await global.fetch(feedUrl);
-            const { currentRelease } = await res.json();
+            const res = await fetch(feedUrl);
+            const { currentRelease } = (await res.json()) as { currentRelease: string };
             const latestVersionDownloaded = latestUpdateDownloaded?.releaseName;
             console.info(
                 `Latest version from release download: ${currentRelease} (current: ${app.getVersion()}, most recent downloaded ${latestVersionDownloaded}})`,
@@ -74,10 +68,12 @@ async function pollForUpdates(): Promise<void> {
     }
 }
 
-export function start(updateBaseUrl: string): void {
-    if (updateBaseUrl.slice(-1) !== "/") {
+export async function start(updateBaseUrl: string): Promise<void> {
+    if (!(await available(updateBaseUrl))) return;
+    if (!updateBaseUrl.endsWith("/")) {
         updateBaseUrl = updateBaseUrl + "/";
     }
+
     try {
         let url: string;
         let serverType: "json" | undefined;
@@ -93,7 +89,6 @@ export function start(updateBaseUrl: string): void {
             // Squirrel / electron only supports auto-update on these two platforms.
             // I'm not even going to try to guess which feed style they'd use if they
             // implemented it on Linux, or if it would be different again.
-            console.log("Auto update not supported on this platform");
             return;
         }
 
@@ -114,6 +109,26 @@ export function start(updateBaseUrl: string): void {
         // will fail if running in debug mode
         console.log("Couldn't enable update checking", err);
     }
+}
+
+async function available(updateBaseUrl?: string): Promise<boolean> {
+    if (process.platform === "linux") {
+        // Auto update is not supported on Linux
+        console.log("Auto update not supported on this platform");
+        return false;
+    }
+
+    if (process.platform === "win32") {
+        try {
+            await fs.access(getSquirrelExecutable());
+        } catch {
+            console.log("Squirrel not found, auto update not supported");
+            return false;
+        }
+    }
+
+    // Otherwise we're either on macOS or Windows with Squirrel
+    return !!updateBaseUrl;
 }
 
 ipcMain.on("install_update", installUpdate);

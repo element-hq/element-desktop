@@ -1,44 +1,60 @@
 {
-    "Add to dictionary": "Engadir ao dicionario",
-    "The image failed to save": "Non se gardou a imaxe",
-    "Failed to save image": "Fallou o gardado da imaxe",
-    "Save image as...": "Gardar imaxe como...",
-    "Copy link address": "Copiar enderezo da ligazón",
-    "Copy email address": "Copiar enderezo de email",
-    "Copy image": "Copiar imaxe",
-    "File": "Ficheiro",
-    "Bring All to Front": "Traer todo á fronte",
-    "Zoom": "Aumento",
-    "Stop Speaking": "Deixa de falar",
-    "Start Speaking": "Comeza a falar",
-    "Speech": "Falar",
-    "Unhide": "Desagochar",
-    "Hide Others": "Agochar outras",
-    "Hide": "Agochar",
-    "Services": "Servizos",
-    "About": "Acerca de",
-    "Help": "Axuda",
-    "Close": "Pechar",
-    "Minimize": "Minimizar",
-    "Window": "Ventá",
-    "Toggle Developer Tools": "Activar ferramentas de desenvolvemento",
-    "Toggle Full Screen": "Activar pantalla completa",
-    "Preferences": "Preferencias",
-    "Zoom Out": "Diminuir",
-    "Zoom In": "Aumentar",
-    "Actual Size": "Tamaño real",
-    "View": "Ver",
-    "Select All": "Elexir todo",
-    "Delete": "Eliminar",
-    "Paste and Match Style": "Pegar e imitar estilo",
-    "Paste": "Pegar",
-    "Copy": "Copiar",
-    "Cut": "Cortar",
-    "Redo": "Refacer",
-    "Undo": "Desfacer",
-    "Edit": "Editar",
-    "Quit": "Saír",
-    "Show/Hide": "Mostrar/Agochar",
-    "Are you sure you want to quit?": "Tes a certeza de que queres saír?",
-    "Cancel": "Cancelar"
+    "action": {
+        "cancel": "Cancelar",
+        "close": "Pechar",
+        "copy": "Copiar",
+        "cut": "Cortar",
+        "delete": "Eliminar",
+        "edit": "Editar",
+        "minimise": "Minimizar",
+        "paste": "Pegar",
+        "paste_match_style": "Pegar e imitar estilo",
+        "quit": "Saír",
+        "redo": "Refacer",
+        "select_all": "Elexir todo",
+        "show_hide": "Mostrar/Agochar",
+        "undo": "Desfacer",
+        "zoom_in": "Aumentar",
+        "zoom_out": "Diminuir"
+    },
+    "common": {
+        "about": "Acerca de",
+        "help": "Axuda",
+        "preferences": "Preferencias"
+    },
+    "confirm_quit": "Tes a certeza de que queres saír?",
+    "edit_menu": {
+        "speech": "Falar",
+        "speech_start_speaking": "Comeza a falar",
+        "speech_stop_speaking": "Deixa de falar"
+    },
+    "file_menu": {
+        "label": "Ficheiro"
+    },
+    "menu": {
+        "hide": "Agochar",
+        "hide_others": "Agochar outras",
+        "services": "Servizos",
+        "unhide": "Desagochar"
+    },
+    "right_click_menu": {
+        "add_to_dictionary": "Engadir ao dicionario",
+        "copy_email": "Copiar enderezo de email",
+        "copy_image": "Copiar imaxe",
+        "copy_link_url": "Copiar enderezo da ligazón",
+        "save_image_as": "Gardar imaxe como...",
+        "save_image_as_error_description": "Non se gardou a imaxe",
+        "save_image_as_error_title": "Fallou o gardado da imaxe"
+    },
+    "view_menu": {
+        "actual_size": "Tamaño real",
+        "toggle_developer_tools": "Activar ferramentas de desenvolvemento",
+        "toggle_full_screen": "Activar pantalla completa",
+        "view": "Vista"
+    },
+    "window_menu": {
+        "bring_all_to_front": "Traer todo á fronte",
+        "label": "Ventá",
+        "zoom": "Aumento"
+    }
 }

@@ -2,25 +2,48 @@ name: Dockerbuild
 on:
     workflow_dispatch: {}
     push:
-        branches: [master, develop]
+        branches: [master, staging, develop]
         paths:
             - "dockerbuild/**"
+    pull_request:
 concurrency: ${{ github.workflow }}-${{ github.ref_name }}
 env:
     REGISTRY: ghcr.io
     IMAGE_NAME: ${{ github.repository }}-dockerbuild
+permissions: {}
 jobs:
     build:
         name: Docker Build
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
         permissions:
             contents: read
             packages: write
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4
+
+            - name: Set up QEMU
+              uses: docker/setup-qemu-action@29109295f81e9208d7d86ff1c6c12d2833863392 # v3
+
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@b5ca514318bd6ebac0fb2aedd5d36ec1b5c232a2 # v3
+              with:
+                  install: true
+
+            - name: Build test image
+              uses: docker/build-push-action@471d1dc4e07e5cdedd4c2171150001c434f0b7a4 # v6
+              with:
+                  file: dockerbuild/Dockerfile
+                  push: false
+                  load: true
+                  tags: element-desktop-dockerbuild
+                  platforms: linux/amd64
+
+            - name: Test image
+              run: docker run -v $PWD:/project element-desktop-dockerbuild yarn install
 
             - name: Log in to the Container registry
-              uses: docker/login-action@a9794064588be971151ec5e7144cb535bcb56e36
+              uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772
+              if: github.event_name != 'pull_request'
               with:
                   registry: ${{ env.REGISTRY }}
                   username: ${{ github.actor }}
@@ -28,16 +51,20 @@ jobs:
 
             - name: Extract metadata for Docker
               id: meta
-              uses: docker/metadata-action@35e9aff4f5d665b5aa8a8f2adffaf8a1b5f49cc0
+              if: github.event_name != 'pull_request'
+              uses: docker/metadata-action@902fa8ec7d6ecbf8d84d538b9b233a880e428804 # v5
               with:
                   images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
                   tags: |
                       type=ref,event=branch
+                      type=ref,event=pr
 
             - name: Build and push Docker image
-              uses: docker/build-push-action@4fad532b9fdbfb80f436784834374a1c11834153
+              if: github.event_name != 'pull_request'
+              uses: docker/build-push-action@471d1dc4e07e5cdedd4c2171150001c434f0b7a4 # v6
               with:
-                  context: dockerbuild
+                  file: dockerbuild/Dockerfile
                   push: true
                   tags: ${{ steps.meta.outputs.tags }}
                   labels: ${{ steps.meta.outputs.labels }}
+                  platforms: linux/amd64,linux/arm64

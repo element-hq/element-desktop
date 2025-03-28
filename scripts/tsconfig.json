@@ -1,16 +1,14 @@
 {
     "compilerOptions": {
         "resolveJsonModule": true,
-        "moduleResolution": "node",
+        "moduleResolution": "node16",
+        "skipLibCheck": true,
         "esModuleInterop": true,
-        "target": "es2017",
-        "module": "commonjs",
+        "target": "es2022",
+        "module": "node16",
         "sourceMap": false,
         "strict": true,
-        "lib": ["es2020", "dom"]
+        "lib": ["es2020"]
     },
-    "include": ["../src/@types", "./**/*.ts"],
-    "ts-node": {
-        "transpileOnly": true
-    }
+    "include": ["../src/@types", "./**/*.ts"]
 }

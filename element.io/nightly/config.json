@@ -21,9 +21,9 @@
     ],
     "bug_report_endpoint_url": "https://element.io/bugreports/submit",
     "uisi_autorageshake_app": "element-auto-uisi",
-    "showLabsSettings": true,
-    "roomDirectory": {
-        "servers": ["matrix.org", "gitter.im", "libera.chat"]
+    "show_labs_settings": true,
+    "room_directory": {
+        "servers": ["matrix.org", "gitter.im"]
     },
     "enable_presence_by_hs_url": {
         "https://matrix.org": false,
@@ -44,16 +44,22 @@
         "environment": "nightly"
     },
     "posthog": {
-        "projectApiKey": "phc_Jzsm6DTm6V2705zeU5dcNvQDlonOR68XvX2sh1sEOHO",
-        "apiHost": "https://posthog.element.io"
+        "project_api_key": "phc_Jzsm6DTm6V2705zeU5dcNvQDlonOR68XvX2sh1sEOHO",
+        "api_host": "https://posthog.element.io"
     },
     "privacy_policy_url": "https://element.io/cookie-policy",
     "features": {
+        "threadsActivityCentre": true,
         "feature_spotlight": true,
-        "feature_video_rooms": true
+        "feature_group_calls": true,
+        "feature_video_rooms": true,
+        "feature_element_call_video_rooms": true
+    },
+    "setting_defaults": {
+        "RustCrypto.staged_rollout_percent": 100
     },
     "element_call": {
-        "url": "https://element-call-livekit.netlify.app"
+        "url": "https://call.element.dev"
     },
     "map_style_url": "https://api.maptiler.com/maps/streets/style.json?key=fU3vlMsMn4Jb6dnEIFsx"
 }

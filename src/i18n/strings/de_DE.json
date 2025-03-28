@@ -1,0 +1,63 @@
+{
+    "action": {
+        "cancel": "Abbrechen",
+        "close": "Schließen",
+        "close_brand": "%(brand)s schließen",
+        "copy": "Kopieren",
+        "cut": "Ausschneiden",
+        "delete": "Löschen",
+        "edit": "Bearbeiten",
+        "minimise": "Minimieren",
+        "paste": "Einfügen",
+        "paste_match_style": "Einfügen und Formatierung beibehalten",
+        "quit": "Beenden",
+        "redo": "Wiederherstellen",
+        "select_all": "Alles auswählen",
+        "show_hide": "Anzeigen/Ausblenden",
+        "undo": "Rückgängig",
+        "zoom_in": "Vergrößern",
+        "zoom_out": "Verkleinern"
+    },
+    "common": {
+        "about": "Über",
+        "brand_help": "%(brand)s Hilfe",
+        "help": "Hilfe",
+        "preferences": "Präferenzen"
+    },
+    "confirm_quit": "Wirklich beenden?",
+    "edit_menu": {
+        "speech": "Sprache",
+        "speech_start_speaking": "Aufnahme starten",
+        "speech_stop_speaking": "Aufnahme beenden"
+    },
+    "file_menu": {
+        "label": "Datei"
+    },
+    "menu": {
+        "hide": "Verstecken",
+        "hide_others": "Andere verstecken",
+        "services": "Dienste",
+        "unhide": "Wieder anzeigen"
+    },
+    "right_click_menu": {
+        "add_to_dictionary": "Wörterbuch hinzufügen",
+        "copy_email": "Email-Adresse kopieren",
+        "copy_image": "Bild kopieren",
+        "copy_image_url": "Bild-Adresse kopieren",
+        "copy_link_url": "Link-Adresse kopieren",
+        "save_image_as": "Bild speichern unter...",
+        "save_image_as_error_description": "Das Bild konnte nicht gespeichert werden",
+        "save_image_as_error_title": "Bild kann nicht gespeichert werden"
+    },
+    "view_menu": {
+        "actual_size": "Tatsächliche Größe",
+        "toggle_developer_tools": "Developer-Tools an/aus",
+        "toggle_full_screen": "Vollbildschirm an/aus",
+        "view": "Ansicht"
+    },
+    "window_menu": {
+        "bring_all_to_front": "Alles in den Vordergrund",
+        "label": "Fenster",
+        "zoom": "Zoomen"
+    }
+}

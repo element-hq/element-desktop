@@ -1,47 +1,63 @@
 {
-    "Bring All to Front": "Wyciągnij wszystko do przodu",
-    "Add to dictionary": "Dodaj do słownika",
-    "The image failed to save": "Obraz nie został zapisany",
-    "Failed to save image": "Nie udało się zapisać obrazu",
-    "Save image as...": "Zapisz obraz jako...",
-    "Copy link address": "Kopiuj adres odnośnika",
-    "Copy email address": "Kopiuj adres e-mail",
-    "Copy image": "Kopiuj obraz",
-    "File": "Plik",
-    "Zoom": "Powiększenie",
-    "Stop Speaking": "Przestań mówić",
-    "Start Speaking": "Zacznij mówić",
-    "Speech": "Mowa",
-    "Unhide": "Odkryj",
-    "Hide Others": "Ukryj inne",
-    "Hide": "Ukryj",
-    "Services": "Usługi",
-    "About": "O nas",
-    "Help": "Pomoc",
-    "Close": "Zamknij",
-    "Minimize": "Minimalizuj",
-    "Window": "Okno",
-    "Toggle Developer Tools": "Przełącz na narzędzia deweloperskie",
-    "Toggle Full Screen": "Przełącz na pełny ekran",
-    "Preferences": "Preferencje",
-    "Zoom Out": "Pomniejsz",
-    "Zoom In": "Powiększ",
-    "Actual Size": "Rozmiar rzeczywisty",
-    "View": "Pokaż",
-    "Select All": "Zaznacz wszystko",
-    "Delete": "Usuń",
-    "Paste and Match Style": "Wklej i dopasuj styl",
-    "Paste": "Wklej",
-    "Copy": "Kopiuj",
-    "Cut": "Wytnij",
-    "Redo": "Ponów",
-    "Undo": "Cofnij",
-    "Edit": "Edytuj",
-    "Quit": "Zamknij",
-    "Show/Hide": "Pokaż/Ukryj",
-    "Are you sure you want to quit?": "Czy na pewno chcesz zamknąć?",
-    "Cancel": "Anuluj",
-    "Copy image address": "Kopiuj adres obrazu",
-    "Close %(brand)s": "Zamknij %(brand)s",
-    "%(brand)s Help": "Pomoc %(brand)s"
+    "action": {
+        "cancel": "Anuluj",
+        "close": "Zamknij",
+        "close_brand": "Zamknij %(brand)s",
+        "copy": "Kopiuj",
+        "cut": "Wytnij",
+        "delete": "Usuń",
+        "edit": "Edytuj",
+        "minimise": "Minimalizuj",
+        "paste": "Wklej",
+        "paste_match_style": "Wklej i dopasuj styl",
+        "quit": "Zamknij",
+        "redo": "Ponów",
+        "select_all": "Zaznacz wszystko",
+        "show_hide": "Pokaż/Ukryj",
+        "undo": "Cofnij",
+        "zoom_in": "Powiększ",
+        "zoom_out": "Pomniejsz"
+    },
+    "common": {
+        "about": "Informacje",
+        "brand_help": "Pomoc %(brand)s",
+        "help": "Pomoc",
+        "preferences": "Preferencje"
+    },
+    "confirm_quit": "Czy na pewno chcesz zamknąć?",
+    "edit_menu": {
+        "speech": "Mowa",
+        "speech_start_speaking": "Zacznij mówić",
+        "speech_stop_speaking": "Przestań mówić"
+    },
+    "file_menu": {
+        "label": "Plik"
+    },
+    "menu": {
+        "hide": "Ukryj",
+        "hide_others": "Ukryj inne",
+        "services": "Usługi",
+        "unhide": "Odkryj"
+    },
+    "right_click_menu": {
+        "add_to_dictionary": "Dodaj do słownika",
+        "copy_email": "Kopiuj adres e-mail",
+        "copy_image": "Kopiuj obraz",
+        "copy_image_url": "Kopiuj adres obrazu",
+        "copy_link_url": "Kopiuj adres odnośnika",
+        "save_image_as": "Zapisz obraz jako...",
+        "save_image_as_error_description": "Obraz nie został zapisany",
+        "save_image_as_error_title": "Nie udało się zapisać obrazu"
+    },
+    "view_menu": {
+        "actual_size": "Rozmiar rzeczywisty",
+        "toggle_developer_tools": "Przełącz narzędzia deweloperskie",
+        "toggle_full_screen": "Przełącz pełny ekran",
+        "view": "Wyświetl"
+    },
+    "window_menu": {
+        "bring_all_to_front": "Wyciągnij wszystko do przodu",
+        "label": "Okno",
+        "zoom": "Powiększenie"
+    }
 }

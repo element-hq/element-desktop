@@ -1,45 +1,42 @@
 /*
+Copyright 2018-2024 New Vector Ltd.
+Copyright 2017-2019 Michael Telatynski <7t3chguy@gmail.com>
 Copyright 2016 Aviral Dasgupta
 Copyright 2016 OpenMarket Ltd
-Copyright 2017, 2019 Michael Telatynski <7t3chguy@gmail.com>
-Copyright 2018 - 2021 New Vector Ltd
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Commercial
+Please see LICENSE files in the repository root for full details.
 */
 
 // Squirrel on windows starts the app with various flags as hooks to tell us when we've been installed/uninstalled etc.
-import "./squirrelhooks";
-import { app, BrowserWindow, Menu, autoUpdater, protocol, dialog, Input, Event, session } from "electron";
+import "./squirrelhooks.js";
+import { app, BrowserWindow, Menu, autoUpdater, protocol, dialog, type Input, type Event, session } from "electron";
+// eslint-disable-next-line n/file-extension-in-import
 import * as Sentry from "@sentry/electron/main";
 import AutoLaunch from "auto-launch";
-import path from "path";
+import path, { dirname } from "node:path";
 import windowStateKeeper from "electron-window-state";
 import Store from "electron-store";
-import fs, { promises as afs } from "fs";
-import { URL } from "url";
+import fs, { promises as afs } from "node:fs";
+import { URL, fileURLToPath } from "node:url";
 import minimist from "minimist";
 
-import "./ipc";
-import "./seshat";
-import "./settings";
-import * as tray from "./tray";
-import { migrate as migrateSafeStorage } from "./safe-storage";
-import { buildMenuTemplate } from "./vectormenu";
-import webContentsHandler from "./webcontents-handler";
-import * as updater from "./updater";
-import { getProfileFromDeeplink, protocolInit } from "./protocol";
-import { _t, AppLocalization } from "./language-helper";
-import { setDisplayMediaCallback } from "./displayMediaCallback";
+import "./ipc.js";
+import "./seshat.js";
+import "./settings.js";
+import * as tray from "./tray.js";
+import { migrate as migrateSafeStorage } from "./safe-storage.js";
+import { buildMenuTemplate } from "./vectormenu.js";
+import webContentsHandler from "./webcontents-handler.js";
+import * as updater from "./updater.js";
+import { getProfileFromDeeplink, protocolInit } from "./protocol.js";
+import { _t, AppLocalization } from "./language-helper.js";
+import { setDisplayMediaCallback } from "./displayMediaCallback.js";
+import { setupMacosTitleBar } from "./macos-titlebar.js";
+import { loadJsonFile } from "./utils.js";
+import { setupMediaAuth } from "./media-auth.js";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const argv = minimist(process.argv, {
     alias: { help: "h" },
@@ -50,12 +47,18 @@ if (argv["help"]) {
     console.log("  --profile-dir {path}: Path to where to store the profile.");
     console.log("  --profile {name}:     Name of alternate profile to use, allows for running multiple accounts.");
     console.log("  --devtools:           Install and use react-devtools and react-perf.");
+    console.log(
+        `  --config:             Path to the config.json file. May also be specified via the ELEMENT_DESKTOP_CONFIG_JSON environment variable.\n` +
+            `                         Otherwise use the default user location '${app.getPath("userData")}'`,
+    );
     console.log("  --no-update:          Disable automatic updating.");
     console.log("  --hidden:             Start the application hidden in the system tray.");
     console.log("  --help:               Displays this help message.");
     console.log("And more such as --proxy, see:" + "https://electronjs.org/docs/api/command-line-switches");
     app.exit();
 }
+
+const LocalConfigLocation = process.env.ELEMENT_DESKTOP_CONFIG_JSON ?? argv["config"];
 
 // Electron creates the user data directory (with just an empty 'Dictionaries' directory...)
 // as soon as the app path is set, so pick a random path in it that must exist if it's a
@@ -103,7 +106,7 @@ async function tryPaths(name: string, root: string, rawPaths: string[]): Promise
         try {
             await afs.stat(p);
             return p + "/";
-        } catch (e) {}
+        } catch {}
     }
     console.log(`Couldn't find ${name} files in any of: `);
     for (const p of paths) {
@@ -142,9 +145,8 @@ async function loadConfig(): Promise<void> {
     const asarPath = await getAsarPath();
 
     try {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        global.vectorConfig = require(asarPath + "config.json");
-    } catch (e) {
+        global.vectorConfig = loadJsonFile(asarPath, "config.json");
+    } catch {
         // it would be nice to check the error code here and bail if the config
         // is unparsable, but we get MODULE_NOT_FOUND in the case of a missing
         // file or invalid json, so node is just very unhelpful.
@@ -154,8 +156,9 @@ async function loadConfig(): Promise<void> {
 
     try {
         // Load local config and use it to override values from the one baked with the build
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const localConfig = require(path.join(app.getPath("userData"), "config.json"));
+        const localConfig = LocalConfigLocation
+            ? loadJsonFile(LocalConfigLocation)
+            : loadJsonFile(app.getPath("userData"), "config.json");
 
         // If the local config has a homeserver defined, don't use the homeserver from the build
         // config. This is to avoid a problem where Riot thinks there are multiple homeservers
@@ -164,16 +167,19 @@ async function loadConfig(): Promise<void> {
             // Rip out all the homeserver options from the vector config
             global.vectorConfig = Object.keys(global.vectorConfig)
                 .filter((k) => !homeserverProps.includes(<any>k))
-                .reduce((obj, key) => {
-                    obj[key] = global.vectorConfig[key];
-                    return obj;
-                }, {} as Omit<Partial<(typeof global)["vectorConfig"]>, keyof typeof homeserverProps>);
+                .reduce(
+                    (obj, key) => {
+                        obj[key] = global.vectorConfig[key];
+                        return obj;
+                    },
+                    {} as Omit<Partial<(typeof global)["vectorConfig"]>, keyof typeof homeserverProps>,
+                );
         }
 
         global.vectorConfig = Object.assign(global.vectorConfig, localConfig);
     } catch (e) {
         if (e instanceof SyntaxError) {
-            dialog.showMessageBox({
+            void dialog.showMessageBox({
                 type: "error",
                 title: `Your ${global.vectorConfig.brand || "Element"} is misconfigured`,
                 message:
@@ -305,7 +311,8 @@ global.appQuitting = false;
 const exitShortcuts: Array<(input: Input, platform: string) => boolean> = [
     (input, platform): boolean => platform !== "darwin" && input.alt && input.key.toUpperCase() === "F4",
     (input, platform): boolean => platform !== "darwin" && input.control && input.key.toUpperCase() === "Q",
-    (input, platform): boolean => platform === "darwin" && input.meta && input.key.toUpperCase() === "Q",
+    (input, platform): boolean =>
+        platform === "darwin" && input.meta && !input.control && input.key.toUpperCase() === "Q",
 ];
 
 const warnBeforeExit = (event: Event, input: Input): void => {
@@ -318,12 +325,12 @@ const warnBeforeExit = (event: Event, input: Input): void => {
             dialog.showMessageBoxSync(global.mainWindow, {
                 type: "question",
                 buttons: [
-                    _t("Cancel"),
-                    _t("Close %(brand)s", {
+                    _t("action|cancel"),
+                    _t("action|close_brand", {
                         brand: global.vectorConfig.brand || "Element",
                     }),
                 ],
-                message: _t("Are you sure you want to quit?"),
+                message: _t("confirm_quit"),
                 defaultId: 1,
                 cancelId: 0,
             }) === 0;
@@ -334,7 +341,7 @@ const warnBeforeExit = (event: Event, input: Input): void => {
     }
 };
 
-configureSentry();
+void configureSentry();
 
 // handle uncaught errors otherwise it displays
 // stack traces in popup dialogs, which is terrible (which
@@ -417,13 +424,9 @@ app.on("ready", async () => {
 
     if (argv["devtools"]) {
         try {
-            // eslint-disable-next-line @typescript-eslint/no-var-requires
-            const { default: installExt, REACT_DEVELOPER_TOOLS, REACT_PERF } = require("electron-devtools-installer");
-            installExt(REACT_DEVELOPER_TOOLS)
-                .then((name: string) => console.log(`Added Extension: ${name}`))
-                .catch((err: unknown) => console.log("An error occurred: ", err));
-            installExt(REACT_PERF)
-                .then((name: string) => console.log(`Added Extension: ${name}`))
+            const { installExtension, REACT_DEVELOPER_TOOLS } = await import("electron-devtools-installer");
+            installExtension(REACT_DEVELOPER_TOOLS)
+                .then((ext) => console.log(`Added Extension: ${ext.name}`))
                 .catch((err: unknown) => console.log("An error occurred: ", err));
         } catch (e) {
             console.log(e);
@@ -482,11 +485,12 @@ app.on("ready", async () => {
         });
     });
 
-    if (argv["no-update"]) {
-        console.log('Auto update disabled via command line flag "--no-update"');
+    // Minimist parses `--no-`-prefixed arguments as booleans with value `false` rather than verbatim.
+    if (argv["update"] === false) {
+        console.log("Auto update disabled via command line flag");
     } else if (global.vectorConfig["update_base_url"]) {
         console.log(`Starting auto update with base URL: ${global.vectorConfig["update_base_url"]}`);
-        updater.start(global.vectorConfig["update_base_url"]);
+        void updater.start(global.vectorConfig["update_base_url"]);
     } else {
         console.log("No update_base_url is defined: auto update is disabled");
     }
@@ -497,10 +501,13 @@ app.on("ready", async () => {
         defaultHeight: 768,
     });
 
-    const preloadScript = path.normalize(`${__dirname}/preload.js`);
+    const preloadScript = path.normalize(`${__dirname}/preload.cjs`);
     global.mainWindow = new BrowserWindow({
         // https://www.electronjs.org/docs/faq#the-font-looks-blurry-what-is-this-and-what-can-i-do
         backgroundColor: "#fff",
+
+        titleBarStyle: process.platform === "darwin" ? "hidden" : "default",
+        trafficLightPosition: { x: 9, y: 8 },
 
         icon: global.trayConfig.icon_path,
         show: false,
@@ -518,7 +525,11 @@ app.on("ready", async () => {
             webgl: true,
         },
     });
-    global.mainWindow.loadURL("vector://vector/webapp/");
+    void global.mainWindow.loadURL("vector://vector/webapp/");
+
+    if (process.platform === "darwin") {
+        setupMacosTitleBar(global.mainWindow);
+    }
 
     // Handle spellchecker
     // For some reason spellCheckerEnabled isn't persisted, so we have to use the store here
@@ -586,6 +597,8 @@ app.on("ready", async () => {
         global.mainWindow?.webContents.send("openDesktopCapturerSourcePicker");
         setDisplayMediaCallback(callback);
     });
+
+    setupMediaAuth(global.mainWindow);
 });
 
 app.on("window-all-closed", () => {

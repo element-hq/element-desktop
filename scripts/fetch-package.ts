@@ -1,18 +1,17 @@
-#!/usr/bin/env -S npx ts-node --resolveJsonModule
+#!/usr/bin/env -S npx tsx --resolveJsonModule
 
-import * as path from "path";
-import { createWriteStream, promises as fs } from "fs";
-import * as childProcess from "child_process";
-import tar from "tar";
+import * as path from "node:path";
+import { createWriteStream, promises as fs } from "node:fs";
+import * as childProcess from "node:child_process";
+import * as tar from "tar";
 import * as asar from "@electron/asar";
-import fetch from "node-fetch";
-import { promises as stream } from "stream";
+import { promises as stream } from "node:stream";
 
 import riotDesktopPackageJson from "../package.json";
-import { setPackageVersion } from "./set-version";
+import { setPackageVersion } from "./set-version.js";
 
 const PUB_KEY_URL = "https://packages.riot.im/element-release-key.asc";
-const PACKAGE_URL_PREFIX = "https://github.com/vector-im/element-web/releases/download/";
+const PACKAGE_URL_PREFIX = "https://github.com/element-hq/element-web/releases/download/";
 const DEVELOP_TGZ_URL = "https://develop.element.io/develop.tar.gz";
 const ASAR_PATH = "webapp.asar";
 
@@ -28,7 +27,7 @@ async function downloadToFile(url: string, filename: string): Promise<void> {
         console.error(e);
         try {
             await fs.unlink(filename);
-        } catch (_) {}
+        } catch {}
         throw e;
     }
 }
@@ -114,7 +113,7 @@ async function main(): Promise<number | undefined> {
             return 1;
         }
 
-        await new Promise<boolean>((resolve) => {
+        await new Promise<boolean>((resolve, reject) => {
             const gpgProc = childProcess.execFile("gpg", ["--import"], (error) => {
                 if (error) {
                     console.log("Failed to import key", error);
@@ -123,9 +122,13 @@ async function main(): Promise<number | undefined> {
                 }
                 resolve(!error);
             });
-            fetch(PUB_KEY_URL).then((resp) => {
-                stream.pipeline(resp.body, gpgProc.stdin!);
-            });
+            fetch(PUB_KEY_URL)
+                .then((resp) => {
+                    if (!resp.ok) throw new Error(`unexpected response ${resp.statusText}`);
+                    if (!resp.body) throw new Error(`unexpected response has no body ${resp.statusText}`);
+                    stream.pipeline(resp.body, gpgProc.stdin!).catch(reject);
+                })
+                .catch(reject);
         });
         return 0;
     }
@@ -148,14 +151,14 @@ async function main(): Promise<number | undefined> {
         await fs.opendir(expectedDeployDir);
         console.log(expectedDeployDir + "already exists");
         haveDeploy = true;
-    } catch (e) {}
+    } catch {}
 
     if (!haveDeploy) {
         const outPath = path.join(pkgDir, filename);
         try {
             await fs.stat(outPath);
             console.log("Already have " + filename + ": not redownloading");
-        } catch (e) {
+        } catch {
             try {
                 await downloadToFile(url, outPath);
             } catch (e) {
@@ -168,7 +171,7 @@ async function main(): Promise<number | undefined> {
             try {
                 await fs.stat(outPath + ".asc");
                 console.log("Already have " + filename + ".asc: not redownloading");
-            } catch (e) {
+            } catch {
                 try {
                     await downloadToFile(url + ".asc", outPath + ".asc");
                 } catch (e) {
@@ -204,7 +207,7 @@ async function main(): Promise<number | undefined> {
         await fs.stat(ASAR_PATH);
         console.log(ASAR_PATH + " already present: removing");
         await fs.unlink(ASAR_PATH);
-    } catch (e) {}
+    } catch {}
 
     if (cfgDir.length) {
         const configJsonSource = path.join(cfgDir, "config.json");

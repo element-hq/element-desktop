@@ -6,9 +6,12 @@ on:
 concurrency:
     group: ${{ github.workflow }}-${{ github.ref }}
     cancel-in-progress: true
+permissions: {} # No permissions required
 jobs:
     fetch:
         uses: ./.github/workflows/build_prepare.yaml
+        permissions:
+            contents: read
         with:
             config: ${{ github.event.pull_request.base.ref == 'develop' && 'element.io/nightly' || 'element.io/release' }}
             version: ${{ github.event.pull_request.base.ref == 'develop' && 'develop' || '' }}
@@ -19,75 +22,20 @@ jobs:
         uses: ./.github/workflows/build_windows.yaml
         strategy:
             matrix:
-                arch: [x64, x86]
+                arch: [x64, ia32, arm64]
         with:
             arch: ${{ matrix.arch }}
 
-    # This allows core contributors to test changes to the dockerbuild image within a pull request
-    linux_docker:
-        name: Linux docker
-        runs-on: ubuntu-latest
-        if: github.event_name == 'pull_request'
-        outputs:
-            docker-image: ${{ steps.docker.outputs.image }}
-        permissions:
-            contents: read
-            packages: write
-        env:
-            REGISTRY: ghcr.io
-            IMAGE_NAME: ${{ github.repository }}-dockerbuild-pr
-        steps:
-            - uses: actions/checkout@v3
-
-            - name: "Get modified files"
-              id: changed_files
-              uses: tj-actions/changed-files@2a968ff601949c81b47d9c1fdb789b0d25ddeea2 # v37
-              with:
-                  files: |
-                      dockerbuild/*
-            - name: Log in to the Container registry
-              if: steps.changed_files.outputs.any_modified == 'true'
-              uses: docker/login-action@a9794064588be971151ec5e7144cb535bcb56e36
-              with:
-                  registry: ${{ env.REGISTRY }}
-                  username: ${{ github.actor }}
-                  password: ${{ secrets.GITHUB_TOKEN }}
-
-            - id: docker
-              if: steps.changed_files.outputs.any_modified == 'true'
-              run: |
-                  echo "image=$IMAGE:$PR" >> $GITHUB_OUTPUT
-              env:
-                  IMAGE: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-                  PR: ${{ github.event.pull_request.number }}
-
-            - name: Build and push Docker image
-              if: steps.changed_files.outputs.any_modified == 'true'
-              uses: docker/build-push-action@4fad532b9fdbfb80f436784834374a1c11834153
-              with:
-                  context: dockerbuild
-                  push: true
-                  tags: ${{ steps.docker.outputs.image }}
-
     linux:
-        needs:
-            - fetch
-            - linux_docker
+        needs: fetch
         name: "Linux (${{ matrix.arch }}) (sqlcipher: ${{ matrix.sqlcipher }})"
         uses: ./.github/workflows/build_linux.yaml
         strategy:
             matrix:
                 sqlcipher: [system, static]
                 arch: [amd64, arm64]
-                exclude:
-                    # FIXME: This combination yields a broken Seshat at this time
-                    # Errors at launch with `undefined symbol: PKCS5_PBKDF2_HMAC
-                    - arch: arm64
-                      sqlcipher: static
         with:
-            config: ${{ github.event.pull_request.base.ref == 'develop' && 'element.io/nightly' || 'element.io/release' }}
             sqlcipher: ${{ matrix.sqlcipher }}
-            docker-image: ${{ needs.linux_docker.outputs.docker-image }}
             arch: ${{ matrix.arch }}
 
     macos:
@@ -101,44 +49,61 @@ jobs:
             - linux
             - windows
         strategy:
+            fail-fast: false
             matrix:
                 include:
                     - name: macOS Universal
-                      os: macos
+                      os: macos-14
                       artifact: macos
-                      executable: "/Volumes/Element/Element.app/Contents/MacOS/Element"
-                      prepare_cmd: "hdiutil attach ./dist/*.dmg -mountpoint /Volumes/Element"
+                      executable: "/Users/runner/Applications/Element.app/Contents/MacOS/Element"
+                      # We need to mount the DMG and copy the app to the Applications folder as a mounted DMG is
+                      # read-only and thus would not allow us to override the fuses as is required for Playwright.
+                      prepare_cmd: |
+                          hdiutil attach ./dist/*.dmg -mountpoint /Volumes/Element &&
+                          rsync -a /Volumes/Element/Element.app ~/Applications/ &&
+                          hdiutil detach /Volumes/Element
                     - name: "Linux (amd64) (sqlcipher: system)"
-                      os: ubuntu
+                      os: ubuntu-22.04
                       artifact: linux-amd64-sqlcipher-system
-                      executable: "element-desktop"
-                      prepare_cmd: "sudo apt install ./dist/*.deb"
+                      executable: "/opt/Element/element-desktop"
+                      prepare_cmd: "sudo apt-get -qq update && sudo apt install ./dist/*.deb"
                     - name: "Linux (amd64) (sqlcipher: static)"
-                      os: ubuntu
+                      os: ubuntu-22.04
                       artifact: linux-amd64-sqlcipher-static
-                      executable: "element-desktop"
-                      prepare_cmd: "sudo apt install ./dist/*.deb"
+                      executable: "/opt/Element/element-desktop"
+                      prepare_cmd: "sudo apt-get -qq update && sudo apt install ./dist/*.deb"
+                    - name: "Linux (arm64) (sqlcipher: system)"
+                      os: ubuntu-22.04-arm
+                      artifact: linux-arm64-sqlcipher-system
+                      executable: "/opt/Element/element-desktop"
+                      prepare_cmd: "sudo apt-get -qq update && sudo apt install -y ./dist/*.deb"
+                    - name: "Linux (arm64) (sqlcipher: static)"
+                      os: ubuntu-22.04-arm
+                      artifact: linux-arm64-sqlcipher-static
+                      executable: "/opt/Element/element-desktop"
+                      prepare_cmd: "sudo apt-get -qq update && sudo apt install -y ./dist/*.deb"
                     - name: Windows (x86)
-                      os: windows
-                      artifact: win-x86
+                      os: windows-2022
+                      artifact: win-ia32
                       executable: "./dist/win-ia32-unpacked/Element.exe"
                     - name: Windows (x64)
-                      os: windows
+                      os: windows-2022
                       artifact: win-x64
                       executable: "./dist/win-unpacked/Element.exe"
         name: Test ${{ matrix.name }}
-        runs-on: ${{ matrix.os }}-latest
+        runs-on: ${{ matrix.os }}
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4
 
-            - uses: actions/setup-node@v3
+            - uses: actions/setup-node@v4
               with:
+                  node-version-file: .node-version
                   cache: "yarn"
 
             - name: Install Deps
               run: "yarn install --frozen-lockfile"
 
-            - uses: actions/download-artifact@v3
+            - uses: actions/download-artifact@v4
               with:
                   name: ${{ matrix.artifact }}
                   path: dist
@@ -147,18 +112,27 @@ jobs:
               run: ${{ matrix.prepare_cmd }}
               if: matrix.prepare_cmd
 
+            # We previously disabled the `EnableNodeCliInspectArguments` fuse, but Playwright requires
+            # it to be enabled to test Electron apps, so turn it back on.
+            - name: Set EnableNodeCliInspectArguments fuse enabled
+              run: $RUN_AS npx @electron/fuses write --app ${{ matrix.executable }} EnableNodeCliInspectArguments=on
+              shell: bash
+              env:
+                  # We need sudo on Linux as it is installed in /opt/
+                  RUN_AS: ${{ runner.os == 'Linux' && 'sudo' || '' }}
+
             - name: Run tests
-              uses: coactions/setup-xvfb@b6b4fcfb9f5a895edadc3bc76318fae0ac17c8b3 # v1
+              uses: coactions/setup-xvfb@6b00cf1889f4e1d5a48635647013c0508128ee1a
               timeout-minutes: 5
               with:
-                  run: "yarn test"
+                  run: "yarn test ${{ runner.os != 'Linux' && '--ignore-snapshots' || '' }}"
               env:
                   ELEMENT_DESKTOP_EXECUTABLE: ${{ matrix.executable }}
 
-            - name: Upload Artifacts
-              uses: actions/upload-artifact@v3
+            - name: Upload HTML report
               if: always()
+              uses: actions/upload-artifact@v4
               with:
-                  name: ${{ matrix.artifact }}
-                  path: test_artifacts
-                  retention-days: 1
+                  name: ${{ matrix.artifact }}-test
+                  path: playwright/html-report
+                  retention-days: 14

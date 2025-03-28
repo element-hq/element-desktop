@@ -1,23 +1,13 @@
 /*
-Copyright 2020-2021 The Matrix.org Foundation C.I.C.
+Copyright 2024 New Vector Ltd.
+Copyright 2020, 2021 The Matrix.org Foundation C.I.C.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Commercial
+Please see LICENSE files in the repository root for full details.
 */
 
-import childProcess from "child_process";
-
-import HakEnv from "../../scripts/hak/hakEnv";
-import { DependencyInfo } from "../../scripts/hak/dep";
+import type HakEnv from "../../scripts/hak/hakEnv.js";
+import type { DependencyInfo } from "../../scripts/hak/dep.js";
 
 export default async function (hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
     const env = hakEnv.makeGypEnv();
@@ -27,38 +17,18 @@ export default async function (hakEnv: HakEnv, moduleInfo: DependencyInfo): Prom
     }
 
     console.log("Running yarn install");
-    await new Promise<void>((resolve, reject) => {
-        const proc = childProcess.spawn(
-            "yarn" + (hakEnv.isWin() ? ".cmd" : ""),
-            ["install"],
-            {
-                cwd: moduleInfo.moduleBuildDir,
-                env,
-                shell: true,
-                stdio: "inherit",
-            },
-        );
-        proc.on("exit", (code) => {
-            code ? reject(code) : resolve();
-        });
+    await hakEnv.spawn("yarn", ["install"], {
+        cwd: moduleInfo.moduleBuildDir,
+        env,
+        shell: true,
     });
 
     const buildTarget = hakEnv.wantsStaticSqlCipher() ? "build-bundled" : "build";
 
     console.log("Running yarn build");
-    await new Promise<void>((resolve, reject) => {
-        const proc = childProcess.spawn(
-            "yarn" + (hakEnv.isWin() ? ".cmd" : ""),
-            ["run", buildTarget],
-            {
-                cwd: moduleInfo.moduleBuildDir,
-                env,
-                shell: true,
-                stdio: "inherit",
-            },
-        );
-        proc.on("exit", (code) => {
-            code ? reject(code) : resolve();
-        });
+    await hakEnv.spawn("yarn", ["run", buildTarget], {
+        cwd: moduleInfo.moduleBuildDir,
+        env,
+        shell: true,
     });
 }

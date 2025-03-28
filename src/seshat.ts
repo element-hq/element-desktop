@@ -1,22 +1,14 @@
 /*
-Copyright 2022 New Vector Ltd
+Copyright 2022-2024 New Vector Ltd.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Commercial
+Please see LICENSE files in the repository root for full details.
 */
 
 import { app, ipcMain } from "electron";
-import { promises as afs } from "fs";
-import path from "path";
+import { promises as afs } from "node:fs";
+import path from "node:path";
+import keytar from "keytar-forked";
 
 import type {
     Seshat as SeshatType,
@@ -24,8 +16,8 @@ import type {
     ReindexError as ReindexErrorType,
 } from "matrix-seshat"; // Hak dependency type
 import IpcMainEvent = Electron.IpcMainEvent;
-import { randomArray } from "./utils";
-import { getPassword, setPassword } from "./safe-storage";
+import { randomArray } from "./utils.js";
+import { getPassword, setPassword } from "./safe-storage.js";
 
 let seshatSupported = false;
 let Seshat: typeof SeshatType;
@@ -33,8 +25,7 @@ let SeshatRecovery: typeof SeshatRecoveryType;
 let ReindexError: typeof ReindexErrorType;
 
 try {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const seshatModule = require("matrix-seshat");
+    const seshatModule = await import("matrix-seshat");
     Seshat = seshatModule.Seshat;
     SeshatRecovery = seshatModule.SeshatRecovery;
     ReindexError = seshatModule.ReindexError;
@@ -67,9 +58,17 @@ async function getOrCreatePassphrase(key: string): Promise<string> {
 }
 
 const deleteContents = async (p: string): Promise<void> => {
-    for (const entry of await afs.readdir(p)) {
-        const curPath = path.join(p, entry);
-        await afs.unlink(curPath);
+    try {
+        for (const entry of await afs.readdir(p)) {
+            const curPath = path.join(p, entry);
+            try {
+                await afs.unlink(curPath);
+            } catch (e) {
+                console.log("Error deleting a file in EventStore directory", e);
+            }
+        }
+    } catch (e) {
+        console.log("Error reading the files in EventStore directory", e);
     }
 };
 
@@ -122,10 +121,7 @@ ipcMain.on("seshat", async function (_ev: IpcMainEvent, payload): Promise<void> 
                         // anyways so reindexing it is a waste of time.
                         if (userVersion === 0) {
                             await recoveryIndex.shutdown();
-
-                            try {
-                                await deleteContents(eventStorePath);
-                            } catch (e) {}
+                            await deleteContents(eventStorePath);
                         } else {
                             await recoveryIndex.reindex();
                         }
@@ -154,9 +150,7 @@ ipcMain.on("seshat", async function (_ev: IpcMainEvent, payload): Promise<void> 
             break;
 
         case "deleteEventIndex": {
-            try {
-                await deleteContents(eventStorePath);
-            } catch (e) {}
+            await deleteContents(eventStorePath);
             break;
         }
 
@@ -271,7 +265,7 @@ ipcMain.on("seshat", async function (_ev: IpcMainEvent, payload): Promise<void> 
             else {
                 try {
                     ret = await eventIndex.loadCheckpoints();
-                } catch (e) {
+                } catch {
                     ret = [];
                 }
             }

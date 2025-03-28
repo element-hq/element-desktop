@@ -1,45 +1,61 @@
 {
-    "Toggle Developer Tools": "ສະຫຼັບໄປໜ້າເຄື່ອງມືພັດທະນາ",
-    "Add to dictionary": "ເພີ່ມເຂົ້າໄປວັດຈະນານຸກົມ",
-    "The image failed to save": "ຮູບພາບບໍ່ສາມາດບັດທຶກໄດ້",
-    "Failed to save image": "ການບັນທຶກຮູບພາບບໍ່ສຳເລັດ",
-    "Save image as...": "ບັນທຶກຮູບພາບເປັນ...",
-    "Copy link address": "ສຳເນົາທີ່ຢູ່ລິ້ງ",
-    "Copy image address": "ສຳເນົາທີ່ຢູ່ຮູບພາບ",
-    "Copy email address": "ສຳເນົາທີ່ຢູ່ເມວ",
-    "Copy image": "ສຳເນົາຮູບ",
-    "File": "ຟາຍ",
-    "Bring All to Front": "ເອົາທັງໝົດມາທາງໜ້າ",
-    "Zoom": "ຊູມ",
-    "Stop Speaking": "ເຊົາສົນທະນາ",
-    "Start Speaking": "ເລີ່ມສົນທະນາ",
-    "Speech": "ຄຳກ່າວ",
-    "Unhide": "ໂຊຄືນ",
-    "Hide Others": "ເຊື່ອງອັນອື່ນ",
-    "Hide": "ເຊື່ອງ",
-    "Services": "ບໍລິການ",
-    "About": "ກ່ຽວກັບ",
-    "Help": "ຊ່ວຍເຫຼືອ",
-    "Close": "ປິດ",
-    "Minimize": "ຫຍໍ້ນ້ອຍ",
-    "Window": "ປ່ອງຢ້ຽມ",
-    "Toggle Full Screen": "ສະຫຼັບເຕັມຈໍ",
-    "Preferences": "ການຕັ້ງຄ່າ",
-    "Zoom Out": "ຊູມອອກ",
-    "Zoom In": "ຊູມເຂົ້າ",
-    "Actual Size": "ຂະໜາດຕົວຈິງ",
-    "View": "ເບິ່ງ",
-    "Select All": "ເລືອກທັງໝົດ",
-    "Delete": "ລຶບ",
-    "Paste and Match Style": "ກັອບມາໃສ່ ແລະໃຫ້ສະຕາຍຕົງກັນ",
-    "Paste": "ກັອບມາໃສ່",
-    "Copy": "ສຳເນົາ",
-    "Cut": "ຕັດ",
-    "Redo": "ລຶ້ມຄືນ",
-    "Undo": "ຮື້ຄືນ",
-    "Edit": "ແກ້ໄຂ",
-    "Quit": "ຍົກເລີກ",
-    "Show/Hide": "ສະແດງ/ເຊື່ອງ",
-    "Are you sure you want to quit?": "ທ່ານຕ້ອງການປິດແທ້ບໍ່?",
-    "Cancel": "ຍົກເລີກ"
+    "action": {
+        "cancel": "ຍົກເລີກ",
+        "close": "ປິດ",
+        "copy": "ສຳເນົາ",
+        "cut": "ຕັດ",
+        "delete": "ລຶບ",
+        "edit": "ແກ້ໄຂ",
+        "minimise": "ຫຍໍ້ນ້ອຍ",
+        "paste": "ກັອບມາໃສ່",
+        "paste_match_style": "ກັອບມາໃສ່ ແລະໃຫ້ສະຕາຍຕົງກັນ",
+        "quit": "ຍົກເລີກ",
+        "redo": "ລຶ້ມຄືນ",
+        "select_all": "ເລືອກທັງໝົດ",
+        "show_hide": "ສະແດງ/ເຊື່ອງ",
+        "undo": "ຮື້ຄືນ",
+        "zoom_in": "ຊູມເຂົ້າ",
+        "zoom_out": "ຊູມອອກ"
+    },
+    "common": {
+        "about": "ກ່ຽວກັບ",
+        "help": "ຊ່ວຍເຫຼືອ",
+        "preferences": "ການຕັ້ງຄ່າ"
+    },
+    "confirm_quit": "ທ່ານຕ້ອງການປິດແທ້ບໍ່?",
+    "edit_menu": {
+        "speech": "ຄຳກ່າວ",
+        "speech_start_speaking": "ເລີ່ມສົນທະນາ",
+        "speech_stop_speaking": "ເຊົາສົນທະນາ"
+    },
+    "file_menu": {
+        "label": "ຟາຍ"
+    },
+    "menu": {
+        "hide": "ເຊື່ອງ",
+        "hide_others": "ເຊື່ອງອັນອື່ນ",
+        "services": "ບໍລິການ",
+        "unhide": "ໂຊຄືນ"
+    },
+    "right_click_menu": {
+        "add_to_dictionary": "ເພີ່ມເຂົ້າໄປວັດຈະນານຸກົມ",
+        "copy_email": "ສຳເນົາທີ່ຢູ່ເມວ",
+        "copy_image": "ສຳເນົາຮູບ",
+        "copy_image_url": "ສຳເນົາທີ່ຢູ່ຮູບພາບ",
+        "copy_link_url": "ສຳເນົາທີ່ຢູ່ລິ້ງ",
+        "save_image_as": "ບັນທຶກຮູບພາບເປັນ...",
+        "save_image_as_error_description": "ຮູບພາບບໍ່ສາມາດບັດທຶກໄດ້",
+        "save_image_as_error_title": "ການບັນທຶກຮູບພາບບໍ່ສຳເລັດ"
+    },
+    "view_menu": {
+        "actual_size": "ຂະໜາດຕົວຈິງ",
+        "toggle_developer_tools": "ສະຫຼັບໄປໜ້າເຄື່ອງມືພັດທະນາ",
+        "toggle_full_screen": "ສະຫຼັບເຕັມຈໍ",
+        "view": "ເບິ່ງ"
+    },
+    "window_menu": {
+        "bring_all_to_front": "ເອົາທັງໝົດມາທາງໜ້າ",
+        "label": "ປ່ອງຢ້ຽມ",
+        "zoom": "ຊູມ"
+    }
 }

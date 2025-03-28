@@ -1,44 +1,21 @@
 /*
-Copyright 2020-2021 The Matrix.org Foundation C.I.C.
+Copyright 2024 New Vector Ltd.
+Copyright 2020, 2021 The Matrix.org Foundation C.I.C.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Commercial
+Please see LICENSE files in the repository root for full details.
 */
 
-import path from "path";
-import fsProm from "fs/promises";
-import childProcess from "child_process";
-import { rimraf } from "rimraf";
+import path from "node:path";
+import fsProm from "node:fs/promises";
+import childProcess from "node:child_process";
 import { glob } from "glob";
 import { mkdirp } from "mkdirp";
 
-import HakEnv from "./hakEnv";
-import { DependencyInfo } from "./dep";
+import type HakEnv from "./hakEnv.js";
+import type { DependencyInfo } from "./dep.js";
 
 export default async function copy(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
-    if (moduleInfo.cfg.prune) {
-        console.log("Removing " + moduleInfo.cfg.prune + " from " + moduleInfo.moduleOutDir);
-        // rimraf doesn't have a 'cwd' option: it always uses process.cwd()
-        // (and if you set glob.cwd it just breaks because it can't find the files)
-        const oldCwd = process.cwd();
-        try {
-            await mkdirp(moduleInfo.moduleOutDir);
-            process.chdir(moduleInfo.moduleOutDir);
-            await rimraf(moduleInfo.cfg.prune);
-        } finally {
-            process.chdir(oldCwd);
-        }
-    }
-
     if (moduleInfo.cfg.copy) {
         // If there are multiple moduleBuildDirs, singular moduleBuildDir
         // is the same as moduleBuildDirs[0], so we're just listing the contents

@@ -1,47 +1,63 @@
 {
-    "Add to dictionary": "Aggiungi al dizionario",
-    "The image failed to save": "Non è stato possibile salvare l'immagine",
-    "Failed to save image": "Salvataggio immagine fallito",
-    "Save image as...": "Salva immagine come...",
-    "Copy link address": "Copia indirizzo collegamento",
-    "Copy email address": "Copia indirizzo email",
-    "Copy image": "Copia immagine",
-    "File": "File",
-    "Bring All to Front": "Porta tutto in primo piano",
-    "Zoom": "Zoom",
-    "Start Speaking": "Inizia a parlare",
-    "Unhide": "Mostra",
-    "Hide Others": "Nascondi gli altri",
-    "Hide": "Nascondi",
-    "Services": "Servizi",
-    "About": "Informazioni su",
-    "Help": "Aiuto",
-    "Close": "Chiudi",
-    "Minimize": "Riduci",
-    "Window": "Finestra",
-    "Toggle Developer Tools": "Attiva strumenti per sviluppatori",
-    "Toggle Full Screen": "Passa a schermo intero",
-    "Preferences": "Preferenze",
-    "Zoom Out": "Rimpicciolisci",
-    "Zoom In": "Ingrandisci",
-    "Actual Size": "Dimensione effettiva",
-    "View": "Vedi",
-    "Select All": "Seleziona tutto",
-    "Delete": "Elimina",
-    "Paste and Match Style": "Incolla e adegua lo stile",
-    "Paste": "Incolla",
-    "Copy": "Copia",
-    "Cut": "Taglia",
-    "Redo": "Ripeti",
-    "Undo": "Annulla",
-    "Edit": "Modifica",
-    "Quit": "Esci",
-    "Show/Hide": "Mostra/Nascondi",
-    "Are you sure you want to quit?": "Vuoi veramente uscire?",
-    "Cancel": "Annulla",
-    "Stop Speaking": "Smetti di parlare",
-    "Speech": "Dettatura",
-    "Copy image address": "Copia indirizzo immagine",
-    "Close %(brand)s": "Chiudi %(brand)s",
-    "%(brand)s Help": "Aiuto per %(brand)s"
+    "action": {
+        "cancel": "Annulla",
+        "close": "Chiudi",
+        "close_brand": "Chiudi %(brand)s",
+        "copy": "Copia",
+        "cut": "Taglia",
+        "delete": "Elimina",
+        "edit": "Modifica",
+        "minimise": "Riduci",
+        "paste": "Incolla",
+        "paste_match_style": "Incolla e adegua lo stile",
+        "quit": "Esci",
+        "redo": "Ripeti",
+        "select_all": "Seleziona tutto",
+        "show_hide": "Mostra/Nascondi",
+        "undo": "Annulla",
+        "zoom_in": "Ingrandisci",
+        "zoom_out": "Rimpicciolisci"
+    },
+    "common": {
+        "about": "Informazioni su",
+        "brand_help": "Aiuto per %(brand)s",
+        "help": "Aiuto",
+        "preferences": "Preferenze"
+    },
+    "confirm_quit": "Vuoi veramente uscire?",
+    "edit_menu": {
+        "speech": "Dettatura",
+        "speech_start_speaking": "Inizia a parlare",
+        "speech_stop_speaking": "Smetti di parlare"
+    },
+    "file_menu": {
+        "label": "File"
+    },
+    "menu": {
+        "hide": "Nascondi",
+        "hide_others": "Nascondi gli altri",
+        "services": "Servizi",
+        "unhide": "Mostra"
+    },
+    "right_click_menu": {
+        "add_to_dictionary": "Aggiungi al dizionario",
+        "copy_email": "Copia indirizzo email",
+        "copy_image": "Copia immagine",
+        "copy_image_url": "Copia indirizzo immagine",
+        "copy_link_url": "Copia indirizzo collegamento",
+        "save_image_as": "Salva immagine come...",
+        "save_image_as_error_description": "Non è stato possibile salvare l'immagine",
+        "save_image_as_error_title": "Salvataggio immagine fallito"
+    },
+    "view_menu": {
+        "actual_size": "Dimensione effettiva",
+        "toggle_developer_tools": "Attiva strumenti per sviluppatori",
+        "toggle_full_screen": "Passa a schermo intero",
+        "view": "Vedi"
+    },
+    "window_menu": {
+        "bring_all_to_front": "Porta tutto in primo piano",
+        "label": "Finestra",
+        "zoom": "Ingrandisci"
+    }
 }

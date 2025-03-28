@@ -1,46 +1,62 @@
 {
-    "Add to dictionary": "Bæta við orðasafn",
-    "The image failed to save": "Myndina var ekki hægt að vista",
-    "Failed to save image": "Mistókst að vista mynd",
-    "Save image as...": "Vista mynd sem...",
-    "Copy link address": "Afrita vistfang tengils",
-    "Copy email address": "Afrita tölvupóstfang",
-    "Copy image": "Afrita mynd",
-    "File": "Skrá",
-    "Bring All to Front": "Setja allt fremst",
-    "Zoom": "Stærð",
-    "Stop Speaking": "Hætta tali",
-    "Start Speaking": "Byrja tal",
-    "Speech": "Tal",
-    "Unhide": "Birta",
-    "Hide Others": "Fela aðra",
-    "Hide": "Fela",
-    "Services": "Þjónustur",
-    "About": "Um hugbúnaðinn",
-    "Help": "Hjálp",
-    "Close": "Loka",
-    "Minimize": "Lágmarka",
-    "Window": "Gluggi",
-    "Toggle Developer Tools": "Víxla forritunarverkfærum af/á",
-    "Toggle Full Screen": "Víxla fullum skjá af/á",
-    "Preferences": "Stillingar",
-    "Zoom Out": "Minnka",
-    "Zoom In": "Stækka",
-    "Actual Size": "Raunstærð",
-    "View": "Skoða",
-    "Select All": "Velja allt",
-    "Delete": "Eyða",
-    "Paste and Match Style": "Líma og samsvara stíl",
-    "Paste": "Líma",
-    "Copy": "Afrita",
-    "Cut": "Klippa",
-    "Redo": "Endurgera",
-    "Undo": "Afturkalla",
-    "Edit": "Breyta",
-    "Quit": "Hætta",
-    "Show/Hide": "Sýna/Fela",
-    "Are you sure you want to quit?": "Ertu viss um að þú viljir hætta?",
-    "Cancel": "Hætta við",
-    "Copy image address": "Afrita slóð myndar",
-    "Close %(brand)s": "Loka %(brand)s"
+    "action": {
+        "cancel": "Hætta við",
+        "close": "Loka",
+        "close_brand": "Loka %(brand)s",
+        "copy": "Afrita",
+        "cut": "Klippa",
+        "delete": "Eyða",
+        "edit": "Breyta",
+        "minimise": "Lágmarka",
+        "paste": "Líma",
+        "paste_match_style": "Líma og samsvara stíl",
+        "quit": "Hætta",
+        "redo": "Endurgera",
+        "select_all": "Velja allt",
+        "show_hide": "Sýna/Fela",
+        "undo": "Afturkalla",
+        "zoom_in": "Stækka",
+        "zoom_out": "Minnka"
+    },
+    "common": {
+        "about": "Um hugbúnaðinn",
+        "help": "Hjálp",
+        "preferences": "Stillingar"
+    },
+    "confirm_quit": "Ertu viss um að þú viljir hætta?",
+    "edit_menu": {
+        "speech": "Tal",
+        "speech_start_speaking": "Byrja tal",
+        "speech_stop_speaking": "Hætta tali"
+    },
+    "file_menu": {
+        "label": "Skrá"
+    },
+    "menu": {
+        "hide": "Fela",
+        "hide_others": "Fela aðra",
+        "services": "Þjónustur",
+        "unhide": "Birta"
+    },
+    "right_click_menu": {
+        "add_to_dictionary": "Bæta við orðasafn",
+        "copy_email": "Afrita tölvupóstfang",
+        "copy_image": "Afrita mynd",
+        "copy_image_url": "Afrita slóð myndar",
+        "copy_link_url": "Afrita vistfang tengils",
+        "save_image_as": "Vista mynd sem...",
+        "save_image_as_error_description": "Myndina var ekki hægt að vista",
+        "save_image_as_error_title": "Mistókst að vista mynd"
+    },
+    "view_menu": {
+        "actual_size": "Raunstærð",
+        "toggle_developer_tools": "Víxla forritunarverkfærum af/á",
+        "toggle_full_screen": "Víxla fullum skjá af/á",
+        "view": "Skoða"
+    },
+    "window_menu": {
+        "bring_all_to_front": "Setja allt fremst",
+        "label": "Gluggi",
+        "zoom": "Stærð"
+    }
 }

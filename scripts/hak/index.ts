@@ -1,33 +1,25 @@
 /*
-Copyright 2020-2021 The Matrix.org Foundation C.I.C.
+Copyright 2024 New Vector Ltd.
+Copyright 2020, 2021 The Matrix.org Foundation C.I.C.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Commercial
+Please see LICENSE files in the repository root for full details.
 */
 
-import path from "path";
-import findNpmPrefix from "find-npm-prefix";
+import path, { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 
-import HakEnv from "./hakEnv";
-import { TargetId } from "./target";
-import { DependencyInfo } from "./dep";
-
-const GENERALCOMMANDS = ["target"];
+import HakEnv from "./hakEnv.js";
+import type { TargetId } from "./target.js";
+import type { DependencyInfo } from "./dep.js";
+import { loadJsonFile } from "../../src/utils.js";
+import packageJson from "../../package.json";
 
 // These can only be run on specific modules
 const MODULECOMMANDS = ["check", "fetch", "link", "build", "copy", "clean"];
 
 // Shortcuts for multiple commands at once (useful for building universal binaries
-// because you can run the fetch/fetchDeps/build for each arch and then copy/link once)
+// because you can run the fetch/build for each arch and then copy/link once)
 const METACOMMANDS: Record<string, string[]> = {
     fetchandbuild: ["check", "fetch", "build"],
     copyandlink: ["copy", "link"],
@@ -36,20 +28,15 @@ const METACOMMANDS: Record<string, string[]> = {
 // Scripts valid in a hak.json 'scripts' section
 const HAKSCRIPTS = ["check", "fetch", "build"];
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
 async function main(): Promise<void> {
-    const prefix = await findNpmPrefix(process.cwd());
-    let packageJson;
-    try {
-        packageJson = require(path.join(prefix, "package.json"));
-    } catch (e) {
-        console.error("Can't find a package.json!");
-        process.exit(1);
-    }
+    const prefix = path.join(__dirname, "..", "..");
 
     const targetIds: TargetId[] = [];
     // Apply `--target <target>` option if specified
     // Can be specified multiple times for the copy command to bundle
-    // multiple archs into a single universal output module)
+    // multiple arches into a single universal output module)
     for (;;) {
         // eslint-disable-line no-constant-condition
         const targetIndex = process.argv.indexOf("--target");
@@ -74,19 +61,19 @@ async function main(): Promise<void> {
 
     const hakDepsCfg = packageJson.hakDependencies || {};
 
-    for (const dep of Object.keys(hakDepsCfg)) {
+    for (const dep in hakDepsCfg) {
         const hakJsonPath = path.join(prefix, "hak", dep, "hak.json");
         let hakJson: Record<string, any>;
         try {
-            hakJson = await require(hakJsonPath);
-        } catch (e) {
+            hakJson = loadJsonFile(hakJsonPath);
+        } catch {
             console.error("No hak.json found for " + dep + ".");
             console.log("Expecting " + hakJsonPath);
             process.exit(1);
         }
         deps[dep] = {
             name: dep,
-            version: hakDepsCfg[dep],
+            version: hakDepsCfg[dep as keyof typeof hakDepsCfg],
             cfg: hakJson,
             moduleHakDir: path.join(prefix, "hak", dep),
             moduleDotHakDir: path.join(hakEnv.dotHakDir, dep),
@@ -100,9 +87,10 @@ async function main(): Promise<void> {
         };
 
         for (const s of HAKSCRIPTS) {
-            if (hakJson.scripts && hakJson.scripts[s]) {
-                const scriptModule = await import(path.join(prefix, "hak", dep, hakJson.scripts[s]));
-                if (scriptModule.__esModule) {
+            if (hakJson.scripts?.[s]) {
+                // Shockingly, using path.join and backslashes here doesn't work on Windows
+                const scriptModule = await import(`../../hak/${dep}/${hakJson.scripts[s]}`);
+                if (scriptModule.default) {
                     deps[dep].scripts[s] = scriptModule.default;
                 } else {
                     deps[dep].scripts[s] = scriptModule;
@@ -130,13 +118,6 @@ async function main(): Promise<void> {
     if (modules.length === 0) modules = Object.keys(deps);
 
     for (const cmd of cmds) {
-        if (GENERALCOMMANDS.includes(cmd)) {
-            if (cmd === "target") {
-                console.log(hakEnv.getNodeTriple());
-            }
-            return;
-        }
-
         if (!MODULECOMMANDS.includes(cmd)) {
             console.error("Unknown command: " + cmd);
             console.log("Commands I know about:");

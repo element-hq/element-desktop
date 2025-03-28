@@ -1,18 +1,19 @@
-#!/usr/bin/env -S npx ts-node
+#!/usr/bin/env -S npx tsx
 
 /*
  * Checks for the presence of a webapp, inspects its version and sets the
  * version metadata of the package to match.
  */
 
-import { promises as fs } from "fs";
+import { promises as fs } from "node:fs";
 import * as asar from "@electron/asar";
-import * as childProcess from "child_process";
+import * as childProcess from "node:child_process";
+import * as url from "node:url";
 
 export async function versionFromAsar(): Promise<string> {
     try {
         await fs.stat("webapp.asar");
-    } catch (e) {
+    } catch {
         throw new Error("No 'webapp.asar' found. Run 'yarn run fetch'");
     }
 
@@ -32,6 +33,11 @@ export async function setPackageVersion(ver: string): Promise<void> {
                 "--new-version",
                 ver,
             ],
+            {
+                // We need shell mode on Windows to be able to launch `.cmd` executables
+                // See https://nodejs.org/en/blog/vulnerability/april-2024-security-releases-2
+                shell: process.platform === "win32",
+            },
             (err) => {
                 if (err) {
                     reject(err);
@@ -52,13 +58,16 @@ async function main(args: string[]): Promise<number> {
     return 0;
 }
 
-if (require.main === module) {
-    main(process.argv.slice(2))
-        .then((ret) => {
-            process.exit(ret);
-        })
-        .catch((e) => {
-            console.error(e);
-            process.exit(1);
-        });
+if (import.meta.url.startsWith("file:")) {
+    const modulePath = url.fileURLToPath(import.meta.url);
+    if (process.argv[1] === modulePath) {
+        main(process.argv.slice(2))
+            .then((ret) => {
+                process.exit(ret);
+            })
+            .catch((e) => {
+                console.error(e);
+                process.exit(1);
+            });
+    }
 }

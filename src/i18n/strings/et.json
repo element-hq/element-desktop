@@ -1,47 +1,63 @@
 {
-    "About": "Rakenduse teave",
-    "The image failed to save": "Seda pilti ei õnnestunud salvestada",
-    "Add to dictionary": "Lisa sõnastikku",
-    "Failed to save image": "Pildi salvestamine ei õnnestunud",
-    "Save image as...": "Salvesta pilt kui...",
-    "Copy link address": "Kopeeri lingi aadress",
-    "Copy email address": "Kopeeri e-posti aadress",
-    "Copy image": "Kopeeri pilt",
-    "File": "Fail",
-    "Bring All to Front": "Too kõik esiplaanile",
-    "Zoom": "Suumi",
-    "Stop Speaking": "Lõpeta rääkimine",
-    "Start Speaking": "Alusta rääkimist",
-    "Speech": "Kõne",
-    "Unhide": "Näita uuesti",
-    "Hide Others": "Peida muud",
-    "Hide": "Peida",
-    "Services": "Teenused",
-    "Help": "Abiteave",
-    "Close": "Sulge",
-    "Minimize": "Vähenda",
-    "Window": "Aken",
-    "Toggle Developer Tools": "Arendaja töövahendid sisse/välja",
-    "Toggle Full Screen": "Täisekraanivaade sisse/välja",
-    "Preferences": "Seadistused",
-    "Zoom Out": "Vähenda",
-    "Zoom In": "Suurenda",
-    "Actual Size": "Näita tavasuuruses",
-    "View": "Vaata",
-    "Select All": "Vali kõik",
-    "Delete": "Kustuta",
-    "Paste and Match Style": "Aseta kasutades sama stiili",
-    "Paste": "Aseta",
-    "Copy": "Kopeeri",
-    "Cut": "Lõika",
-    "Redo": "Tee uuesti",
-    "Undo": "Võta tagasi",
-    "Edit": "Muuda",
-    "Quit": "Välju",
-    "Show/Hide": "Näita/peida",
-    "Are you sure you want to quit?": "Kas sa kindlasti soovid rakendusest väljuda?",
-    "Cancel": "Tühista",
-    "Copy image address": "Kopeeri pildi aadress",
-    "Close %(brand)s": "Sulge %(brand)s",
-    "%(brand)s Help": "%(brand)s abiteave"
+    "action": {
+        "cancel": "Loobu",
+        "close": "Sulge",
+        "close_brand": "Sulge %(brand)s",
+        "copy": "Kopeeri",
+        "cut": "Lõika",
+        "delete": "Kustuta",
+        "edit": "Muuda",
+        "minimise": "Vähenda",
+        "paste": "Aseta",
+        "paste_match_style": "Aseta kasutades sama stiili",
+        "quit": "Välju",
+        "redo": "Tee uuesti",
+        "select_all": "Vali kõik",
+        "show_hide": "Näita/peida",
+        "undo": "Võta tagasi",
+        "zoom_in": "Suurenda",
+        "zoom_out": "Vähenda"
+    },
+    "common": {
+        "about": "Rakenduse teave",
+        "brand_help": "%(brand)s abiteave",
+        "help": "Abiteave",
+        "preferences": "Eelistused"
+    },
+    "confirm_quit": "Kas sa kindlasti soovid rakendusest väljuda?",
+    "edit_menu": {
+        "speech": "Kõne",
+        "speech_start_speaking": "Alusta rääkimist",
+        "speech_stop_speaking": "Lõpeta rääkimine"
+    },
+    "file_menu": {
+        "label": "Fail"
+    },
+    "menu": {
+        "hide": "Peida",
+        "hide_others": "Peida muud",
+        "services": "Teenused",
+        "unhide": "Näita uuesti"
+    },
+    "right_click_menu": {
+        "add_to_dictionary": "Lisa sõnastikku",
+        "copy_email": "Kopeeri e-posti aadress",
+        "copy_image": "Kopeeri pilt",
+        "copy_image_url": "Kopeeri pildi aadress",
+        "copy_link_url": "Kopeeri lingi aadress",
+        "save_image_as": "Salvesta pilt kui...",
+        "save_image_as_error_description": "Seda pilti ei õnnestunud salvestada",
+        "save_image_as_error_title": "Pildi salvestamine ei õnnestunud"
+    },
+    "view_menu": {
+        "actual_size": "Näita tavasuuruses",
+        "toggle_developer_tools": "Arendaja töövahendid sisse/välja",
+        "toggle_full_screen": "Täisekraanivaade sisse/välja",
+        "view": "Näita"
+    },
+    "window_menu": {
+        "bring_all_to_front": "Too kõik esiplaanile",
+        "label": "Aken",
+        "zoom": "Suumi"
+    }
 }

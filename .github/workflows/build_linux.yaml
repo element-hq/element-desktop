@@ -8,10 +8,6 @@ on:
                 type: string
                 required: true
                 description: "The architecture to build for, one of 'amd64' | 'arm64'"
-            config:
-                type: string
-                required: true
-                description: "The config directory to use"
             version:
                 type: string
                 required: false
@@ -20,24 +16,29 @@ on:
                 type: string
                 required: true
                 description: "How to link sqlcipher, one of 'system' | 'static'"
-            deploy-mode:
-                type: boolean
-                required: false
-                description: "Whether to arrange artifacts in the arrangement needed for deployment, skipping unrelated ones"
-            docker-image:
-                type: string
-                required: false
-                description: "The docker image to use for the build, defaults to ghcr.io/vector-im/element-desktop-dockerbuild"
+env:
+    SQLCIPHER_BUNDLED: ${{ inputs.sqlcipher == 'static' && '1' || '' }}
+    MAX_GLIBC: 2.31 # bullseye-era glibc, used by glibc-check.sh
+permissions: {} # No permissions required
 jobs:
     build:
-        runs-on: ubuntu-latest
-        container:
-            image: ${{ inputs.docker-image || format('ghcr.io/vector-im/element-desktop-dockerbuild:{0}', github.ref_name == 'master' && 'master' || 'develop') }}
-        defaults:
-            run:
-                shell: bash
+        # We build on native infrastructure as matrix-seshat fails to cross-compile properly
+        # https://github.com/matrix-org/seshat/issues/135
+        runs-on: ${{ inputs.arch == 'arm64' && 'ubuntu-22.04-arm' || 'ubuntu-22.04' }}
+        env:
+            HAK_DOCKER_IMAGE: ghcr.io/element-hq/element-desktop-dockerbuild
         steps:
-            - uses: kanga333/variable-mapper@master
+            - name: Resolve docker image tag for push
+              if: github.event_name == 'push'
+              run: echo "HAK_DOCKER_IMAGE=$HAK_DOCKER_IMAGE:$GITHUB_REF_NAME" >> $GITHUB_ENV
+            - name: Resolve docker image tag for release
+              if: github.event_name == 'release'
+              run: echo "HAK_DOCKER_IMAGE=$HAK_DOCKER_IMAGE:staging" >> $GITHUB_ENV
+            - name: Resolve docker image tag for other triggers
+              if: github.event_name != 'push' && github.event_name != 'release'
+              run: echo "HAK_DOCKER_IMAGE=$HAK_DOCKER_IMAGE:develop" >> $GITHUB_ENV
+
+            - uses: nbucic/variable-mapper@0673f6891a0619ba7c002ecfed0f9f4f39017b6f
               id: config
               with:
                   key: "${{ inputs.arch }}"
@@ -55,75 +56,88 @@ jobs:
                         }
                       }
 
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4
 
-            - uses: actions/download-artifact@v3
+            - uses: actions/download-artifact@v4
               with:
                   name: webapp
 
             - name: Cache .hak
               id: cache
-              uses: actions/cache@v3
+              uses: actions/cache@v4
               with:
-                  key: ${{ runner.os }}-${{ inputs.docker-image || github.ref_name }}-${{ inputs.sqlcipher }}-${{ inputs.arch }}-${{ hashFiles('hakHash', 'electronVersion') }}
+                  key: ${{ runner.os }}-${{ github.ref_name }}-${{ inputs.sqlcipher }}-${{ inputs.arch }}-${{ hashFiles('hakHash', 'electronVersion', 'dockerbuild/*') }}
                   path: |
                       ./.hak
 
-            - uses: actions/setup-node@v3
+            - uses: actions/setup-node@v4
               with:
+                  node-version-file: .node-version
                   cache: "yarn"
               env:
                   # Workaround for https://github.com/actions/setup-node/issues/317
                   FORCE_COLOR: 0
 
-            # Does not need branch matching as only analyses this layer
             - name: Install Deps
               run: "yarn install --frozen-lockfile"
 
-            - name: Prepare for static sqlcipher build
-              if: inputs.sqlcipher == 'static'
-              run: |
-                  echo "SQLCIPHER_BUNDLED=1" >> $GITHUB_ENV
+            - name: "Get modified files"
+              id: changed_files
+              if: steps.cache.outputs.cache-hit != 'true' && github.event_name == 'pull_request'
+              uses: tj-actions/changed-files@dcc7a0cba800f454d79fff4b993e8c3555bcc0a8 # v45
+              with:
+                  files: |
+                      dockerbuild/**
 
-            # Ideally the docker image would be ready for cross-compilation but libsqlcipher-dev is not Multi-Arch compatible
-            # https://unix.stackexchange.com/a/349359
-            - name: Prepare for cross compilation
-              if: steps.cache.outputs.cache-hit != 'true' && inputs.arch == 'arm64'
-              run: |
-                  set -x
-                  sed -i 's/deb http/deb [arch=amd64] http/g' /etc/apt/sources.list
-                  echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ bionic main multiverse restricted universe" | tee -a /etc/apt/sources.list
-                  echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ bionic-updates main multiverse restricted universe" | tee -a /etc/apt/sources.list
-                  dpkg --add-architecture arm64
-                  apt-get -qq update
-                  apt-get -qq install --no-install-recommends crossbuild-essential-arm64 libsqlcipher-dev:arm64 libssl-dev:arm64 libsecret-1-dev:arm64 libgnome-keyring-dev:arm64
-                  rustup target add aarch64-unknown-linux-gnu
-                  mv dockerbuild/aarch64/.cargo .
-                  cat dockerbuild/aarch64/.env >> $GITHUB_ENV
+            # This allows contributors to test changes to the dockerbuild image within a pull request
+            - name: Build docker image
+              uses: docker/build-push-action@471d1dc4e07e5cdedd4c2171150001c434f0b7a4 # v6
+              if: steps.changed_files.outputs.any_modified == 'true'
+              with:
+                  file: dockerbuild/Dockerfile
+                  load: true
+                  platforms: linux/${{ inputs.arch }}
+                  tags: ${{ env.HAK_DOCKER_IMAGE }}
 
             - name: Build Natives
               if: steps.cache.outputs.cache-hit != 'true'
-              run: "yarn build:native --target ${{ steps.config.outputs.target }}"
-
-            - name: "[Nightly] Resolve version"
-              id: nightly
-              if: inputs.version != ''
               run: |
-                  echo "config-args=--nightly '${{ inputs.version }}'" >> $GITHUB_OUTPUT
+                  docker run \
+                    -v ${{ github.workspace }}:/work -w /work \
+                    -e SQLCIPHER_BUNDLED \
+                    $HAK_DOCKER_IMAGE \
+                    yarn build:native
+
+            - name: Fix permissions on .hak
+              run: sudo chown -R $USER:$USER .hak
+
+            - name: Check native libraries in hak dependencies
+              run: |
+                  shopt -s globstar
+
+                  for filename in ./.hak/hakModules/**/*.node; do
+                      ./scripts/glibc-check.sh $filename
+                  done
 
             - name: Generate debian files and arguments
-              id: debian
               run: |
                   if [ -f changelog.Debian ]; then
-                      echo "config-args=--deb-changelog changelog.Debian" >> $GITHUB_OUTPUT
+                      echo "ED_DEBIAN_CHANGELOG=changelog.Debian" >> $GITHUB_ENV
                   fi
 
-            - name: Build App
+            # Workaround for https://github.com/electron-userland/electron-builder/issues/6116
+            - name: Install fpm
+              if: inputs.arch == 'arm64'
               run: |
-                  npx ts-node scripts/generate-builder-config.ts \
-                      ${{ steps.nightly.outputs.config-args }} \
-                      ${{ steps.debian.outputs.config-args }}
-                  yarn build --publish never -l --config electron-builder.json ${{ steps.config.outputs.build-args }}
+                  sudo apt-get install ruby-dev build-essential
+                  sudo gem install fpm
+                  echo "USE_SYSTEM_FPM=true" >> $GITHUB_ENV
+
+            - name: Build App
+              run: yarn build --publish never -l ${{ steps.config.outputs.build-args }}
+              env:
+                  # Only set for Nightly builds
+                  ED_NIGHTLY: ${{ inputs.version }}
 
             - name: Check native libraries
               run: |
@@ -148,43 +162,24 @@ jobs:
                   else
                       assert_contains_string "$LIBS" "libsqlcipher.so.0"
                   fi
+
+                  ./scripts/glibc-check.sh dist/linux-*unpacked/element-desktop*
               env:
                   ARCH: ${{ steps.config.outputs.arch }}
 
-            - name: Stash deb package
-              if: inputs.deploy-mode
-              uses: actions/upload-artifact@v3
-              with:
-                  name: linux-sqlcipher-${{ inputs.sqlcipher }}-deb
-                  path: dist/*.deb
-                  retention-days: 1
-
-            - name: Prepare artifacts for deployment
-              if: inputs.deploy-mode
-              run: |
-                  mv dist _dist
-                  mkdir -p "dist/install/linux/glibc-x86-64/"
-                  mv _dist/*.tar.gz "dist/install/linux/glibc-x86-64"
-
-            # We don't wish to store the tarball for every nightly ever, so we only keep the latest
-            - name: "[Nightly] Strip version from tarball"
-              if: inputs.deploy-mode && inputs.version != ''
-              run: |
-                  mv dist/install/linux/glibc-x86-64/*.tar.gz "dist/install/linux/glibc-x86-64/element-desktop-nightly.tar.gz"
-
-            - name: "[Release] Prepare release latest symlink"
-              if: inputs.deploy-mode && inputs.version == ''
-              shell: bash
-              run: |
-                  ln -s "$(find . -type f -iname "*.tar.gz" | xargs -0 -n1 -- basename)" "element-desktop.tar.gz"
-              working-directory: "dist/install/linux/glibc-x86-64"
-
             # We exclude *-unpacked as it loses permissions and the tarball contains it with correct permissions
             - name: Upload Artifacts
-              uses: actions/upload-artifact@v3
+              uses: actions/upload-artifact@v4
               with:
-                  name: ${{ inputs.deploy-mode && 'packages.element.io' || format('linux-{0}-sqlcipher-{1}', inputs.arch, inputs.sqlcipher) }}
+                  name: linux-${{ inputs.arch }}-sqlcipher-${{ inputs.sqlcipher }}
                   path: |
                       dist
                       !dist/*-unpacked/**
                   retention-days: 1
+
+            - name: Assert all required files are present
+              run: |
+                  test -f ./dist/element-desktop*$ARCH.deb
+                  test -f ./dist/element-desktop*.tar.gz
+              env:
+                  ARCH: ${{ inputs.arch }}

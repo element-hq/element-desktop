@@ -1,47 +1,63 @@
 {
-    "Are you sure you want to quit?": "Είστε βέβαιος ότι θέλετε να εγκαταλείψετε;",
-    "Zoom": "Ζουμ",
-    "Unhide": "Εμφάνιση",
-    "Window": "Παράθυρο",
-    "Toggle Developer Tools": "Άνοιγμα Εργαλείων Προγραμματιστή",
-    "Toggle Full Screen": "Εναλλαγή σε Πλήρη Οθόνη",
-    "Copy email address": "Αντιγραφή διεύθυνσης email",
-    "File": "Αρχείο",
-    "Bring All to Front": "Μεταφορά Όλων στο Προσκήνιο",
-    "Stop Speaking": "Τερματίστε να μιλάτε",
-    "Start Speaking": "Ξεκινήστε να μιλάτε",
-    "Speech": "Ομιλία",
-    "Hide Others": "Απόκρυψη Άλλων",
-    "Hide": "Απόκρυψη",
-    "Services": "Υπηρεσίες",
-    "About": "Σχετικά με",
-    "Help": "Βοήθεια",
-    "Close": "Κλείσιμο",
-    "Minimize": "Ελαχιστοποίηση",
-    "Preferences": "Προτιμήσεις",
-    "Zoom Out": "Σμίκρυνση",
-    "Zoom In": "Μεγέθυνση",
-    "Actual Size": "Πραγματικό Μέγεθος",
-    "View": "Προβολή",
-    "Select All": "Επιλογή Όλων",
-    "Delete": "Διαγραφή",
-    "Paste and Match Style": "Επικόλληση και Ταίριασμα Στυλ",
-    "Paste": "Επικόλληση",
-    "Copy": "Αντιγραφή",
-    "Cut": "Αποκοπή",
-    "Redo": "Επανάληψη",
-    "Undo": "Αναίρεση",
-    "Edit": "Επεξεργασία",
-    "Quit": "Κλείσιμο",
-    "Show/Hide": "Eμφάνιση/Απόκρυψη",
-    "Cancel": "Ακύρωση",
-    "Add to dictionary": "Προσθήκη στο λεξικό",
-    "The image failed to save": "Η αποθήκευση της εικόνας απέτυχε",
-    "Failed to save image": "Αποτυχία αποθήκευσης εικόνας",
-    "Save image as...": "Αποθήκευση εικόνας ως...",
-    "Copy link address": "Αντιγραφή διεύθυνσης συνδέσμου",
-    "Copy image address": "Αντιγραφή διεύθυνσης εικόνας",
-    "Copy image": "Αντιγραφή εικόνας",
-    "Close %(brand)s": "Κλείσιμο %(brand)s",
-    "%(brand)s Help": "%(brand)s Υποστήριξη"
+    "action": {
+        "cancel": "Ακύρωση",
+        "close": "Κλείσιμο",
+        "close_brand": "Κλείσιμο %(brand)s",
+        "copy": "Αντιγραφή",
+        "cut": "Αποκοπή",
+        "delete": "Διαγραφή",
+        "edit": "Επεξεργασία",
+        "minimise": "Ελαχιστοποίηση",
+        "paste": "Επικόλληση",
+        "paste_match_style": "Επικόλληση και Ταίριασμα Στυλ",
+        "quit": "Κλείσιμο",
+        "redo": "Επανάληψη",
+        "select_all": "Επιλογή Όλων",
+        "show_hide": "Eμφάνιση/Απόκρυψη",
+        "undo": "Αναίρεση",
+        "zoom_in": "Μεγέθυνση",
+        "zoom_out": "Σμίκρυνση"
+    },
+    "common": {
+        "about": "Σχετικά με",
+        "brand_help": "%(brand)s Υποστήριξη",
+        "help": "Βοήθεια",
+        "preferences": "Προτιμήσεις"
+    },
+    "confirm_quit": "Είστε βέβαιος ότι θέλετε να εγκαταλείψετε;",
+    "edit_menu": {
+        "speech": "Ομιλία",
+        "speech_start_speaking": "Ξεκινήστε να μιλάτε",
+        "speech_stop_speaking": "Τερματίστε να μιλάτε"
+    },
+    "file_menu": {
+        "label": "Αρχείο"
+    },
+    "menu": {
+        "hide": "Απόκρυψη",
+        "hide_others": "Απόκρυψη Άλλων",
+        "services": "Υπηρεσίες",
+        "unhide": "Εμφάνιση"
+    },
+    "right_click_menu": {
+        "add_to_dictionary": "Προσθήκη στο λεξικό",
+        "copy_email": "Αντιγραφή διεύθυνσης email",
+        "copy_image": "Αντιγραφή εικόνας",
+        "copy_image_url": "Αντιγραφή διεύθυνσης εικόνας",
+        "copy_link_url": "Αντιγραφή διεύθυνσης συνδέσμου",
+        "save_image_as": "Αποθήκευση εικόνας ως...",
+        "save_image_as_error_description": "Η αποθήκευση της εικόνας απέτυχε",
+        "save_image_as_error_title": "Αποτυχία αποθήκευσης εικόνας"
+    },
+    "view_menu": {
+        "actual_size": "Πραγματικό Μέγεθος",
+        "toggle_developer_tools": "Άνοιγμα Εργαλείων Προγραμματιστή",
+        "toggle_full_screen": "Εναλλαγή σε Πλήρη Οθόνη",
+        "view": "Προβολή"
+    },
+    "window_menu": {
+        "bring_all_to_front": "Μεταφορά Όλων στο Προσκήνιο",
+        "label": "Παράθυρο",
+        "zoom": "Ζουμ"
+    }
 }

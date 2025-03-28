@@ -2,17 +2,18 @@
     "compilerOptions": {
         "resolveJsonModule": true,
         "esModuleInterop": true,
-        "module": "commonjs",
-        "moduleResolution": "node",
-        "target": "es2016",
+        "module": "node16",
+        "moduleResolution": "node16",
+        "skipLibCheck": true,
+        "target": "es2022",
         "sourceMap": false,
         "outDir": "./lib",
         "rootDir": "./src",
         "declaration": true,
         "typeRoots": ["src/@types", "node_modules/@types"],
-        "lib": ["es2020", "dom"],
+        "lib": ["es2022"],
         "types": ["node"],
         "strict": true
     },
-    "include": ["./src/**/*.ts"]
+    "include": ["./src/**/*.ts", "./src/**/*.cts"]
 }
