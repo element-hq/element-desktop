@@ -12,6 +12,7 @@ import { fileURLToPath } from "node:url";
 
 import type EN from "./i18n/strings/en_EN.json";
 import { loadJsonFile } from "./utils.js";
+import { Store } from "./store.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -58,15 +59,13 @@ export function _t(text: TranslationKey, variables: Variables = {}): string {
 
 type Component = () => void;
 
-type TypedStore = (typeof global)["store"];
-
 export class AppLocalization {
     private static readonly STORE_KEY = "locale";
 
-    private readonly store: TypedStore;
+    private readonly store: Store;
     private readonly localizedComponents?: Set<Component>;
 
-    public constructor({ store, components = [] }: { store: TypedStore; components: Component[] }) {
+    public constructor({ store, components = [] }: { store: Store; components: Component[] }) {
         counterpart.registerTranslations(FALLBACK_LOCALE, this.fetchTranslationJson("en_EN"));
         counterpart.setFallbackLocale(FALLBACK_LOCALE);
         counterpart.setSeparator("|");

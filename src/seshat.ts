@@ -16,7 +16,6 @@ import type {
 } from "matrix-seshat"; // Hak dependency type
 import IpcMainEvent = Electron.IpcMainEvent;
 import { randomArray } from "./utils.js";
-import { getPassword, setPassword } from "./safe-storage.js";
 
 let seshatSupported = false;
 let Seshat: typeof SeshatType;
@@ -42,12 +41,12 @@ let eventIndex: SeshatType | null = null;
 const seshatDefaultPassphrase = "DEFAULT_PASSPHRASE";
 async function getOrCreatePassphrase(key: string): Promise<string> {
     try {
-        const storedPassphrase = await getPassword(key);
+        const storedPassphrase = await global.store.getSecret(key);
         if (storedPassphrase !== null) {
             return storedPassphrase;
         } else {
             const newPassphrase = await randomArray(32);
-            await setPassword(key, newPassphrase);
+            await global.store.setSecret(key, newPassphrase);
             return newPassphrase;
         }
     } catch (e) {

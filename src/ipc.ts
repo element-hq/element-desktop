@@ -13,7 +13,6 @@ import { recordSSOSession } from "./protocol.js";
 import { randomArray } from "./utils.js";
 import { Settings } from "./settings.js";
 import { getDisplayMediaCallback, setDisplayMediaCallback } from "./displayMediaCallback.js";
-import { deletePassword, getPassword, setPassword } from "./safe-storage.js";
 
 ipcMain.on("setBadgeCount", function (_ev: IpcMainEvent, count: number): void {
     if (process.platform !== "win32") {
@@ -141,7 +140,7 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
 
         case "getPickleKey":
             try {
-                ret = await getPassword(`${args[0]}|${args[1]}`);
+                ret = await global.store.getSecret(`${args[0]}|${args[1]}`);
             } catch {
                 // if an error is thrown (e.g. keytar can't connect to the keychain),
                 // then return null, which means the default pickle key will be used
@@ -152,7 +151,7 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
         case "createPickleKey":
             try {
                 const pickleKey = await randomArray(32);
-                await setPassword(`${args[0]}|${args[1]}`, pickleKey);
+                await global.store.setSecret(`${args[0]}|${args[1]}`, pickleKey);
                 ret = pickleKey;
             } catch (e) {
                 console.error("Failed to create pickle key", e);
@@ -162,7 +161,7 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
 
         case "destroyPickleKey":
             try {
-                await deletePassword(`${args[0]}|${args[1]}`);
+                await global.store.deleteSecret(`${args[0]}|${args[1]}`);
             } catch (e) {
                 console.error("Failed to destroy pickle key", e);
             }
