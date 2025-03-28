@@ -7,7 +7,6 @@ Please see LICENSE files in the repository root for full details.
 
 import { app, autoUpdater, desktopCapturer, ipcMain, powerSaveBlocker, TouchBar, nativeImage } from "electron";
 import { relaunchApp } from "@standardnotes/electron-clear-data";
-import keytar from "keytar-forked";
 
 import IpcMainEvent = Electron.IpcMainEvent;
 import { recordSSOSession } from "./protocol.js";

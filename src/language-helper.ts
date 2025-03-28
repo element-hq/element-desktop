@@ -10,7 +10,6 @@ import { type TranslationKey as TKey } from "matrix-web-i18n";
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import type Store from "electron-store";
 import type EN from "./i18n/strings/en_EN.json";
 import { loadJsonFile } from "./utils.js";
 

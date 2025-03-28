@@ -1,5 +1,5 @@
 /*
-Copyright 2022 New Vector Ltd
+Copyright 2022-2025 New Vector Ltd
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,43 +15,35 @@ limitations under the License.
 */
 
 import { safeStorage } from "electron";
-
-import type * as Keytar from "keytar";
+import * as keytar from "keytar-forked";
 
 const KEYTAR_SERVICE = "element.io";
 const LEGACY_KEYTAR_SERVICE = "riot.im";
 
-let keytar: typeof Keytar | undefined;
-try {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    keytar = require("keytar");
-} catch (e) {
-    if ((<NodeJS.ErrnoException>e).code === "MODULE_NOT_FOUND") {
-        console.log("Keytar isn't installed; secure key storage is disabled.");
-    } else {
-        console.warn("Keytar unexpected error:", e);
-    }
-}
+const getStorageKey = (key: string) => `safeStorage.${key}` as const;
 
+/**
+ * Migrates keytar data to safeStorage,
+ * deletes data from legacy keytar but keeps it in the new keytar for downgrade compatibility.
+ */
 export async function migrate(): Promise<void> {
     if (global.store.get("migratedToSafeStorage")) return; // already done
 
-    if (keytar) {
-        const credentials = [
-            ...(await keytar.findCredentials(LEGACY_KEYTAR_SERVICE)),
-            ...(await keytar.findCredentials(KEYTAR_SERVICE)),
-        ];
-        credentials.forEach((cred) => {
-            deletePassword(cred.account);
-            setPassword(cred.account, cred.password);
-        });
-    }
+    const credentials = [
+        ...(await keytar.findCredentials(LEGACY_KEYTAR_SERVICE)),
+        ...(await keytar.findCredentials(KEYTAR_SERVICE)),
+    ];
+    credentials.forEach((cred) => {
+        deletePassword(cred.account); // delete from keytar & keytar legacy
+        setPassword(cred.account, cred.password); // write to safeStorage & keytar for downgrade compatibility
+    });
 
     global.store.set("migratedToSafeStorage", true);
 }
 
 /**
  * Get the stored password for the key.
+ * We read from safeStorage first, then keytar & keytar legacy.
  *
  * @param key The string key name.
  *
@@ -59,21 +51,17 @@ export async function migrate(): Promise<void> {
  */
 export async function getPassword(key: string): Promise<string | null> {
     if (safeStorage.isEncryptionAvailable()) {
-        const encryptedValue = global.store.get(`safeStorage.${key}`);
+        const encryptedValue = global.store.get(getStorageKey(key));
         if (typeof encryptedValue === "string") {
             return safeStorage.decryptString(Buffer.from(encryptedValue));
         }
     }
-    if (keytar) {
-        return (
-            (await keytar.getPassword(KEYTAR_SERVICE, key)) ?? (await keytar.getPassword(LEGACY_KEYTAR_SERVICE, key))
-        );
-    }
-    return null;
+    return (await keytar.getPassword(KEYTAR_SERVICE, key)) ?? (await keytar.getPassword(LEGACY_KEYTAR_SERVICE, key));
 }
 
 /**
  * Add the password for the key to the keychain.
+ * We write to both safeStorage & keytar to support downgrading the application.
  *
  * @param key The string key name.
  * @param password The string password.
@@ -83,13 +71,14 @@ export async function getPassword(key: string): Promise<string | null> {
 export async function setPassword(key: string, password: string): Promise<void> {
     if (safeStorage.isEncryptionAvailable()) {
         const encryptedValue = safeStorage.encryptString(password);
-        global.store.set(`safeStorage.${key}`, encryptedValue.toString());
+        global.store.set(getStorageKey(key), encryptedValue.toString());
     }
-    await keytar?.setPassword(KEYTAR_SERVICE, key, password);
+    await keytar.setPassword(KEYTAR_SERVICE, key, password);
 }
 
 /**
  * Delete the stored password for the key.
+ * Removes from safeStorage, keytar & keytar legacy.
  *
  * @param key The string key name.
  *
@@ -97,9 +86,9 @@ export async function setPassword(key: string, password: string): Promise<void> 
  */
 export async function deletePassword(key: string): Promise<boolean> {
     if (safeStorage.isEncryptionAvailable()) {
-        global.store.delete(`safeStorage.${key}`);
-        await keytar?.deletePassword(LEGACY_KEYTAR_SERVICE, key);
-        await keytar?.deletePassword(KEYTAR_SERVICE, key);
+        global.store.delete(getStorageKey(key));
+        await keytar.deletePassword(LEGACY_KEYTAR_SERVICE, key);
+        await keytar.deletePassword(KEYTAR_SERVICE, key);
         return true;
     }
     return false;
