@@ -26,7 +26,7 @@ type JsonArray = Array<JsonValue | JsonObject | JsonArray>;
 interface JsonObject {
     [key: string]: JsonObject | JsonArray | JsonValue;
 }
-type Json = JsonArray | JsonObject;
+export type Json = JsonArray | JsonObject;
 
 /**
  * Synchronously load a JSON file from the local filesystem.
