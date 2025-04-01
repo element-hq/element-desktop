@@ -2551,7 +2551,7 @@ app-builder-bin@5.0.0-alpha.12:
   resolved "https://registry.yarnpkg.com/app-builder-bin/-/app-builder-bin-5.0.0-alpha.12.tgz#2daf82f8badc698e0adcc95ba36af4ff0650dc80"
   integrity sha512-j87o0j6LqPL3QRr8yid6c+Tt5gC7xNfYo6uQIQkorAC6MpeayVMZrEDzKmJJ/Hlv7EnOQpaRm53k6ktDYZyB6w==
 
-app-builder-lib@26.0.11:
+app-builder-lib@26.0.11, "app-builder-lib@workspace:*":
   version "26.0.11"
   resolved "https://registry.yarnpkg.com/app-builder-lib/-/app-builder-lib-26.0.11.tgz#339e96561ec05f5e4838b3f6c11ac39ffbe9fb8d"
   integrity sha512-bsfSjSZp9dg7q28+4NPLJ2ldq3j1ESP2LJ+8AibaPqQb2lTIJeQW1JmgdAs9KuYTtkswiZ/+PMyokC9M7hwnjQ==
@@ -2828,7 +2828,7 @@ builder-util-runtime@9.3.1:
     debug "^4.3.4"
     sax "^1.2.4"
 
-builder-util@26.0.11:
+builder-util@26.0.11, "builder-util@workspace:*":
   version "26.0.11"
   resolved "https://registry.yarnpkg.com/builder-util/-/builder-util-26.0.11.tgz#ad85b92c93f2b976b973e1d87337e0c6813fcb8f"
   integrity sha512-xNjXfsldUEe153h1DraD0XvDOpqGR0L5eKFkdReB7eFW5HqysDZFfly4rckda6y9dF39N3pkPlOblcfHKGw+uA==
@@ -3479,13 +3479,12 @@ ejs@^3.1.8:
   dependencies:
     jake "^10.8.5"
 
-electron-builder-squirrel-windows@26.0.11:
+"electron-builder-squirrel-windows@file:./electron-builder-squirrel-windows-26.0.11-pr8959.tgz":
   version "26.0.11"
-  resolved "https://registry.yarnpkg.com/electron-builder-squirrel-windows/-/electron-builder-squirrel-windows-26.0.11.tgz#1aca09b93cf30d663618f94cdc844fe3aff6a7bd"
-  integrity sha512-LM3VDospLXCY6leWPhoJngDlP2GGOPzje/qZbCwX5g9ZeuYhcsVfm5NDDrjS3H6yC4PzHI9U2mnhJxc3bpIMGw==
+  resolved "file:./electron-builder-squirrel-windows-26.0.11-pr8959.tgz#da118af897ac7d561efdb8f8dabf7e3abc478af7"
   dependencies:
-    app-builder-lib "26.0.11"
-    builder-util "26.0.11"
+    app-builder-lib "workspace:*"
+    builder-util "workspace:*"
     electron-winstaller "5.4.0"
 
 electron-builder@26.0.11:
