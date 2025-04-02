@@ -2551,10 +2551,10 @@ app-builder-bin@5.0.0-alpha.12:
   resolved "https://registry.yarnpkg.com/app-builder-bin/-/app-builder-bin-5.0.0-alpha.12.tgz#2daf82f8badc698e0adcc95ba36af4ff0650dc80"
   integrity sha512-j87o0j6LqPL3QRr8yid6c+Tt5gC7xNfYo6uQIQkorAC6MpeayVMZrEDzKmJJ/Hlv7EnOQpaRm53k6ktDYZyB6w==
 
-app-builder-lib@26.0.11:
-  version "26.0.11"
-  resolved "https://registry.yarnpkg.com/app-builder-lib/-/app-builder-lib-26.0.11.tgz#339e96561ec05f5e4838b3f6c11ac39ffbe9fb8d"
-  integrity sha512-bsfSjSZp9dg7q28+4NPLJ2ldq3j1ESP2LJ+8AibaPqQb2lTIJeQW1JmgdAs9KuYTtkswiZ/+PMyokC9M7hwnjQ==
+app-builder-lib@26.0.12:
+  version "26.0.12"
+  resolved "https://registry.yarnpkg.com/app-builder-lib/-/app-builder-lib-26.0.12.tgz#2e33df936e0f78d4266b058ece90308ea981eefb"
+  integrity sha512-+/CEPH1fVKf6HowBUs6LcAIoRcjeqgvAeoSE+cl7Y7LndyQ9ViGPYibNk7wmhMHzNgHIuIbw4nWADPO+4mjgWw==
   dependencies:
     "@develar/schema-utils" "~2.6.5"
     "@electron/asar" "3.2.18"
@@ -3388,12 +3388,12 @@ dir-compare@^4.2.0:
     minimatch "^3.0.5"
     p-limit "^3.1.0 "
 
-dmg-builder@26.0.11:
-  version "26.0.11"
-  resolved "https://registry.yarnpkg.com/dmg-builder/-/dmg-builder-26.0.11.tgz#c9779137d28dc5eaebf268d8ea7782d6ade32250"
-  integrity sha512-C+SaRneQ11OxG99EeGp3TvPrlkW9ZaiukxB9Z7+OhhO1ge0nAtq9uD0ILt1JpvNAQ1de3gzX7TFRYJrSGsNe+Q==
+dmg-builder@26.0.12:
+  version "26.0.12"
+  resolved "https://registry.yarnpkg.com/dmg-builder/-/dmg-builder-26.0.12.tgz#6996ad0bab80a861c9a7b33ee9734d4f60566b46"
+  integrity sha512-59CAAjAhTaIMCN8y9kD573vDkxbs1uhDcrFLHSgutYdPcGOU35Rf95725snvzEOy4BFB7+eLJ8djCNPmGwG67w==
   dependencies:
-    app-builder-lib "26.0.11"
+    app-builder-lib "26.0.12"
     builder-util "26.0.11"
     builder-util-runtime "9.3.1"
     fs-extra "^10.1.0"
@@ -3479,25 +3479,25 @@ ejs@^3.1.8:
   dependencies:
     jake "^10.8.5"
 
-electron-builder-squirrel-windows@26.0.11:
-  version "26.0.11"
-  resolved "https://registry.yarnpkg.com/electron-builder-squirrel-windows/-/electron-builder-squirrel-windows-26.0.11.tgz#1aca09b93cf30d663618f94cdc844fe3aff6a7bd"
-  integrity sha512-LM3VDospLXCY6leWPhoJngDlP2GGOPzje/qZbCwX5g9ZeuYhcsVfm5NDDrjS3H6yC4PzHI9U2mnhJxc3bpIMGw==
+electron-builder-squirrel-windows@26.0.12:
+  version "26.0.12"
+  resolved "https://registry.yarnpkg.com/electron-builder-squirrel-windows/-/electron-builder-squirrel-windows-26.0.12.tgz#21ff5d8b764a4feb73f7c25fabcaab5109d60385"
+  integrity sha512-kpwXM7c/ayRUbYVErQbsZ0nQZX4aLHQrPEG9C4h9vuJCXylwFH8a7Jgi2VpKIObzCXO7LKHiCw4KdioFLFOgqA==
   dependencies:
-    app-builder-lib "26.0.11"
+    app-builder-lib "26.0.12"
     builder-util "26.0.11"
     electron-winstaller "5.4.0"
 
-electron-builder@26.0.11:
-  version "26.0.11"
-  resolved "https://registry.yarnpkg.com/electron-builder/-/electron-builder-26.0.11.tgz#874741aa3943953bdce6677428ee7587254cbfe5"
-  integrity sha512-u7Qgge5ue5oOPDbZEseor7RjxKSYAekVflHkbNIY6te1kbtShQFqESq3FZakMBsQf/3SkEycvWhHHRb8zjqBqg==
+electron-builder@26.0.12:
+  version "26.0.12"
+  resolved "https://registry.yarnpkg.com/electron-builder/-/electron-builder-26.0.12.tgz#797af2e70efdd96c9ea5d8a8164b8728c90d65ff"
+  integrity sha512-cD1kz5g2sgPTMFHjLxfMjUK5JABq3//J4jPswi93tOPFz6btzXYtK5NrDt717NRbukCUDOrrvmYVOWERlqoiXA==
   dependencies:
-    app-builder-lib "26.0.11"
+    app-builder-lib "26.0.12"
     builder-util "26.0.11"
     builder-util-runtime "9.3.1"
     chalk "^4.1.2"
-    dmg-builder "26.0.11"
+    dmg-builder "26.0.12"
     fs-extra "^10.1.0"
     is-ci "^3.0.0"
     lazy-val "^1.0.5"
