@@ -75,7 +75,7 @@ if (userDataPathInProtocol) {
 } else if (argv["profile-dir"]) {
     userDataPath = argv["profile-dir"];
 } else {
-    let newUserDataPath = app.getPath("userData");
+    let newUserDataPath = process.env.ELEMENT_PROFILE_DIR ?? app.getPath("userData");
     if (argv["profile"]) {
         newUserDataPath += "-" + argv["profile"];
     }
