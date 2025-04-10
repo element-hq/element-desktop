@@ -46,7 +46,10 @@ if (argv["help"]) {
     console.log(
         "  --profile-dir {path}: Path to where to store the profile. May also be specified via the ELEMENT_PROFILE_DIR environment variable.",
     );
-    console.log("  --profile {name}:     Name of alternate profile to use, allows for running multiple accounts.");
+    console.log(
+        `  --profile {name}:     Name of alternate profile to use, allows for running multiple accounts.\n` +
+            `                         Ignored if --profile-dir is specified, can be combined with ELEMENT_PROFILE_DIR environment variable.`,
+    );
     console.log("  --devtools:           Install and use react-devtools and react-perf.");
     console.log(
         `  --config:             Path to the config.json file. May also be specified via the ELEMENT_DESKTOP_CONFIG_JSON environment variable.\n` +
