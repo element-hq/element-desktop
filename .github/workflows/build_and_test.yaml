@@ -66,22 +66,38 @@ jobs:
                       os: ubuntu-22.04
                       artifact: linux-amd64-sqlcipher-system
                       executable: "/opt/Element/element-desktop"
-                      prepare_cmd: "sudo apt-get -qq update && sudo apt install ./dist/*.deb && sudo apt install -y gnome-keyring"
+                      prepare_cmd: |
+                          sudo apt-get -qq update
+                          sudo apt install ./dist/*.deb
+                          sudo apt install -y gnome-keyring
+                          gnome-keyring-daemon --unlock
                     - name: "Linux (amd64) (sqlcipher: static)"
                       os: ubuntu-22.04
                       artifact: linux-amd64-sqlcipher-static
                       executable: "/opt/Element/element-desktop"
-                      prepare_cmd: "sudo apt-get -qq update && sudo apt install ./dist/*.deb && sudo apt install -y gnome-keyring"
+                      prepare_cmd: |
+                          sudo apt-get -qq update
+                          sudo apt install ./dist/*.deb
+                          sudo apt install -y gnome-keyring
+                          gnome-keyring-daemon --unlock
                     - name: "Linux (arm64) (sqlcipher: system)"
                       os: ubuntu-22.04-arm
                       artifact: linux-arm64-sqlcipher-system
                       executable: "/opt/Element/element-desktop"
-                      prepare_cmd: "sudo apt-get -qq update && sudo apt install -y ./dist/*.deb && sudo apt install -y gnome-keyring"
+                      prepare_cmd: |
+                          sudo apt-get -qq update
+                          sudo apt install ./dist/*.deb
+                          sudo apt install -y gnome-keyring
+                          gnome-keyring-daemon --unlock
                     - name: "Linux (arm64) (sqlcipher: static)"
                       os: ubuntu-22.04-arm
                       artifact: linux-arm64-sqlcipher-static
                       executable: "/opt/Element/element-desktop"
-                      prepare_cmd: "sudo apt-get -qq update && sudo apt install -y ./dist/*.deb && sudo apt install -y gnome-keyring"
+                      prepare_cmd: |
+                          sudo apt-get -qq update
+                          sudo apt install ./dist/*.deb
+                          sudo apt install -y gnome-keyring
+                          gnome-keyring-daemon --unlock
                     - name: Windows (x86)
                       os: windows-2022
                       artifact: win-ia32
