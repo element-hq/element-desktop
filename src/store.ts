@@ -116,9 +116,7 @@ export class Store extends _Store<{
                 return safeStorage.decryptString(Buffer.from(encryptedValue));
             }
         }
-        return (
-            (await keytar.getPassword(KEYTAR_SERVICE, key)) ?? (await keytar.getPassword(LEGACY_KEYTAR_SERVICE, key))
-        );
+        return null;
     }
 
     /**
