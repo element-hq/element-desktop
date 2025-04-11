@@ -124,7 +124,7 @@ export class Store extends ElectronStore<{
 
         const encryptedValue = this.get(this.getSecretStorageKey(key));
         if (typeof encryptedValue === "string") {
-            return safeStorage.decryptString(Buffer.from(encryptedValue));
+            return safeStorage.decryptString(Buffer.from(encryptedValue, "base64"));
         }
         return null;
     }
@@ -146,7 +146,7 @@ export class Store extends ElectronStore<{
         }
 
         const encryptedValue = safeStorage.encryptString(secret);
-        this.set(this.getSecretStorageKey(key), encryptedValue.toString());
+        this.set(this.getSecretStorageKey(key), encryptedValue.toString("base64"));
         await keytar.setPassword(KEYTAR_SERVICE, key, secret);
     }
 
