@@ -196,7 +196,8 @@ ipcMain.on("seshat", async function (_ev: IpcMainEvent, payload): Promise<void> 
             try {
                 ret = await eventIndex?.search(args[0]);
             } catch (e) {
-                sendError(payload.id, <Error>e);
+                // Do not call sendError to avoid havin a pop-up while typing fancy seshat search syntaxes
+                console.log(<Error>e);
                 return;
             }
             break;
