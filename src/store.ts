@@ -101,8 +101,8 @@ export class Store extends ElectronStore<{
             ...(await keytar.findCredentials(KEYTAR_SERVICE)),
         ];
         for (const cred of credentials) {
-            await this.deleteSecret(cred.account); // delete from keytar & keytar legacy
-            await this.setSecret(cred.account, cred.password); // write to safeStorage & keytar for downgrade compatibility
+            await this.deleteSecretKeytar(LEGACY_KEYTAR_SERVICE, cred.account);
+            await this.setSecret(cred.account, cred.password);
         }
         console.info(`Store migration done: found ${credentials.length} credentials`);
     }
@@ -161,10 +161,14 @@ export class Store extends ElectronStore<{
     public async deleteSecret(key: string): Promise<void> {
         await this.safeStorageReady();
 
-        await keytar.deletePassword(LEGACY_KEYTAR_SERVICE, key);
-        await keytar.deletePassword(KEYTAR_SERVICE, key);
+        await this.deleteSecretKeytar(LEGACY_KEYTAR_SERVICE, key);
+        await this.deleteSecretKeytar(KEYTAR_SERVICE, key);
         if (safeStorage.isEncryptionAvailable()) {
             this.delete(this.getSecretStorageKey(key));
         }
+    }
+
+    private async deleteSecretKeytar(namespace: string, key: string): Promise<void> {
+        await keytar.deletePassword(namespace, key);
     }
 }

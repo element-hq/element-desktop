@@ -57,7 +57,10 @@ test.describe("App launch", () => {
 
         test("should be supported", async ({ page }) => {
             await expect(
-                page.evaluate(() => window.mxPlatformPeg.get().createPickleKey(userId, deviceId)),
+                page.evaluate(
+                    ([userId, deviceId]) => window.mxPlatformPeg.get().createPickleKey(userId, deviceId),
+                    [userId, deviceId],
+                ),
             ).resolves.not.toBeNull();
         });
 
@@ -70,7 +73,10 @@ test.describe("App launch", () => {
 
             test("should migrate successfully", async ({ page }) => {
                 await expect(
-                    page.evaluate(() => window.mxPlatformPeg.get().getPickleKey(userId, deviceId)),
+                    page.evaluate(
+                        ([userId, deviceId]) => window.mxPlatformPeg.get().getPickleKey(userId, deviceId),
+                        [userId, deviceId],
+                    ),
                 ).resolves.toBe(pickleKey);
             });
         });
