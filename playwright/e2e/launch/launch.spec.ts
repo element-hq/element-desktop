@@ -12,17 +12,19 @@ import keytar from "keytar-forked";
 import { test, expect } from "../../element-desktop-test.js";
 
 declare global {
+    interface ElectronPlatform {
+        getEventIndexingManager():
+            | {
+                  supportsEventIndexing(): Promise<boolean>;
+              }
+            | undefined;
+        getPickleKey(userId: string, deviceId: string): Promise<string | null>;
+        createPickleKey(userId: string, deviceId: string): Promise<string | null>;
+    }
+
     interface Window {
         mxPlatformPeg: {
-            get(): {
-                getEventIndexingManager():
-                    | {
-                          supportsEventIndexing(): Promise<boolean>;
-                      }
-                    | undefined;
-                getPickleKey(userId: string, deviceId: string): Promise<string | null>;
-                createPickleKey(userId: string, deviceId: string): Promise<string | null>;
-            };
+            get(): ElectronPlatform;
         };
     }
 }
