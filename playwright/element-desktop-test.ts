@@ -67,7 +67,7 @@ export const test = base.extend<Fixtures>({
         await fs.rm(tmpDir, { recursive: true });
     },
     app: async ({ tmpDir, extraEnv, extraArgs, stdout, stderr }, use) => {
-        const args = ["--profile-dir", tmpDir, '--password-store="basic"'];
+        const args = ["--profile-dir", tmpDir];
 
         const executablePath = process.env["ELEMENT_DESKTOP_EXECUTABLE"];
         if (!executablePath) {

@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 import ElectronStore from "electron-store";
-import * as keytar from "keytar-forked";
+import keytar from "keytar-forked";
 import { app, safeStorage } from "electron";
 
 /**

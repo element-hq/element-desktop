@@ -46,8 +46,8 @@ test.describe("App launch", () => {
         ).resolves.toBeTruthy();
     });
 
-    test("should launch and render the welcome view successfully and support keytar", async ({ page }) => {
-        // test.skip(platform() === "linux", "This test does not yet support Linux");
+    test("should launch and render the welcome view successfully and support safeStorage", async ({ page }) => {
+        test.skip(platform() === "linux", "This test does not yet support Linux");
 
         await expect(
             page.evaluate<string | null>(async () => {
@@ -55,6 +55,8 @@ test.describe("App launch", () => {
             }),
         ).resolves.not.toBeNull();
     });
+
+    // TODO test keytar migration
 
     test.describe("--no-update", () => {
         test.use({
