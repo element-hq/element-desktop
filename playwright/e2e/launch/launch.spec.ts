@@ -7,6 +7,7 @@ Please see LICENSE files in the repository root for full details.
 */
 
 import { platform } from "node:os";
+import keytar from "keytar-forked";
 
 import { test, expect } from "../../element-desktop-test.js";
 
@@ -19,6 +20,7 @@ declare global {
                           supportsEventIndexing(): Promise<boolean>;
                       }
                     | undefined;
+                getPickleKey(userId: string, deviceId: string): Promise<string | null>;
                 createPickleKey(userId: string, deviceId: string): Promise<string | null>;
             };
         };
@@ -46,17 +48,33 @@ test.describe("App launch", () => {
         ).resolves.toBeTruthy();
     });
 
-    test("should launch and render the welcome view successfully and support safeStorage", async ({ page }) => {
-        // test.skip(platform() === "linux", "This test does not yet support Linux");
+    test.describe("safeStorage", () => {
+        test.skip(platform() === "linux", "The linux runner has no compatible wallet/keychain");
+        test.skip(platform() === "darwin", "The macOS runner's keychain is not available");
 
-        await expect(
-            page.evaluate<string | null>(async () => {
-                return await window.mxPlatformPeg.get().createPickleKey("@user:server", "ABCDEF");
-            }),
-        ).resolves.not.toBeNull();
+        const userId = "@user:server";
+        const deviceId = "ABCDEF";
+
+        test("should be supported", async ({ page }) => {
+            await expect(
+                page.evaluate(() => window.mxPlatformPeg.get().createPickleKey(userId, deviceId)),
+            ).resolves.not.toBeNull();
+        });
+
+        test.describe("migrate from keytar", () => {
+            const pickleKey = "DEADBEEF1234";
+
+            test.beforeEach(async () => {
+                await keytar.setPassword("element.io", `${userId}|${deviceId}`, pickleKey);
+            });
+
+            test("should migrate successfully", async ({ page }) => {
+                await expect(
+                    page.evaluate(() => window.mxPlatformPeg.get().getPickleKey(userId, deviceId)),
+                ).resolves.toBe(pickleKey);
+            });
+        });
     });
-
-    // TODO test keytar migration
 
     test.describe("--no-update", () => {
         test.use({

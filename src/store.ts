@@ -89,10 +89,10 @@ export class Store extends ElectronStore<{
      * @throws if safeStorage is not available.
      */
     public async migrate(): Promise<void> {
-        console.log("Store migration: started");
         if (this.has("safeStorage")) return;
+        console.info("Store migration: started");
         if (!safeStorage.isEncryptionAvailable()) {
-            console.log("Store migration: safeStorage is not available");
+            console.error("Store migration: safeStorage is not available");
             throw new Error("safeStorage is not available");
         }
 
@@ -100,11 +100,11 @@ export class Store extends ElectronStore<{
             ...(await keytar.findCredentials(LEGACY_KEYTAR_SERVICE)),
             ...(await keytar.findCredentials(KEYTAR_SERVICE)),
         ];
-        console.log("Store migration:", credentials);
         for (const cred of credentials) {
             await this.deleteSecret(cred.account); // delete from keytar & keytar legacy
             await this.setSecret(cred.account, cred.password); // write to safeStorage & keytar for downgrade compatibility
         }
+        console.info(`Store migration done: found ${credentials.length} credentials`);
     }
 
     /**
