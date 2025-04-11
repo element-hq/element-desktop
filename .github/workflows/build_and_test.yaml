@@ -13,8 +13,8 @@ jobs:
         permissions:
             contents: read
         with:
-            config: ${{ github.event.pull_request.base.ref == 'develop' && 'element.io/nightly' || 'element.io/release' }}
-            version: ${{ github.event.pull_request.base.ref == 'develop' && 'develop' || '' }}
+            config: ${{ (github.event.pull_request.base.ref || github.ref_name) == 'develop' && 'element.io/nightly' || 'element.io/release' }}
+            version: ${{ (github.event.pull_request.base.ref || github.ref_name) == 'develop' && 'develop' || '' }}
 
     windows:
         needs: fetch
