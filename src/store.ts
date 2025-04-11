@@ -89,20 +89,22 @@ export class Store extends ElectronStore<{
      * @throws if safeStorage is not available.
      */
     public async migrate(): Promise<void> {
+        console.log("Store migration: started");
         if (this.has("safeStorage")) return;
-        await app.whenReady();
         if (!safeStorage.isEncryptionAvailable()) {
-            throw new Error("SafeStorage is not available");
+            console.log("Store migration: safeStorage is not available");
+            throw new Error("safeStorage is not available");
         }
 
         const credentials = [
             ...(await keytar.findCredentials(LEGACY_KEYTAR_SERVICE)),
             ...(await keytar.findCredentials(KEYTAR_SERVICE)),
         ];
-        credentials.forEach((cred) => {
-            this.deleteSecret(cred.account); // delete from keytar & keytar legacy
-            this.setSecret(cred.account, cred.password); // write to safeStorage & keytar for downgrade compatibility
-        });
+        console.log("Store migration:", credentials);
+        for (const cred of credentials) {
+            await this.deleteSecret(cred.account); // delete from keytar & keytar legacy
+            await this.setSecret(cred.account, cred.password); // write to safeStorage & keytar for downgrade compatibility
+        }
     }
 
     /**
@@ -142,7 +144,7 @@ export class Store extends ElectronStore<{
     public async setSecret(key: string, secret: string): Promise<void> {
         await this.safeStorageReady();
         if (!safeStorage.isEncryptionAvailable()) {
-            throw new Error("SafeStorage is not available");
+            throw new Error("safeStorage is not available");
         }
 
         const encryptedValue = safeStorage.encryptString(secret);
