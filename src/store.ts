@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import _Store from "electron-store";
+import ElectronStore from "electron-store";
 import * as keytar from "keytar-forked";
 import { app, safeStorage } from "electron";
 
@@ -29,7 +29,7 @@ const LEGACY_KEYTAR_SERVICE = "riot.im";
  * Secrets are stored within the `safeStorage` object, encrypted with safeStorage.
  * Any secrets operations are blocked on Electron app ready emit, and keytar migration if still needed.
  */
-export class Store extends _Store<{
+export class Store extends ElectronStore<{
     warnBeforeExit: boolean;
     minimizeToTray: boolean;
     spellCheckerEnabled: boolean;
@@ -89,7 +89,11 @@ export class Store extends _Store<{
      */
     public async migrate(): Promise<void> {
         if (this.has("safeStorage")) return;
-        await this.safeStorageReady();
+        await app.whenReady();
+        if (!safeStorage.isEncryptionAvailable()) {
+            throw new Error("SafeStorage is not available");
+        }
+
         const credentials = [
             ...(await keytar.findCredentials(LEGACY_KEYTAR_SERVICE)),
             ...(await keytar.findCredentials(KEYTAR_SERVICE)),
@@ -102,7 +106,7 @@ export class Store extends _Store<{
 
     /**
      * Get the stored secret for the key.
-     * We read from safeStorage first, then keytar & keytar legacy.
+     * We read from safeStorage if available, falling back to keytar & keytar legacy.
      *
      * @param key The string key name.
      *
@@ -110,11 +114,16 @@ export class Store extends _Store<{
      */
     public async getSecret(key: string): Promise<string | null> {
         await this.safeStorageReady();
-        if (safeStorage.isEncryptionAvailable()) {
-            const encryptedValue = this.get(this.getSecretStorageKey(key));
-            if (typeof encryptedValue === "string") {
-                return safeStorage.decryptString(Buffer.from(encryptedValue));
-            }
+        if (!safeStorage.isEncryptionAvailable()) {
+            return (
+                (await keytar.getPassword(KEYTAR_SERVICE, key)) ??
+                (await keytar.getPassword(LEGACY_KEYTAR_SERVICE, key))
+            );
+        }
+
+        const encryptedValue = this.get(this.getSecretStorageKey(key));
+        if (typeof encryptedValue === "string") {
+            return safeStorage.decryptString(Buffer.from(encryptedValue));
         }
         return null;
     }
@@ -125,15 +134,18 @@ export class Store extends _Store<{
      *
      * @param key The string key name.
      * @param secret The string password.
+     * @throws if safeStorage is not available.
      *
      * @returns A promise for the set password completion.
      */
     public async setSecret(key: string, secret: string): Promise<void> {
         await this.safeStorageReady();
-        if (safeStorage.isEncryptionAvailable()) {
-            const encryptedValue = safeStorage.encryptString(secret);
-            this.set(this.getSecretStorageKey(key), encryptedValue.toString());
+        if (!safeStorage.isEncryptionAvailable()) {
+            throw new Error("SafeStorage is not available");
         }
+
+        const encryptedValue = safeStorage.encryptString(secret);
+        this.set(this.getSecretStorageKey(key), encryptedValue.toString());
         await keytar.setPassword(KEYTAR_SERVICE, key, secret);
     }
 
@@ -142,17 +154,15 @@ export class Store extends _Store<{
      * Removes from safeStorage, keytar & keytar legacy.
      *
      * @param key The string key name.
-     *
-     * @returns A promise for the deletion status. True on success.
      */
-    public async deleteSecret(key: string): Promise<boolean> {
+    public async deleteSecret(key: string): Promise<void> {
         await this.safeStorageReady();
-        if (safeStorage.isEncryptionAvailable()) {
-            this.delete(this.getSecretStorageKey(key));
-            await keytar.deletePassword(LEGACY_KEYTAR_SERVICE, key);
-            await keytar.deletePassword(KEYTAR_SERVICE, key);
-            return true;
+        if (!safeStorage.isEncryptionAvailable()) {
+            throw new Error("SafeStorage is not available");
         }
-        return false;
+
+        this.delete(this.getSecretStorageKey(key));
+        await keytar.deletePassword(LEGACY_KEYTAR_SERVICE, key);
+        await keytar.deletePassword(KEYTAR_SERVICE, key);
     }
 }
