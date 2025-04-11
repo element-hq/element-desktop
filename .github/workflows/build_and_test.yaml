@@ -63,6 +63,8 @@ jobs:
                           rsync -a /Volumes/Element/Element.app ~/Applications/ &&
                           hdiutil detach /Volumes/Element
                           security list-keychains
+                          security default-keychain
+                          security default-keychain -s "/Users/runner/Library/Keychains/login.keychain-db"
                     - name: "Linux (amd64) (sqlcipher: system)"
                       os: ubuntu-22.04
                       artifact: linux-amd64-sqlcipher-system
