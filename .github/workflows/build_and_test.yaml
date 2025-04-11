@@ -62,12 +62,6 @@ jobs:
                           hdiutil attach ./dist/*.dmg -mountpoint /Volumes/Element &&
                           rsync -a /Volumes/Element/Element.app ~/Applications/ &&
                           hdiutil detach /Volumes/Element
-
-                          security create-keychain -p password temp.keychain
-                          security unlock-keychain -p password temp.keychain
-                          security list-keychains -d user -s temp.keychain
-                          security set-keychain-settings temp.keychain
-                          security default-keychain -s temp.keychain
                     - name: "Linux (amd64) (sqlcipher: system)"
                       os: ubuntu-22.04
                       artifact: linux-amd64-sqlcipher-system
