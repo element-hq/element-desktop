@@ -51,7 +51,10 @@ test.describe("App launch", () => {
     });
 
     test.describe("safeStorage", () => {
-        test.skip(platform() === "linux", "The linux runner has no compatible wallet/keychain");
+        test.use({
+            extraArgs: ['--password-store="basic"'],
+        });
+
         test.skip(platform() === "darwin", "The macOS runner's keychain is not available");
 
         const userId = "@user:server";
@@ -67,6 +70,8 @@ test.describe("App launch", () => {
         });
 
         test.describe("migrate from keytar", () => {
+            test.skip(platform() === "win32", "Windows requires authentication to write to the store");
+
             const pickleKey = "DEADBEEF1234";
 
             test.beforeEach(async () => {
