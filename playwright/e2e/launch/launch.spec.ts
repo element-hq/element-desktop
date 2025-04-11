@@ -47,7 +47,7 @@ test.describe("App launch", () => {
     });
 
     test("should launch and render the welcome view successfully and support keytar", async ({ page }) => {
-        test.skip(platform() === "linux", "This test does not yet support Linux");
+        // test.skip(platform() === "linux", "This test does not yet support Linux");
 
         await expect(
             page.evaluate<string | null>(async () => {
