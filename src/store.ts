@@ -101,8 +101,10 @@ export class Store extends ElectronStore<{
             ...(await keytar.findCredentials(KEYTAR_SERVICE)),
         ];
         for (const cred of credentials) {
-            await this.deleteSecretKeytar(LEGACY_KEYTAR_SERVICE, cred.account);
+            console.info("Store migration: writing", cred);
             await this.setSecret(cred.account, cred.password);
+            console.info("Store migration: deleting", cred);
+            await this.deleteSecretKeytar(LEGACY_KEYTAR_SERVICE, cred.account);
         }
         console.info(`Store migration done: found ${credentials.length} credentials`);
     }
