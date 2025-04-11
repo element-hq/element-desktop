@@ -86,6 +86,7 @@ export class Store extends ElectronStore<{
     /**
      * Migrates keytar data to safeStorage,
      * deletes data from legacy keytar but keeps it in the new keytar for downgrade compatibility.
+     * @throws if safeStorage is not available.
      */
     public async migrate(): Promise<void> {
         if (this.has("safeStorage")) return;
@@ -157,12 +158,11 @@ export class Store extends ElectronStore<{
      */
     public async deleteSecret(key: string): Promise<void> {
         await this.safeStorageReady();
-        if (!safeStorage.isEncryptionAvailable()) {
-            throw new Error("SafeStorage is not available");
-        }
 
-        this.delete(this.getSecretStorageKey(key));
         await keytar.deletePassword(LEGACY_KEYTAR_SERVICE, key);
         await keytar.deletePassword(KEYTAR_SERVICE, key);
+        if (safeStorage.isEncryptionAvailable()) {
+            this.delete(this.getSecretStorageKey(key));
+        }
     }
 }
