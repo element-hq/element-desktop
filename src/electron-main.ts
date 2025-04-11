@@ -43,12 +43,12 @@ const argv = minimist(process.argv, {
 
 if (argv["help"]) {
     console.log("Options:");
-    console.log(
-        "  --profile-dir {path}: Path to where to store the profile. May also be specified via the ELEMENT_PROFILE_DIR environment variable.",
-    );
+    console.log("  --profile-dir {path}: Path to where to store the profile.");
     console.log(
         `  --profile {name}:     Name of alternate profile to use, allows for running multiple accounts.\n` +
-            `                         Ignored if --profile-dir is specified, can be combined with ELEMENT_PROFILE_DIR environment variable.`,
+            `                         Ignored if --profile-dir is specified.\n` +
+            `                         The ELEMENT_PROFILE_DIR environment variable may be used to change the default profile path.\n` +
+            `                         It is overridden by --profile-dir, but can be combined with --profile.`,
     );
     console.log("  --devtools:           Install and use react-devtools and react-perf.");
     console.log(
