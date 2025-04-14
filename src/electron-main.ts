@@ -32,7 +32,7 @@ import { getProfileFromDeeplink, protocolInit } from "./protocol.js";
 import { _t, AppLocalization } from "./language-helper.js";
 import { setDisplayMediaCallback } from "./displayMediaCallback.js";
 import { setupMacosTitleBar } from "./macos-titlebar.js";
-import { Json, loadJsonFile } from "./utils.js";
+import { type Json, loadJsonFile } from "./utils.js";
 import { setupMediaAuth } from "./media-auth.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
