@@ -10,7 +10,18 @@ Please see LICENSE files in the repository root for full details.
 
 // Squirrel on windows starts the app with various flags as hooks to tell us when we've been installed/uninstalled etc.
 import "./squirrelhooks.js";
-import { app, BrowserWindow, Menu, autoUpdater, protocol, dialog, type Input, type Event, session } from "electron";
+import {
+    app,
+    BrowserWindow,
+    Menu,
+    autoUpdater,
+    protocol,
+    dialog,
+    type Input,
+    type Event,
+    session,
+    safeStorage,
+} from "electron";
 // eslint-disable-next-line n/file-extension-in-import
 import * as Sentry from "@sentry/electron/main";
 import AutoLaunch from "auto-launch";
@@ -359,6 +370,9 @@ const SUPPORTED_ELECTRON_SWITCHES: string[] = [];
 
 if (process.platform === "linux") {
     SUPPORTED_ELECTRON_SWITCHES.push("password-store");
+    if (process.env.CI) {
+        safeStorage.setUsePlainTextEncryption(true);
+    }
 }
 for (const switchKey of SUPPORTED_ELECTRON_SWITCHES) {
     if (switchKey in argv) {
