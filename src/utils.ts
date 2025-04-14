@@ -34,6 +34,13 @@ export type Json = JsonArray | JsonObject;
  * @param paths - An array of path segments which will be joined using the system's path delimiter.
  */
 export function loadJsonFile<T extends Json>(...paths: string[]): T {
-    const file = fs.readFileSync(path.join(...paths), { encoding: "utf-8" });
+    const joinedPaths = path.join(...paths);
+
+    if (!fs.existsSync(joinedPaths)) {
+        console.debug(`Skipping nonexisting file: ${joinedPaths}`);
+        return {} as T;
+    }
+
+    const file = fs.readFileSync(joinedPaths, { encoding: "utf-8" });
     return JSON.parse(file);
 }
