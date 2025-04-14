@@ -69,7 +69,7 @@ jobs:
                       prepare_cmd: |
                           sudo apt-get -qq update
                           sudo apt install ./dist/*.deb
-                          sudo apt install -y gnome-keyring
+                          sudo apt install -y gnome-keyring dbus-user-session dbus dbus-x11
                           gnome-keyring-daemon --unlock
                     - name: "Linux (amd64) (sqlcipher: static)"
                       os: ubuntu-22.04
@@ -78,7 +78,7 @@ jobs:
                       prepare_cmd: |
                           sudo apt-get -qq update
                           sudo apt install ./dist/*.deb
-                          sudo apt install -y gnome-keyring
+                          sudo apt install -y gnome-keyring dbus-user-session dbus dbus-x11
                           gnome-keyring-daemon --unlock
                     - name: "Linux (arm64) (sqlcipher: system)"
                       os: ubuntu-22.04-arm
@@ -87,7 +87,7 @@ jobs:
                       prepare_cmd: |
                           sudo apt-get -qq update
                           sudo apt install ./dist/*.deb
-                          sudo apt install -y gnome-keyring
+                          sudo apt install -y gnome-keyring dbus-user-session dbus dbus-x11
                           gnome-keyring-daemon --unlock
                     - name: "Linux (arm64) (sqlcipher: static)"
                       os: ubuntu-22.04-arm
@@ -96,7 +96,7 @@ jobs:
                       prepare_cmd: |
                           sudo apt-get -qq update
                           sudo apt install ./dist/*.deb
-                          sudo apt install -y gnome-keyring
+                          sudo apt install -y gnome-keyring dbus-user-session dbus dbus-x11
                           gnome-keyring-daemon --unlock
                     - name: Windows (x86)
                       os: windows-2022

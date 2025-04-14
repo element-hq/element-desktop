@@ -70,7 +70,7 @@ test.describe("App launch", () => {
         });
 
         test.describe("migrate from keytar", () => {
-            test.skip(platform() === "win32", "Windows requires authentication to write to the store");
+            // test.skip(platform() === "win32", "Windows requires authentication to write to the store");
 
             const pickleKey = "DEADBEEF1234";
 
