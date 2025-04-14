@@ -366,25 +366,6 @@ app.enableSandbox();
 // We disable media controls here. We do this because calls use audio and video elements and they sometimes capture the media keys. See https://github.com/vector-im/element-web/issues/15704
 app.commandLine.appendSwitch("disable-features", "HardwareMediaKeyHandling,MediaSessionService");
 
-const SUPPORTED_ELECTRON_SWITCHES: string[] = [];
-
-if (process.platform === "linux") {
-    SUPPORTED_ELECTRON_SWITCHES.push("password-store");
-    if (process.env.CI) {
-        safeStorage.setUsePlainTextEncryption(true);
-    }
-}
-for (const switchKey of SUPPORTED_ELECTRON_SWITCHES) {
-    if (switchKey in argv) {
-        const switchValue = argv[switchKey];
-        if (switchValue === true) {
-            app.commandLine.appendSwitch(switchKey);
-        } else {
-            app.commandLine.appendSwitch(switchKey, switchValue);
-        }
-    }
-}
-
 // Disable hardware acceleration if the setting has been set.
 if (global.store.get("disableHardwareAcceleration") === true) {
     console.log("Disabling hardware acceleration.");

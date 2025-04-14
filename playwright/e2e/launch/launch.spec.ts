@@ -51,11 +51,10 @@ test.describe("App launch", () => {
     });
 
     test.describe("safeStorage", () => {
-        test.use({
-            extraArgs: ['--password-store="basic"'],
-        });
-
-        test.skip(platform() === "darwin", "The macOS runner's keychain is not available");
+        if (process.env.GITHUB_ACTIONS) {
+            test.skip(platform() === "darwin", "The macOS runner's keychain is not available");
+            test.skip(platform() === "linux", "The Linux runner's dbus is not available");
+        }
 
         const userId = "@user:server";
         const deviceId = "ABCDEF";
@@ -70,7 +69,7 @@ test.describe("App launch", () => {
         });
 
         test.describe("migrate from keytar", () => {
-            // test.skip(platform() === "win32", "Windows requires authentication to write to the store");
+            test.skip(!!process.env.GITHUB_ACTIONS, "Does not work in CI");
 
             const pickleKey = "DEADBEEF1234";
 
