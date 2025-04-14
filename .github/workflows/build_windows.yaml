@@ -216,3 +216,13 @@ jobs:
                   Test-Path './dist/squirrel-windows*/element-desktop-*-full.nupkg'
                   Test-Path './dist/squirrel-windows*/RELEASES'
                   Test-Path './dist/Element*.msi'
+
+    test:
+        needs: build
+        uses: ./.github/workflows/build_test.yaml
+        # We have no Windows ARM64 runners at this time
+        if: inputs.arch != 'arm64'
+        with:
+            artifact: win-${{ inputs.arch }}
+            runs-on: windows-2022
+            executable: ${{ inputs.arch == 'ia32' && './dist/win-ia32-unpacked/Element.exe' || './dist/win-unpacked/Element.exe' }}

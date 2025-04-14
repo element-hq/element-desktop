@@ -1,0 +1,68 @@
+# This action helps run Playwright tests within one of the build_* stages.
+on:
+    workflow_call:
+        inputs:
+            runs-on:
+                type: string
+                required: true
+                description: "The runner image to use"
+            artifact:
+                type: string
+                required: true
+                description: "The name of the artifact to download"
+            executable:
+                type: string
+                required: true
+                description: "Path to the executable to test"
+            prepare_cmd:
+                type: string
+                required: false
+                description: "Command to run to prepare the executable or environment for testing"
+permissions: {}
+jobs:
+    test:
+        runs-on: ${{ inputs.runs-on }}
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: actions/setup-node@v4
+              with:
+                  node-version-file: .node-version
+                  cache: "yarn"
+
+            - name: Install Deps
+              run: "yarn install --frozen-lockfile"
+
+            - uses: actions/download-artifact@v4
+              with:
+                  name: ${{ inputs.artifact }}
+                  path: dist
+
+            - name: Prepare for tests
+              run: ${{ inputs.prepare_cmd }}
+              if: inputs.prepare_cmd
+
+            # We previously disabled the `EnableNodeCliInspectArguments` fuse, but Playwright requires
+            # it to be enabled to test Electron apps, so turn it back on.
+            - name: Set EnableNodeCliInspectArguments fuse enabled
+              run: $RUN_AS npx @electron/fuses write --app ${{ inputs.executable }} EnableNodeCliInspectArguments=on
+              shell: bash
+              env:
+                  # We need sudo on Linux as it is installed in /opt/
+                  RUN_AS: ${{ runner.os == 'Linux' && 'sudo' || '' }}
+
+            - name: Run tests
+              uses: coactions/setup-xvfb@6b00cf1889f4e1d5a48635647013c0508128ee1a
+              timeout-minutes: 10
+              with:
+                  run: "yarn test ${{ runner.os != 'Linux' && '--ignore-snapshots' || '' }}"
+              env:
+                  ELEMENT_DESKTOP_EXECUTABLE: ${{ inputs.executable }}
+
+            - name: Upload HTML report
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: ${{ inputs.artifact }}-test
+                  path: playwright/html-report
+                  retention-days: 14
