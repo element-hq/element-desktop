@@ -32,7 +32,7 @@ import { getProfileFromDeeplink, protocolInit } from "./protocol.js";
 import { _t, AppLocalization } from "./language-helper.js";
 import { setDisplayMediaCallback } from "./displayMediaCallback.js";
 import { setupMacosTitleBar } from "./macos-titlebar.js";
-import { loadJsonFile } from "./utils.js";
+import { type Json, loadJsonFile } from "./utils.js";
 import { setupMediaAuth } from "./media-auth.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -63,6 +63,7 @@ if (argv["help"]) {
 }
 
 const LocalConfigLocation = process.env.ELEMENT_DESKTOP_CONFIG_JSON ?? argv["config"];
+const LocalConfigFilename = "config.json";
 
 // Electron creates the user data directory (with just an empty 'Dictionaries' directory...)
 // as soon as the app path is set, so pick a random path in it that must exist if it's a
@@ -141,6 +142,17 @@ function getAsarPath(): Promise<string> {
     return asarPathPromise;
 }
 
+function loadLocalConfigFile(): Json {
+    if (LocalConfigLocation) {
+        console.log("Loading local config: " + LocalConfigLocation);
+        return loadJsonFile(LocalConfigLocation);
+    } else {
+        const configDir = app.getPath("userData");
+        console.log(`Loading local config: ${path.join(configDir, LocalConfigFilename)}`);
+        return loadJsonFile(configDir, LocalConfigFilename);
+    }
+}
+
 // Loads the config from asar, and applies a config.json from userData atop if one exists
 // Writes config to `global.vectorConfig`. Does nothing if `global.vectorConfig` is already set.
 async function loadConfig(): Promise<void> {
@@ -149,7 +161,8 @@ async function loadConfig(): Promise<void> {
     const asarPath = await getAsarPath();
 
     try {
-        global.vectorConfig = loadJsonFile(asarPath, "config.json");
+        console.log(`Loading app config: ${path.join(asarPath, LocalConfigFilename)}`);
+        global.vectorConfig = loadJsonFile(asarPath, LocalConfigFilename);
     } catch {
         // it would be nice to check the error code here and bail if the config
         // is unparsable, but we get MODULE_NOT_FOUND in the case of a missing
@@ -160,9 +173,7 @@ async function loadConfig(): Promise<void> {
 
     try {
         // Load local config and use it to override values from the one baked with the build
-        const localConfig = LocalConfigLocation
-            ? loadJsonFile(LocalConfigLocation)
-            : loadJsonFile(app.getPath("userData"), "config.json");
+        const localConfig = loadLocalConfigFile();
 
         // If the local config has a homeserver defined, don't use the homeserver from the build
         // config. This is to avoid a problem where Riot thinks there are multiple homeservers
