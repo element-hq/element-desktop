@@ -37,7 +37,7 @@ export function loadJsonFile<T extends Json>(...paths: string[]): T {
     const joinedPaths = path.join(...paths);
 
     if (!fs.existsSync(joinedPaths)) {
-        console.debug(`Skipping nonexisting file: ${joinedPaths}`);
+        console.log(`Skipping nonexisting file: ${joinedPaths}`);
         return {} as T;
     }
 
