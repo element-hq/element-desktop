@@ -24,7 +24,7 @@ import "./ipc.js";
 import "./seshat.js";
 import "./settings.js";
 import * as tray from "./tray.js";
-import { Store } from "./store.js";
+import store from "./store.js";
 import { buildMenuTemplate } from "./vectormenu.js";
 import webContentsHandler from "./webcontents-handler.js";
 import * as updater from "./updater.js";
@@ -262,8 +262,6 @@ async function moveAutoLauncher(): Promise<void> {
     }
 }
 
-global.store = new Store();
-
 global.appQuitting = false;
 
 const exitShortcuts: Array<(input: Input, platform: string) => boolean> = [
@@ -274,7 +272,7 @@ const exitShortcuts: Array<(input: Input, platform: string) => boolean> = [
 ];
 
 const warnBeforeExit = (event: Event, input: Input): void => {
-    const shouldWarnBeforeExit = global.store.get("warnBeforeExit", true);
+    const shouldWarnBeforeExit = store.get("warnBeforeExit", true);
     const exitShortcutPressed =
         input.type === "keyDown" && exitShortcuts.some((shortcutFn) => shortcutFn(input, process.platform));
 
@@ -356,7 +354,7 @@ app.enableSandbox();
 app.commandLine.appendSwitch("disable-features", "HardwareMediaKeyHandling,MediaSessionService");
 
 // Disable hardware acceleration if the setting has been set.
-if (global.store.get("disableHardwareAcceleration") === true) {
+if (store.get("disableHardwareAcceleration") === true) {
     console.log("Disabling hardware acceleration.");
     app.disableHardwareAcceleration();
 }
@@ -467,7 +465,7 @@ app.on("ready", async () => {
 
         icon: global.trayConfig.icon_path,
         show: false,
-        autoHideMenuBar: global.store.get("autoHideMenuBar"),
+        autoHideMenuBar: store.get("autoHideMenuBar"),
 
         x: mainWindowState.x,
         y: mainWindowState.y,
@@ -489,10 +487,10 @@ app.on("ready", async () => {
 
     // Handle spellchecker
     // For some reason spellCheckerEnabled isn't persisted, so we have to use the store here
-    global.mainWindow.webContents.session.setSpellCheckerEnabled(global.store.get("spellCheckerEnabled", true));
+    global.mainWindow.webContents.session.setSpellCheckerEnabled(store.get("spellCheckerEnabled", true));
 
     // Create trayIcon icon
-    if (global.store.get("minimizeToTray")) tray.create(global.trayConfig);
+    if (store.get("minimizeToTray")) tray.create(global.trayConfig);
 
     global.mainWindow.once("ready-to-show", () => {
         if (!global.mainWindow) return;
@@ -545,7 +543,6 @@ app.on("ready", async () => {
     webContentsHandler(global.mainWindow.webContents);
 
     global.appLocalization = new AppLocalization({
-        store: global.store,
         components: [(): void => tray.initApplicationMenu(), (): void => Menu.setApplicationMenu(buildMenuTemplate())],
     });
 

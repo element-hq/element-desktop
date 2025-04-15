@@ -12,7 +12,7 @@ import { fileURLToPath } from "node:url";
 
 import type EN from "./i18n/strings/en_EN.json";
 import { loadJsonFile } from "./utils.js";
-import { type Store } from "./store.js";
+import store from "./store.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -62,10 +62,9 @@ type Component = () => void;
 export class AppLocalization {
     private static readonly STORE_KEY = "locale";
 
-    private readonly store: Store;
     private readonly localizedComponents?: Set<Component>;
 
-    public constructor({ store, components = [] }: { store: Store; components: Component[] }) {
+    public constructor({ components = [] }: { components: Component[] }) {
         counterpart.registerTranslations(FALLBACK_LOCALE, this.fetchTranslationJson("en_EN"));
         counterpart.setFallbackLocale(FALLBACK_LOCALE);
         counterpart.setSeparator("|");
@@ -74,9 +73,8 @@ export class AppLocalization {
             this.localizedComponents = new Set(components);
         }
 
-        this.store = store;
-        if (this.store.has(AppLocalization.STORE_KEY)) {
-            const locales = this.store.get(AppLocalization.STORE_KEY);
+        if (store.has(AppLocalization.STORE_KEY)) {
+            const locales = store.get(AppLocalization.STORE_KEY);
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             this.setAppLocale(locales!);
         }
@@ -122,7 +120,7 @@ export class AppLocalization {
         });
 
         counterpart.setLocale(loadedLocales[0]);
-        this.store.set(AppLocalization.STORE_KEY, locales);
+        store.set(AppLocalization.STORE_KEY, locales);
 
         this.resetLocalizedUI();
     }

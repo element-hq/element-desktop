@@ -27,10 +27,10 @@ export const Settings: Record<string, Setting> = {
     },
     "Electron.warnBeforeExit": {
         async read(): Promise<any> {
-            return global.store.get("warnBeforeExit");
+            return store.get("warnBeforeExit");
         },
         async write(value: any): Promise<void> {
-            global.store.set("warnBeforeExit", value);
+            store.set("warnBeforeExit", value);
         },
     },
     "Electron.alwaysShowMenuBar": {
@@ -39,7 +39,7 @@ export const Settings: Record<string, Setting> = {
             return !global.mainWindow!.autoHideMenuBar;
         },
         async write(value: any): Promise<void> {
-            global.store.set("autoHideMenuBar", !value);
+            store.set("autoHideMenuBar", !value);
             global.mainWindow!.autoHideMenuBar = !value;
             global.mainWindow!.setMenuBarVisibility(value);
         },
@@ -56,15 +56,15 @@ export const Settings: Record<string, Setting> = {
             } else {
                 tray.destroy();
             }
-            global.store.set("minimizeToTray", value);
+            store.set("minimizeToTray", value);
         },
     },
     "Electron.enableHardwareAcceleration": {
         async read(): Promise<any> {
-            return !global.store.get("disableHardwareAcceleration");
+            return !store.get("disableHardwareAcceleration");
         },
         async write(value: any): Promise<void> {
-            global.store.set("disableHardwareAcceleration", !value);
+            store.set("disableHardwareAcceleration", !value);
         },
     },
 };

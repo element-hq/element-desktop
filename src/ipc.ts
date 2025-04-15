@@ -112,11 +112,11 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
             if (typeof args[0] !== "boolean") return;
 
             global.mainWindow.webContents.session.setSpellCheckerEnabled(args[0]);
-            global.store.set("spellCheckerEnabled", args[0]);
+            store.set("spellCheckerEnabled", args[0]);
             break;
 
         case "getSpellCheckEnabled":
-            ret = global.store.get("spellCheckerEnabled");
+            ret = store.get("spellCheckerEnabled");
             break;
 
         case "setSpellCheckLanguages":
@@ -140,7 +140,7 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
 
         case "getPickleKey":
             try {
-                ret = await global.store.getSecret(`${args[0]}|${args[1]}`);
+                ret = await store.getSecret(`${args[0]}|${args[1]}`);
             } catch {
                 // if an error is thrown (e.g. keytar can't connect to the keychain),
                 // then return null, which means the default pickle key will be used
@@ -151,7 +151,7 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
         case "createPickleKey":
             try {
                 const pickleKey = await randomArray(32);
-                await global.store.setSecret(`${args[0]}|${args[1]}`, pickleKey);
+                await store.setSecret(`${args[0]}|${args[1]}`, pickleKey);
                 ret = pickleKey;
             } catch (e) {
                 console.error("Failed to create pickle key", e);
@@ -161,7 +161,7 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
 
         case "destroyPickleKey":
             try {
-                await global.store.deleteSecret(`${args[0]}|${args[1]}`);
+                await store.deleteSecret(`${args[0]}|${args[1]}`);
             } catch (e) {
                 console.error("Failed to destroy pickle key", e);
             }
@@ -180,7 +180,7 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
             break;
 
         case "clearStorage":
-            global.store.clear();
+            store.clear();
             global.mainWindow.webContents.session.flushStorageData();
             await global.mainWindow.webContents.session.clearStorageData();
             relaunchApp();

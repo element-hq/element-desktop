@@ -41,12 +41,12 @@ let eventIndex: SeshatType | null = null;
 const seshatDefaultPassphrase = "DEFAULT_PASSPHRASE";
 async function getOrCreatePassphrase(key: string): Promise<string> {
     try {
-        const storedPassphrase = await global.store.getSecret(key);
+        const storedPassphrase = await store.getSecret(key);
         if (storedPassphrase !== null) {
             return storedPassphrase;
         } else {
             const newPassphrase = await randomArray(32);
-            await global.store.setSecret(key, newPassphrase);
+            await store.setSecret(key, newPassphrase);
             return newPassphrase;
         }
     } catch (e) {

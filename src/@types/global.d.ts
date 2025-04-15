@@ -9,7 +9,6 @@ import { type BrowserWindow } from "electron";
 
 import type AutoLaunch from "auto-launch";
 import { type AppLocalization } from "../language-helper.js";
-import { type Store } from "../store.js";
 
 // global type extensions need to use var for whatever reason
 /* eslint-disable no-var */
@@ -24,6 +23,5 @@ declare global {
         icon_path: string;
         brand: string;
     };
-    var store: Store;
 }
 /* eslint-enable no-var */

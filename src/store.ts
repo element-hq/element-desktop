@@ -29,7 +29,7 @@ const LEGACY_KEYTAR_SERVICE = "riot.im";
  * Secrets are stored within the `safeStorage` object, encrypted with safeStorage.
  * Any secrets operations are blocked on Electron app ready emit, and keytar migration if still needed.
  */
-export class Store extends ElectronStore<{
+class Store extends ElectronStore<{
     warnBeforeExit: boolean;
     minimizeToTray: boolean;
     spellCheckerEnabled: boolean;
@@ -174,3 +174,14 @@ export class Store extends ElectronStore<{
         await keytar.deletePassword(namespace, key);
     }
 }
+
+declare global {
+    // eslint-disable-next-line no-var
+    var store: Store;
+}
+
+if (!global.store) {
+    global.store = new Store();
+}
+
+export default global.store;
