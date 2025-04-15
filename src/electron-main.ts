@@ -161,7 +161,7 @@ async function loadConfig(): Promise<void> {
     const asarPath = await getAsarPath();
 
     try {
-        console.log(`Loading global config: ${path.join(asarPath, LocalConfigFilename)}`);
+        console.log(`Loading app config: ${path.join(asarPath, LocalConfigFilename)}`);
         global.vectorConfig = loadJsonFile(asarPath, LocalConfigFilename);
     } catch {
         // it would be nice to check the error code here and bail if the config
