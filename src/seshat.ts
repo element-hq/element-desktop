@@ -44,14 +44,19 @@ async function getOrCreatePassphrase(key: string): Promise<string> {
         const storedPassphrase = await store.getSecret(key);
         if (storedPassphrase !== null) {
             return storedPassphrase;
-        } else {
-            const newPassphrase = await randomArray(32);
-            await store.setSecret(key, newPassphrase);
-            return newPassphrase;
         }
     } catch (e) {
-        console.log("Error getting the event index passphrase out of the secret store", e);
+        console.error("Error getting the event index passphrase out of the secret store", e);
     }
+
+    try {
+        const newPassphrase = await randomArray(32);
+        await store.setSecret(key, newPassphrase);
+        return newPassphrase;
+    } catch (e) {
+        console.error("Error creating new event index passphrase, using default", e);
+    }
+
     return seshatDefaultPassphrase;
 }
 
