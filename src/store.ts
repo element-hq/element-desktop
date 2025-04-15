@@ -74,9 +74,9 @@ class Store extends ElectronStore<{
     }
 
     private whenSafeStorageReadyPromise?: Promise<void>;
-    private safeStorageReady(): Promise<void> {
+    public safeStorageReady(): Promise<void> {
         if (!this.whenSafeStorageReadyPromise) {
-            this.whenSafeStorageReadyPromise = app.whenReady().then(() => this.migrate());
+            this.whenSafeStorageReadyPromise = app.whenReady().then(() => this.migrateSecrets());
         }
         return this.whenSafeStorageReadyPromise;
     }
@@ -88,7 +88,7 @@ class Store extends ElectronStore<{
      * deletes data from legacy keytar but keeps it in the new keytar for downgrade compatibility.
      * @throws if safeStorage is not available.
      */
-    public async migrate(): Promise<void> {
+    private async migrateSecrets(): Promise<void> {
         if (this.has("safeStorage")) return;
         console.info("Store migration: started");
         if (!safeStorage.isEncryptionAvailable()) {

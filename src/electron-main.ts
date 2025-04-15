@@ -449,6 +449,8 @@ app.on("ready", async () => {
         console.log("No update_base_url is defined: auto update is disabled");
     }
 
+    await store.safeStorageReady();
+
     // Load the previous window state with fallback to defaults
     const mainWindowState = windowStateKeeper({
         defaultWidth: 1024,
