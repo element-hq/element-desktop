@@ -43,7 +43,7 @@ jobs:
         name: macOS
         uses: ./.github/workflows/build_macos.yaml
 
-    complete:
+    tests-done:
         needs: [windows, linux, macos]
         runs-on: ubuntu-22.04
         steps:

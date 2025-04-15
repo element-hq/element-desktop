@@ -42,22 +42,32 @@ jobs:
               run: ${{ inputs.prepare_cmd }}
               if: inputs.prepare_cmd
 
+            - name: Expand executable path
+              id: executable
+              shell: bash
+              env:
+                  EXECUTABLE: ${{ inputs.executable }}
+              run: |
+                  FILES=($EXECUTABLE)
+                  echo "path=${FILES[0]}" >> $GITHUB_OUTPUT
+
             # We previously disabled the `EnableNodeCliInspectArguments` fuse, but Playwright requires
             # it to be enabled to test Electron apps, so turn it back on.
             - name: Set EnableNodeCliInspectArguments fuse enabled
-              run: $RUN_AS npx @electron/fuses write --app ${{ inputs.executable }} EnableNodeCliInspectArguments=on
+              run: $RUN_AS npx @electron/fuses write --app "$EXECUTABLE" EnableNodeCliInspectArguments=on
               shell: bash
               env:
                   # We need sudo on Linux as it is installed in /opt/
                   RUN_AS: ${{ runner.os == 'Linux' && 'sudo' || '' }}
+                  EXECUTABLE: ${{ steps.executable.outputs.path }}
 
             - name: Run tests
               uses: coactions/setup-xvfb@6b00cf1889f4e1d5a48635647013c0508128ee1a
-              timeout-minutes: 10
+              timeout-minutes: 5
               with:
                   run: "yarn test ${{ runner.os != 'Linux' && '--ignore-snapshots' || '' }}"
               env:
-                  ELEMENT_DESKTOP_EXECUTABLE: ${{ inputs.executable }}
+                  ELEMENT_DESKTOP_EXECUTABLE: ${{ steps.executable.outputs.path }}
 
             - name: Upload HTML report
               if: always()

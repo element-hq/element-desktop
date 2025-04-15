@@ -152,10 +152,10 @@ jobs:
         with:
             artifact: macos
             runs-on: macos-14
-            executable: /Users/runner/Applications/Element.app/Contents/MacOS/Element
+            executable: /Users/runner/Applications/Element*.app/Contents/MacOS/Element*
             # We need to mount the DMG and copy the app to the Applications folder as a mounted DMG is
             # read-only and thus would not allow us to override the fuses as is required for Playwright.
             prepare_cmd: |
                 hdiutil attach ./dist/*.dmg -mountpoint /Volumes/Element &&
-                rsync -a /Volumes/Element/Element.app ~/Applications/ &&
+                rsync -a /Volumes/Element/Element*.app ~/Applications/ &&
                 hdiutil detach /Volumes/Element
