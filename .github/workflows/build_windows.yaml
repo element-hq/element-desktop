@@ -225,4 +225,4 @@ jobs:
         with:
             artifact: win-${{ inputs.arch }}
             runs-on: windows-2022
-            executable: ${{ inputs.arch == 'ia32' && './dist/win-ia32-unpacked/Element.exe' || './dist/win-unpacked/Element.exe' }}
+            executable: ./dist/win*-unpacked/Element*.exe

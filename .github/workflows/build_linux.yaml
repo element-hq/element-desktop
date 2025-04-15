@@ -190,7 +190,7 @@ jobs:
         with:
             artifact: linux-${{ inputs.arch }}-sqlcipher-${{ inputs.sqlcipher }}
             runs-on: ${{ inputs.arch == 'arm64' && 'ubuntu-22.04-arm' || 'ubuntu-22.04' }}
-            executable: /opt/Element/element-desktop
+            executable: /opt/Element/element-desktop*
             prepare_cmd: |
                 sudo apt-get -qq update
                 sudo apt install ./dist/*.deb
