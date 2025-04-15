@@ -92,7 +92,10 @@ class Store extends ElectronStore<{
         if (this.has("safeStorage")) return;
         console.info("Store migration: started");
         if (!safeStorage.isEncryptionAvailable()) {
-            console.error("Store migration: safeStorage is not available");
+            console.error(
+                "Store migration: safeStorage is not available with backend",
+                safeStorage.getSelectedStorageBackend(),
+            );
             throw new Error("safeStorage is not available");
         }
 

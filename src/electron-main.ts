@@ -371,6 +371,8 @@ if (store.get("disableHardwareAcceleration") === true) {
 }
 
 app.on("ready", async () => {
+    console.debug("Reached Electron ready state");
+
     let asarPath: string;
 
     try {
@@ -460,6 +462,7 @@ app.on("ready", async () => {
         console.log("No update_base_url is defined: auto update is disabled");
     }
 
+    console.debug("Ensuring storage is ready");
     await store.safeStorageReady();
 
     // Load the previous window state with fallback to defaults
@@ -468,6 +471,7 @@ app.on("ready", async () => {
         defaultHeight: 768,
     });
 
+    console.debug("Opening main window");
     const preloadScript = path.normalize(`${__dirname}/preload.cjs`);
     global.mainWindow = new BrowserWindow({
         // https://www.electronjs.org/docs/faq#the-font-looks-blurry-what-is-this-and-what-can-i-do
