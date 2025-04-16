@@ -17,6 +17,7 @@ limitations under the License.
 import ElectronStore from "electron-store";
 import keytar from "keytar-forked";
 import { app, safeStorage, dialog, type SafeStorage } from "electron";
+import { clearAllUserData, clearSensitiveDirectories, relaunchApp } from "@standardnotes/electron-clear-data";
 
 import { _t } from "./language-helper.js";
 
@@ -26,19 +27,28 @@ import { _t } from "./language-helper.js";
 const KEYTAR_SERVICE = "element.io";
 const LEGACY_KEYTAR_SERVICE = "riot.im";
 
-type SafeStorageBackend = ReturnType<SafeStorage["getSelectedStorageBackend"]>;
+type SafeStorageBackend = ReturnType<SafeStorage["getSelectedStorageBackend"]> | "system";
 
 /**
  * Map of safeStorage backends to their command line arguments.
  * kwallet6 cannot be specified via command line
  * https://www.electronjs.org/docs/latest/api/safe-storage#safestoragegetselectedstoragebackend-linux
  */
-const safeStorageBackendMap: Omit<Record<SafeStorageBackend, string>, "unknown" | "kwallet6"> = {
+const safeStorageBackendMap: Omit<Record<SafeStorageBackend, string>, "unknown" | "kwallet6" | "system"> = {
     basic_text: "basic",
     gnome_libsecret: "gnome-libsecret",
     kwallet: "kwallet",
     kwallet5: "kwallet5",
 };
+
+async function clearDataAndRelaunch(): Promise<void> {
+    global.store?.clear();
+    global.mainWindow?.webContents.session.flushStorageData();
+    await global.mainWindow?.webContents.session.clearStorageData();
+    clearAllUserData();
+    clearSensitiveDirectories();
+    relaunchApp();
+}
 
 /**
  * JSON-backed store for settings which need to be accessible by the main process.
@@ -115,7 +125,19 @@ class Store extends ElectronStore<{
                 } else {
                     // This case should never happen, but could due to a downgrade or a modified store.
                     dialog.showErrorBox(_t("store|error|title"), _t("store|error|unsupported_backend_override"));
-                    throw new Error("safeStorage backend override is not supported");
+                    const response = dialog.showMessageBoxSync({
+                        title: _t("store|error|title"),
+                        message: _t("store|error|unsupported_backend_override"),
+                        detail: _t("store|error|unsupported_backend_override_details"),
+                        type: "question",
+                        buttons: [_t("common|no"), _t("store|error|clear_data_cta")],
+                        defaultId: 0,
+                        cancelId: 0,
+                    });
+                    if (response === 0) {
+                        throw new Error("safeStorage backend override is not supported");
+                    }
+                    void clearDataAndRelaunch();
                 }
             }
         }
@@ -129,7 +151,7 @@ class Store extends ElectronStore<{
         await this.safeStorageReadyPromise;
     }
 
-    private getSecretStorageKey = (key: string) => `safeStorage.${key}` as const;
+    private getSecretStorageKey = (key: string) => `safeStorage.${key.replaceAll(".", "-")}` as const;
 
     private async prepareSafeStorage(): Promise<void> {
         await app.whenReady();
@@ -142,7 +164,12 @@ class Store extends ElectronStore<{
 
             if (selectedSafeStorageBackend === "unknown") {
                 // This should never happen but good to be safe
-                dialog.showErrorBox(_t("store|error|title"), _t("store|error|unknown_backend_override"));
+                await dialog.showMessageBox({
+                    title: _t("store|error|title"),
+                    message: _t("store|error|unknown_backend_override"),
+                    detail: _t("store|error|unknown_backend_override_details"),
+                    type: "error",
+                });
                 throw new Error("safeStorage backend unknown");
             }
 
@@ -166,7 +193,7 @@ class Store extends ElectronStore<{
                 }
 
                 // Store the backend used for the safeStorage data so we can detect if it changes
-                this.set("safeStorageBackend", selectedSafeStorageBackend);
+                this.recordSafeStorageBackend(selectedSafeStorageBackend);
                 safeStorageBackend = selectedSafeStorageBackend;
             } else if (safeStorageBackend !== selectedSafeStorageBackend) {
                 console.warn(`safeStorage backend changed from ${safeStorageBackend} to ${selectedSafeStorageBackend}`);
@@ -219,16 +246,23 @@ class Store extends ElectronStore<{
         await this.migrateSecrets();
     }
 
+    private recordSafeStorageBackend(backend: SafeStorageBackend): void {
+        this.set("safeStorageBackend", backend);
+    }
+
+    private get isPlaintext(): boolean {
+        return this.get("safeStorageBackend") === "basic_text";
+    }
+
     /**
      * Migrates keytar data to safeStorage,
      * deletes data from legacy keytar but keeps it in the new keytar for downgrade compatibility.
-     * @throws if safeStorage is not available. TODO
      */
     private async migrateSecrets(): Promise<void> {
         if (this.has("safeStorage")) return; // already migrated
         console.info("Store migration: started");
 
-        if (process.platform === "linux" && safeStorage.getSelectedStorageBackend() === "basic_text") {
+        if (process.platform === "linux" && this.isPlaintext) {
             console.warn("Store migration: safeStorage is using basic text encryption");
         }
 

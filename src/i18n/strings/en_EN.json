@@ -64,9 +64,12 @@
     },
     "store": {
         "error": {
-            "title": "Failed to load configuration",
-            "unsupported_backend_override": "TODO",
-            "unknown_backend_override": "TODO"
+            "title": "Failed to load database",
+            "unsupported_backend_override": "The encrypted database is corrupted, unable to access your system keyring.",
+            "unsupported_backend_override_details": "Please check the logs for more details.",
+            "unknown_backend_override": "Your system has an unsupported keyring meaning the database cannot be opened.",
+            "unknown_backend_override_details": "Please check the logs for more details.",
+            "clear_data_cta": "Clear data"
         }
     }
 }
