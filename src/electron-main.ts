@@ -464,8 +464,18 @@ app.on("ready", async () => {
         console.log("No update_base_url is defined: auto update is disabled");
     }
 
-    console.debug("Ensuring storage is ready");
-    await store.safeStorageReady();
+    // Set up i18n before loading storage as we need translations for dialogs
+    global.appLocalization = new AppLocalization({
+        components: [(): void => tray.initApplicationMenu(), (): void => Menu.setApplicationMenu(buildMenuTemplate())],
+    });
+
+    try {
+        console.debug("Ensuring storage is ready");
+        await store.safeStorageReady();
+    } catch (e) {
+        console.error(e);
+        app.exit(1);
+    }
 
     // Load the previous window state with fallback to defaults
     const mainWindowState = windowStateKeeper({
@@ -560,10 +570,6 @@ app.on("ready", async () => {
     }
 
     webContentsHandler(global.mainWindow.webContents);
-
-    global.appLocalization = new AppLocalization({
-        components: [(): void => tray.initApplicationMenu(), (): void => Menu.setApplicationMenu(buildMenuTemplate())],
-    });
 
     session.defaultSession.setDisplayMediaRequestHandler((_, callback) => {
         global.mainWindow?.webContents.send("openDesktopCapturerSourcePicker");

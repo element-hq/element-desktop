@@ -177,7 +177,7 @@ class Store extends ElectronStore<{
                     if (data) {
                         for (const key in data) {
                             const plaintext = data[key];
-                            await this.setSecret(key, plaintext);
+                            await this.setSecretSafeStorage(key, plaintext);
                         }
                     }
                 } else if (safeStorageBackend in safeStorageBackendMap) {
@@ -239,7 +239,7 @@ class Store extends ElectronStore<{
             ];
             for (const cred of credentials) {
                 console.info("Store migration: writing", cred);
-                await this.setSecret(cred.account, cred.password);
+                await this.setSecretSafeStorage(cred.account, cred.password);
                 console.info("Store migration: deleting", cred);
                 await this.deleteSecretKeytar(LEGACY_KEYTAR_SERVICE, cred.account);
             }
@@ -290,9 +290,13 @@ class Store extends ElectronStore<{
             throw new Error("safeStorage is not available");
         }
 
+        await this.setSecretSafeStorage(key, secret);
+        await keytar.setPassword(KEYTAR_SERVICE, key, secret);
+    }
+
+    private async setSecretSafeStorage(key: string, secret: string): Promise<void> {
         const encryptedValue = safeStorage.encryptString(secret);
         this.set(this.getSecretStorageKey(key), encryptedValue.toString("base64"));
-        await keytar.setPassword(KEYTAR_SERVICE, key, secret);
     }
 
     /**
