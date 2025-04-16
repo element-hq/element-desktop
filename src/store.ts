@@ -73,12 +73,12 @@ class Store extends ElectronStore<{
         });
     }
 
-    private whenSafeStorageReadyPromise?: Promise<void>;
-    public safeStorageReady(): Promise<void> {
+    private whenSafeStorageReadyPromise?: Promise<unknown>;
+    public async safeStorageReady(): Promise<void> {
         if (!this.whenSafeStorageReadyPromise) {
-            this.whenSafeStorageReadyPromise = app.whenReady().then(() => this.migrateSecrets());
+            this.whenSafeStorageReadyPromise = Promise.allSettled([app.whenReady().then(() => this.migrateSecrets())]);
         }
-        return this.whenSafeStorageReadyPromise;
+        await this.whenSafeStorageReadyPromise;
     }
 
     private getSecretStorageKey = (key: string) => `safeStorage.${key}` as const;
@@ -91,7 +91,10 @@ class Store extends ElectronStore<{
     private async migrateSecrets(): Promise<void> {
         if (this.has("safeStorage")) return;
         console.info("Store migration: started");
-        if (!safeStorage.isEncryptionAvailable()) {
+        if (
+            !safeStorage.isEncryptionAvailable() &&
+            !(process.platform === "linux" && safeStorage.getSelectedStorageBackend() === "basic_text")
+        ) {
             console.error(
                 "Store migration: safeStorage is not available with backend",
                 safeStorage.getSelectedStorageBackend(),
