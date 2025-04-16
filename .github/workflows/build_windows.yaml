@@ -33,10 +33,10 @@ on:
 permissions: {} # No permissions required
 jobs:
     build:
-        runs-on: windows-2022
+        runs-on: windows-2025
         environment: ${{ inputs.sign && 'packages.element.io' || '' }}
         env:
-            SIGNTOOL_PATH: "C:/Program Files (x86)/Windows Kits/10/bin/10.0.22000.0/x86/signtool.exe"
+            SIGNTOOL_PATH: "C:/Program Files (x86)/Windows Kits/10/bin/10.0.26100.0/x86/signtool.exe"
         steps:
             - uses: nbucic/variable-mapper@0673f6891a0619ba7c002ecfed0f9f4f39017b6f
               id: config
@@ -220,9 +220,7 @@ jobs:
     test:
         needs: build
         uses: ./.github/workflows/build_test.yaml
-        # We have no Windows ARM64 runners at this time
-        if: inputs.arch != 'arm64'
         with:
             artifact: win-${{ inputs.arch }}
-            runs-on: windows-2022
+            runs-on: ${{ inputs.arch == 'arm64' && 'windows-11-arm' || 'windows-2022' }}
             executable: ./dist/win*-unpacked/Element*.exe

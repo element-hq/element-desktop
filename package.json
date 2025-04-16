@@ -80,14 +80,14 @@
         "@types/auto-launch": "^5.0.1",
         "@types/counterpart": "^0.18.1",
         "@types/minimist": "^1.2.1",
-        "@types/node": "18.19.84",
+        "@types/node": "18.19.86",
         "@types/pacote": "^11.1.1",
         "@typescript-eslint/eslint-plugin": "^8.0.0",
         "@typescript-eslint/parser": "^8.0.0",
         "app-builder-lib": "26.0.12",
         "chokidar": "^4.0.0",
         "detect-libc": "^2.0.0",
-        "electron": "35.1.4",
+        "electron": "35.1.5",
         "electron-builder": "26.0.12",
         "electron-builder-squirrel-windows": "26.0.12",
         "electron-devtools-installer": "^4.0.0",
@@ -110,13 +110,13 @@
         "rimraf": "^6.0.0",
         "tar": "^7.0.0",
         "tsx": "^4.19.2",
-        "typescript": "5.8.2"
+        "typescript": "5.8.3"
     },
     "hakDependencies": {
         "matrix-seshat": "^4.0.1"
     },
     "resolutions": {
-        "@types/node": "18.19.84",
+        "@types/node": "18.19.86",
         "config-file-ts": "0.2.8-rc1"
     }
 }
