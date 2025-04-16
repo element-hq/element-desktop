@@ -27,14 +27,19 @@ import { _t } from "./language-helper.js";
 const KEYTAR_SERVICE = "element.io";
 const LEGACY_KEYTAR_SERVICE = "riot.im";
 
-type SafeStorageBackend = ReturnType<SafeStorage["getSelectedStorageBackend"]> | "system";
+// system is the encrypted backend on Windows & macOS
+// plaintext is the temporarily-unencrypted backend for migration
+type SafeStorageBackend = ReturnType<SafeStorage["getSelectedStorageBackend"]> | "system" | "plaintext";
 
 /**
  * Map of safeStorage backends to their command line arguments.
  * kwallet6 cannot be specified via command line
  * https://www.electronjs.org/docs/latest/api/safe-storage#safestoragegetselectedstoragebackend-linux
  */
-const safeStorageBackendMap: Omit<Record<SafeStorageBackend, string>, "unknown" | "kwallet6" | "system"> = {
+const safeStorageBackendMap: Omit<
+    Record<SafeStorageBackend, string>,
+    "unknown" | "kwallet6" | "system" | "plaintext"
+> = {
     basic_text: "basic",
     gnome_libsecret: "gnome-libsecret",
     kwallet: "kwallet",
@@ -63,10 +68,12 @@ class Store extends ElectronStore<{
     locale?: string | string[];
     disableHardwareAcceleration: boolean;
     safeStorage?: Record<string, string>;
-    // Only known for Linux - the safeStorage backend used for the safeStorage data as written
+    // the safeStorage backend used for the safeStorage data as written
     safeStorageBackend?: SafeStorageBackend;
-    // Only valid for Linux - whether to override the safeStorage backend via commandLine
+    // whether to explicitly override the safeStorage backend, used for migration
     safeStorageBackendOverride?: boolean;
+    // whether to perform a migration of the safeStorage data
+    safeStorageBackendMigrate?: boolean;
 }> {
     public constructor() {
         super({
@@ -105,6 +112,9 @@ class Store extends ElectronStore<{
                 safeStorageBackendOverride: {
                     type: "boolean",
                 },
+                safeStorageBackendMigrate: {
+                    type: "boolean",
+                },
             },
         });
     }
@@ -115,30 +125,12 @@ class Store extends ElectronStore<{
      */
     public prepare(): void {
         if (process.platform === "linux") {
-            if (this.get("safeStorageBackendOverride")) {
-                const backend = this.get("safeStorageBackend")!;
-                if (backend in safeStorageBackendMap) {
-                    app.commandLine.appendSwitch(
-                        "password-store",
-                        safeStorageBackendMap[backend as keyof typeof safeStorageBackendMap],
-                    );
-                } else {
-                    // This case should never happen, but could due to a downgrade or a modified store.
-                    dialog.showErrorBox(_t("store|error|title"), _t("store|error|unsupported_backend_override"));
-                    const response = dialog.showMessageBoxSync({
-                        title: _t("store|error|title"),
-                        message: _t("store|error|unsupported_backend_override"),
-                        detail: _t("store|error|unsupported_backend_override_details"),
-                        type: "question",
-                        buttons: [_t("common|no"), _t("store|error|clear_data_cta")],
-                        defaultId: 0,
-                        cancelId: 0,
-                    });
-                    if (response === 0) {
-                        throw new Error("safeStorage backend override is not supported");
-                    }
-                    void clearDataAndRelaunch();
-                }
+            const backend = this.get("safeStorageBackend")!;
+            if (backend in safeStorageBackendMap) {
+                app.commandLine.appendSwitch(
+                    "password-store",
+                    safeStorageBackendMap[backend as keyof typeof safeStorageBackendMap],
+                );
             }
         }
     }
@@ -153,6 +145,9 @@ class Store extends ElectronStore<{
 
     private getSecretStorageKey = (key: string) => `safeStorage.${key.replaceAll(".", "-")}` as const;
 
+    /**
+     * Prepare the safeStorage backend for use.
+     */
     private async prepareSafeStorage(): Promise<void> {
         await app.whenReady();
 
@@ -171,6 +166,10 @@ class Store extends ElectronStore<{
                     type: "error",
                 });
                 throw new Error("safeStorage backend unknown");
+            }
+
+            if (this.get("safeStorageBackendMigrate")) {
+                return this.migratePhase2();
             }
 
             if (!safeStorageBackend) {
@@ -198,32 +197,14 @@ class Store extends ElectronStore<{
             } else if (safeStorageBackend !== selectedSafeStorageBackend) {
                 console.warn(`safeStorage backend changed from ${safeStorageBackend} to ${selectedSafeStorageBackend}`);
 
-                if (safeStorageBackend === "basic_text") {
-                    console.info(`Migrating safeStorage from basic_text to ${selectedSafeStorageBackend}`);
-                    const data = this.get("safeStorage");
-                    if (data) {
-                        for (const key in data) {
-                            const plaintext = data[key];
-                            await this.setSecretSafeStorage(key, plaintext);
-                        }
-                    }
+                if (safeStorageBackend === "plaintext") {
+                    this.migratePhase3();
+                } else if (safeStorageBackend === "basic_text") {
+                    return this.migratePhase1();
                 } else if (safeStorageBackend in safeStorageBackendMap) {
-                    // Warn the user that the backend has changed and ask if they wish to use the old one
-                    const { response } = await dialog.showMessageBox({
-                        // TODO
-                        title: "Error 2",
-                        message: "Message",
-                        // detail: _t(""),
-                        type: "question",
-                        buttons: [_t("common|no"), _t("common|yes")],
-                        defaultId: 0,
-                        cancelId: 0,
-                    });
-                    if (response === 0) {
-                        throw new Error("safeStorage backend changed and user rejected mitigation");
-                    }
                     this.set("safeStorageBackendOverride", true);
-                    app.relaunch();
+                    relaunchApp();
+                    return;
                 } else {
                     // Warn the user that the backend has changed and tell them that we cannot migrate
                     // dialog.showErrorBox(_t(""), _t("")); TODO
@@ -240,7 +221,7 @@ class Store extends ElectronStore<{
         if (!safeStorage.isEncryptionAvailable()) {
             console.error("Store migration: safeStorage is not available");
             throw new Error(`safeStorage is not available`);
-            // TODO fatal error
+            // TODO fatal error?
         }
 
         await this.migrateSecrets();
@@ -285,6 +266,38 @@ class Store extends ElectronStore<{
     }
 
     /**
+     * Linux support for upgrading the backend from basic_text to one of the encrypted backends,
+     * this is quite a tricky process as the backend is not known until the app is ready & cannot be changed once it is.
+     * First we restart the app in basic_text backend mode, and decrypt the data, then restart back in default backend mode and re-encrypt the data.
+     */
+    private migratePhase1(): void {
+        console.info(`Starting safeStorage migration to ${safeStorage.getSelectedStorageBackend()}`);
+        this.set("safeStorageBackendMigrate", true);
+        relaunchApp();
+    }
+    private migratePhase2(): void {
+        console.info("Performing safeStorage migration");
+        const data = this.get("safeStorage");
+        if (data) {
+            for (const key in data) {
+                this.set(this.getSecretStorageKey(key), this.getSecret(key));
+            }
+            this.set("safeStorageBackend", "plaintext");
+        }
+        this.set("safeStorageBackendMigrate", false);
+        relaunchApp();
+    }
+    private migratePhase3(): void {
+        console.info(`Finishing safeStorage migration to ${safeStorage.getSelectedStorageBackend()}`);
+        const data = this.get("safeStorage");
+        if (data) {
+            for (const key in data) {
+                this.setSecretSafeStorage(key, data[key]);
+            }
+        }
+    }
+
+    /**
      * Get the stored secret for the key.
      * We read from safeStorage if available, falling back to keytar & keytar legacy.
      *
@@ -324,11 +337,11 @@ class Store extends ElectronStore<{
             throw new Error("safeStorage is not available");
         }
 
-        await this.setSecretSafeStorage(key, secret);
+        this.setSecretSafeStorage(key, secret);
         await keytar.setPassword(KEYTAR_SERVICE, key, secret);
     }
 
-    private async setSecretSafeStorage(key: string, secret: string): Promise<void> {
+    private setSecretSafeStorage(key: string, secret: string): void {
         const encryptedValue = safeStorage.encryptString(secret);
         this.set(this.getSecretStorageKey(key), encryptedValue.toString("base64"));
     }
@@ -344,9 +357,7 @@ class Store extends ElectronStore<{
 
         await this.deleteSecretKeytar(LEGACY_KEYTAR_SERVICE, key);
         await this.deleteSecretKeytar(KEYTAR_SERVICE, key);
-        if (safeStorage.isEncryptionAvailable()) {
-            this.delete(this.getSecretStorageKey(key));
-        }
+        this.delete(this.getSecretStorageKey(key));
     }
 
     private async deleteSecretKeytar(namespace: string, key: string): Promise<void> {
