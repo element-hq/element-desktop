@@ -17,7 +17,7 @@ limitations under the License.
 import ElectronStore from "electron-store";
 import keytar from "keytar-forked";
 import { app, safeStorage, dialog, type SafeStorage } from "electron";
-import { clearAllUserData, clearSensitiveDirectories, relaunchApp } from "@standardnotes/electron-clear-data";
+import { clearAllUserData, relaunchApp } from "@standardnotes/electron-clear-data";
 
 import { _t } from "./language-helper.js";
 
@@ -46,12 +46,9 @@ const safeStorageBackendMap: Omit<
     kwallet5: "kwallet5",
 };
 
-async function clearDataAndRelaunch(): Promise<void> {
+export async function clearDataAndRelaunch(): Promise<void> {
     global.store?.clear();
-    global.mainWindow?.webContents.session.flushStorageData();
-    await global.mainWindow?.webContents.session.clearStorageData();
     clearAllUserData();
-    clearSensitiveDirectories();
     relaunchApp();
 }
 
@@ -72,30 +69,30 @@ interface StoreData {
 }
 
 class PlaintextStorageWriter {
-    public constructor(private readonly store: ElectronStore<StoreData>) {}
+    public constructor(protected readonly store: ElectronStore<StoreData>) {}
 
-    protected getSecretStorageKey = (key: string) => `safeStorage.${key.replaceAll(".", "-")}` as const;
+    protected getKey = (key: string) => `safeStorage.${key.replaceAll(".", "-")}` as const;
 
     public set(key: string, secret: string): void {
-        this.store.set(this.getSecretStorageKey(key), secret);
+        this.store.set(this.getKey(key), secret);
     }
 
     public get(key: string): string | null {
-        return this.store.get(this.getSecretStorageKey(key));
+        return this.store.get(this.getKey(key));
     }
 
     public delete(key: string): void {
-        this.store.delete(this.getSecretStorageKey(key));
+        this.store.delete(this.getKey(key));
     }
 }
 
 class SafeStorageWriter extends PlaintextStorageWriter {
     public set(key: string, secret: string): void {
-        this.set(this.getSecretStorageKey(key), safeStorage.encryptString(secret).toString("base64"));
+        this.store.set(this.getKey(key), safeStorage.encryptString(secret).toString("base64"));
     }
 
     public get(key: string): string | null {
-        const ciphertext = this.get(this.getSecretStorageKey(key));
+        const ciphertext = this.store.get(this.getKey(key));
         if (typeof ciphertext === "string") {
             return safeStorage.decryptString(Buffer.from(ciphertext, "base64"));
         }
@@ -172,6 +169,8 @@ class Store extends ElectronStore<StoreData> {
         if (process.platform === "linux") {
             const backend = this.get("safeStorageBackend")!;
             if (backend in safeStorageBackendMap) {
+                // If the safeStorage backend which was used to write the data is one we can specify via the commandLine
+                // then do so to ensure we use the same backend for reading the data.
                 app.commandLine.appendSwitch(
                     "password-store",
                     safeStorageBackendMap[backend as keyof typeof safeStorageBackendMap],
@@ -241,10 +240,10 @@ class Store extends ElectronStore<StoreData> {
             } else if (safeStorageBackend !== selectedSafeStorageBackend) {
                 console.warn(`safeStorage backend changed from ${safeStorageBackend} to ${selectedSafeStorageBackend}`);
 
-                if (safeStorageBackend === "plaintext") {
-                    this.upgradeLinuxBackend3();
-                } else if (safeStorageBackend === "basic_text") {
+                if (safeStorageBackend === "basic_text") {
                     return this.upgradeLinuxBackend1();
+                } else if (safeStorageBackend === "plaintext") {
+                    this.upgradeLinuxBackend3();
                 } else if (safeStorageBackend in safeStorageBackendMap) {
                     this.set("safeStorageBackendOverride", true);
                     relaunchApp();
@@ -268,6 +267,8 @@ class Store extends ElectronStore<StoreData> {
                 }
             }
 
+            // We do not check allowPlaintextStorage here as it was already checked above if the storage is new
+            // and if the storage is existing then we should continue to honour the backend used to write the data
             if (safeStorageBackend === "basic_text" && selectedSafeStorageBackend === safeStorageBackend) {
                 // TODO verify if this even works, the docstring makes it sound ephemeral!
                 safeStorage.setUsePlainTextEncryption(true);
@@ -332,19 +333,21 @@ class Store extends ElectronStore<StoreData> {
             for (const key in data) {
                 this.set(key, this.secrets!.get(key));
             }
-            this.set("safeStorageBackend", "plaintext");
+            this.recordSafeStorageBackend("plaintext");
         }
         this.set("safeStorageBackendMigrate", false);
         relaunchApp();
     }
     private upgradeLinuxBackend3(): void {
-        console.info(`Finishing safeStorage migration to ${safeStorage.getSelectedStorageBackend()}`);
+        const selectedSafeStorageBackend = safeStorage.getSelectedStorageBackend();
+        console.info(`Finishing safeStorage migration to ${selectedSafeStorageBackend}`);
         const data = this.get("safeStorage");
         if (data) {
             for (const key in data) {
                 this.secrets.set(key, data[key]);
             }
         }
+        this.recordSafeStorageBackend(selectedSafeStorageBackend);
     }
 
     /**

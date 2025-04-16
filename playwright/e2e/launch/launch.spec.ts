@@ -6,7 +6,6 @@ SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Com
 Please see LICENSE files in the repository root for full details.
 */
 
-import { platform } from "node:os";
 import keytar from "keytar-forked";
 
 import { test, expect } from "../../element-desktop-test.js";
@@ -51,10 +50,6 @@ test.describe("App launch", () => {
     });
 
     test.describe("safeStorage", () => {
-        if (process.env.GITHUB_ACTIONS) {
-            test.skip(platform() === "darwin", "The macOS runner's keychain is not available");
-        }
-
         const userId = "@user:server";
         const deviceId = "ABCDEF";
 
@@ -68,8 +63,6 @@ test.describe("App launch", () => {
         });
 
         test.describe("migrate from keytar", () => {
-            // test.skip(!!process.env.GITHUB_ACTIONS, "Does not work in CI");
-
             const pickleKey = "DEADBEEF1234";
 
             test.beforeEach(async () => {

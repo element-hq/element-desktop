@@ -6,13 +6,13 @@ Please see LICENSE files in the repository root for full details.
 */
 
 import { app, autoUpdater, desktopCapturer, ipcMain, powerSaveBlocker, TouchBar, nativeImage } from "electron";
-import { relaunchApp } from "@standardnotes/electron-clear-data";
 
 import IpcMainEvent = Electron.IpcMainEvent;
 import { recordSSOSession } from "./protocol.js";
 import { randomArray } from "./utils.js";
 import { Settings } from "./settings.js";
 import { getDisplayMediaCallback, setDisplayMediaCallback } from "./displayMediaCallback.js";
+import { clearDataAndRelaunch } from "./store.js";
 
 ipcMain.on("setBadgeCount", function (_ev: IpcMainEvent, count: number): void {
     if (process.platform !== "win32") {
@@ -180,10 +180,7 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
             break;
 
         case "clearStorage":
-            store.clear();
-            global.mainWindow.webContents.session.flushStorageData();
-            await global.mainWindow.webContents.session.clearStorageData();
-            relaunchApp();
+            await clearDataAndRelaunch();
             return; // the app is about to stop, we don't need to reply to the IPC
 
         case "breadcrumbs": {

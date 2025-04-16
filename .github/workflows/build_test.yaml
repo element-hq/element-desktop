@@ -63,7 +63,7 @@ jobs:
 
             - name: Run tests
               uses: coactions/setup-xvfb@6b00cf1889f4e1d5a48635647013c0508128ee1a
-              timeout-minutes: 5
+              timeout-minutes: 10
               with:
                   run: "yarn test ${{ runner.os != 'Linux' && '--ignore-snapshots' || '' }}"
               env:
