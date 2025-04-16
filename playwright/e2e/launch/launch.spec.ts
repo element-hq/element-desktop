@@ -53,7 +53,6 @@ test.describe("App launch", () => {
     test.describe("safeStorage", () => {
         if (process.env.GITHUB_ACTIONS) {
             test.skip(platform() === "darwin", "The macOS runner's keychain is not available");
-            test.skip(platform() === "linux", "The Linux runner's dbus is not available");
         }
 
         const userId = "@user:server";
@@ -69,7 +68,7 @@ test.describe("App launch", () => {
         });
 
         test.describe("migrate from keytar", () => {
-            test.skip(!!process.env.GITHUB_ACTIONS, "Does not work in CI");
+            // test.skip(!!process.env.GITHUB_ACTIONS, "Does not work in CI");
 
             const pickleKey = "DEADBEEF1234";
 
