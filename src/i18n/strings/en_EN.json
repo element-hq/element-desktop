@@ -19,6 +19,8 @@
         "zoom_out": "Zoom Out"
     },
     "common": {
+        "yes": "Yes",
+        "no":  "No",
         "about": "About",
         "brand_help": "%(brand)s Help",
         "help": "Help",
@@ -59,5 +61,12 @@
         "bring_all_to_front": "Bring All to Front",
         "label": "Window",
         "zoom": "Zoom"
+    },
+    "store": {
+        "error": {
+            "title": "Failed to load configuration",
+            "unsupported_backend_override": "TODO",
+            "unknown_backend_override": "TODO"
+        }
     }
 }
