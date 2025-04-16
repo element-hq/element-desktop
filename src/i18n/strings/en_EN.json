@@ -19,12 +19,12 @@
         "zoom_out": "Zoom Out"
     },
     "common": {
-        "yes": "Yes",
-        "no":  "No",
         "about": "About",
         "brand_help": "%(brand)s Help",
         "help": "Help",
-        "preferences": "Preferences"
+        "no": "No",
+        "preferences": "Preferences",
+        "yes": "Yes"
     },
     "confirm_quit": "Are you sure you want to quit?",
     "edit_menu": {
@@ -51,6 +51,20 @@
         "save_image_as_error_description": "The image failed to save",
         "save_image_as_error_title": "Failed to save image"
     },
+    "store": {
+        "error": {
+            "backend_changed": "Clear data and reload?",
+            "backend_changed_detail": "Unable to access secret from system keyring, it appears to have changed.",
+            "backend_changed_title": "Failed to load database",
+            "unknown_backend_override": "Your system has an unsupported keyring meaning the database cannot be opened.",
+            "unknown_backend_override_details": "Please check the logs for more details.",
+            "unknown_backend_override_title": "Failed to load database",
+            "unsupported_keyring": "Your system has an unsupported keyring meaning the database cannot be opened.",
+            "unsupported_keyring_cta": "Use weaker encryption",
+            "unsupported_keyring_detail": "Electron's keyring detection did not find a supported backend, you may be able to convince it to use one on your system anyway, see %(link)s.",
+            "unsupported_keyring_title": "System unsupported"
+        }
+    },
     "view_menu": {
         "actual_size": "Actual Size",
         "toggle_developer_tools": "Toggle Developer Tools",
@@ -61,15 +75,5 @@
         "bring_all_to_front": "Bring All to Front",
         "label": "Window",
         "zoom": "Zoom"
-    },
-    "store": {
-        "error": {
-            "title": "Failed to load database",
-            "unsupported_backend_override": "The encrypted database is corrupted, unable to access your system keyring.",
-            "unsupported_backend_override_details": "Please check the logs for more details.",
-            "unknown_backend_override": "Your system has an unsupported keyring meaning the database cannot be opened.",
-            "unknown_backend_override_details": "Please check the logs for more details.",
-            "clear_data_cta": "Clear data"
-        }
     }
 }

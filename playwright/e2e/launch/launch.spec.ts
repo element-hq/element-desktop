@@ -64,9 +64,15 @@ test.describe("App launch", () => {
 
         test.describe("migrate from keytar", () => {
             const pickleKey = "DEADBEEF1234";
+            const keytarService = "element.io";
+            const keytarKey = `${userId}|${deviceId}`;
 
-            test.beforeEach(async () => {
-                await keytar.setPassword("element.io", `${userId}|${deviceId}`, pickleKey);
+            test.beforeAll(async () => {
+                await keytar.setPassword(keytarService, keytarKey, pickleKey);
+                await expect(keytar.getPassword(keytarService, keytarKey)).resolves.toBe(pickleKey);
+            });
+            test.afterAll(async () => {
+                await keytar.deletePassword(keytarService, keytarKey);
             });
 
             test("should migrate successfully", async ({ page }) => {

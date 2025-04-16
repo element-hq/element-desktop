@@ -22,13 +22,24 @@ import { clearAllUserData, relaunchApp } from "@standardnotes/electron-clear-dat
 import { _t } from "./language-helper.js";
 
 /**
- * Legacy keytar service names for storing secrets.
+ * Legacy keytar service name for storing secrets.
+ * @deprecated
  */
 const KEYTAR_SERVICE = "element.io";
+/**
+ * Super legacy keytar service name for reading secrets.
+ * @deprecated
+ */
 const LEGACY_KEYTAR_SERVICE = "riot.im";
 
-// system is the encrypted backend on Windows & macOS
-// plaintext is the temporarily-unencrypted backend for migration
+/**
+ * String union type representing all the safeStorage backends.
+ * + The "unknown" backend shouldn't exist in practice once the app is ready
+ * + The "plaintext" is the temporarily-unencrypted backend for migration, data is wholly unencrypted - uses PlaintextStorageWriter
+ * + The "basic_text" backend is the 'plaintext' backend on Linux, data is encrypted but not using the keychain
+ * + The "system" backend is the encrypted backend on Windows & macOS, data is encrypted using system keychain
+ * + All other backends are linux-specific and are encrypted using the keychain
+ */
 type SafeStorageBackend = ReturnType<SafeStorage["getSelectedStorageBackend"]> | "system" | "plaintext";
 
 /**
@@ -46,6 +57,9 @@ const safeStorageBackendMap: Omit<
     kwallet5: "kwallet5",
 };
 
+/**
+ * Clear all data and relaunch the app.
+ */
 export async function clearDataAndRelaunch(): Promise<void> {
     global.store?.clear();
     clearAllUserData();
@@ -60,14 +74,17 @@ interface StoreData {
     locale?: string | string[];
     disableHardwareAcceleration: boolean;
     safeStorage?: Record<string, string>;
-    // the safeStorage backend used for the safeStorage data as written
+    /** the safeStorage backend used for the safeStorage data as written */
     safeStorageBackend?: SafeStorageBackend;
-    // whether to explicitly override the safeStorage backend, used for migration
+    /** whether to explicitly override the safeStorage backend, used for migration */
     safeStorageBackendOverride?: boolean;
-    // whether to perform a migration of the safeStorage data
+    /** whether to perform a migration of the safeStorage data */
     safeStorageBackendMigrate?: boolean;
 }
 
+/**
+ * Fallback storage writer for secrets, mainly used for automated tests and systems without any safeStorage support.
+ */
 class PlaintextStorageWriter {
     public constructor(protected readonly store: ElectronStore<StoreData>) {}
 
@@ -86,6 +103,9 @@ class PlaintextStorageWriter {
     }
 }
 
+/**
+ * Storage writer for secrets using safeStorage.
+ */
 class SafeStorageWriter extends PlaintextStorageWriter {
     public set(key: string, secret: string): void {
         this.store.set(this.getKey(key), safeStorage.encryptString(secret).toString("base64"));
@@ -202,7 +222,7 @@ class Store extends ElectronStore<StoreData> {
             if (selectedSafeStorageBackend === "unknown") {
                 // This should never happen but good to be safe
                 await dialog.showMessageBox({
-                    title: _t("store|error|title"),
+                    title: _t("store|error|unknown_backend_override_title"),
                     message: _t("store|error|unknown_backend_override"),
                     detail: _t("store|error|unknown_backend_override_details"),
                     type: "error",
@@ -216,15 +236,14 @@ class Store extends ElectronStore<StoreData> {
 
             if (!safeStorageBackend) {
                 if (selectedSafeStorageBackend === "basic_text" && !this.allowPlaintextStorage) {
-                    // Ask the user if they want to use plain text encryption
-                    // TODO should we only do this if they have existing data
                     const { response } = await dialog.showMessageBox({
-                        // TODO
-                        title: "Error 1",
-                        message: "Message",
-                        // detail: _t(""),
-                        type: "question",
-                        buttons: [_t("common|no"), _t("common|yes")],
+                        title: _t("store|error|unsupported_keyring_title"),
+                        message: _t("store|error|unsupported_keyring"),
+                        detail: _t("store|error|unsupported_keyring_detail", {
+                            link: "https://www.electronjs.org/docs/latest/api/safe-storage#safestoragegetselectedstoragebackend-linux",
+                        }),
+                        type: "error",
+                        buttons: [_t("action|cancel"), _t("store|error|unsupported_keyring_cta")],
                         defaultId: 0,
                         cancelId: 0,
                     });
@@ -251,10 +270,9 @@ class Store extends ElectronStore<StoreData> {
                 } else {
                     // Warn the user that the backend has changed and tell them that we cannot migrate
                     const { response } = await dialog.showMessageBox({
-                        // TODO
-                        title: "Error 2",
-                        message: "Message",
-                        // detail: _t(""),
+                        title: _t("store|error|backend_changed_title"),
+                        message: _t("store|error|backend_changed"),
+                        detail: _t("store|error|backend_changed_detail"),
                         type: "question",
                         buttons: [_t("common|no"), _t("common|yes")],
                         defaultId: 0,
@@ -293,8 +311,16 @@ class Store extends ElectronStore<StoreData> {
     /**
      * Migrates keytar data to safeStorage,
      * deletes data from legacy keytar but keeps it in the new keytar for downgrade compatibility.
+     * @deprecated will be removed in the near future
      */
     private async importKeytarSecrets(): Promise<void> {
+        if (this.has("safeStorage")) {
+            // TODO
+            const data = this.get("safeStorage");
+            const key = "@user:server|ABCDEF";
+            console.error("@@", key, data![key], this.secrets.get(key));
+            console.error("@@", app.getPath("userData"));
+        }
         if (this.has("safeStorage")) return; // already migrated
         console.info("Store migration: started");
 
@@ -306,7 +332,7 @@ class Store extends ElectronStore<StoreData> {
             for (const cred of credentials) {
                 console.info("Store migration: writing", cred);
                 this.secrets?.set(cred.account, cred.password);
-                console.info("Store migration: deleting", cred);
+                console.info("Store migration: deleting legacy", cred);
                 await this.deleteSecretKeytar(LEGACY_KEYTAR_SERVICE, cred.account);
             }
             console.info(`Store migration done: found ${credentials.length} credentials`);
@@ -405,6 +431,9 @@ class Store extends ElectronStore<StoreData> {
         this.secrets.delete(key);
     }
 
+    /**
+     * @deprecated will be removed in the near future
+     */
     private async deleteSecretKeytar(namespace: string, key: string): Promise<void> {
         await keytar.deletePassword(namespace, key);
     }
