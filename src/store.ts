@@ -315,11 +315,11 @@ class Store extends ElectronStore<StoreData> {
      */
     private async importKeytarSecrets(): Promise<void> {
         if (this.has("safeStorage")) {
-            // TODO
-            const data = this.get("safeStorage");
-            const key = "@user:server|ABCDEF";
-            console.error("@@", key, data![key], this.secrets.get(key));
-            console.error("@@", app.getPath("userData"));
+            // TODO remove
+            const data = this.get("safeStorage")!;
+            for (const key in data) {
+                console.error("@@", key, data[key], this.secrets.get(key));
+            }
         }
         if (this.has("safeStorage")) return; // already migrated
         console.info("Store migration: started");
@@ -331,7 +331,7 @@ class Store extends ElectronStore<StoreData> {
             ];
             for (const cred of credentials) {
                 console.info("Store migration: writing", cred);
-                this.secrets?.set(cred.account, cred.password);
+                this.secrets.set(cred.account, cred.password);
                 console.info("Store migration: deleting legacy", cred);
                 await this.deleteSecretKeytar(LEGACY_KEYTAR_SERVICE, cred.account);
             }
