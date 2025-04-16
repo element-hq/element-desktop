@@ -55,12 +55,7 @@ async function clearDataAndRelaunch(): Promise<void> {
     relaunchApp();
 }
 
-/**
- * JSON-backed store for settings which need to be accessible by the main process.
- * Secrets are stored within the `safeStorage` object, encrypted with safeStorage.
- * Any secrets operations are blocked on Electron app ready emit, and keytar migration if still needed.
- */
-class Store extends ElectronStore<{
+interface StoreData {
     warnBeforeExit: boolean;
     minimizeToTray: boolean;
     spellCheckerEnabled: boolean;
@@ -74,7 +69,50 @@ class Store extends ElectronStore<{
     safeStorageBackendOverride?: boolean;
     // whether to perform a migration of the safeStorage data
     safeStorageBackendMigrate?: boolean;
-}> {
+}
+
+class PlaintextStorageWriter {
+    public constructor(private readonly store: ElectronStore<StoreData>) {}
+
+    protected getSecretStorageKey = (key: string) => `safeStorage.${key.replaceAll(".", "-")}` as const;
+
+    public set(key: string, secret: string): void {
+        this.store.set(this.getSecretStorageKey(key), secret);
+    }
+
+    public get(key: string): string | null {
+        return this.store.get(this.getSecretStorageKey(key));
+    }
+
+    public delete(key: string): void {
+        this.store.delete(this.getSecretStorageKey(key));
+    }
+}
+
+class SafeStorageWriter extends PlaintextStorageWriter {
+    public set(key: string, secret: string): void {
+        this.set(this.getSecretStorageKey(key), safeStorage.encryptString(secret).toString("base64"));
+    }
+
+    public get(key: string): string | null {
+        const ciphertext = this.get(this.getSecretStorageKey(key));
+        if (typeof ciphertext === "string") {
+            return safeStorage.decryptString(Buffer.from(ciphertext, "base64"));
+        }
+        return null;
+    }
+}
+
+/**
+ * JSON-backed store for settings which need to be accessible by the main process.
+ * Secrets are stored within the `safeStorage` object, encrypted with safeStorage.
+ * Any secrets operations are blocked on Electron app ready emit, and keytar migration if still needed.
+ */
+class Store extends ElectronStore<StoreData> {
+    // Provides "raw" access to the underlying secrets storage,
+    // should be avoided in favour of the getSecret/setSecret/deleteSecret methods.
+    private secrets: PlaintextStorageWriter | SafeStorageWriter;
+
     public constructor() {
         super({
             name: "electron-config",
@@ -117,13 +155,20 @@ class Store extends ElectronStore<{
                 },
             },
         });
+
+        // May be upgraded to a SafeStorageWriter later in prepareSafeStorage
+        this.secrets = new PlaintextStorageWriter(this);
     }
+
+    private allowPlaintextStorage = false;
 
     /**
      * Prepare the store, does not prepare safeStorage, which needs to be done after the app is ready.
      * Must be executed in the first tick of the event loop so that it can call Electron APIs before ready state.
      */
-    public prepare(): void {
+    public prepare(allowPlaintextStorage = false): void {
+        this.allowPlaintextStorage = allowPlaintextStorage;
+
         if (process.platform === "linux") {
             const backend = this.get("safeStorageBackend")!;
             if (backend in safeStorageBackendMap) {
@@ -142,8 +187,6 @@ class Store extends ElectronStore<{
         }
         await this.safeStorageReadyPromise;
     }
-
-    private getSecretStorageKey = (key: string) => `safeStorage.${key.replaceAll(".", "-")}` as const;
 
     /**
      * Prepare the safeStorage backend for use.
@@ -169,11 +212,11 @@ class Store extends ElectronStore<{
             }
 
             if (this.get("safeStorageBackendMigrate")) {
-                return this.migratePhase2();
+                return this.upgradeLinuxBackend2();
             }
 
             if (!safeStorageBackend) {
-                if (selectedSafeStorageBackend === "basic_text") {
+                if (selectedSafeStorageBackend === "basic_text" && !this.allowPlaintextStorage) {
                     // Ask the user if they want to use plain text encryption
                     // TODO should we only do this if they have existing data
                     const { response } = await dialog.showMessageBox({
@@ -189,6 +232,7 @@ class Store extends ElectronStore<{
                     if (response === 0) {
                         throw new Error("safeStorage backend basic_text and user rejected it");
                     }
+                    this.allowPlaintextStorage = true;
                 }
 
                 // Store the backend used for the safeStorage data so we can detect if it changes
@@ -198,17 +242,29 @@ class Store extends ElectronStore<{
                 console.warn(`safeStorage backend changed from ${safeStorageBackend} to ${selectedSafeStorageBackend}`);
 
                 if (safeStorageBackend === "plaintext") {
-                    this.migratePhase3();
+                    this.upgradeLinuxBackend3();
                 } else if (safeStorageBackend === "basic_text") {
-                    return this.migratePhase1();
+                    return this.upgradeLinuxBackend1();
                 } else if (safeStorageBackend in safeStorageBackendMap) {
                     this.set("safeStorageBackendOverride", true);
                     relaunchApp();
                     return;
                 } else {
                     // Warn the user that the backend has changed and tell them that we cannot migrate
-                    // dialog.showErrorBox(_t(""), _t("")); TODO
-                    throw new Error("safeStorage backend changed and cannot migrate");
+                    const { response } = await dialog.showMessageBox({
+                        // TODO
+                        title: "Error 2",
+                        message: "Message",
+                        // detail: _t(""),
+                        type: "question",
+                        buttons: [_t("common|no"), _t("common|yes")],
+                        defaultId: 0,
+                        cancelId: 0,
+                    });
+                    if (response === 0) {
+                        throw new Error("safeStorage backend changed and cannot migrate");
+                    }
+                    await clearDataAndRelaunch();
                 }
             }
 
@@ -218,34 +274,28 @@ class Store extends ElectronStore<{
             }
         }
 
-        if (!safeStorage.isEncryptionAvailable()) {
+        if (safeStorage.isEncryptionAvailable()) {
+            this.secrets = new SafeStorageWriter(this);
+        } else if (!this.allowPlaintextStorage) {
             console.error("Store migration: safeStorage is not available");
             throw new Error(`safeStorage is not available`);
             // TODO fatal error?
         }
 
-        await this.migrateSecrets();
+        await this.importKeytarSecrets();
     }
 
     private recordSafeStorageBackend(backend: SafeStorageBackend): void {
         this.set("safeStorageBackend", backend);
     }
 
-    private get isPlaintext(): boolean {
-        return this.get("safeStorageBackend") === "basic_text";
-    }
-
     /**
      * Migrates keytar data to safeStorage,
      * deletes data from legacy keytar but keeps it in the new keytar for downgrade compatibility.
      */
-    private async migrateSecrets(): Promise<void> {
+    private async importKeytarSecrets(): Promise<void> {
         if (this.has("safeStorage")) return; // already migrated
         console.info("Store migration: started");
-
-        if (process.platform === "linux" && this.isPlaintext) {
-            console.warn("Store migration: safeStorage is using basic text encryption");
-        }
 
         try {
             const credentials = [
@@ -254,7 +304,7 @@ class Store extends ElectronStore<{
             ];
             for (const cred of credentials) {
                 console.info("Store migration: writing", cred);
-                await this.setSecretSafeStorage(cred.account, cred.password);
+                this.secrets?.set(cred.account, cred.password);
                 console.info("Store migration: deleting", cred);
                 await this.deleteSecretKeytar(LEGACY_KEYTAR_SERVICE, cred.account);
             }
@@ -270,29 +320,29 @@ class Store extends ElectronStore<{
      * this is quite a tricky process as the backend is not known until the app is ready & cannot be changed once it is.
      * First we restart the app in basic_text backend mode, and decrypt the data, then restart back in default backend mode and re-encrypt the data.
      */
-    private migratePhase1(): void {
+    private upgradeLinuxBackend1(): void {
         console.info(`Starting safeStorage migration to ${safeStorage.getSelectedStorageBackend()}`);
         this.set("safeStorageBackendMigrate", true);
         relaunchApp();
     }
-    private migratePhase2(): void {
+    private upgradeLinuxBackend2(): void {
         console.info("Performing safeStorage migration");
         const data = this.get("safeStorage");
         if (data) {
             for (const key in data) {
-                this.set(this.getSecretStorageKey(key), this.getSecret(key));
+                this.set(key, this.secrets!.get(key));
             }
             this.set("safeStorageBackend", "plaintext");
         }
         this.set("safeStorageBackendMigrate", false);
         relaunchApp();
     }
-    private migratePhase3(): void {
+    private upgradeLinuxBackend3(): void {
         console.info(`Finishing safeStorage migration to ${safeStorage.getSelectedStorageBackend()}`);
         const data = this.get("safeStorage");
         if (data) {
             for (const key in data) {
-                this.setSecretSafeStorage(key, data[key]);
+                this.secrets.set(key, data[key]);
             }
         }
     }
@@ -307,18 +357,15 @@ class Store extends ElectronStore<{
      */
     public async getSecret(key: string): Promise<string | null> {
         await this.safeStorageReady();
-        if (!safeStorage.isEncryptionAvailable()) {
+
+        if (!safeStorage.isEncryptionAvailable() && !this.allowPlaintextStorage) {
             return (
                 (await keytar.getPassword(KEYTAR_SERVICE, key)) ??
                 (await keytar.getPassword(LEGACY_KEYTAR_SERVICE, key))
             );
         }
 
-        const encryptedValue = this.get(this.getSecretStorageKey(key));
-        if (typeof encryptedValue === "string") {
-            return safeStorage.decryptString(Buffer.from(encryptedValue, "base64"));
-        }
-        return null;
+        return this.secrets.get(key);
     }
 
     /**
@@ -333,17 +380,12 @@ class Store extends ElectronStore<{
      */
     public async setSecret(key: string, secret: string): Promise<void> {
         await this.safeStorageReady();
-        if (!safeStorage.isEncryptionAvailable()) {
+        if (!safeStorage.isEncryptionAvailable() && !this.allowPlaintextStorage) {
             throw new Error("safeStorage is not available");
         }
 
-        this.setSecretSafeStorage(key, secret);
+        this.secrets.set(key, secret);
         await keytar.setPassword(KEYTAR_SERVICE, key, secret);
-    }
-
-    private setSecretSafeStorage(key: string, secret: string): void {
-        const encryptedValue = safeStorage.encryptString(secret);
-        this.set(this.getSecretStorageKey(key), encryptedValue.toString("base64"));
     }
 
     /**
@@ -357,7 +399,7 @@ class Store extends ElectronStore<{
 
         await this.deleteSecretKeytar(LEGACY_KEYTAR_SERVICE, key);
         await this.deleteSecretKeytar(KEYTAR_SERVICE, key);
-        this.delete(this.getSecretStorageKey(key));
+        this.secrets.delete(key);
     }
 
     private async deleteSecretKeytar(namespace: string, key: string): Promise<void> {

@@ -364,7 +364,7 @@ app.enableSandbox();
 // We disable media controls here. We do this because calls use audio and video elements and they sometimes capture the media keys. See https://github.com/vector-im/element-web/issues/15704
 app.commandLine.appendSwitch("disable-features", "HardwareMediaKeyHandling,MediaSessionService");
 
-store.prepare(); // must be called before any async actions
+store.prepare(argv["allow-plaintext-storage"] === true); // must be called before any async actions
 
 // Disable hardware acceleration if the setting has been set.
 if (store.get("disableHardwareAcceleration") === true) {
