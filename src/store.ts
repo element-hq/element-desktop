@@ -102,17 +102,22 @@ class Store extends ElectronStore<{
             throw new Error("safeStorage is not available");
         }
 
-        const credentials = [
-            ...(await keytar.findCredentials(LEGACY_KEYTAR_SERVICE)),
-            ...(await keytar.findCredentials(KEYTAR_SERVICE)),
-        ];
-        for (const cred of credentials) {
-            console.info("Store migration: writing", cred);
-            await this.setSecret(cred.account, cred.password);
-            console.info("Store migration: deleting", cred);
-            await this.deleteSecretKeytar(LEGACY_KEYTAR_SERVICE, cred.account);
+        try {
+            const credentials = [
+                ...(await keytar.findCredentials(LEGACY_KEYTAR_SERVICE)),
+                ...(await keytar.findCredentials(KEYTAR_SERVICE)),
+            ];
+            for (const cred of credentials) {
+                console.info("Store migration: writing", cred);
+                await this.setSecret(cred.account, cred.password);
+                console.info("Store migration: deleting", cred);
+                await this.deleteSecretKeytar(LEGACY_KEYTAR_SERVICE, cred.account);
+            }
+            console.info(`Store migration done: found ${credentials.length} credentials`);
+        } catch (e) {
+            console.error("Store migration failed:", e);
+            throw e;
         }
-        console.info(`Store migration done: found ${credentials.length} credentials`);
     }
 
     /**
