@@ -220,9 +220,7 @@ jobs:
     test:
         needs: build
         uses: ./.github/workflows/build_test.yaml
-        # We have no Windows ARM64 runners at this time
-        if: inputs.arch != 'arm64'
         with:
             artifact: win-${{ inputs.arch }}
-            runs-on: windows-2022
+            runs-on: ${{ inputs.arch == 'arm64' && 'windows-11-arm' || 'windows-2022' }}
             executable: ./dist/win*-unpacked/Element*.exe
