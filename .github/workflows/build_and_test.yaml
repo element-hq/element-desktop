@@ -70,7 +70,7 @@ jobs:
                   merge-multiple: true
 
             - name: Merge into HTML Report
-              run: yarn playwright merge-reports --reporter=html ./all-blob-reports
+              run: yarn playwright merge-reports -c ./playwright.config.ts --reporter=html ./all-blob-reports
 
             # Upload the HTML report even if one of our reporters fails, this can happen when stale screenshots are detected
             - name: Upload HTML report
