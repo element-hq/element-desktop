@@ -114,7 +114,12 @@ class SafeStorageWriter extends PlaintextStorageWriter {
     public get(key: string): string | null {
         const ciphertext = this.store.get(this.getKey(key));
         if (typeof ciphertext === "string") {
-            return safeStorage.decryptString(Buffer.from(ciphertext, "base64"));
+            try {
+                return safeStorage.decryptString(Buffer.from(ciphertext, "base64"));
+            } catch (e) {
+                console.error("Failed to decrypt secret", e);
+                console.debug("...ciphertext:", ciphertext);
+            }
         }
         return null;
     }
