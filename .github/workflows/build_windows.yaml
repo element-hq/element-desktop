@@ -30,6 +30,10 @@ on:
                 type: string
                 required: false
                 description: "Whether to sign & notarise the build, requires 'packages.element.io' environment"
+            blob_report:
+                type: boolean
+                required: false
+                description: "Whether to run the blob report"
 permissions: {} # No permissions required
 jobs:
     build:
@@ -224,3 +228,4 @@ jobs:
             artifact: win-${{ inputs.arch }}
             runs-on: ${{ inputs.arch == 'arm64' && 'windows-11-arm' || 'windows-2022' }}
             executable: ./dist/win*-unpacked/Element*.exe
+            blob_report: ${{ inputs.blob_report }}

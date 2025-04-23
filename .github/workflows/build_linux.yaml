@@ -16,6 +16,10 @@ on:
                 type: string
                 required: true
                 description: "How to link sqlcipher, one of 'system' | 'static'"
+            blob_report:
+                type: boolean
+                required: false
+                description: "Whether to run the blob report"
 env:
     SQLCIPHER_BUNDLED: ${{ inputs.sqlcipher == 'static' && '1' || '' }}
     MAX_GLIBC: 2.31 # bullseye-era glibc, used by glibc-check.sh
@@ -194,3 +198,4 @@ jobs:
             prepare_cmd: |
                 sudo apt-get -qq update
                 sudo apt install ./dist/*.deb
+            blob_report: ${{ inputs.blob_report }}
