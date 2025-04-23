@@ -118,7 +118,7 @@ class SafeStorageWriter extends PlaintextStorageWriter {
                 return safeStorage.decryptString(Buffer.from(ciphertext, "base64"));
             } catch (e) {
                 console.error("Failed to decrypt secret", e);
-                console.debug("...ciphertext:", ciphertext);
+                console.error("...ciphertext:", JSON.stringify(ciphertext));
             }
         }
         return null;
