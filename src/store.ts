@@ -326,7 +326,7 @@ class Store extends ElectronStore<StoreData> {
                 console.error("@@", key, data[key], this.secrets.get(key));
             }
         }
-        if (this.has("safeStorage")) return; // already migrated
+        // if (this.has("safeStorage")) return; // already migrated
         console.info("Store migration: started");
 
         try {
