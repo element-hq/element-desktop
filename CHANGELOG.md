@@ -1,3 +1,11 @@
+Changes in [1.11.99](https://github.com/element-hq/element-desktop/releases/tag/v1.11.99) (2025-04-23)
+======================================================================================================
+## 🐛 Bug Fixes
+
+* [Backport staging] Fix `io.element.desktop` protocol handler ([#2281](https://github.com/element-hq/element-desktop/pull/2281)). Contributed by @RiotRobot.
+
+
+
 Changes in [1.11.98](https://github.com/element-hq/element-desktop/releases/tag/v1.11.98) (2025-04-22)
 ======================================================================================================
 ## 🦖 Deprecations
