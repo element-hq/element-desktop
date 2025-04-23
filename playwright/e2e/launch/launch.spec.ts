@@ -63,10 +63,6 @@ test.describe("App launch", () => {
         });
 
         test.describe("migrate from keytar", () => {
-            test.use({
-                extraArgs: ["--allow-plaintext-storage"],
-            });
-
             const pickleKey = "DEADBEEF1234";
             const keytarService = "element.io";
             const keytarKey = `${userId}|${deviceId}`;
