@@ -27,6 +27,10 @@ on:
                 type: string
                 required: false
                 description: "The URL to which the output will be deployed."
+            blob_report:
+                type: boolean
+                required: false
+                description: "Whether to run the blob report"
 permissions: {} # No permissions required
 jobs:
     build:
@@ -159,3 +163,4 @@ jobs:
                 hdiutil attach ./dist/*.dmg -mountpoint /Volumes/Element &&
                 rsync -a /Volumes/Element/Element*.app ~/Applications/ &&
                 hdiutil detach /Volumes/Element
+            blob_report: ${{ inputs.blob_report }}
