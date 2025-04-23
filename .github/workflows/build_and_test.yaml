@@ -25,6 +25,7 @@ jobs:
                 arch: [x64, ia32, arm64]
         with:
             arch: ${{ matrix.arch }}
+            blob_report: true
 
     linux:
         needs: fetch
@@ -37,14 +38,48 @@ jobs:
         with:
             sqlcipher: ${{ matrix.sqlcipher }}
             arch: ${{ matrix.arch }}
+            blob_report: true
 
     macos:
         needs: fetch
         name: macOS
         uses: ./.github/workflows/build_macos.yaml
+        with:
+            blob_report: true
 
     tests-done:
         needs: [windows, linux, macos]
         runs-on: ubuntu-24.04
+        if: always()
         steps:
-            - run: echo "Tests successful"
+            - uses: actions/checkout@v4
+
+            - uses: actions/setup-node@v4
+              with:
+                  cache: "yarn"
+                  node-version: "lts/*"
+
+            - name: Install dependencies
+              run: yarn install --frozen-lockfile
+
+            - name: Download blob reports from GitHub Actions Artifacts
+              uses: actions/download-artifact@v4
+              with:
+                  pattern: blob-report-*
+                  path: all-blob-reports
+                  merge-multiple: true
+
+            - name: Merge into HTML Report
+              run: yarn playwright merge-reports --reporter=html ./all-blob-reports
+
+            # Upload the HTML report even if one of our reporters fails, this can happen when stale screenshots are detected
+            - name: Upload HTML report
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: html-report
+                  path: playwright-report
+                  retention-days: 14
+
+            - if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
+              run: exit 1
