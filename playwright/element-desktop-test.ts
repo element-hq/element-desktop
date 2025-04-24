@@ -69,9 +69,14 @@ export const test = base.extend<Fixtures>({
     app: async ({ tmpDir, extraEnv, extraArgs, stdout, stderr }, use) => {
         const args = ["--profile-dir", tmpDir];
 
-        if (process.platform === "linux" && process.env.GITHUB_ACTIONS) {
-            // Github Actions lacks dbus and a compatible keyring, so we need to force plaintext storage
-            args.push("--storage-mode", "force-plaintext");
+        if (process.env.GITHUB_ACTIONS) {
+            if (process.platform === "linux") {
+                // GitHub Actions hosted runner lacks dbus and a compatible keyring, so we need to force plaintext storage
+                args.push("--storage-mode", "force-plaintext");
+            } else if (process.platform === "darwin") {
+                // GitHub Actions hosted runner has no working default keychain, so allow plaintext storage
+                args.push("--storage-mode", "allow-plaintext");
+            }
         }
 
         const executablePath = process.env["ELEMENT_DESKTOP_EXECUTABLE"];

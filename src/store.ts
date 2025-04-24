@@ -222,6 +222,8 @@ class Store extends ElectronStore<StoreData> {
 
     /**
      * Prepare the safeStorage backend for use.
+     * We don't eagerly import from keytar as that would bring in data for all Element profiles and not just the current one,
+     * so we import lazily in getSecret.
      */
     private async prepareSafeStorage(): Promise<void> {
         await app.whenReady();
@@ -314,39 +316,10 @@ class Store extends ElectronStore<StoreData> {
             throw new Error(`safeStorage is not available`);
             // TODO fatal error?
         }
-
-        await this.importKeytarSecrets();
     }
 
     private recordSafeStorageBackend(backend: SafeStorageBackend): void {
         this.set("safeStorageBackend", backend);
-    }
-
-    /**
-     * Migrates keytar data to safeStorage,
-     * deletes data from legacy keytar but keeps it in the new keytar for downgrade compatibility.
-     * @deprecated will be removed in the near future
-     */
-    private async importKeytarSecrets(): Promise<void> {
-        if (Object.keys(this.get("safeStorage", {})).length > 0) return; // already migrated
-        console.info("Store migration: started");
-
-        try {
-            const credentials = [
-                ...(await keytar.findCredentials(LEGACY_KEYTAR_SERVICE)),
-                ...(await keytar.findCredentials(KEYTAR_SERVICE)),
-            ];
-            for (const cred of credentials) {
-                console.info("Store migration: writing", cred);
-                this.secrets.set(cred.account, cred.password);
-                console.info("Store migration: deleting legacy", cred);
-                await this.deleteSecretKeytar(LEGACY_KEYTAR_SERVICE, cred.account);
-            }
-            console.info(`Store migration done: found ${credentials.length} credentials`);
-        } catch (e) {
-            console.error("Store migration failed:", e);
-            throw e;
-        }
     }
 
     /**
@@ -385,7 +358,7 @@ class Store extends ElectronStore<StoreData> {
 
     /**
      * Get the stored secret for the key.
-     * We read from safeStorage if available, falling back to keytar & keytar legacy.
+     * Lazily migrates keys from keytar if they are not yet in the store.
      *
      * @param key The string key name.
      *
@@ -393,7 +366,16 @@ class Store extends ElectronStore<StoreData> {
      */
     public async getSecret(key: string): Promise<string | null> {
         await this.safeStorageReady();
-        return this.secrets.get(key);
+        let secret = this.secrets.get(key);
+        if (secret) return secret;
+
+        secret = await this.getSecretKeytar(key);
+        if (secret) {
+            console.debug("Migrating secret from keytar", key);
+            this.secrets.set(key, secret);
+        }
+
+        return secret;
     }
 
     /**
@@ -421,15 +403,24 @@ class Store extends ElectronStore<StoreData> {
         await this.safeStorageReady();
 
         this.secrets.delete(key);
-        await this.deleteSecretKeytar(LEGACY_KEYTAR_SERVICE, key);
-        await this.deleteSecretKeytar(KEYTAR_SERVICE, key);
+        await this.deleteSecretKeytar(key);
     }
 
     /**
      * @deprecated will be removed in the near future
      */
-    private async deleteSecretKeytar(namespace: string, key: string): Promise<void> {
-        await keytar.deletePassword(namespace, key);
+    private async getSecretKeytar(key: string): Promise<string | null> {
+        return (
+            (await keytar.getPassword(KEYTAR_SERVICE, key)) ?? (await keytar.getPassword(LEGACY_KEYTAR_SERVICE, key))
+        );
+    }
+
+    /**
+     * @deprecated will be removed in the near future
+     */
+    private async deleteSecretKeytar(key: string): Promise<void> {
+        await keytar.deletePassword(LEGACY_KEYTAR_SERVICE, key);
+        await keytar.deletePassword(KEYTAR_SERVICE, key);
     }
 }
 
