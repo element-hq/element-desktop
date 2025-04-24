@@ -63,6 +63,11 @@ test.describe("App launch", () => {
         });
 
         test.describe("migrate from keytar", () => {
+            test.skip(
+                process.env.GITHUB_ACTIONS && ["linux", "darwin"].includes(process.platform),
+                "GitHub Actions hosted runner are not a compatible environment for this test",
+            );
+
             const pickleKey = "DEADBEEF1234";
             const keytarService = "element.io";
             const keytarKey = `${userId}|${deviceId}`;

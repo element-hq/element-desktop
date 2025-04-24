@@ -194,7 +194,7 @@ class Store extends ElectronStore<StoreData> {
      * Prepare the store, does not prepare safeStorage, which needs to be done after the app is ready.
      * Must be executed in the first tick of the event loop so that it can call Electron APIs before ready state.
      */
-    public prepare(mode?: Mode): void {
+    public prepare(mode: Mode | undefined): void {
         if (mode) {
             this.mode = mode;
         }
@@ -325,7 +325,8 @@ class Store extends ElectronStore<StoreData> {
     /**
      * Linux support for upgrading the backend from basic_text to one of the encrypted backends,
      * this is quite a tricky process as the backend is not known until the app is ready & cannot be changed once it is.
-     * First we restart the app in basic_text backend mode, and decrypt the data, then restart back in default backend mode and re-encrypt the data.
+     * First we restart the app in basic_text backend mode, then decrypt the data & restart back in default backend mode,
+     * and re-encrypt the data.
      */
     private upgradeLinuxBackend1(): void {
         console.info(`Starting safeStorage migration to ${safeStorage.getSelectedStorageBackend()}`);
@@ -401,7 +402,6 @@ class Store extends ElectronStore<StoreData> {
      */
     public async deleteSecret(key: string): Promise<void> {
         await this.safeStorageReady();
-
         this.secrets.delete(key);
         await this.deleteSecretKeytar(key);
     }
