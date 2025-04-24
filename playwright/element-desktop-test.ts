@@ -62,12 +62,11 @@ export const test = base.extend<Fixtures>({
     // eslint-disable-next-line no-empty-pattern
     tmpDir: async ({}, use) => {
         const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "element-desktop-tests-"));
-        console.log("Using temp profile directory: ", tmpDir);
         await use(tmpDir);
         await fs.rm(tmpDir, { recursive: true });
     },
     app: async ({ tmpDir, extraEnv, extraArgs, stdout, stderr }, use) => {
-        const args = ["--profile-dir", tmpDir];
+        const args = ["--profile-dir", tmpDir, ...extraArgs];
 
         if (process.env.GITHUB_ACTIONS) {
             if (process.platform === "linux") {
@@ -85,13 +84,15 @@ export const test = base.extend<Fixtures>({
             args.unshift(path.join(__dirname, "..", "lib", "electron-main.js"));
         }
 
+        console.log(`Launching '${executablePath}' with args ${args.join(" ")}`);
+
         const app = await electron.launch({
             env: {
                 ...process.env,
                 ...extraEnv,
             },
             executablePath,
-            args: [...args, ...extraArgs],
+            args,
         });
 
         app.process().stdout.pipe(stdout).pipe(process.stdout);

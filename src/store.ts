@@ -306,7 +306,8 @@ class Store extends ElectronStore<StoreData> {
                 safeStorage.setUsePlainTextEncryption(true);
             }
         } else if (!safeStorageBackend) {
-            this.recordSafeStorageBackend(this.mode === Mode.Encrypted ? "system" : "plaintext");
+            safeStorageBackend = this.mode === Mode.Encrypted ? "system" : "plaintext";
+            this.recordSafeStorageBackend(safeStorageBackend);
         }
 
         if (this.mode !== Mode.ForcePlaintext && safeStorage.isEncryptionAvailable()) {
@@ -316,6 +317,8 @@ class Store extends ElectronStore<StoreData> {
             throw new Error(`safeStorage is not available`);
             // TODO fatal error?
         }
+
+        console.info(`Using mode '${this.mode}' with backend '${safeStorageBackend}'`);
     }
 
     private recordSafeStorageBackend(backend: SafeStorageBackend): void {
@@ -370,7 +373,11 @@ class Store extends ElectronStore<StoreData> {
         let secret = this.secrets.get(key);
         if (secret) return secret;
 
-        secret = await this.getSecretKeytar(key);
+        try {
+            secret = await this.getSecretKeytar(key);
+        } catch (e) {
+            console.warn(`Failed to read data from keytar with key='${key}'`, e);
+        }
         if (secret) {
             console.debug("Migrating secret from keytar", key);
             this.secrets.set(key, secret);
@@ -391,7 +398,11 @@ class Store extends ElectronStore<StoreData> {
     public async setSecret(key: string, secret: string): Promise<void> {
         await this.safeStorageReady();
         this.secrets.set(key, secret);
-        await keytar.setPassword(KEYTAR_SERVICE, key, secret);
+        try {
+            await keytar.setPassword(KEYTAR_SERVICE, key, secret);
+        } catch (e) {
+            console.warn(`Failed to write safeStorage backwards-compatibility key='${key}' data to keytar`, e);
+        }
     }
 
     /**
@@ -403,7 +414,11 @@ class Store extends ElectronStore<StoreData> {
     public async deleteSecret(key: string): Promise<void> {
         await this.safeStorageReady();
         this.secrets.delete(key);
-        await this.deleteSecretKeytar(key);
+        try {
+            await this.deleteSecretKeytar(key);
+        } catch (e) {
+            console.warn(`Failed to delete secret with key='${key}' from keytar`, e);
+        }
     }
 
     /**
