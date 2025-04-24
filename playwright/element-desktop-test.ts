@@ -67,7 +67,12 @@ export const test = base.extend<Fixtures>({
         await fs.rm(tmpDir, { recursive: true });
     },
     app: async ({ tmpDir, extraEnv, extraArgs, stdout, stderr }, use) => {
-        const args = ["--profile-dir", tmpDir, "--allow-plaintext-storage"];
+        const args = ["--profile-dir", tmpDir];
+
+        if (process.platform === "linux" && process.env.GITHUB_ACTIONS) {
+            // Github Actions lacks dbus and a compatible keyring, so we need to force plaintext storage
+            args.push("--storage-mode", "force-plaintext");
+        }
 
         const executablePath = process.env["ELEMENT_DESKTOP_EXECUTABLE"];
         if (!executablePath) {

@@ -125,6 +125,12 @@ class SafeStorageWriter extends PlaintextStorageWriter {
     }
 }
 
+const enum Mode {
+    Encrypted = "encrypted", // default
+    AllowPlaintext = "allow-plaintext",
+    ForcePlaintext = "force-plaintext",
+}
+
 /**
  * JSON-backed store for settings which need to be accessible by the main process.
  * Secrets are stored within the `safeStorage` object, encrypted with safeStorage.
@@ -182,14 +188,16 @@ class Store extends ElectronStore<StoreData> {
         this.secrets = new PlaintextStorageWriter(this);
     }
 
-    private allowPlaintextStorage = false;
+    private mode = Mode.Encrypted;
 
     /**
      * Prepare the store, does not prepare safeStorage, which needs to be done after the app is ready.
      * Must be executed in the first tick of the event loop so that it can call Electron APIs before ready state.
      */
-    public prepare(allowPlaintextStorage = false): void {
-        this.allowPlaintextStorage = allowPlaintextStorage;
+    public prepare(mode?: Mode): void {
+        if (mode) {
+            this.mode = mode;
+        }
 
         if (process.platform === "linux") {
             const backend = this.get("safeStorageBackend")!;
@@ -218,10 +226,10 @@ class Store extends ElectronStore<StoreData> {
     private async prepareSafeStorage(): Promise<void> {
         await app.whenReady();
 
+        let safeStorageBackend = this.get("safeStorageBackend");
         if (process.platform === "linux") {
             // Linux safeStorage support is hellish, the support varies on the Desktop Environment used rather than the store itself.
             // https://github.com/electron/electron/issues/39789 https://github.com/microsoft/vscode/issues/185212
-            let safeStorageBackend = this.get("safeStorageBackend");
             const selectedSafeStorageBackend = safeStorage.getSelectedStorageBackend();
 
             if (selectedSafeStorageBackend === "unknown") {
@@ -240,7 +248,7 @@ class Store extends ElectronStore<StoreData> {
             }
 
             if (!safeStorageBackend) {
-                if (selectedSafeStorageBackend === "basic_text" && !this.allowPlaintextStorage) {
+                if (selectedSafeStorageBackend === "basic_text" && this.mode === Mode.Encrypted) {
                     const { response } = await dialog.showMessageBox({
                         title: _t("store|error|unsupported_keyring_title"),
                         message: _t("store|error|unsupported_keyring"),
@@ -255,7 +263,7 @@ class Store extends ElectronStore<StoreData> {
                     if (response === 0) {
                         throw new Error("safeStorage backend basic_text and user rejected it");
                     }
-                    this.allowPlaintextStorage = true;
+                    this.mode = Mode.AllowPlaintext;
                 }
 
                 // Store the backend used for the safeStorage data so we can detect if it changes
@@ -293,14 +301,15 @@ class Store extends ElectronStore<StoreData> {
             // We do not check allowPlaintextStorage here as it was already checked above if the storage is new
             // and if the storage is existing then we should continue to honour the backend used to write the data
             if (safeStorageBackend === "basic_text" && selectedSafeStorageBackend === safeStorageBackend) {
-                // TODO verify if this even works, the docstring makes it sound ephemeral!
                 safeStorage.setUsePlainTextEncryption(true);
             }
+        } else if (!safeStorageBackend) {
+            this.recordSafeStorageBackend(this.mode === Mode.Encrypted ? "system" : "plaintext");
         }
 
-        if (safeStorage.isEncryptionAvailable()) {
+        if (this.mode !== Mode.ForcePlaintext && safeStorage.isEncryptionAvailable()) {
             this.secrets = new SafeStorageWriter(this);
-        } else if (!this.allowPlaintextStorage) {
+        } else if (this.mode === Mode.Encrypted) {
             console.error("Store migration: safeStorage is not available");
             throw new Error(`safeStorage is not available`);
             // TODO fatal error?
@@ -319,14 +328,7 @@ class Store extends ElectronStore<StoreData> {
      * @deprecated will be removed in the near future
      */
     private async importKeytarSecrets(): Promise<void> {
-        if (this.has("safeStorage")) {
-            // TODO remove
-            const data = this.get("safeStorage")!;
-            for (const key in data) {
-                console.error("@@", key, data[key], this.secrets.get(key));
-            }
-        }
-        // if (this.has("safeStorage")) return; // already migrated
+        if (Object.keys(this.get("safeStorage", {})).length > 0) return; // already migrated
         console.info("Store migration: started");
 
         try {
@@ -391,14 +393,6 @@ class Store extends ElectronStore<StoreData> {
      */
     public async getSecret(key: string): Promise<string | null> {
         await this.safeStorageReady();
-
-        if (!safeStorage.isEncryptionAvailable() && !this.allowPlaintextStorage) {
-            return (
-                (await keytar.getPassword(KEYTAR_SERVICE, key)) ??
-                (await keytar.getPassword(LEGACY_KEYTAR_SERVICE, key))
-            );
-        }
-
         return this.secrets.get(key);
     }
 
@@ -408,16 +402,11 @@ class Store extends ElectronStore<StoreData> {
      *
      * @param key The string key name.
      * @param secret The string password.
-     * @throws if safeStorage is not available.
      *
      * @returns A promise for the set password completion.
      */
     public async setSecret(key: string, secret: string): Promise<void> {
         await this.safeStorageReady();
-        if (!safeStorage.isEncryptionAvailable() && !this.allowPlaintextStorage) {
-            throw new Error("safeStorage is not available");
-        }
-
         this.secrets.set(key, secret);
         await keytar.setPassword(KEYTAR_SERVICE, key, secret);
     }
@@ -431,9 +420,9 @@ class Store extends ElectronStore<StoreData> {
     public async deleteSecret(key: string): Promise<void> {
         await this.safeStorageReady();
 
+        this.secrets.delete(key);
         await this.deleteSecretKeytar(LEGACY_KEYTAR_SERVICE, key);
         await this.deleteSecretKeytar(KEYTAR_SERVICE, key);
-        this.secrets.delete(key);
     }
 
     /**
