@@ -7,7 +7,7 @@ Please see LICENSE files in the repository root for full details.
 
 import path from "node:path";
 
-import { loadJsonFile } from "./utils.js";
+import { type JsonObject, loadJsonFile } from "./utils.js";
 
 export interface BuildConfig {
     appId: string;
@@ -15,5 +15,9 @@ export interface BuildConfig {
 }
 
 export function readBuildConfig(): BuildConfig {
-    return loadJsonFile(path.join(__dirname, "build-config.json")) as unknown as BuildConfig;
+    const packageJson = loadJsonFile(path.join(__dirname, "..", "package.json")) as JsonObject;
+    return {
+        appId: (packageJson["electron_appId"] as string) || "im.riot.app",
+        protocol: (packageJson["electron_protocol"] as string) || "io.element.desktop",
+    };
 }
