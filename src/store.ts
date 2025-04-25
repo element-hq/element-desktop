@@ -233,6 +233,7 @@ class Store extends ElectronStore<StoreData> {
             // Linux safeStorage support is hellish, the support varies on the Desktop Environment used rather than the store itself.
             // https://github.com/electron/electron/issues/39789 https://github.com/microsoft/vscode/issues/185212
             const selectedSafeStorageBackend = safeStorage.getSelectedStorageBackend();
+            console.info(`safeStorage backend '${selectedSafeStorageBackend}' selected`);
 
             if (selectedSafeStorageBackend === "unknown") {
                 // This should never happen but good to be safe
