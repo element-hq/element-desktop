@@ -88,7 +88,9 @@ interface StoreData {
 class PlaintextStorageWriter {
     public constructor(protected readonly store: ElectronStore<StoreData>) {}
 
-    protected getKey = (key: string) => `safeStorage.${key.replaceAll(".", "-")}` as const;
+    public getKey(key: string): `safeStorage.${string}` {
+        return `safeStorage.${key.replaceAll(".", "-")}`;
+    }
 
     public set(key: string, secret: string): void {
         this.store.set(this.getKey(key), secret);
@@ -351,7 +353,7 @@ class Store extends ElectronStore<StoreData> {
         const data = this.get("safeStorage");
         if (data) {
             for (const key in data) {
-                this.set(key, this.secrets!.get(key));
+                this.set(this.secrets.getKey(key), this.secrets!.get(key));
             }
             this.recordSafeStorageBackend("plaintext");
         }
