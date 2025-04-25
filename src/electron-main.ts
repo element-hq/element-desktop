@@ -282,32 +282,6 @@ const exitShortcuts: Array<(input: Input, platform: string) => boolean> = [
         platform === "darwin" && input.meta && !input.control && input.key.toUpperCase() === "Q",
 ];
 
-const warnBeforeExit = (event: Event, input: Input): void => {
-    const shouldWarnBeforeExit = Store.instance?.get("warnBeforeExit", true);
-    const exitShortcutPressed =
-        input.type === "keyDown" && exitShortcuts.some((shortcutFn) => shortcutFn(input, process.platform));
-
-    if (shouldWarnBeforeExit && exitShortcutPressed && global.mainWindow) {
-        const shouldCancelCloseRequest =
-            dialog.showMessageBoxSync(global.mainWindow, {
-                type: "question",
-                buttons: [
-                    _t("action|cancel"),
-                    _t("action|close_brand", {
-                        brand: global.vectorConfig.brand || "Element",
-                    }),
-                ],
-                message: _t("confirm_quit"),
-                defaultId: 1,
-                cancelId: 0,
-            }) === 0;
-
-        if (shouldCancelCloseRequest) {
-            event.preventDefault();
-        }
-    }
-};
-
 void configureSentry();
 
 // handle uncaught errors otherwise it displays
@@ -534,7 +508,31 @@ app.on("ready", async () => {
         }
     });
 
-    global.mainWindow.webContents.on("before-input-event", warnBeforeExit);
+    global.mainWindow.webContents.on("before-input-event", (event: Event, input: Input): void => {
+        const shouldWarnBeforeExit = store.get("warnBeforeExit", true);
+        const exitShortcutPressed =
+            input.type === "keyDown" && exitShortcuts.some((shortcutFn) => shortcutFn(input, process.platform));
+
+        if (shouldWarnBeforeExit && exitShortcutPressed && global.mainWindow) {
+            const shouldCancelCloseRequest =
+                dialog.showMessageBoxSync(global.mainWindow, {
+                    type: "question",
+                    buttons: [
+                        _t("action|cancel"),
+                        _t("action|close_brand", {
+                            brand: global.vectorConfig.brand || "Element",
+                        }),
+                    ],
+                    message: _t("confirm_quit"),
+                    defaultId: 1,
+                    cancelId: 0,
+                }) === 0;
+
+            if (shouldCancelCloseRequest) {
+                event.preventDefault();
+            }
+        }
+    });
 
     global.mainWindow.on("closed", () => {
         global.mainWindow = null;
