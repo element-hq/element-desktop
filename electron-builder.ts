@@ -2,6 +2,7 @@ import * as os from "node:os";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import * as plist from "plist";
+import { PackContext } from "app-builder-lib";
 import { AfterPackContext, Arch, Configuration as BaseConfiguration, Platform } from "electron-builder";
 import { computeData } from "app-builder-lib/out/asar/integrity";
 import { readFile, writeFile } from "node:fs/promises";
@@ -20,8 +21,12 @@ import { readFile, writeFile } from "node:fs/promises";
  *  Passes $ED_DEBIAN_CHANGELOG to build.deb.fpm if specified
  */
 
+const DEFAULT_APP_ID = "im.riot.app";
 const NIGHTLY_APP_ID = "im.riot.nightly";
 const NIGHTLY_DEB_NAME = "element-nightly";
+
+const DEFAULT_PROTOCOL_SCHEME = "io.element.desktop";
+const NIGHTLY_PROTOCOL_SCHEME = "io.element.nightly";
 
 interface Pkg {
     name: string;
@@ -74,7 +79,7 @@ const config: Omit<Writable<Configuration>, "electronFuses"> & {
     // Make all fuses required to ensure they are all explicitly specified
     electronFuses: Required<Configuration["electronFuses"]>;
 } = {
-    appId: "im.riot.app",
+    appId: DEFAULT_APP_ID,
     asarUnpack: "**/*.node",
     electronFuses: {
         enableCookieEncryption: true,
@@ -89,6 +94,16 @@ const config: Omit<Writable<Configuration>, "electronFuses"> & {
 
         loadBrowserProcessSpecificV8Snapshot: false,
         enableEmbeddedAsarIntegrityValidation: true,
+    },
+    beforePack: async (context: PackContext) => {
+        const buildInfoPath = path.join(context.appOutDir, "build-info.json");
+        await writeFile(
+            buildInfoPath,
+            JSON.stringify({
+                protocol: config.protocols[0].schemes[0],
+                appId: config.appId,
+            }),
+        );
     },
     afterPack: async (context: AfterPackContext) => {
         await injectAsarIntegrity(context);
@@ -171,7 +186,7 @@ const config: Omit<Writable<Configuration>, "electronFuses"> & {
     protocols: [
         {
             name: "element",
-            schemes: ["io.element.desktop", "element"],
+            schemes: [DEFAULT_PROTOCOL_SCHEME, "element"],
         },
     ],
     nativeRebuilder: "sequential",
@@ -201,6 +216,7 @@ if (process.env.ED_NIGHTLY) {
     config.extraMetadata.name += "-nightly";
     config.extraMetadata.description += " (nightly unstable build)";
     config.deb.fpm.push("--name", NIGHTLY_DEB_NAME);
+    config.protocols[0].schemes[0] = NIGHTLY_PROTOCOL_SCHEME;
 
     let version = process.env.ED_NIGHTLY;
     if (os.platform() === "win32") {
