@@ -313,12 +313,10 @@ class Store extends ElectronStore<StoreData> {
         if (this.mode !== Mode.ForcePlaintext && safeStorage.isEncryptionAvailable()) {
             this.secrets = new SafeStorageWriter(this);
         } else if (this.mode === Mode.Encrypted) {
-            console.error("Store migration: safeStorage is not available");
             throw new Error(`safeStorage is not available`);
-            // TODO fatal error?
         }
 
-        console.info(`Using mode '${this.mode}' with backend '${safeStorageBackend}'`);
+        console.info(`Using storage mode '${this.mode}' with backend '${safeStorageBackend}'`);
     }
 
     private recordSafeStorageBackend(backend: SafeStorageBackend): void {
