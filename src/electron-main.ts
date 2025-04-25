@@ -24,7 +24,7 @@ import "./ipc.js";
 import "./seshat.js";
 import "./settings.js";
 import * as tray from "./tray.js";
-import store from "./store.js";
+import Store from "./store.js";
 import { buildMenuTemplate } from "./vectormenu.js";
 import webContentsHandler from "./webcontents-handler.js";
 import * as updater from "./updater.js";
@@ -283,7 +283,7 @@ const exitShortcuts: Array<(input: Input, platform: string) => boolean> = [
 ];
 
 const warnBeforeExit = (event: Event, input: Input): void => {
-    const shouldWarnBeforeExit = store.get("warnBeforeExit", true);
+    const shouldWarnBeforeExit = Store.instance?.get("warnBeforeExit", true);
     const exitShortcutPressed =
         input.type === "keyDown" && exitShortcuts.some((shortcutFn) => shortcutFn(input, process.platform));
 
@@ -364,10 +364,10 @@ app.enableSandbox();
 // We disable media controls here. We do this because calls use audio and video elements and they sometimes capture the media keys. See https://github.com/vector-im/element-web/issues/15704
 app.commandLine.appendSwitch("disable-features", "HardwareMediaKeyHandling,MediaSessionService");
 
-store.prepare(argv["storage-mode"]); // must be called before any async actions
+const store = Store.initialize(argv["storage-mode"]); // must be called before any async actions
 
 // Disable hardware acceleration if the setting has been set.
-if (store.get("disableHardwareAcceleration") === true) {
+if (store.get("disableHardwareAcceleration")) {
     console.log("Disabling hardware acceleration.");
     app.disableHardwareAcceleration();
 }
@@ -467,6 +467,7 @@ app.on("ready", async () => {
     // Set up i18n before loading storage as we need translations for dialogs
     global.appLocalization = new AppLocalization({
         components: [(): void => tray.initApplicationMenu(), (): void => Menu.setApplicationMenu(buildMenuTemplate())],
+        store,
     });
 
     try {

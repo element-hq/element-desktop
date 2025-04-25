@@ -16,6 +16,7 @@ import type {
 } from "matrix-seshat"; // Hak dependency type
 import IpcMainEvent = Electron.IpcMainEvent;
 import { randomArray } from "./utils.js";
+import Store from "./store.js";
 
 let seshatSupported = false;
 let Seshat: typeof SeshatType;
@@ -39,7 +40,7 @@ try {
 let eventIndex: SeshatType | null = null;
 
 const seshatDefaultPassphrase = "DEFAULT_PASSPHRASE";
-async function getOrCreatePassphrase(key: string): Promise<string> {
+async function getOrCreatePassphrase(store: Store, key: string): Promise<string> {
     try {
         const storedPassphrase = await store.getSecret(key);
         if (storedPassphrase !== null) {
@@ -76,7 +77,8 @@ const deleteContents = async (p: string): Promise<void> => {
 };
 
 ipcMain.on("seshat", async function (_ev: IpcMainEvent, payload): Promise<void> {
-    if (!global.mainWindow) return;
+    const store = Store.instance;
+    if (!global.mainWindow || !store) return;
 
     // We do this here to ensure we get the path after --profile has been resolved
     const eventStorePath = path.join(app.getPath("userData"), "EventStore");
@@ -103,7 +105,7 @@ ipcMain.on("seshat", async function (_ev: IpcMainEvent, payload): Promise<void> 
                 const deviceId = args[1];
                 const passphraseKey = `seshat|${userId}|${deviceId}`;
 
-                const passphrase = await getOrCreatePassphrase(passphraseKey);
+                const passphrase = await getOrCreatePassphrase(store, passphraseKey);
 
                 try {
                     await afs.mkdir(eventStorePath, { recursive: true });

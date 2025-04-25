@@ -12,7 +12,7 @@ import { recordSSOSession } from "./protocol.js";
 import { randomArray } from "./utils.js";
 import { Settings } from "./settings.js";
 import { getDisplayMediaCallback, setDisplayMediaCallback } from "./displayMediaCallback.js";
-import { clearDataAndRelaunch } from "./store.js";
+import Store, { clearDataAndRelaunch } from "./store.js";
 
 ipcMain.on("setBadgeCount", function (_ev: IpcMainEvent, count: number): void {
     if (process.platform !== "win32") {
@@ -60,7 +60,8 @@ ipcMain.on("app_onAction", function (_ev: IpcMainEvent, payload) {
 });
 
 ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
-    if (!global.mainWindow) return;
+    const store = Store.instance;
+    if (!global.mainWindow || !store) return;
 
     const args = payload.args || [];
     let ret: any;

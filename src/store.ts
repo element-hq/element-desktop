@@ -61,7 +61,7 @@ const safeStorageBackendMap: Omit<
  * Clear all data and relaunch the app.
  */
 export async function clearDataAndRelaunch(): Promise<void> {
-    global.store?.clear();
+    Store.instance?.clear();
     clearAllUserData();
     relaunchApp();
 }
@@ -137,11 +137,44 @@ const enum Mode {
  * Any secrets operations are blocked on Electron app ready emit, and keytar migration if still needed.
  */
 class Store extends ElectronStore<StoreData> {
+    private static internalInstance?: Store;
+
+    public static get instance(): Store | undefined {
+        return Store.internalInstance;
+    }
+
+    /**
+     * Prepare the store, does not prepare safeStorage, which needs to be done after the app is ready.
+     * Must be executed in the first tick of the event loop so that it can call Electron APIs before ready state.
+     */
+    public static initialize(mode: Mode | undefined): Store {
+        if (Store.internalInstance) {
+            throw new Error("Store already initialized");
+        }
+
+        const store = new Store(mode ?? Mode.Encrypted);
+        Store.internalInstance = store;
+
+        if (process.platform === "linux") {
+            const backend = store.get("safeStorageBackend")!;
+            if (backend in safeStorageBackendMap) {
+                // If the safeStorage backend which was used to write the data is one we can specify via the commandLine
+                // then do so to ensure we use the same backend for reading the data.
+                app.commandLine.appendSwitch(
+                    "password-store",
+                    safeStorageBackendMap[backend as keyof typeof safeStorageBackendMap],
+                );
+            }
+        }
+
+        return store;
+    }
+
     // Provides "raw" access to the underlying secrets storage,
     // should be avoided in favour of the getSecret/setSecret/deleteSecret methods.
     private secrets: PlaintextStorageWriter | SafeStorageWriter;
 
-    public constructor() {
+    private constructor(private mode: Mode) {
         super({
             name: "electron-config",
             clearInvalidConfig: false,
@@ -186,30 +219,6 @@ class Store extends ElectronStore<StoreData> {
 
         // May be upgraded to a SafeStorageWriter later in prepareSafeStorage
         this.secrets = new PlaintextStorageWriter(this);
-    }
-
-    private mode = Mode.Encrypted;
-
-    /**
-     * Prepare the store, does not prepare safeStorage, which needs to be done after the app is ready.
-     * Must be executed in the first tick of the event loop so that it can call Electron APIs before ready state.
-     */
-    public prepare(mode: Mode | undefined): void {
-        if (mode) {
-            this.mode = mode;
-        }
-
-        if (process.platform === "linux") {
-            const backend = this.get("safeStorageBackend")!;
-            if (backend in safeStorageBackendMap) {
-                // If the safeStorage backend which was used to write the data is one we can specify via the commandLine
-                // then do so to ensure we use the same backend for reading the data.
-                app.commandLine.appendSwitch(
-                    "password-store",
-                    safeStorageBackendMap[backend as keyof typeof safeStorageBackendMap],
-                );
-            }
-        }
     }
 
     private safeStorageReadyPromise?: Promise<unknown>;
@@ -438,13 +447,4 @@ class Store extends ElectronStore<StoreData> {
     }
 }
 
-declare global {
-    // eslint-disable-next-line no-var
-    var store: Store;
-}
-
-if (!global.store) {
-    global.store = new Store();
-}
-
-export default global.store;
+export default Store;

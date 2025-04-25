@@ -12,7 +12,7 @@ import { fileURLToPath } from "node:url";
 
 import type EN from "./i18n/strings/en_EN.json";
 import { loadJsonFile } from "./utils.js";
-import store from "./store.js";
+import type Store from "./store.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -63,12 +63,14 @@ export class AppLocalization {
     private static readonly STORE_KEY = "locale";
 
     private readonly localizedComponents?: Set<Component>;
+    private readonly store: Store;
 
-    public constructor({ components = [] }: { components: Component[] }) {
+    public constructor({ components = [], store }: { components: Component[]; store: Store }) {
         counterpart.registerTranslations(FALLBACK_LOCALE, this.fetchTranslationJson("en_EN"));
         counterpart.setFallbackLocale(FALLBACK_LOCALE);
         counterpart.setSeparator("|");
 
+        this.store = store;
         if (Array.isArray(components)) {
             this.localizedComponents = new Set(components);
         }
@@ -120,7 +122,7 @@ export class AppLocalization {
         });
 
         counterpart.setLocale(loadedLocales[0]);
-        store.set(AppLocalization.STORE_KEY, locales);
+        this.store.set(AppLocalization.STORE_KEY, locales);
 
         this.resetLocalizedUI();
     }
