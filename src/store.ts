@@ -155,7 +155,7 @@ class Store extends ElectronStore<StoreData> {
         const store = new Store(mode ?? Mode.Encrypted);
         Store.internalInstance = store;
 
-        if (process.platform === "linux") {
+        if (process.platform === "linux" && store.get("safeStorageBackendOverride")) {
             const backend = store.get("safeStorageBackend")!;
             if (backend in safeStorageBackendMap) {
                 // If the safeStorage backend which was used to write the data is one we can specify via the commandLine
