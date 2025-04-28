@@ -174,7 +174,7 @@ class Store extends ElectronStore<StoreData> {
 
     // Provides "raw" access to the underlying secrets storage,
     // should be avoided in favour of the getSecret/setSecret/deleteSecret methods.
-    private secrets: PlaintextStorageWriter | SafeStorageWriter;
+    private secrets?: PlaintextStorageWriter | SafeStorageWriter;
 
     private constructor(private mode: Mode) {
         super({
@@ -218,9 +218,6 @@ class Store extends ElectronStore<StoreData> {
                 },
             },
         });
-
-        // May be upgraded to a SafeStorageWriter later in prepareSafeStorage
-        this.secrets = new PlaintextStorageWriter(this);
     }
 
     private safeStorageReadyPromise?: Promise<unknown>;
@@ -326,7 +323,9 @@ class Store extends ElectronStore<StoreData> {
 
         if (this.mode !== Mode.ForcePlaintext && safeStorage.isEncryptionAvailable()) {
             this.secrets = new SafeStorageWriter(this);
-        } else if (this.mode === Mode.Encrypted) {
+        } else if (this.mode !== Mode.Encrypted) {
+            this.secrets = new PlaintextStorageWriter(this);
+        } else {
             throw new Error(`safeStorage is not available`);
         }
 
@@ -349,6 +348,7 @@ class Store extends ElectronStore<StoreData> {
         relaunchApp();
     }
     private upgradeLinuxBackend2(): void {
+        if (!this.secrets) throw new Error("safeStorage not ready");
         console.info("Performing safeStorage migration");
         const data = this.get("safeStorage");
         if (data) {
@@ -361,6 +361,7 @@ class Store extends ElectronStore<StoreData> {
         relaunchApp();
     }
     private upgradeLinuxBackend3(): void {
+        if (!this.secrets) throw new Error("safeStorage not ready");
         const selectedSafeStorageBackend = safeStorage.getSelectedStorageBackend();
         console.info(`Finishing safeStorage migration to ${selectedSafeStorageBackend}`);
         const data = this.get("safeStorage");
@@ -382,7 +383,7 @@ class Store extends ElectronStore<StoreData> {
      */
     public async getSecret(key: string): Promise<string | null> {
         await this.safeStorageReady();
-        let secret = this.secrets.get(key);
+        let secret = this.secrets!.get(key);
         if (secret) return secret;
 
         try {
@@ -392,7 +393,7 @@ class Store extends ElectronStore<StoreData> {
         }
         if (secret) {
             console.debug("Migrating secret from keytar", key);
-            this.secrets.set(key, secret);
+            this.secrets!.set(key, secret);
         }
 
         return secret;
@@ -409,7 +410,7 @@ class Store extends ElectronStore<StoreData> {
      */
     public async setSecret(key: string, secret: string): Promise<void> {
         await this.safeStorageReady();
-        this.secrets.set(key, secret);
+        this.secrets!.set(key, secret);
         try {
             await keytar.setPassword(KEYTAR_SERVICE, key, secret);
         } catch (e) {
@@ -425,7 +426,7 @@ class Store extends ElectronStore<StoreData> {
      */
     public async deleteSecret(key: string): Promise<void> {
         await this.safeStorageReady();
-        this.secrets.delete(key);
+        this.secrets!.delete(key);
         try {
             await this.deleteSecretKeytar(key);
         } catch (e) {
