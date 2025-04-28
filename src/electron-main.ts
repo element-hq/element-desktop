@@ -596,8 +596,9 @@ app.on("second-instance", (ev, commandLine, workingDirectory) => {
     }
 });
 
-// Set the App User Model ID to match what the squirrel
-// installer uses for the shortcut icon.
-// This makes notifications work on windows 8.1 (and is
-// a noop on other platforms).
-app.setAppUserModelId("com.squirrel.element-desktop.Element");
+// This is required to make notification handlers work
+// on Windows 8.1/10/11 (and is a noop on other platforms);
+// It must also match the ID found in 'electron-builder'
+// in order to get the title and icon to show up correctly.
+// Ref: https://stackoverflow.com/a/77314604/3525780
+app.setAppUserModelId("im.riot.app");
