@@ -10,7 +10,7 @@ Please see LICENSE files in the repository root for full details.
 
 // Squirrel on windows starts the app with various flags as hooks to tell us when we've been installed/uninstalled etc.
 import "./squirrelhooks.js";
-import { app, BrowserWindow, Menu, autoUpdater, protocol, dialog, type Input, type Event, session } from "electron";
+import { app, BrowserWindow, Menu, autoUpdater, dialog, type Input, type Event, session, protocol } from "electron";
 // eslint-disable-next-line n/file-extension-in-import
 import * as Sentry from "@sentry/electron/main";
 import AutoLaunch from "auto-launch";
@@ -28,12 +28,13 @@ import * as tray from "./tray.js";
 import { buildMenuTemplate } from "./vectormenu.js";
 import webContentsHandler from "./webcontents-handler.js";
 import * as updater from "./updater.js";
-import { getProfileFromDeeplink, protocolInit } from "./protocol.js";
+import ProtocolHandler from "./protocol.js";
 import { _t, AppLocalization } from "./language-helper.js";
 import { setDisplayMediaCallback } from "./displayMediaCallback.js";
 import { setupMacosTitleBar } from "./macos-titlebar.js";
 import { type Json, loadJsonFile } from "./utils.js";
 import { setupMediaAuth } from "./media-auth.js";
+import { readBuildConfig } from "./build-config.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -72,10 +73,12 @@ function isRealUserDataDir(d: string): boolean {
     return fs.existsSync(path.join(d, "IndexedDB"));
 }
 
+global.buildConfig = readBuildConfig();
+
 // check if we are passed a profile in the SSO callback url
 let userDataPath: string;
 
-const userDataPathInProtocol = getProfileFromDeeplink(argv["_"]);
+const userDataPathInProtocol = ProtocolHandler.getProfileFromDeeplink(global.buildConfig.protocol, argv["_"]);
 if (userDataPathInProtocol) {
     userDataPath = userDataPathInProtocol;
 } else if (argv["profile-dir"]) {
@@ -334,7 +337,7 @@ if (!gotLock) {
 }
 
 // do this after we know we are the primary instance of the app
-protocolInit();
+ProtocolHandler.initialize(global.buildConfig.protocol);
 
 // Register the scheme the app is served from as 'standard'
 // which allows things like relative URLs and IndexedDB to

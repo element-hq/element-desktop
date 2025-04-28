@@ -2,7 +2,13 @@ import * as os from "node:os";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import * as plist from "plist";
-import { AfterPackContext, Arch, Configuration as BaseConfiguration, Platform } from "electron-builder";
+import {
+    type AfterPackContext,
+    Arch,
+    type Configuration as BaseConfiguration,
+    Platform,
+    type Protocol,
+} from "electron-builder";
 import { computeData } from "app-builder-lib/out/asar/integrity";
 import { readFile, writeFile } from "node:fs/promises";
 
@@ -20,8 +26,12 @@ import { readFile, writeFile } from "node:fs/promises";
  *  Passes $ED_DEBIAN_CHANGELOG to build.deb.fpm if specified
  */
 
+const DEFAULT_APP_ID = "im.riot.app";
 const NIGHTLY_APP_ID = "im.riot.nightly";
 const NIGHTLY_DEB_NAME = "element-nightly";
+
+const DEFAULT_PROTOCOL_SCHEME = "io.element.desktop";
+const NIGHTLY_PROTOCOL_SCHEME = "io.element.nightly";
 
 interface Pkg {
     name: string;
@@ -37,7 +47,11 @@ type Writable<T> = NonNullable<
 const pkg: Pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
 
 interface Configuration extends BaseConfiguration {
-    extraMetadata: Partial<Pick<Pkg, "version">> & Omit<Pkg, "version">;
+    extraMetadata: Partial<Pick<Pkg, "version">> &
+        Omit<Pkg, "version"> & {
+            electron_appId: string;
+            electron_protocol: string;
+        };
     linux: BaseConfiguration["linux"];
     win: BaseConfiguration["win"];
     mac: BaseConfiguration["mac"];
@@ -74,7 +88,7 @@ const config: Omit<Writable<Configuration>, "electronFuses"> & {
     // Make all fuses required to ensure they are all explicitly specified
     electronFuses: Required<Configuration["electronFuses"]>;
 } = {
-    appId: "im.riot.app",
+    appId: DEFAULT_APP_ID,
     asarUnpack: "**/*.node",
     electronFuses: {
         enableCookieEncryption: true,
@@ -112,6 +126,8 @@ const config: Omit<Writable<Configuration>, "electronFuses"> & {
         name: pkg.name,
         productName: pkg.productName,
         description: pkg.description,
+        electron_appId: DEFAULT_APP_ID,
+        electron_protocol: DEFAULT_PROTOCOL_SCHEME,
     },
     linux: {
         target: ["tar.gz", "deb"],
@@ -168,12 +184,10 @@ const config: Omit<Writable<Configuration>, "electronFuses"> & {
     directories: {
         output: "dist",
     },
-    protocols: [
-        {
-            name: "element",
-            schemes: ["io.element.desktop", "element"],
-        },
-    ],
+    protocols: {
+        name: "element",
+        schemes: [DEFAULT_PROTOCOL_SCHEME, "element"],
+    },
     nativeRebuilder: "sequential",
     nodeGypRebuild: false,
     npmRebuild: true,
@@ -196,11 +210,12 @@ if (process.env.ED_SIGNTOOL_SUBJECT_NAME && process.env.ED_SIGNTOOL_THUMBPRINT) 
 if (process.env.ED_NIGHTLY) {
     config.deb.fpm = []; // Clear the fpm as the breaks deb fields don't apply to nightly
 
-    config.appId = NIGHTLY_APP_ID;
+    config.appId = config.extraMetadata.electron_appId = NIGHTLY_APP_ID;
     config.extraMetadata.productName += " Nightly";
     config.extraMetadata.name += "-nightly";
     config.extraMetadata.description += " (nightly unstable build)";
     config.deb.fpm.push("--name", NIGHTLY_DEB_NAME);
+    (config.protocols as Protocol).schemes[0] = config.extraMetadata.electron_protocol = NIGHTLY_PROTOCOL_SCHEME;
 
     let version = process.env.ED_NIGHTLY;
     if (os.platform() === "win32") {

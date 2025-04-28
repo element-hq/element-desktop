@@ -10,6 +10,7 @@ import { type BrowserWindow } from "electron";
 import type Store from "electron-store";
 import type AutoLaunch from "auto-launch";
 import { type AppLocalization } from "../language-helper.js";
+import { type BuildConfig } from "../build-config.js";
 
 // global type extensions need to use var for whatever reason
 /* eslint-disable no-var */
@@ -32,5 +33,6 @@ declare global {
         locale?: string | string[];
         disableHardwareAcceleration?: boolean;
     }>;
+    var buildConfig: BuildConfig;
 }
 /* eslint-enable no-var */

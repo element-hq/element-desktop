@@ -10,7 +10,7 @@ import { relaunchApp } from "@standardnotes/electron-clear-data";
 import keytar from "keytar-forked";
 
 import IpcMainEvent = Electron.IpcMainEvent;
-import { recordSSOSession } from "./protocol.js";
+import ProtocolHandler from "./protocol.js";
 import { randomArray } from "./utils.js";
 import { Settings } from "./settings.js";
 import { getDisplayMediaCallback, setDisplayMediaCallback } from "./displayMediaCallback.js";
@@ -135,8 +135,9 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
             ret = global.mainWindow.webContents.session.availableSpellCheckerLanguages;
             break;
 
-        case "startSSOFlow":
-            recordSSOSession(args[0]);
+        case "initializeProtocolScheme":
+            ProtocolHandler.instance?.recordSSOSession(args[0]);
+            ret = global.buildConfig.protocol;
             break;
 
         case "getPickleKey":
