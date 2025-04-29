@@ -6,6 +6,7 @@ Please see LICENSE files in the repository root for full details.
 */
 
 import * as tray from "./tray.js";
+import Store from "./store.js";
 
 interface Setting {
     read(): Promise<any>;
@@ -27,10 +28,10 @@ export const Settings: Record<string, Setting> = {
     },
     "Electron.warnBeforeExit": {
         async read(): Promise<any> {
-            return global.store.get("warnBeforeExit", true);
+            return Store.instance?.get("warnBeforeExit");
         },
         async write(value: any): Promise<void> {
-            global.store.set("warnBeforeExit", value);
+            Store.instance?.set("warnBeforeExit", value);
         },
     },
     "Electron.alwaysShowMenuBar": {
@@ -39,7 +40,7 @@ export const Settings: Record<string, Setting> = {
             return !global.mainWindow!.autoHideMenuBar;
         },
         async write(value: any): Promise<void> {
-            global.store.set("autoHideMenuBar", !value);
+            Store.instance?.set("autoHideMenuBar", !value);
             global.mainWindow!.autoHideMenuBar = !value;
             global.mainWindow!.setMenuBarVisibility(value);
         },
@@ -56,15 +57,15 @@ export const Settings: Record<string, Setting> = {
             } else {
                 tray.destroy();
             }
-            global.store.set("minimizeToTray", value);
+            Store.instance?.set("minimizeToTray", value);
         },
     },
     "Electron.enableHardwareAcceleration": {
         async read(): Promise<any> {
-            return !global.store.get("disableHardwareAcceleration", false);
+            return !Store.instance?.get("disableHardwareAcceleration");
         },
         async write(value: any): Promise<void> {
-            global.store.set("disableHardwareAcceleration", !value);
+            Store.instance?.set("disableHardwareAcceleration", !value);
         },
     },
 };

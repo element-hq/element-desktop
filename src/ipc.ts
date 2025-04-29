@@ -6,14 +6,13 @@ Please see LICENSE files in the repository root for full details.
 */
 
 import { app, autoUpdater, desktopCapturer, ipcMain, powerSaveBlocker, TouchBar, nativeImage } from "electron";
-import { relaunchApp } from "@standardnotes/electron-clear-data";
-import keytar from "keytar-forked";
 
 import IpcMainEvent = Electron.IpcMainEvent;
 import { recordSSOSession } from "./protocol.js";
 import { randomArray } from "./utils.js";
 import { Settings } from "./settings.js";
 import { getDisplayMediaCallback, setDisplayMediaCallback } from "./displayMediaCallback.js";
+import Store, { clearDataAndRelaunch } from "./store.js";
 
 ipcMain.on("setBadgeCount", function (_ev: IpcMainEvent, count: number): void {
     if (process.platform !== "win32") {
@@ -61,7 +60,8 @@ ipcMain.on("app_onAction", function (_ev: IpcMainEvent, payload) {
 });
 
 ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
-    if (!global.mainWindow) return;
+    const store = Store.instance;
+    if (!global.mainWindow || !store) return;
 
     const args = payload.args || [];
     let ret: any;
@@ -113,11 +113,11 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
             if (typeof args[0] !== "boolean") return;
 
             global.mainWindow.webContents.session.setSpellCheckerEnabled(args[0]);
-            global.store.set("spellCheckerEnabled", args[0]);
+            store.set("spellCheckerEnabled", args[0]);
             break;
 
         case "getSpellCheckEnabled":
-            ret = global.store.get("spellCheckerEnabled", true);
+            ret = store.get("spellCheckerEnabled");
             break;
 
         case "setSpellCheckLanguages":
@@ -141,12 +141,7 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
 
         case "getPickleKey":
             try {
-                ret = await keytar.getPassword("element.io", `${args[0]}|${args[1]}`);
-                // migrate from riot.im (remove once we think there will no longer be
-                // logins from the time of riot.im)
-                if (ret === null) {
-                    ret = await keytar.getPassword("riot.im", `${args[0]}|${args[1]}`);
-                }
+                ret = await store.getSecret(`${args[0]}|${args[1]}`);
             } catch {
                 // if an error is thrown (e.g. keytar can't connect to the keychain),
                 // then return null, which means the default pickle key will be used
@@ -157,9 +152,7 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
         case "createPickleKey":
             try {
                 const pickleKey = await randomArray(32);
-                // We purposefully throw if keytar is not available so the caller can handle it
-                // rather than sending them a pickle key we did not store on their behalf.
-                await keytar!.setPassword("element.io", `${args[0]}|${args[1]}`, pickleKey);
+                await store.setSecret(`${args[0]}|${args[1]}`, pickleKey);
                 ret = pickleKey;
             } catch (e) {
                 console.error("Failed to create pickle key", e);
@@ -169,11 +162,10 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
 
         case "destroyPickleKey":
             try {
-                await keytar.deletePassword("element.io", `${args[0]}|${args[1]}`);
-                // migrate from riot.im (remove once we think there will no longer be
-                // logins from the time of riot.im)
-                await keytar.deletePassword("riot.im", `${args[0]}|${args[1]}`);
-            } catch {}
+                await store.deleteSecret(`${args[0]}|${args[1]}`);
+            } catch (e) {
+                console.error("Failed to destroy pickle key", e);
+            }
             break;
         case "getDesktopCapturerSources":
             ret = (await desktopCapturer.getSources(args[0])).map((source) => ({
@@ -189,10 +181,7 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
             break;
 
         case "clearStorage":
-            global.store.clear();
-            global.mainWindow.webContents.session.flushStorageData();
-            await global.mainWindow.webContents.session.clearStorageData();
-            relaunchApp();
+            await clearDataAndRelaunch();
             return; // the app is about to stop, we don't need to reply to the IPC
 
         case "breadcrumbs": {
