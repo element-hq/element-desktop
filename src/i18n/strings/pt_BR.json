@@ -22,7 +22,9 @@
         "about": "Sobre",
         "brand_help": "%(brand)s Ajuda",
         "help": "Ajuda",
-        "preferences": "Preferências"
+        "no": "Não",
+        "preferences": "Preferências",
+        "yes": "Sim"
     },
     "confirm_quit": "Você tem certeza que você quer sair?",
     "edit_menu": {
@@ -48,6 +50,20 @@
         "save_image_as": "Salvar imagem como...",
         "save_image_as_error_description": "A imagem falhou para salvar",
         "save_image_as_error_title": "Falha para salvar imagem"
+    },
+    "store": {
+        "error": {
+            "backend_changed": "Limpar dados e recarregar?",
+            "backend_changed_detail": "Não foi possível acessar o segredo no cofre do sistema, parece que ele foi alterado.",
+            "backend_changed_title": "Falha ao carregar o banco de dados",
+            "unknown_backend_override": "Seu sistema possui um cofre não compatível, o que impede a abertura do banco de dados.",
+            "unknown_backend_override_details": "Verifique os logs para obter mais detalhes.",
+            "unknown_backend_override_title": "Falha ao carregar o banco de dados",
+            "unsupported_keyring": "Seu sistema possui um cofre não compatível, o que impede a abertura do banco de dados.",
+            "unsupported_keyring_cta": "Use criptografia mais fraca",
+            "unsupported_keyring_detail": "A detecção de cofre do Electron não encontrou um back-end compatível. Talvez você consiga convencê-lo a usar um em seu sistema de qualquer maneira, veja %(link)s.",
+            "unsupported_keyring_title": "Sistema não suportado"
+        }
     },
     "view_menu": {
         "actual_size": "Tamanho de Verdade",
