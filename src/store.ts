@@ -266,6 +266,7 @@ class Store extends ElectronStore<StoreData> {
                         title: _t("store|error|unsupported_keyring_title"),
                         message: _t("store|error|unsupported_keyring"),
                         detail: _t("store|error|unsupported_keyring_detail", {
+                            brand: global.vectorConfig.brand || "Element",
                             link: "https://www.electronjs.org/docs/latest/api/safe-storage#safestoragegetselectedstoragebackend-linux",
                         }),
                         type: "error",
