@@ -61,7 +61,7 @@
             "unknown_backend_override_title": "Failed to load database",
             "unsupported_keyring": "Your system has an unsupported keyring meaning the database cannot be opened.",
             "unsupported_keyring_cta": "Use weaker encryption",
-            "unsupported_keyring_detail": "Electron's keyring detection did not find a supported backend, you may be able to convince it to use one on your system anyway, see %(link)s.",
+            "unsupported_keyring_detail": "Electron's keyring detection did not find a supported backend. You can attempt to manually configure the backend by starting %(brand)s with a command-line argument, a one-time operation. See %(link)s.",
             "unsupported_keyring_title": "System unsupported"
         }
     },
