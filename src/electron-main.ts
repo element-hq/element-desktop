@@ -298,6 +298,11 @@ app.commandLine.appendSwitch("--enable-usermedia-screen-capturing");
 if (!app.commandLine.hasSwitch("enable-features")) {
     app.commandLine.appendSwitch("enable-features", "WebRTCPipeWireCapturer");
 }
+// Workaround bug in electron 36:https://github.com/electron/electron/issues/46538
+// Hopefully this will no longer be needed soon and can be removed
+if (process.platform === "linux") {
+    app.commandLine.appendSwitch('gtk-version', '3');
+}
 
 const gotLock = app.requestSingleInstanceLock();
 if (!gotLock) {
