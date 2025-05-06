@@ -301,7 +301,7 @@ if (!app.commandLine.hasSwitch("enable-features")) {
 // Workaround bug in electron 36:https://github.com/electron/electron/issues/46538
 // Hopefully this will no longer be needed soon and can be removed
 if (process.platform === "linux") {
-    app.commandLine.appendSwitch('gtk-version', '3');
+    app.commandLine.appendSwitch("gtk-version", "3");
 }
 
 const gotLock = app.requestSingleInstanceLock();
