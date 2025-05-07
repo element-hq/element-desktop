@@ -16,6 +16,10 @@ on:
                 type: string
                 required: true
                 description: "How to link sqlcipher, one of 'system' | 'static'"
+            blob_report:
+                type: boolean
+                required: false
+                description: "Whether to run the blob report"
 env:
     SQLCIPHER_BUNDLED: ${{ inputs.sqlcipher == 'static' && '1' || '' }}
     MAX_GLIBC: 2.31 # bullseye-era glibc, used by glibc-check.sh
@@ -84,14 +88,14 @@ jobs:
             - name: "Get modified files"
               id: changed_files
               if: steps.cache.outputs.cache-hit != 'true' && github.event_name == 'pull_request'
-              uses: tj-actions/changed-files@dcc7a0cba800f454d79fff4b993e8c3555bcc0a8 # v45
+              uses: tj-actions/changed-files@823fcebdb31bb35fdf2229d9f769b400309430d0 # v46
               with:
                   files: |
                       dockerbuild/**
 
             # This allows contributors to test changes to the dockerbuild image within a pull request
             - name: Build docker image
-              uses: docker/build-push-action@471d1dc4e07e5cdedd4c2171150001c434f0b7a4 # v6
+              uses: docker/build-push-action@14487ce63c7a62a4a324b0bfb37086795e31c6c1 # v6
               if: steps.changed_files.outputs.any_modified == 'true'
               with:
                   file: dockerbuild/Dockerfile
@@ -183,3 +187,15 @@ jobs:
                   test -f ./dist/element-desktop*.tar.gz
               env:
                   ARCH: ${{ inputs.arch }}
+
+    test:
+        needs: build
+        uses: ./.github/workflows/build_test.yaml
+        with:
+            artifact: linux-${{ inputs.arch }}-sqlcipher-${{ inputs.sqlcipher }}
+            runs-on: ${{ inputs.arch == 'arm64' && 'ubuntu-22.04-arm' || 'ubuntu-22.04' }}
+            executable: /opt/Element*/element-desktop*
+            prepare_cmd: |
+                sudo apt-get -qq update
+                sudo apt install ./dist/*.deb
+            blob_report: ${{ inputs.blob_report }}

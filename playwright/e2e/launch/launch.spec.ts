@@ -6,21 +6,24 @@ SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Com
 Please see LICENSE files in the repository root for full details.
 */
 
-import { platform } from "node:os";
+import keytar from "keytar-forked";
 
 import { test, expect } from "../../element-desktop-test.js";
 
 declare global {
+    interface ElectronPlatform {
+        getEventIndexingManager():
+            | {
+                  supportsEventIndexing(): Promise<boolean>;
+              }
+            | undefined;
+        getPickleKey(userId: string, deviceId: string): Promise<string | null>;
+        createPickleKey(userId: string, deviceId: string): Promise<string | null>;
+    }
+
     interface Window {
         mxPlatformPeg: {
-            get(): {
-                getEventIndexingManager():
-                    | {
-                          supportsEventIndexing(): Promise<boolean>;
-                      }
-                    | undefined;
-                createPickleKey(userId: string, deviceId: string): Promise<string | null>;
-            };
+            get(): ElectronPlatform;
         };
     }
 }
@@ -46,14 +49,46 @@ test.describe("App launch", () => {
         ).resolves.toBeTruthy();
     });
 
-    test("should launch and render the welcome view successfully and support keytar", async ({ page }) => {
-        test.skip(platform() === "linux", "This test does not yet support Linux");
+    test.describe("safeStorage", () => {
+        const userId = "@user:server";
+        const deviceId = "ABCDEF";
 
-        await expect(
-            page.evaluate<string | null>(async () => {
-                return await window.mxPlatformPeg.get().createPickleKey("@user:server", "ABCDEF");
-            }),
-        ).resolves.not.toBeNull();
+        test("should be supported", async ({ page }) => {
+            await expect(
+                page.evaluate(
+                    ([userId, deviceId]) => window.mxPlatformPeg.get().createPickleKey(userId, deviceId),
+                    [userId, deviceId],
+                ),
+            ).resolves.not.toBeNull();
+        });
+
+        test.describe("migrate from keytar", () => {
+            test.skip(
+                process.env.GITHUB_ACTIONS && ["linux", "darwin"].includes(process.platform),
+                "GitHub Actions hosted runner are not a compatible environment for this test",
+            );
+
+            const pickleKey = "DEADBEEF1234";
+            const keytarService = "element.io";
+            const keytarKey = `${userId}|${deviceId}`;
+
+            test.beforeAll(async () => {
+                await keytar.setPassword(keytarService, keytarKey, pickleKey);
+                await expect(keytar.getPassword(keytarService, keytarKey)).resolves.toBe(pickleKey);
+            });
+            test.afterAll(async () => {
+                await keytar.deletePassword(keytarService, keytarKey);
+            });
+
+            test("should migrate successfully", async ({ page }) => {
+                await expect(
+                    page.evaluate(
+                        ([userId, deviceId]) => window.mxPlatformPeg.get().getPickleKey(userId, deviceId),
+                        [userId, deviceId],
+                    ),
+                ).resolves.toBe(pickleKey);
+            });
+        });
     });
 
     test.describe("--no-update", () => {

@@ -30,13 +30,17 @@ on:
                 type: string
                 required: false
                 description: "Whether to sign & notarise the build, requires 'packages.element.io' environment"
+            blob_report:
+                type: boolean
+                required: false
+                description: "Whether to run the blob report"
 permissions: {} # No permissions required
 jobs:
     build:
-        runs-on: windows-2022
+        runs-on: windows-2025
         environment: ${{ inputs.sign && 'packages.element.io' || '' }}
         env:
-            SIGNTOOL_PATH: "C:/Program Files (x86)/Windows Kits/10/bin/10.0.22000.0/x86/signtool.exe"
+            SIGNTOOL_PATH: "C:/Program Files (x86)/Windows Kits/10/bin/10.0.26100.0/x86/signtool.exe"
         steps:
             - uses: nbucic/variable-mapper@0673f6891a0619ba7c002ecfed0f9f4f39017b6f
               id: config
@@ -57,7 +61,7 @@ jobs:
                           "target": "i686-pc-windows-msvc",
                           "build-args": "--ia32",
                           "arch": "x86",
-                          "extra_config": "{\"user_notice\": {\"title\": \"Your desktop support ends soon\",\"description\": \"Support for 32-bit Windows installations will end soon, this impacts you. Transition to the web or mobile app for continued access.\"}}"
+                          "extra_config": "{\"user_notice\": {\"title\": \"Your desktop environment is unsupported.\",\"description\": \"Support for 32-bit Windows installations has ended. Transition to the web or mobile app for continued access.\"}}"
                         }
                       }
 
@@ -216,3 +220,12 @@ jobs:
                   Test-Path './dist/squirrel-windows*/element-desktop-*-full.nupkg'
                   Test-Path './dist/squirrel-windows*/RELEASES'
                   Test-Path './dist/Element*.msi'
+
+    test:
+        needs: build
+        uses: ./.github/workflows/build_test.yaml
+        with:
+            artifact: win-${{ inputs.arch }}
+            runs-on: ${{ inputs.arch == 'arm64' && 'windows-11-arm' || 'windows-2022' }}
+            executable: ./dist/win*-unpacked/Element*.exe
+            blob_report: ${{ inputs.blob_report }}

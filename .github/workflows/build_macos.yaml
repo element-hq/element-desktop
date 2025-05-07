@@ -27,6 +27,10 @@ on:
                 type: string
                 required: false
                 description: "The URL to which the output will be deployed."
+            blob_report:
+                type: boolean
+                required: false
+                description: "Whether to run the blob report"
 permissions: {} # No permissions required
 jobs:
     build:
@@ -58,7 +62,7 @@ jobs:
             # M1 macos-14 comes without Python preinstalled
             - uses: actions/setup-python@v5
               with:
-                  python-version: "3.12"
+                  python-version: "3.13"
 
             - uses: actions/setup-node@v4
               with:
@@ -145,3 +149,18 @@ jobs:
               run: |
                   test -f ./dist/Element*.dmg
                   test -f ./dist/Element*-mac.zip
+
+    test:
+        needs: build
+        uses: ./.github/workflows/build_test.yaml
+        with:
+            artifact: macos
+            runs-on: macos-14
+            executable: /Users/runner/Applications/Element*.app/Contents/MacOS/Element*
+            # We need to mount the DMG and copy the app to the Applications folder as a mounted DMG is
+            # read-only and thus would not allow us to override the fuses as is required for Playwright.
+            prepare_cmd: |
+                hdiutil attach ./dist/*.dmg -mountpoint /Volumes/Element &&
+                rsync -a /Volumes/Element/Element*.app ~/Applications/ &&
+                hdiutil detach /Volumes/Element
+            blob_report: ${{ inputs.blob_report }}

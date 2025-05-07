@@ -10,9 +10,9 @@ import { type TranslationKey as TKey } from "matrix-web-i18n";
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import type Store from "electron-store";
 import type EN from "./i18n/strings/en_EN.json";
 import { loadJsonFile } from "./utils.js";
+import type Store from "./store.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -59,26 +59,24 @@ export function _t(text: TranslationKey, variables: Variables = {}): string {
 
 type Component = () => void;
 
-type TypedStore = Store<{ locale?: string | string[] }>;
-
 export class AppLocalization {
     private static readonly STORE_KEY = "locale";
 
-    private readonly store: TypedStore;
     private readonly localizedComponents?: Set<Component>;
+    private readonly store: Store;
 
-    public constructor({ store, components = [] }: { store: TypedStore; components: Component[] }) {
+    public constructor({ components = [], store }: { components: Component[]; store: Store }) {
         counterpart.registerTranslations(FALLBACK_LOCALE, this.fetchTranslationJson("en_EN"));
         counterpart.setFallbackLocale(FALLBACK_LOCALE);
         counterpart.setSeparator("|");
 
+        this.store = store;
         if (Array.isArray(components)) {
             this.localizedComponents = new Set(components);
         }
 
-        this.store = store;
-        if (this.store.has(AppLocalization.STORE_KEY)) {
-            const locales = this.store.get(AppLocalization.STORE_KEY);
+        if (store.has(AppLocalization.STORE_KEY)) {
+            const locales = store.get(AppLocalization.STORE_KEY);
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             this.setAppLocale(locales!);
         }

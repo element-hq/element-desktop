@@ -117,7 +117,7 @@ export function protocolInit(): void {
         // Protocol handler for win32/Linux
         app.on("second-instance", (ev, commandLine) => {
             const url = commandLine[commandLine.length - 1];
-            if (!url.startsWith(`${PROTOCOL}://`) && !url.startsWith(`${LEGACY_PROTOCOL}://`)) return;
+            if (!url.startsWith(`${PROTOCOL}:/`) && !url.startsWith(`${LEGACY_PROTOCOL}://`)) return;
             processUrl(url);
         });
     }
