@@ -22,7 +22,9 @@
         "about": "Om",
         "brand_help": "%(brand)s Hjelp",
         "help": "Hjelp",
-        "preferences": "Brukervalg"
+        "no": "Nei",
+        "preferences": "Brukervalg",
+        "yes": "Ja"
     },
     "confirm_quit": "Er du sikker på at du vil slutte?",
     "edit_menu": {
@@ -48,6 +50,20 @@
         "save_image_as": "Lagre bildet som...",
         "save_image_as_error_description": "Bildet kunne ikke lagres",
         "save_image_as_error_title": "Kunne ikke lagre bildet"
+    },
+    "store": {
+        "error": {
+            "backend_changed": "Tøm data og last inn på nytt?",
+            "backend_changed_detail": "Kan ikke få tilgang til hemmeligheten fra systemnøkkelringen, den ser ut til å ha blitt endret.",
+            "backend_changed_title": "Kunne ikke laste inn databasen",
+            "unknown_backend_override": "Systemet ditt har en nøkkelring som ikke støttes, noe som betyr at databasen ikke kan åpnes.",
+            "unknown_backend_override_details": "Vennligst sjekk loggene for mer informasjon.",
+            "unknown_backend_override_title": "Kunne ikke laste inn databasen",
+            "unsupported_keyring": "Systemet ditt har en nøkkelring som ikke støttes, noe som betyr at databasen ikke kan åpnes.",
+            "unsupported_keyring_cta": "Bruk svakere kryptering",
+            "unsupported_keyring_detail": "Electrons nøkkelringdeteksjon fant ikke en støttet backend. Du kan prøve å konfigurere backend manuelt ved å starte %(brand)s med et kommandolinjeargument, en engangsoperasjon. Se%(link)s.",
+            "unsupported_keyring_title": "Systemet støttes ikke"
+        }
     },
     "view_menu": {
         "actual_size": "Faktisk størrelse",

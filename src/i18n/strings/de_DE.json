@@ -22,7 +22,9 @@
         "about": "Über",
         "brand_help": "%(brand)s Hilfe",
         "help": "Hilfe",
-        "preferences": "Präferenzen"
+        "no": "Nein",
+        "preferences": "Präferenzen",
+        "yes": "Ja"
     },
     "confirm_quit": "Wirklich beenden?",
     "edit_menu": {
@@ -48,6 +50,20 @@
         "save_image_as": "Bild speichern unter...",
         "save_image_as_error_description": "Das Bild konnte nicht gespeichert werden",
         "save_image_as_error_title": "Bild kann nicht gespeichert werden"
+    },
+    "store": {
+        "error": {
+            "backend_changed": "Daten löschen und neu laden?",
+            "backend_changed_detail": "Zugriff auf Schlüssel im Systemschlüsselbund nicht möglich, er scheint sich geändert zu haben.",
+            "backend_changed_title": "Datenbank konnte nicht geladen werden",
+            "unknown_backend_override": "Der Schlüsselbund ihres Systems wird nicht unterstützt, wodurch die Datenbank nicht geöffnet werden kann.",
+            "unknown_backend_override_details": "Weitere Informationen finden Sie in den Protokollen.",
+            "unknown_backend_override_title": "Die Datenbank konnte nicht geladen werden",
+            "unsupported_keyring": "Der Schlüsselbund ihres Systems wird nicht unterstützt, wodurch die Datenbank nicht geöffnet werden kann.",
+            "unsupported_keyring_cta": "Schwächere Verschlüsselung verwenden",
+            "unsupported_keyring_detail": "Die Schlüsselbunderkennung von Electron hat kein unterstütztes Backend gefunden. Möglicherweise können sie dennoch den ihres Systemes verwenden. Infos unter %(link)s.",
+            "unsupported_keyring_title": "System nicht unterstützt"
+        }
     },
     "view_menu": {
         "actual_size": "Tatsächliche Größe",
