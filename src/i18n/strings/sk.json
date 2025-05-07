@@ -22,7 +22,9 @@
         "about": "Informácie",
         "brand_help": "%(brand)s Pomoc",
         "help": "Pomocník",
-        "preferences": "Predvoľby"
+        "no": "Nie",
+        "preferences": "Predvoľby",
+        "yes": "Áno"
     },
     "confirm_quit": "Naozaj chcete zavrieť aplikáciu?",
     "edit_menu": {
@@ -48,6 +50,20 @@
         "save_image_as": "Uložiť obrázok ako...",
         "save_image_as_error_description": "Obrázok sa nepodarilo uložiť",
         "save_image_as_error_title": "Chyba pri ukladaní obrázka"
+    },
+    "store": {
+        "error": {
+            "backend_changed": "Vymazať údaje a znova načítať?",
+            "backend_changed_detail": "Nepodarilo sa získať prístup k tajnému kľúču zo systémového zväzku kľúčov, zdá sa, že sa zmenil.",
+            "backend_changed_title": "Nepodarilo sa načítať databázu",
+            "unknown_backend_override": "Váš systém má nepodporovaný zväzok kľúčov, čo znamená, že databázu nemožno otvoriť.",
+            "unknown_backend_override_details": "Pre viac informácií si pozrite protokoly.",
+            "unknown_backend_override_title": "Nepodarilo sa načítať databázu",
+            "unsupported_keyring": "Váš systém má nepodporovaný zväzok kľúčov, čo znamená, že databázu nemožno otvoriť.",
+            "unsupported_keyring_cta": "Použiť slabšie šifrovanie",
+            "unsupported_keyring_detail": "Detekcia zväzku kľúčov aplikácie Electron nenašla podporovaný backend. Môžete sa pokúsiť manuálne nastaviť backend spustením aplikácie %(brand)s s argumentom príkazového riadka, je to jednorazová operácia. Pozrite si %(link)s .",
+            "unsupported_keyring_title": "Systém nie je podporovaný"
+        }
     },
     "view_menu": {
         "actual_size": "Aktuálna veľkosť",

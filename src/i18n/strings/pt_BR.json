@@ -61,7 +61,7 @@
             "unknown_backend_override_title": "Falha ao carregar o banco de dados",
             "unsupported_keyring": "Seu sistema possui um cofre não compatível, o que impede a abertura do banco de dados.",
             "unsupported_keyring_cta": "Use criptografia mais fraca",
-            "unsupported_keyring_detail": "A detecção de cofre do Electron não encontrou um back-end compatível. Talvez você consiga convencê-lo a usar um em seu sistema de qualquer maneira, veja %(link)s.",
+            "unsupported_keyring_detail": "A detecção de chaveiro do Electron não encontrou um backend compatível. Você pode tentar configurar manualmente o backend iniciando %(brand)s com um argumento de linha de comando, uma operação única. Consulte %(link)s.",
             "unsupported_keyring_title": "Sistema não suportado"
         }
     },
