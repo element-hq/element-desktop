@@ -61,8 +61,8 @@
             "unknown_backend_override_title": "Nie udało się załadować bazy danych",
             "unsupported_keyring": "System zawiera niewspierany keyring, nie można otworzyć bazy danych.",
             "unsupported_keyring_cta": "Użyj słabszego szyfrowania",
-            "unsupported_keyring_detail": "Wykrywanie keyring'u electron nie znalazł wspieranego backendu, możesz spróbować wymusić wybrany przez siebie, zobacz %(link)s.",
-            "unsupported_keyring_title": "Brak wsparcia systemu"
+            "unsupported_keyring_detail": "Wykrywanie keyringu Electron nie znalazł wspieranego backendu. Możesz spróbować ręcznie ustawić backed, uruchamiając %(brand)s za pomocą wiesza poleceń. Zobacz %(link)s.",
+            "unsupported_keyring_title": "System niewspierany"
         }
     },
     "view_menu": {
