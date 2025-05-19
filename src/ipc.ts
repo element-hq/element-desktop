@@ -242,6 +242,4 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
     });
 });
 
-ipcMain.handle("getConfig", async () => {
-    return global.vectorConfig;
-});
+ipcMain.handle("getConfig", () => global.vectorConfig);
