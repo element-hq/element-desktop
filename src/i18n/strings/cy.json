@@ -22,7 +22,9 @@
         "about": "Ynghylch",
         "brand_help": "Cymorth %(brand)s",
         "help": "Cymorth",
-        "preferences": "Dewisiadau"
+        "no": "Na",
+        "preferences": "Dewisiadau",
+        "yes": "Iawn"
     },
     "confirm_quit": "Ydych chi'n siŵr eich bod am roi'r gorau iddi?",
     "edit_menu": {
@@ -48,6 +50,20 @@
         "save_image_as": "Cadw delwedd fel...",
         "save_image_as_error_description": "Methodd cadw'r ddelwedd",
         "save_image_as_error_title": "Methodd cadw'r ddelwedd"
+    },
+    "store": {
+        "error": {
+            "backend_changed": "Clirio data ac ail-lwytho?",
+            "backend_changed_detail": "Methu cael mynediad at y gyfrinach o allweddi'r system, mae'n ymddangos ei fod wedi newid.",
+            "backend_changed_title": "Methwyd llwytho'r gronfa ddata",
+            "unknown_backend_override": "Mae gan eich system allweddell nad yw'n cael ei chefnogi sy'n golygu na ellir agor y gronfa ddata.",
+            "unknown_backend_override_details": "Gwiriwch y logiau am fwy o fanylion.",
+            "unknown_backend_override_title": "Methwyd llwytho'r gronfa ddata",
+            "unsupported_keyring": "Mae gan eich system allweddell nad yw'n cael ei chefnogi sy'n golygu nad oes modd agor y gronfa ddata.",
+            "unsupported_keyring_cta": "Defnyddiwch amgryptio gwannach",
+            "unsupported_keyring_detail": "Heb ganfod allweddell Electron gefn. Gallwch geisio ffurfweddu'r gefn â llaw trwy gychwyn %(brand)s gyda dadl llinell orchymyn, gweithrediad untro. Gweler %(link)s.",
+            "unsupported_keyring_title": "System heb ei chefnogi"
+        }
     },
     "view_menu": {
         "actual_size": "Maint Gwirioneddol",

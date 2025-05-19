@@ -22,7 +22,9 @@
         "about": "Informacje",
         "brand_help": "Pomoc %(brand)s",
         "help": "Pomoc",
-        "preferences": "Preferencje"
+        "no": "Nie",
+        "preferences": "Preferencje",
+        "yes": "Tak"
     },
     "confirm_quit": "Czy na pewno chcesz zamknąć?",
     "edit_menu": {
@@ -48,6 +50,20 @@
         "save_image_as": "Zapisz obraz jako...",
         "save_image_as_error_description": "Obraz nie został zapisany",
         "save_image_as_error_title": "Nie udało się zapisać obrazu"
+    },
+    "store": {
+        "error": {
+            "backend_changed": "Wyczyścić dane i przeładować?",
+            "backend_changed_detail": "Nie można uzyskać dostępu do sekretnego magazynu, wygląda na to, że uległ zmianie.",
+            "backend_changed_title": "Nie udało się załadować bazy danych",
+            "unknown_backend_override": "System zawiera niewspierany keyring, nie można otworzyć bazy danych.",
+            "unknown_backend_override_details": "Sprawdź dziennik, aby uzyskać więcej informacji.",
+            "unknown_backend_override_title": "Nie udało się załadować bazy danych",
+            "unsupported_keyring": "System zawiera niewspierany keyring, nie można otworzyć bazy danych.",
+            "unsupported_keyring_cta": "Użyj słabszego szyfrowania",
+            "unsupported_keyring_detail": "Wykrywanie keyringu Electron nie znalazł wspieranego backendu. Możesz spróbować ręcznie ustawić backed, uruchamiając %(brand)s za pomocą wiesza poleceń. Zobacz %(link)s.",
+            "unsupported_keyring_title": "System niewspierany"
+        }
     },
     "view_menu": {
         "actual_size": "Rozmiar rzeczywisty",

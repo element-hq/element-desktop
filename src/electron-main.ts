@@ -16,7 +16,6 @@ import * as Sentry from "@sentry/electron/main";
 import AutoLaunch from "auto-launch";
 import path, { dirname } from "node:path";
 import windowStateKeeper from "electron-window-state";
-import Store from "electron-store";
 import fs, { promises as afs } from "node:fs";
 import { URL, fileURLToPath } from "node:url";
 import minimist from "minimist";
@@ -25,6 +24,7 @@ import "./ipc.js";
 import "./seshat.js";
 import "./settings.js";
 import * as tray from "./tray.js";
+import Store from "./store.js";
 import { buildMenuTemplate } from "./vectormenu.js";
 import webContentsHandler from "./webcontents-handler.js";
 import * as updater from "./updater.js";
@@ -276,8 +276,6 @@ async function moveAutoLauncher(): Promise<void> {
     }
 }
 
-global.store = new Store({ name: "electron-config" });
-
 global.appQuitting = false;
 
 const exitShortcuts: Array<(input: Input, platform: string) => boolean> = [
@@ -286,32 +284,6 @@ const exitShortcuts: Array<(input: Input, platform: string) => boolean> = [
     (input, platform): boolean =>
         platform === "darwin" && input.meta && !input.control && input.key.toUpperCase() === "Q",
 ];
-
-const warnBeforeExit = (event: Event, input: Input): void => {
-    const shouldWarnBeforeExit = global.store.get("warnBeforeExit", true);
-    const exitShortcutPressed =
-        input.type === "keyDown" && exitShortcuts.some((shortcutFn) => shortcutFn(input, process.platform));
-
-    if (shouldWarnBeforeExit && exitShortcutPressed && global.mainWindow) {
-        const shouldCancelCloseRequest =
-            dialog.showMessageBoxSync(global.mainWindow, {
-                type: "question",
-                buttons: [
-                    _t("action|cancel"),
-                    _t("action|close_brand", {
-                        brand: global.vectorConfig.brand || "Element",
-                    }),
-                ],
-                message: _t("confirm_quit"),
-                defaultId: 1,
-                cancelId: 0,
-            }) === 0;
-
-        if (shouldCancelCloseRequest) {
-            event.preventDefault();
-        }
-    }
-};
 
 void configureSentry();
 
@@ -328,6 +300,11 @@ process.on("uncaughtException", function (error: Error): void {
 app.commandLine.appendSwitch("--enable-usermedia-screen-capturing");
 if (!app.commandLine.hasSwitch("enable-features")) {
     app.commandLine.appendSwitch("enable-features", "WebRTCPipeWireCapturer");
+}
+// Workaround bug in electron 36:https://github.com/electron/electron/issues/46538
+// Hopefully this will no longer be needed soon and can be removed
+if (process.platform === "linux") {
+    app.commandLine.appendSwitch("gtk-version", "3");
 }
 
 const gotLock = app.requestSingleInstanceLock();
@@ -369,13 +346,17 @@ app.enableSandbox();
 // We disable media controls here. We do this because calls use audio and video elements and they sometimes capture the media keys. See https://github.com/vector-im/element-web/issues/15704
 app.commandLine.appendSwitch("disable-features", "HardwareMediaKeyHandling,MediaSessionService");
 
+const store = Store.initialize(argv["storage-mode"]); // must be called before any async actions
+
 // Disable hardware acceleration if the setting has been set.
-if (global.store.get("disableHardwareAcceleration", false) === true) {
+if (store.get("disableHardwareAcceleration")) {
     console.log("Disabling hardware acceleration.");
     app.disableHardwareAcceleration();
 }
 
 app.on("ready", async () => {
+    console.debug("Reached Electron ready state");
+
     let asarPath: string;
 
     try {
@@ -465,12 +446,27 @@ app.on("ready", async () => {
         console.log("No update_base_url is defined: auto update is disabled");
     }
 
+    // Set up i18n before loading storage as we need translations for dialogs
+    global.appLocalization = new AppLocalization({
+        components: [(): void => tray.initApplicationMenu(), (): void => Menu.setApplicationMenu(buildMenuTemplate())],
+        store,
+    });
+
+    try {
+        console.debug("Ensuring storage is ready");
+        await store.safeStorageReady();
+    } catch (e) {
+        console.error(e);
+        app.exit(1);
+    }
+
     // Load the previous window state with fallback to defaults
     const mainWindowState = windowStateKeeper({
         defaultWidth: 1024,
         defaultHeight: 768,
     });
 
+    console.debug("Opening main window");
     const preloadScript = path.normalize(`${__dirname}/preload.cjs`);
     global.mainWindow = new BrowserWindow({
         // https://www.electronjs.org/docs/faq#the-font-looks-blurry-what-is-this-and-what-can-i-do
@@ -481,7 +477,7 @@ app.on("ready", async () => {
 
         icon: global.trayConfig.icon_path,
         show: false,
-        autoHideMenuBar: global.store.get("autoHideMenuBar", true),
+        autoHideMenuBar: store.get("autoHideMenuBar"),
 
         x: mainWindowState.x,
         y: mainWindowState.y,
@@ -503,10 +499,10 @@ app.on("ready", async () => {
 
     // Handle spellchecker
     // For some reason spellCheckerEnabled isn't persisted, so we have to use the store here
-    global.mainWindow.webContents.session.setSpellCheckerEnabled(global.store.get("spellCheckerEnabled", true));
+    global.mainWindow.webContents.session.setSpellCheckerEnabled(store.get("spellCheckerEnabled", true));
 
     // Create trayIcon icon
-    if (global.store.get("minimizeToTray", true)) tray.create(global.trayConfig);
+    if (store.get("minimizeToTray")) tray.create(global.trayConfig);
 
     global.mainWindow.once("ready-to-show", () => {
         if (!global.mainWindow) return;
@@ -520,7 +516,31 @@ app.on("ready", async () => {
         }
     });
 
-    global.mainWindow.webContents.on("before-input-event", warnBeforeExit);
+    global.mainWindow.webContents.on("before-input-event", (event: Event, input: Input): void => {
+        const shouldWarnBeforeExit = store.get("warnBeforeExit", true);
+        const exitShortcutPressed =
+            input.type === "keyDown" && exitShortcuts.some((shortcutFn) => shortcutFn(input, process.platform));
+
+        if (shouldWarnBeforeExit && exitShortcutPressed && global.mainWindow) {
+            const shouldCancelCloseRequest =
+                dialog.showMessageBoxSync(global.mainWindow, {
+                    type: "question",
+                    buttons: [
+                        _t("action|cancel"),
+                        _t("action|close_brand", {
+                            brand: global.vectorConfig.brand || "Element",
+                        }),
+                    ],
+                    message: _t("confirm_quit"),
+                    defaultId: 1,
+                    cancelId: 0,
+                }) === 0;
+
+            if (shouldCancelCloseRequest) {
+                event.preventDefault();
+            }
+        }
+    });
 
     global.mainWindow.on("closed", () => {
         global.mainWindow = null;
@@ -558,11 +578,6 @@ app.on("ready", async () => {
 
     webContentsHandler(global.mainWindow.webContents);
 
-    global.appLocalization = new AppLocalization({
-        store: global.store,
-        components: [(): void => tray.initApplicationMenu(), (): void => Menu.setApplicationMenu(buildMenuTemplate())],
-    });
-
     session.defaultSession.setDisplayMediaRequestHandler((_, callback) => {
         global.mainWindow?.webContents.send("openDesktopCapturerSourcePicker");
         setDisplayMediaCallback(callback);
@@ -599,8 +614,9 @@ app.on("second-instance", (ev, commandLine, workingDirectory) => {
     }
 });
 
-// Set the App User Model ID to match what the squirrel
-// installer uses for the shortcut icon.
-// This makes notifications work on windows 8.1 (and is
-// a noop on other platforms).
-app.setAppUserModelId("com.squirrel.element-desktop.Element");
+// This is required to make notification handlers work
+// on Windows 8.1/10/11 (and is a noop on other platforms);
+// It must also match the ID found in 'electron-builder'
+// in order to get the title and icon to show up correctly.
+// Ref: https://stackoverflow.com/a/77314604/3525780
+app.setAppUserModelId("im.riot.app");

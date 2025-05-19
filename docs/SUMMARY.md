@@ -2,10 +2,11 @@
 
 - [Introduction](../README.md)
 
-# Build
+# Build/Debug
 
 - [Native Node modules](native-node-modules.md)
 - [Windows requirements](windows-requirements.md)
+- [Using gdb](gdb.md)
 
 # Distribution
 

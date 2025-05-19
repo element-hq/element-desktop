@@ -107,7 +107,7 @@ jobs:
         environment: ${{ needs.prepare.outputs.deploy == 'true' && 'packages.element.io' || '' }}
         steps:
             - name: Download artifacts
-              uses: actions/download-artifact@v4
+              uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
 
             - name: Prepare artifacts for deployment
               run: |
@@ -197,7 +197,7 @@ jobs:
 
             - name: Stash packages.element.io
               if: needs.prepare.outputs.deploy == 'false'
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
               with:
                   name: packages.element.io
                   path: packages.element.io
@@ -235,7 +235,7 @@ jobs:
 
             - name: Stash debs
               if: needs.prepare.outputs.deploy == 'false' && needs.linux.result == 'success'
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
               with:
                   name: debs
                   path: |
@@ -274,14 +274,14 @@ jobs:
             id-token: write # This is required for requesting the JWT
         steps:
             - name: Configure AWS credentials
-              uses: aws-actions/configure-aws-credentials@v4
+              uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 # v4
               with:
                   role-to-assume: arn:aws:iam::264135176173:role/Push-ElementDesktop-MSI
                   role-session-name: githubaction-run-${{ github.run_id }}
                   aws-region: ${{ env.AWS_REGION }}
 
             - name: Download artifacts
-              uses: actions/download-artifact@v4
+              uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
               with:
                   pattern: win-*
 

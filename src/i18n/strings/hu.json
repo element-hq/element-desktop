@@ -22,7 +22,9 @@
         "about": "Névjegy",
         "brand_help": "%(brand)s Súgó",
         "help": "Súgó",
-        "preferences": "Beállítások"
+        "no": "Nem",
+        "preferences": "Beállítások",
+        "yes": "Igen"
     },
     "confirm_quit": "Biztos, hogy kilép?",
     "edit_menu": {
@@ -48,6 +50,20 @@
         "save_image_as": "Kép mentése másként…",
         "save_image_as_error_description": "A kép mentése sikertelen",
         "save_image_as_error_title": "Kép mentése sikertelen"
+    },
+    "store": {
+        "error": {
+            "backend_changed": "Adatok törlése és újratöltés?",
+            "backend_changed_detail": "Nem sikerült hozzáférni a rendszerkulcstartó titkos kódjához, úgy tűnik, megváltozott.",
+            "backend_changed_title": "Nem sikerült betölteni az adatbázist",
+            "unknown_backend_override": "A rendszer nem támogatott kulcstartóval rendelkezik, ami azt jelenti, hogy az adatbázis nem nyitható meg.",
+            "unknown_backend_override_details": "További részletekért ellenőrizze a naplókat.",
+            "unknown_backend_override_title": "Nem sikerült betölteni az adatbázist",
+            "unsupported_keyring": "A rendszer nem támogatott kulcstartóval rendelkezik, ami azt jelenti, hogy az adatbázis nem nyitható meg.",
+            "unsupported_keyring_cta": "Gyengébb titkosítás használata",
+            "unsupported_keyring_detail": "Az Electron kulcstartóészlelése nem talált támogatott háttérrendszert. Megpróbálhatja kézileg beállítani a háttérrendszert az %(brand)s egyszeri, parancssori argumentummal való indításával. Lásd: %(link)s.",
+            "unsupported_keyring_title": "A rendszer nem támogatott"
+        }
     },
     "view_menu": {
         "actual_size": "Jelenlegi méret",

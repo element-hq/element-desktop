@@ -22,7 +22,9 @@
         "about": "Tietoa",
         "brand_help": "%(brand)s-tuki",
         "help": "Ohje",
-        "preferences": "Valinnat"
+        "no": "Ei",
+        "preferences": "Valinnat",
+        "yes": "Kyllä"
     },
     "confirm_quit": "Haluatko varmasti poistua?",
     "edit_menu": {
@@ -48,6 +50,15 @@
         "save_image_as": "Tallenna kuva nimellä...",
         "save_image_as_error_description": "Kuvan tallennus epäonnistui",
         "save_image_as_error_title": "Kuvan tallennus epäonnistui"
+    },
+    "store": {
+        "error": {
+            "backend_changed_title": "Tietokannan lataaminen epäonnistui",
+            "unknown_backend_override_details": "Katso tarkemmat tiedot lokeista.",
+            "unknown_backend_override_title": "Tietokannan lataaminen epäonnistui",
+            "unsupported_keyring_cta": "Käytä heikompaa salausta",
+            "unsupported_keyring_title": "Järjestelmä ei ole tuettu"
+        }
     },
     "view_menu": {
         "actual_size": "Alkuperäinen koko",

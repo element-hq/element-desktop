@@ -22,7 +22,9 @@
         "about": "Rakenduse teave",
         "brand_help": "%(brand)s abiteave",
         "help": "Abiteave",
-        "preferences": "Eelistused"
+        "no": "Ei",
+        "preferences": "Eelistused",
+        "yes": "Jah"
     },
     "confirm_quit": "Kas sa kindlasti soovid rakendusest väljuda?",
     "edit_menu": {
@@ -48,6 +50,20 @@
         "save_image_as": "Salvesta pilt kui...",
         "save_image_as_error_description": "Seda pilti ei õnnestunud salvestada",
         "save_image_as_error_title": "Pildi salvestamine ei õnnestunud"
+    },
+    "store": {
+        "error": {
+            "backend_changed": "Kas kustutame andmed ja laadime uuesti?",
+            "backend_changed_detail": "Süsteemsest võtmerõngast ei õnnestu laadida vajalikku saladust, tundub et ta on muutunud.",
+            "backend_changed_title": "Andmebaasi ei õnnestunud laadida",
+            "unknown_backend_override": "Sinu süsteemis on kasutusel mittetoetatud võtmerõnga versioon ning see tähendab, et andmebaasi ei saa avada.",
+            "unknown_backend_override_details": "Lisateavet leiad logidest.",
+            "unknown_backend_override_title": "Andmebaasi ei õnnestunud laadida",
+            "unsupported_keyring": "Sinu süsteemis on kasutusel mittetoetatud võtmerõnga versioon ning see tähendab, et andmebaasi ei saa avada.",
+            "unsupported_keyring_cta": "Kasuta nõrgemat krüptimist",
+            "unsupported_keyring_detail": "Electroni võtmerõnga tuvastamine ei leidnud toetatud taustateenust. Kui käivitad rakenduse %(brand)s käsurealt õigete argumentidega, siis võib taustateenuse käsitsi seadistamine õnnestuda ning seda tegevust peaksid vaid üks kord tegema. Lisateave: %(link)s.",
+            "unsupported_keyring_title": "Süsteem pole toetatud"
+        }
     },
     "view_menu": {
         "actual_size": "Näita tavasuuruses",
