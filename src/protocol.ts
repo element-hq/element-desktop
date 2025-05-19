@@ -106,8 +106,7 @@ export default class ProtocolHandler {
         fs.writeFileSync(storePath, JSON.stringify(this.store));
     }
 
-    public initialise(): void {
-        const userDataPath = app.getPath("userData");
+    public initialise(userDataPath: string): void {
         for (const key in this.store) {
             // ensure each instance only has one (the latest) session ID to prevent the file growing unbounded
             if (this.store[key] === userDataPath) {
@@ -128,14 +127,14 @@ export default class ProtocolHandler {
             const parsedUrl = new URL(deeplinkUrl);
             if (parsedUrl.protocol === `${this.protocol}:` || parsedUrl.protocol === `${LEGACY_PROTOCOL}:`) {
                 const store = this.readStore();
-                let ssoID = parsedUrl.searchParams.get(SEARCH_PARAM);
-                if (!ssoID) {
+                let sessionId = parsedUrl.searchParams.get(SEARCH_PARAM);
+                if (!sessionId) {
                     // In OIDC, we must shuttle the value in the `state` param rather than `element-desktop-ssoid`
                     // We encode it as a suffix like `:element-desktop-ssoid:XXYYZZ`
-                    ssoID ??= parsedUrl.searchParams.get("state")!.split(`:${SEARCH_PARAM}:`)[1];
+                    sessionId = parsedUrl.searchParams.get("state")!.split(`:${SEARCH_PARAM}:`)[1];
                 }
-                console.log("Forwarding to profile: ", store[ssoID]);
-                return store[ssoID];
+                console.log("Forwarding to profile: ", store[sessionId]);
+                return store[sessionId];
             }
         }
     }

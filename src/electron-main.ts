@@ -315,7 +315,7 @@ if (!gotLock) {
 }
 
 // do this after we know we are the primary instance of the app
-protocolHandler.initialise();
+protocolHandler.initialise(userDataPath);
 
 // Register the scheme the app is served from as 'standard'
 // which allows things like relative URLs and IndexedDB to
