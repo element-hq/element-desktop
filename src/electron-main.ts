@@ -73,12 +73,13 @@ function isRealUserDataDir(d: string): boolean {
     return fs.existsSync(path.join(d, "IndexedDB"));
 }
 
-global.buildConfig = readBuildConfig();
+const buildConfig = readBuildConfig();
+const protocolHandler = new ProtocolHandler(buildConfig.protocol);
 
 // check if we are passed a profile in the SSO callback url
 let userDataPath: string;
 
-const userDataPathInProtocol = ProtocolHandler.getProfileFromDeeplink(global.buildConfig.protocol, argv["_"]);
+const userDataPathInProtocol = protocolHandler.getProfileFromDeeplink(argv["_"]);
 if (userDataPathInProtocol) {
     userDataPath = userDataPathInProtocol;
 } else if (argv["profile-dir"]) {
@@ -314,7 +315,7 @@ if (!gotLock) {
 }
 
 // do this after we know we are the primary instance of the app
-ProtocolHandler.initialize(global.buildConfig.protocol);
+protocolHandler.initialise();
 
 // Register the scheme the app is served from as 'standard'
 // which allows things like relative URLs and IndexedDB to
@@ -619,4 +620,4 @@ app.on("second-instance", (ev, commandLine, workingDirectory) => {
 // It must also match the ID found in 'electron-builder'
 // in order to get the title and icon to show up correctly.
 // Ref: https://stackoverflow.com/a/77314604/3525780
-app.setAppUserModelId("im.riot.app");
+app.setAppUserModelId(buildConfig.appId);

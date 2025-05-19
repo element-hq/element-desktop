@@ -1,9 +1,6 @@
 import * as os from "node:os";
 import * as fs from "node:fs";
-import {
-    type Configuration as BaseConfiguration,
-    type Protocol,
-} from "electron-builder";
+import { type Configuration as BaseConfiguration, type Protocol } from "electron-builder";
 
 /**
  * This script has different outputs depending on your os platform.

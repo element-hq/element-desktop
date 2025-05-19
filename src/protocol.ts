@@ -6,10 +6,11 @@ SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Com
 Please see LICENSE files in the repository root for full details.
 */
 
-import { app } from "electron";
+import { app, ipcMain } from "electron";
 import { URL } from "node:url";
 import path from "node:path";
 import fs from "node:fs";
+import { randomUUID } from "node:crypto";
 
 const LEGACY_PROTOCOL = "element";
 const SEARCH_PARAM = "element-desktop-ssoid";
@@ -19,26 +20,10 @@ const STORE_FILE_NAME = "sso-sessions.json";
 const storePath = path.join(app.getPath("userData"), STORE_FILE_NAME);
 
 export default class ProtocolHandler {
-    private static internalInstance?: ProtocolHandler;
+    private readonly store: Record<string, string> = {};
+    private readonly sessionId: string;
 
-    public static get instance(): ProtocolHandler | undefined {
-        return ProtocolHandler.internalInstance;
-    }
-
-    /**
-     * Prepare the store, does not prepare safeStorage, which needs to be done after the app is ready.
-     * Must be executed in the first tick of the event loop so that it can call Electron APIs before ready state.
-     */
-    public static initialize(protocol: string): ProtocolHandler {
-        if (ProtocolHandler.internalInstance) {
-            throw new Error("Store already initialized");
-        }
-
-        ProtocolHandler.internalInstance = new ProtocolHandler(protocol);
-        return ProtocolHandler.internalInstance;
-    }
-
-    private constructor(private readonly protocol: string) {
+    public constructor(private readonly protocol: string) {
         // get all args except `hidden` as it'd mean the app would not get focused
         // XXX: passing args to protocol handlers only works on Windows, so unpackaged deep-linking
         // --profile/--profile-dir are passed via the SEARCH_PARAM var in the callback url
@@ -67,7 +52,19 @@ export default class ProtocolHandler {
                 this.processUrl(url);
             });
         }
+
+        this.store = this.readStore();
+        this.sessionId = randomUUID();
+
+        ipcMain.handle("getProtocol", this.onGetProtocol);
     }
+
+    private readonly onGetProtocol = (): { protocol: string; sessionId: string } => {
+        return {
+            protocol: this.protocol,
+            sessionId: this.sessionId,
+        };
+    };
 
     private processUrl(url: string): void {
         if (!global.mainWindow) return;
@@ -95,7 +92,7 @@ export default class ProtocolHandler {
         void global.mainWindow.loadURL(urlToLoad.href);
     }
 
-    private static readStore(): Record<string, string> {
+    private readStore(): Record<string, string> {
         try {
             const s = fs.readFileSync(storePath, { encoding: "utf8" });
             const o = JSON.parse(s);
@@ -105,38 +102,37 @@ export default class ProtocolHandler {
         }
     }
 
-    private static writeStore(data: Record<string, string>): void {
-        fs.writeFileSync(storePath, JSON.stringify(data));
+    private writeStore(): void {
+        fs.writeFileSync(storePath, JSON.stringify(this.store));
     }
 
-    public recordSSOSession(sessionID: string): void {
+    public initialise(): void {
         const userDataPath = app.getPath("userData");
-        const store = ProtocolHandler.readStore();
-        for (const key in store) {
+        for (const key in this.store) {
             // ensure each instance only has one (the latest) session ID to prevent the file growing unbounded
-            if (store[key] === userDataPath) {
-                delete store[key];
+            if (this.store[key] === userDataPath) {
+                delete this.store[key];
                 break;
             }
         }
-        store[sessionID] = userDataPath;
-        ProtocolHandler.writeStore(store);
+        this.store[this.sessionId] = userDataPath;
+        this.writeStore();
     }
 
-    public static getProfileFromDeeplink(protocol: string, args: string[]): string | undefined {
+    public getProfileFromDeeplink(args: string[]): string | undefined {
         // check if we are passed a profile in the SSO callback url
         const deeplinkUrl = args.find(
-            (arg) => arg.startsWith(`${protocol}://`) || arg.startsWith(`${LEGACY_PROTOCOL}://`),
+            (arg) => arg.startsWith(`${this.protocol}://`) || arg.startsWith(`${LEGACY_PROTOCOL}://`),
         );
         if (deeplinkUrl?.includes(SEARCH_PARAM)) {
             const parsedUrl = new URL(deeplinkUrl);
-            if (parsedUrl.protocol === `${protocol}:` || parsedUrl.protocol === `${LEGACY_PROTOCOL}:`) {
+            if (parsedUrl.protocol === `${this.protocol}:` || parsedUrl.protocol === `${LEGACY_PROTOCOL}:`) {
                 const store = this.readStore();
                 let ssoID = parsedUrl.searchParams.get(SEARCH_PARAM);
                 if (!ssoID) {
                     // In OIDC, we must shuttle the value in the `state` param rather than `element-desktop-ssoid`
                     // We encode it as a suffix like `:element-desktop-ssoid:XXYYZZ`
-                    ssoID = parsedUrl.searchParams.get("state")!.split(`:${SEARCH_PARAM}:`)[1];
+                    ssoID ??= parsedUrl.searchParams.get("state")!.split(`:${SEARCH_PARAM}:`)[1];
                 }
                 console.log("Forwarding to profile: ", store[ssoID]);
                 return store[ssoID];
