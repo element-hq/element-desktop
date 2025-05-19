@@ -9,7 +9,7 @@ import path from "node:path";
 
 import { type JsonObject, loadJsonFile } from "./utils.js";
 
-export interface BuildConfig {
+interface BuildConfig {
     appId: string;
     protocol: string;
 }
