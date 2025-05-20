@@ -4,7 +4,6 @@ set -x
 
 deforg="$1"
 defrepo="$2"
-defbranch="$3"
 
 rm -r "$defrepo" || true
 
@@ -31,23 +30,13 @@ clone() {
     fi
 }
 
-# A function that gets info about a PR from the GitHub API based on its number
-getPRInfo() {
-    number=$1
-    if [ -n "$number" ]; then
-        echo "Getting info about a PR with number $number"
+number=$1
+if [ -n "$number" ]; then
+    echo "Getting info about a PR with number $PR_NUMBER"
 
-        apiEndpoint="https://api.github.com/repos/$PR_ORG/$PR_REPO/pulls/$number"
+    apiEndpoint="https://api.github.com/repos/$PR_ORG/$PR_REPO/pulls/$PR_NUMBER"
 
-        head=$(curl $apiEndpoint | jq -r '.head.label')
-    fi
-}
-
-# Some CIs don't give us enough info, so we just get the PR number and ask the
-# GH API for more info - "fork:branch". Some give us this directly.
-if [ -n "$PR_NUMBER" ]; then
-    # GitHub
-    getPRInfo $PR_NUMBER
+    head=$(curl "$apiEndpoint" | jq -r '.head.label')
 fi
 
 # for forks, $head will be in the format "fork:branch", so we split it by ":"
@@ -64,24 +53,6 @@ if [[ "$head" == *":"* ]]; then
     fi
     TRY_BRANCH=${BRANCH_ARRAY[1]}
 fi
-clone ${TRY_ORG} $defrepo ${TRY_BRANCH}
+clone "$TRY_ORG" "$defrepo" "$TRY_BRANCH"
 
-# For merge queue runs we need to extract the temporary branch name
-# the ref_name will look like `gh-readonly-queue/<branch>/pr-<number>-<sha>`
-if [[ "$GITHUB_EVENT_NAME" == "merge_group" ]]; then
-    withoutPrefix=${GITHUB_REF_NAME#gh-readonly-queue/}
-    clone $deforg $defrepo ${withoutPrefix%%/pr-*}
-fi
-
-# Try the target branch of the push or PR, or the branch that was pushed to
-# (ie. the 'master' branch should use matching 'master' dependencies)
-base_or_branch=$GITHUB_BASE_REF
-if [[ "$GITHUB_EVENT_NAME" == "push" ]]; then
-    base_or_branch=${GITHUB_REF}
-fi
-if [ -n "$base_or_branch" ]; then
-    clone $deforg $defrepo $base_or_branch
-fi
-
-# Use the default branch as the last resort.
-clone $deforg $defrepo $defbranch
+exit 1

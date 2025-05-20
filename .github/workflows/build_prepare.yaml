@@ -69,21 +69,20 @@ jobs:
               if: inputs.branch-matching
               continue-on-error: true
               run: |
-                  # We specify an invalid default branch so it falls through to the next step if there is no matching branch
-                  scripts/fetchdep.sh element-hq element-web INVALID
+                  scripts/branch-match.sh
                   cp "$CONFIG_DIR/config.json" element-web/
                   yarn --cwd element-web install --frozen-lockfile
                   yarn --cwd element-web run build
                   mv element-web/webapp .
                   yarn asar-webapp
               env:
-                  # These must be set for fetchdep.sh to get the right branch
+                  # These must be set for branch-match.sh to get the right branch
                   REPOSITORY: ${{ github.repository }}
                   PR_NUMBER: ${{ github.event.pull_request.number }}
                   CONFIG_DIR: ${{ inputs.config }}
 
             - name: Fetch Element Web (${{ inputs.version }})
-              if: steps.branch-matching.conclusion == 'failure' || steps.branch-matching.outcome == 'skipped'
+              if: steps.branch-matching.outcome == 'failure' || steps.branch-matching.outcome == 'skipped'
               run: yarn run fetch --noverify -d ${{ inputs.config }} ${{ inputs.version }}
 
             # We split this out to save the build_* scripts having to do it to make use of `hashFiles` in the cache action
