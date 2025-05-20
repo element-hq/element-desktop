@@ -23,14 +23,9 @@ clone() {
     fi
 }
 
-number=$1
-if [ -n "$number" ]; then
-    echo "Getting info about a PR with number $PR_NUMBER"
-
-    apiEndpoint="https://api.github.com/repos/$PR_ORG/$PR_REPO/pulls/$PR_NUMBER"
-
-    head=$(curl "$apiEndpoint" | jq -r '.head.label')
-fi
+echo "Getting info about a PR with number $PR_NUMBER"
+apiEndpoint="https://api.github.com/repos/$PR_ORG/$PR_REPO/pulls/$PR_NUMBER"
+head=$(curl "$apiEndpoint" | jq -r '.head.label')
 
 # for forks, $head will be in the format "fork:branch", so we split it by ":"
 # into an array. On non-forks, this has the effect of splitting into a single
