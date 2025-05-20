@@ -5,9 +5,12 @@ SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Com
 Please see LICENSE files in the repository root for full details.
 */
 
-import path from "node:path";
+import path, { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 
 import { type JsonObject, loadJsonFile } from "./utils.js";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 interface BuildConfig {
     appId: string;
