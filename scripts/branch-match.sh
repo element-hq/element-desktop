@@ -1,9 +1,11 @@
 #!/bin/bash
 
+# Script for downloading a branch of element-web matching the branch a PR is contributed from
+
 set -x
 
 deforg="element-hq"
-defrepo="element-desktop"
+defrepo="element-web"
 
 # The PR_NUMBER variable must be set explicitly.
 default_org_repo=${GITHUB_REPOSITORY:-"$deforg/$defrepo"}
