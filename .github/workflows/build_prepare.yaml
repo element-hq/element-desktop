@@ -82,7 +82,7 @@ jobs:
                   CONFIG_DIR: ${{ inputs.config }}
 
             - name: Fetch Element Web (${{ inputs.version }})
-              if: steps.branch-matching.conclusion == 'failure' || steps.branch-matching.outcome == 'skipped'
+              if: steps.branch-matching.outcome == 'failure' || steps.branch-matching.outcome == 'skipped'
               run: yarn run fetch --noverify -d ${{ inputs.config }} ${{ inputs.version }}
 
             # We split this out to save the build_* scripts having to do it to make use of `hashFiles` in the cache action
