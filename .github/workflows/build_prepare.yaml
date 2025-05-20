@@ -20,6 +20,11 @@ on:
                 required: false
                 default: false
                 description: "Whether the build should be deployed to production"
+            branch-matching:
+                type: boolean
+                required: false
+                default: false
+                description: "Whether the branch name should be matched to find the element-web commit"
         secrets:
             # Required if `nightly` is set
             CF_R2_ACCESS_KEY_ID:
@@ -59,7 +64,26 @@ jobs:
             - name: Install Deps
               run: "yarn install --frozen-lockfile"
 
-            - name: Fetch Element Web
+            - name: Fetch Element Web (matching branch)
+              id: branch-matching
+              if: inputs.branch-matching
+              continue-on-error: true
+              run: |
+                  # We specify an invalid default branch so it falls through to the next step if there is no matching branch
+                  scripts/fetchdep.sh element-hq element-web INVALID
+                  cp "$CONFIG_DIR/config.json" element-web/
+                  yarn --cwd element-web install --frozen-lockfile
+                  yarn --cwd element-web run build
+                  mv element-web/webapp .
+                  yarn asar-webapp
+              env:
+                  # These must be set for fetchdep.sh to get the right branch
+                  REPOSITORY: ${{ github.repository }}
+                  PR_NUMBER: ${{ github.event.pull_request.number }}
+                  CONFIG_DIR: ${{ inputs.config }}
+
+            - name: Fetch Element Web (${{ inputs.version }})
+              if: steps.branch-matching.conclusion == 'failure' || steps.branch-matching.outcome == 'skipped'
               run: yarn run fetch --noverify -d ${{ inputs.config }} ${{ inputs.version }}
 
             # We split this out to save the build_* scripts having to do it to make use of `hashFiles` in the cache action
