@@ -6,6 +6,7 @@
 
 - [Native Node modules](native-node-modules.md)
 - [Windows requirements](windows-requirements.md)
+- [Debugging](debugging.md)
 - [Using gdb](gdb.md)
 
 # Distribution
