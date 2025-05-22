@@ -31,6 +31,6 @@ test.describe("OIDC Native", () => {
             page.evaluate<string>(() => {
                 return window.mxPlatformPeg.get().getOidcCallbackUrl().toString();
             }),
-        ).resolves.toBe("io.element.desktop:/vector/webapp/");
+        ).resolves.toMatch(/io\.element\.(desktop|nightly):\/vector\/webapp\//);
     });
 });
