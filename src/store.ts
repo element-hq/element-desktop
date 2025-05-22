@@ -258,7 +258,6 @@ class Store extends ElectronStore<StoreData> {
             }
 
             if (this.get("safeStorageBackendMigrate")) {
-                this.secrets = new PlaintextStorageWriter(this);
                 return this.upgradeLinuxBackend2();
             }
 
@@ -322,7 +321,6 @@ class Store extends ElectronStore<StoreData> {
                 if (safeStorageBackend === "basic_text") {
                     return this.upgradeLinuxBackend1();
                 } else if (safeStorageBackend === "plaintext") {
-                    this.secrets = new PlaintextStorageWriter(this);
                     this.upgradeLinuxBackend3();
                 } else if (safeStorageBackend in safeStorageBackendMap) {
                     this.set("safeStorageBackendOverride", true);
@@ -383,7 +381,7 @@ class Store extends ElectronStore<StoreData> {
         relaunchApp();
     }
     private upgradeLinuxBackend2(): void {
-        if (!this.secrets) throw new Error("safeStorage not ready");
+        this.secrets = new PlaintextStorageWriter(this);
         console.info("Performing safeStorage migration");
         const data = this.get("safeStorage");
         if (data) {
@@ -396,7 +394,7 @@ class Store extends ElectronStore<StoreData> {
         relaunchApp();
     }
     private upgradeLinuxBackend3(): void {
-        if (!this.secrets) throw new Error("safeStorage not ready");
+        this.secrets = new PlaintextStorageWriter(this);
         const selectedSafeStorageBackend = safeStorage.getSelectedStorageBackend();
         console.info(`Finishing safeStorage migration to ${selectedSafeStorageBackend}`);
         const data = this.get("safeStorage");
