@@ -23,7 +23,7 @@ export async function randomArray(size: number): Promise<string> {
 
 type JsonValue = null | string | number;
 type JsonArray = Array<JsonValue | JsonObject | JsonArray>;
-interface JsonObject {
+export interface JsonObject {
     [key: string]: JsonObject | JsonArray | JsonValue;
 }
 export type Json = JsonArray | JsonObject;

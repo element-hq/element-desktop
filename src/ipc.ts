@@ -8,7 +8,6 @@ Please see LICENSE files in the repository root for full details.
 import { app, autoUpdater, desktopCapturer, ipcMain, powerSaveBlocker, TouchBar, nativeImage } from "electron";
 
 import IpcMainEvent = Electron.IpcMainEvent;
-import { recordSSOSession } from "./protocol.js";
 import { randomArray } from "./utils.js";
 import { Settings } from "./settings.js";
 import { getDisplayMediaCallback, setDisplayMediaCallback } from "./displayMediaCallback.js";
@@ -96,9 +95,7 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
                 global.mainWindow.focus();
             }
             break;
-        case "getConfig":
-            ret = global.vectorConfig;
-            break;
+
         case "navigateBack":
             if (global.mainWindow.webContents.canGoBack()) {
                 global.mainWindow.webContents.goBack();
@@ -133,10 +130,6 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
             break;
         case "getAvailableSpellCheckLanguages":
             ret = global.mainWindow.webContents.session.availableSpellCheckerLanguages;
-            break;
-
-        case "startSSOFlow":
-            recordSSOSession(args[0]);
             break;
 
         case "getPickleKey":
@@ -248,3 +241,5 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
         reply: ret,
     });
 });
+
+ipcMain.handle("getConfig", () => global.vectorConfig);

@@ -49,4 +49,16 @@ contextBridge.exposeInMainWorld("electron", {
         }
         ipcRenderer.send(channel, ...args);
     },
+
+    async initialise(): Promise<{
+        protocol: string;
+        sessionId: string;
+        config: IConfigOptions;
+    }> {
+        const [{ protocol, sessionId }, config] = await Promise.all([
+            ipcRenderer.invoke("getProtocol"),
+            ipcRenderer.invoke("getConfig"),
+        ]);
+        return { protocol, sessionId, config };
+    },
 });
