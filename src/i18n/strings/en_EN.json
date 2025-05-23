@@ -56,13 +56,14 @@
             "backend_changed": "Clear data and reload?",
             "backend_changed_detail": "Unable to access secret from system keyring, it appears to have changed.",
             "backend_changed_title": "Failed to load database",
-            "unknown_backend_override": "Your system has an unsupported keyring meaning the database cannot be opened.",
-            "unknown_backend_override_details": "Please check the logs for more details.",
-            "unknown_backend_override_title": "Failed to load database",
+            "backend_no_encryption": "Your system has a supported keyring but encryption is not available.",
+            "backend_no_encryption_detail": "Electron has detected that encryption is not available on your keyring %(backend)s. Please ensure that you have the keyring installed. If you do have the keyring installed, please reboot and try again. Optionally, you can allow %(brand)s to use a weaker form of encryption.",
+            "backend_no_encryption_title": "No encryption support",
             "unsupported_keyring": "Your system has an unsupported keyring meaning the database cannot be opened.",
-            "unsupported_keyring_cta": "Use weaker encryption",
             "unsupported_keyring_detail": "Electron's keyring detection did not find a supported backend. You can attempt to manually configure the backend by starting %(brand)s with a command-line argument, a one-time operation. See %(link)s.",
-            "unsupported_keyring_title": "System unsupported"
+            "unsupported_keyring_title": "System unsupported",
+            "unsupported_keyring_use_basic_text": "Use weaker encryption",
+            "unsupported_keyring_use_plaintext": "Use no encryption"
         }
     },
     "view_menu": {
