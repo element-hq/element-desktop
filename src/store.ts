@@ -246,7 +246,6 @@ class Store extends ElectronStore<StoreData> {
             return "plaintext";
         }
 
-        const isEncryptionAvailable = safeStorage.isEncryptionAvailable();
         if (process.platform === "linux") {
             // The following enables plain text encryption if the backend used is basic_text.
             // It has no significance for any other backend.
@@ -258,13 +257,13 @@ class Store extends ElectronStore<StoreData> {
             // https://github.com/electron/electron/issues/39789 https://github.com/microsoft/vscode/issues/185212
             const selectedBackend = safeStorage.getSelectedStorageBackend();
 
-            if (selectedBackend === "unknown" || !isEncryptionAvailable) {
+            if (selectedBackend === "unknown" || !safeStorage.isEncryptionAvailable()) {
                 return "plaintext";
             }
             return selectedBackend;
         }
 
-        return isEncryptionAvailable ? "system" : "plaintext";
+        return safeStorage.isEncryptionAvailable() ? "system" : "plaintext";
     }
 
     /**
@@ -282,6 +281,13 @@ class Store extends ElectronStore<StoreData> {
 
         if (!existingSafeStorageBackend) {
             // First launch of the app or first launch since the update
+            if (this.mode !== Mode.ForcePlaintext && backend === "plaintext" && process.platform === "linux") {
+                // Special case:
+                // we are on Linux and the backend is plaintext because isEncryptionAvailable returned false,
+                // try relaunch in basic_text mode which will failover to plaintext if it fails
+                this.recordSafeStorageBackend("basic_text", true);
+                return relaunchApp();
+            }
             if (this.mode === Mode.Encrypted && (backend === "plaintext" || backend === "basic_text")) {
                 // Ask the user for consent to use a degraded mode
                 await this.consultUserConsentDegradedMode(backend);
@@ -298,7 +304,7 @@ class Store extends ElectronStore<StoreData> {
             console.warn(`safeStorage backend changed from ${existingSafeStorageBackend} to ${backend}`);
 
             if (existingSafeStorageBackend in safeStorageBackendMap) {
-                this.set("safeStorageBackendOverride", true);
+                this.recordSafeStorageBackend(existingSafeStorageBackend, true);
                 return relaunchApp();
             } else {
                 await this.consultUserBackendChangedUnableToMigrate();
@@ -371,8 +377,11 @@ class Store extends ElectronStore<StoreData> {
         }
     }
 
-    private recordSafeStorageBackend(backend: SafeStorageBackend): void {
+    private recordSafeStorageBackend(backend: SafeStorageBackend, override?: boolean): void {
         this.set("safeStorageBackend", backend);
+        if (override) {
+            this.set("safeStorageBackendOverride", true);
+        }
     }
 
     /**
