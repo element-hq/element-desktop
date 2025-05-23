@@ -353,7 +353,7 @@ class Store extends ElectronStore<StoreData> {
                     brand: global.vectorConfig.brand || "Element",
                 }),
                 type: "error",
-                buttons: [_t("action|cancel"), _t("store|error|unsupported_keyring_cta")],
+                buttons: [_t("action|cancel"), _t("store|error|unsupported_keyring_use_plaintext")],
                 defaultId: 0,
                 cancelId: 0,
             });
@@ -370,7 +370,7 @@ class Store extends ElectronStore<StoreData> {
                     link: "https://www.electronjs.org/docs/latest/api/safe-storage#safestoragegetselectedstoragebackend-linux",
                 }),
                 type: "error",
-                buttons: [_t("action|cancel"), _t("store|error|unsupported_keyring_cta")],
+                buttons: [_t("action|cancel"), _t("store|error|unsupported_keyring_use_basic_text")],
                 defaultId: 0,
                 cancelId: 0,
             });
