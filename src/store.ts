@@ -278,42 +278,9 @@ class Store extends ElectronStore<StoreData> {
 
         if (!existingSafeStorageBackend) {
             // First launch of the app or first launch since the update
-            if (this.mode === Mode.Encrypted && backend === "plaintext") {
-                // Sometimes we may have a working backend that for some reason does not support encryption at the moment.
-                // This may be because electron reported an incorrect backend or because of some known issues with the keyring itself.
-                // In any case, when this happens, we give the user an option to use a weaker form of encryption.
-                const { response } = await dialog.showMessageBox({
-                    title: _t("store|error|backend_no_encryption_title"),
-                    message: _t("store|error|backend_no_encryption"),
-                    detail: _t("store|error|backend_no_encryption_detail", {
-                        backend: safeStorage.getSelectedStorageBackend(),
-                        brand: global.vectorConfig.brand || "Element",
-                    }),
-                    type: "error",
-                    buttons: [_t("action|cancel"), _t("store|error|unsupported_keyring_cta")],
-                    defaultId: 0,
-                    cancelId: 0,
-                });
-                if (response === 0) {
-                    throw new Error("isEncryptionAvailable=false and user rejected plaintext");
-                }
-            } else if (this.mode === Mode.Encrypted && backend === "basic_text") {
-                // Electron did not identify a compatible encrypted backend, ask user for consent to degraded mode
-                const { response } = await dialog.showMessageBox({
-                    title: _t("store|error|unsupported_keyring_title"),
-                    message: _t("store|error|unsupported_keyring"),
-                    detail: _t("store|error|unsupported_keyring_detail", {
-                        brand: global.vectorConfig.brand || "Element",
-                        link: "https://www.electronjs.org/docs/latest/api/safe-storage#safestoragegetselectedstoragebackend-linux",
-                    }),
-                    type: "error",
-                    buttons: [_t("action|cancel"), _t("store|error|unsupported_keyring_cta")],
-                    defaultId: 0,
-                    cancelId: 0,
-                });
-                if (response === 0) {
-                    throw new Error("safeStorage backend basic_text and user rejected it");
-                }
+            if (this.mode === Mode.Encrypted && (backend === "plaintext" || backend === "basic_text")) {
+                // Ask the user for consent to use a degraded mode
+                await this.consultUserConsentDegradedMode(backend);
             }
             // Store the backend used for the safeStorage data so we can detect if it changes, and we know how the data is encoded
             this.recordSafeStorageBackend(backend);
@@ -330,20 +297,7 @@ class Store extends ElectronStore<StoreData> {
                 this.set("safeStorageBackendOverride", true);
                 return relaunchApp();
             } else {
-                // Warn the user that the backend has changed and tell them that we cannot migrate
-                const { response } = await dialog.showMessageBox({
-                    title: _t("store|error|backend_changed_title"),
-                    message: _t("store|error|backend_changed"),
-                    detail: _t("store|error|backend_changed_detail"),
-                    type: "question",
-                    buttons: [_t("common|no"), _t("common|yes")],
-                    defaultId: 0,
-                    cancelId: 0,
-                });
-                if (response === 0) {
-                    throw new Error("safeStorage backend changed and cannot migrate");
-                }
-                return clearDataAndRelaunch();
+                await this.consultUserBackendChangedUnableToMigrate();
             }
         }
 
@@ -353,6 +307,63 @@ class Store extends ElectronStore<StoreData> {
             this.secrets = new SafeStorageWriter(this);
         } else {
             this.secrets = new StorageWriter(this);
+        }
+    }
+
+    private async consultUserBackendChangedUnableToMigrate(): Promise<void> {
+        const { response } = await dialog.showMessageBox({
+            title: _t("store|error|backend_changed_title"),
+            message: _t("store|error|backend_changed"),
+            detail: _t("store|error|backend_changed_detail"),
+            type: "question",
+            buttons: [_t("common|no"), _t("common|yes")],
+            defaultId: 0,
+            cancelId: 0,
+        });
+        if (response === 0) {
+            throw new Error("safeStorage backend changed and cannot migrate");
+        }
+        return clearDataAndRelaunch();
+    }
+
+    private async consultUserConsentDegradedMode(backend: "plaintext" | "basic_text"): Promise<void> {
+        if (backend === "plaintext") {
+            // Sometimes we may have a working backend that for some reason does not support encryption at the moment.
+            // This may be because electron reported an incorrect backend or because of some known issues with the keyring itself.
+            // Or the environment specified `--storage-mode=force-plaintext`.
+            // In any case, when this happens, we give the user an option to use a weaker form of encryption.
+            const { response } = await dialog.showMessageBox({
+                title: _t("store|error|backend_no_encryption_title"),
+                message: _t("store|error|backend_no_encryption"),
+                detail: _t("store|error|backend_no_encryption_detail", {
+                    backend: safeStorage.getSelectedStorageBackend(),
+                    brand: global.vectorConfig.brand || "Element",
+                }),
+                type: "error",
+                buttons: [_t("action|cancel"), _t("store|error|unsupported_keyring_cta")],
+                defaultId: 0,
+                cancelId: 0,
+            });
+            if (response === 0) {
+                throw new Error("isEncryptionAvailable=false and user rejected plaintext");
+            }
+        } else {
+            // Electron did not identify a compatible encrypted backend, ask user for consent to degraded mode
+            const { response } = await dialog.showMessageBox({
+                title: _t("store|error|unsupported_keyring_title"),
+                message: _t("store|error|unsupported_keyring"),
+                detail: _t("store|error|unsupported_keyring_detail", {
+                    brand: global.vectorConfig.brand || "Element",
+                    link: "https://www.electronjs.org/docs/latest/api/safe-storage#safestoragegetselectedstoragebackend-linux",
+                }),
+                type: "error",
+                buttons: [_t("action|cancel"), _t("store|error|unsupported_keyring_cta")],
+                defaultId: 0,
+                cancelId: 0,
+            });
+            if (response === 0) {
+                throw new Error("safeStorage backend basic_text and user rejected it");
+            }
         }
     }
 
