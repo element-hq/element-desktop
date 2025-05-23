@@ -241,9 +241,8 @@ class Store extends ElectronStore<StoreData> {
             // Linux safeStorage support is hellish, the support varies on the Desktop Environment used rather than the store itself.
             // https://github.com/electron/electron/issues/39789 https://github.com/microsoft/vscode/issues/185212
             const selectedSafeStorageBackend = safeStorage.getSelectedStorageBackend();
-            const isEncryptionAvailable = safeStorage.isEncryptionAvailable();
             console.info(
-                `safeStorage backend '${selectedSafeStorageBackend}' selected, '${safeStorageBackend}' in config, isEncryptionAvailable = ${isEncryptionAvailable}.`,
+                `safeStorage backend '${selectedSafeStorageBackend}' selected, '${safeStorageBackend}' in config.`,
             );
 
             if (selectedSafeStorageBackend === "unknown") {
@@ -261,38 +260,7 @@ class Store extends ElectronStore<StoreData> {
                 return this.upgradeLinuxBackend2();
             }
 
-            // Whether we were using basic_text as a fallback before
-            const usingFallback = this.get("safeStorageBackendOverride") && safeStorageBackend === "basic_text";
-
-            if (this.mode === Mode.Encrypted && !isEncryptionAvailable && !usingFallback) {
-                // Sometimes we may have a working backend that for some reason does not support encryption at the moment.
-                // This may be because electron reported an incorrect backend or because of some known issues with the keyring itself.
-                // In any case, when this happens, we give the user an option to use a weaker form of encryption.
-                const { response } = await dialog.showMessageBox({
-                    title: _t("store|error|backend_no_encryption_title"),
-                    message: _t("store|error|backend_no_encryption"),
-                    detail: _t("store|error|backend_no_encryption_detail", {
-                        backend: safeStorageBackend,
-                        brand: global.vectorConfig.brand || "Element",
-                    }),
-                    type: "error",
-                    buttons: [_t("action|cancel"), _t("store|error|unsupported_keyring_cta")],
-                    defaultId: 0,
-                    cancelId: 0,
-                });
-                if (response === 0) {
-                    throw new Error(
-                        `Encryption support not available on backend ${safeStorageBackend} and user prohibits using weaker encryption.`,
-                    );
-                }
-                this.recordSafeStorageBackend("basic_text");
-                this.set("safeStorageBackendOverride", true);
-                relaunchApp();
-            } else if (usingFallback) {
-                // On the next run, don't use the fallback.
-                // This is so that we can check if the problems with the keyring fixed itself.
-                this.set("safeStorageBackendOverride", false);
-            } else if (!safeStorageBackend) {
+            if (!safeStorageBackend) {
                 if (selectedSafeStorageBackend === "basic_text" && this.mode === Mode.Encrypted) {
                     const { response } = await dialog.showMessageBox({
                         title: _t("store|error|unsupported_keyring_title"),
@@ -381,7 +349,7 @@ class Store extends ElectronStore<StoreData> {
         relaunchApp();
     }
     private upgradeLinuxBackend2(): void {
-        this.secrets = new PlaintextStorageWriter(this);
+        if (!this.secrets) throw new Error("safeStorage not ready");
         console.info("Performing safeStorage migration");
         const data = this.get("safeStorage");
         if (data) {
@@ -394,7 +362,7 @@ class Store extends ElectronStore<StoreData> {
         relaunchApp();
     }
     private upgradeLinuxBackend3(): void {
-        this.secrets = new PlaintextStorageWriter(this);
+        if (!this.secrets) throw new Error("safeStorage not ready");
         const selectedSafeStorageBackend = safeStorage.getSelectedStorageBackend();
         console.info(`Finishing safeStorage migration to ${selectedSafeStorageBackend}`);
         const data = this.get("safeStorage");
