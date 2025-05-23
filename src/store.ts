@@ -41,6 +41,10 @@ const LEGACY_KEYTAR_SERVICE = "riot.im";
  * + All other backends are linux-specific and are encrypted using the keychain
  */
 type SafeStorageBackend = ReturnType<SafeStorage["getSelectedStorageBackend"]> | "system" | "plaintext";
+/**
+ * The "unknown" backend is not a valid backend, so we exclude it from the type.
+ */
+type SaneSafeStorageBackend = Exclude<SafeStorageBackend, "unknown">;
 
 /**
  * Map of safeStorage backends to their command line arguments.
@@ -231,16 +235,19 @@ class Store extends ElectronStore<StoreData> {
         await this.safeStorageReadyPromise;
     }
 
-    private chooseBackend(forcePlaintext: boolean): {
-        backend: Exclude<SafeStorageBackend, "unknown">;
-        isEncryptionAvailable: boolean;
-    } {
-        const isEncryptionAvailable = safeStorage.isEncryptionAvailable();
-
-        let backend: Exclude<SafeStorageBackend, "unknown">;
+    /**
+     * Normalise the backend to a sane value (exclude `unknown`), respect forcePlaintext mode,
+     * and ensure that if an encrypted backend is picked that encryption is available, falling back to plaintext if not.
+     * @param forcePlaintext - whether to force plaintext mode
+     * @private
+     */
+    private chooseBackend(forcePlaintext: boolean): SaneSafeStorageBackend {
         if (forcePlaintext) {
-            backend = "plaintext";
-        } else if (process.platform === "linux") {
+            return "plaintext";
+        }
+
+        const isEncryptionAvailable = safeStorage.isEncryptionAvailable();
+        if (process.platform === "linux") {
             // The following enables plain text encryption if the backend used is basic_text.
             // It has no significance for any other backend.
             // We do this early so that in case we end up using the basic_text backend (either because that's the only one available
@@ -252,15 +259,12 @@ class Store extends ElectronStore<StoreData> {
             const selectedBackend = safeStorage.getSelectedStorageBackend();
 
             if (selectedBackend === "unknown" || !isEncryptionAvailable) {
-                backend = "plaintext";
-            } else {
-                backend = selectedBackend;
+                return "plaintext";
             }
-        } else {
-            backend = isEncryptionAvailable ? "system" : "plaintext";
+            return selectedBackend;
         }
 
-        return { backend, isEncryptionAvailable };
+        return isEncryptionAvailable ? "system" : "plaintext";
     }
 
     /**
@@ -274,7 +278,7 @@ class Store extends ElectronStore<StoreData> {
         // The backend the existing data is written with if any
         const existingSafeStorageBackend = this.get("safeStorageBackend");
         // The backend and encryption status of the currently loaded backend
-        const { backend, isEncryptionAvailable } = this.chooseBackend(this.mode === Mode.ForcePlaintext);
+        const backend = this.chooseBackend(this.mode === Mode.ForcePlaintext);
 
         if (!existingSafeStorageBackend) {
             // First launch of the app or first launch since the update
@@ -303,7 +307,7 @@ class Store extends ElectronStore<StoreData> {
 
         console.info(`Using storage mode '${this.mode}' with backend '${existingSafeStorageBackend}'`);
 
-        if (isEncryptionAvailable) {
+        if (backend !== "plaintext") {
             this.secrets = new SafeStorageWriter(this);
         } else {
             this.secrets = new StorageWriter(this);
