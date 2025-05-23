@@ -241,13 +241,6 @@ class Store extends ElectronStore<StoreData> {
             // Linux safeStorage support is hellish, the support varies on the Desktop Environment used rather than the store itself.
             // https://github.com/electron/electron/issues/39789 https://github.com/microsoft/vscode/issues/185212
             const selectedSafeStorageBackend = safeStorage.getSelectedStorageBackend();
-
-            // The following enables plain text encryption if the backend used is basic_text.
-            // It has no significance for any other backend.
-            // We do this early so that in case we end up using the basic_text backend (either because that's the only one available
-            // or as a fallback when the configured backend lacks encryption support), encryption is already turned on.
-            safeStorage.setUsePlainTextEncryption(true);
-
             const isEncryptionAvailable = safeStorage.isEncryptionAvailable();
             console.info(
                 `safeStorage backend '${selectedSafeStorageBackend}' selected, '${safeStorageBackend}' in config, isEncryptionAvailable = ${isEncryptionAvailable}.`,
@@ -267,6 +260,12 @@ class Store extends ElectronStore<StoreData> {
             if (this.get("safeStorageBackendMigrate")) {
                 return this.upgradeLinuxBackend2();
             }
+
+            // The following enables plain text encryption if the backend used is basic_text.
+            // It has no significance for any other backend.
+            // We do this early so that in case we end up using the basic_text backend (either because that's the only one available
+            // or as a fallback when the configured backend lacks encryption support), encryption is already turned on.
+            safeStorage.setUsePlainTextEncryption(true);
 
             // Whether we were using basic_text as a fallback before
             const usingFallback = this.get("safeStorageBackendOverride") && safeStorageBackend === "basic_text";
