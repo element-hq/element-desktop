@@ -85,7 +85,7 @@ interface StoreData {
 /**
  * Fallback storage writer for secrets, mainly used for automated tests and systems without any safeStorage support.
  */
-class PlaintextStorageWriter {
+class StorageWriter {
     public constructor(protected readonly store: ElectronStore<StoreData>) {}
 
     public getKey(key: string): `safeStorage.${string}` {
@@ -108,7 +108,7 @@ class PlaintextStorageWriter {
 /**
  * Storage writer for secrets using safeStorage.
  */
-class SafeStorageWriter extends PlaintextStorageWriter {
+class SafeStorageWriter extends StorageWriter {
     public set(key: string, secret: string): void {
         this.store.set(this.getKey(key), safeStorage.encryptString(secret).toString("base64"));
     }
@@ -157,7 +157,10 @@ class Store extends ElectronStore<StoreData> {
         const store = new Store(mode ?? Mode.Encrypted);
         Store.internalInstance = store;
 
-        if (process.platform === "linux" && store.get("safeStorageBackendOverride")) {
+        if (
+            process.platform === "linux" &&
+            (store.get("safeStorageBackendOverride") || store.get("safeStorageBackendMigrate"))
+        ) {
             const backend = store.get("safeStorageBackend")!;
             if (backend in safeStorageBackendMap) {
                 // If the safeStorage backend which was used to write the data is one we can specify via the commandLine
@@ -174,7 +177,7 @@ class Store extends ElectronStore<StoreData> {
 
     // Provides "raw" access to the underlying secrets storage,
     // should be avoided in favour of the getSecret/setSecret/deleteSecret methods.
-    private secrets?: PlaintextStorageWriter | SafeStorageWriter;
+    private secrets?: StorageWriter;
 
     private constructor(private mode: Mode) {
         super({
@@ -228,6 +231,38 @@ class Store extends ElectronStore<StoreData> {
         await this.safeStorageReadyPromise;
     }
 
+    private chooseBackend(forcePlaintext: boolean): {
+        backend: Exclude<SafeStorageBackend, "unknown">;
+        isEncryptionAvailable: boolean;
+    } {
+        const isEncryptionAvailable = safeStorage.isEncryptionAvailable();
+
+        let backend: Exclude<SafeStorageBackend, "unknown">;
+        if (forcePlaintext) {
+            backend = "plaintext";
+        } else if (process.platform === "linux") {
+            // The following enables plain text encryption if the backend used is basic_text.
+            // It has no significance for any other backend.
+            // We do this early so that in case we end up using the basic_text backend (either because that's the only one available
+            // or as a fallback when the configured backend lacks encryption support), encryption is already turned on.
+            safeStorage.setUsePlainTextEncryption(true);
+
+            // Linux safeStorage support is hellish, the support varies on the Desktop Environment used rather than the store itself.
+            // https://github.com/electron/electron/issues/39789 https://github.com/microsoft/vscode/issues/185212
+            const selectedBackend = safeStorage.getSelectedStorageBackend();
+
+            if (selectedBackend === "unknown" || !isEncryptionAvailable) {
+                backend = "plaintext";
+            } else {
+                backend = selectedBackend;
+            }
+        } else {
+            backend = isEncryptionAvailable ? "system" : "plaintext";
+        }
+
+        return { backend, isEncryptionAvailable };
+    }
+
     /**
      * Prepare the safeStorage backend for use.
      * We don't eagerly import from keytar as that would bring in data for all Element profiles and not just the current one,
@@ -236,42 +271,14 @@ class Store extends ElectronStore<StoreData> {
     private async prepareSafeStorage(): Promise<void> {
         await app.whenReady();
 
-        let safeStorageBackend = this.get("safeStorageBackend");
-        if (process.platform === "linux") {
-            // Linux safeStorage support is hellish, the support varies on the Desktop Environment used rather than the store itself.
-            // https://github.com/electron/electron/issues/39789 https://github.com/microsoft/vscode/issues/185212
-            const selectedSafeStorageBackend = safeStorage.getSelectedStorageBackend();
+        // The backend the existing data is written with if any
+        const existingSafeStorageBackend = this.get("safeStorageBackend");
+        // The backend and encryption status of the currently loaded backend
+        const { backend, isEncryptionAvailable } = this.chooseBackend(this.mode === Mode.ForcePlaintext);
 
-            // The following enables plain text encryption if the backend used is basic_text.
-            // It has no significance for any other backend.
-            // We do this early so that in case we end up using the basic_text backend (either because that's the only one available
-            // or as a fallback when the configured backend lacks encryption support), encryption is already turned on.
-            safeStorage.setUsePlainTextEncryption(true);
-
-            const isEncryptionAvailable = safeStorage.isEncryptionAvailable();
-            console.info(
-                `safeStorage backend '${selectedSafeStorageBackend}' selected, '${safeStorageBackend}' in config, isEncryptionAvailable = ${isEncryptionAvailable}.`,
-            );
-
-            if (selectedSafeStorageBackend === "unknown") {
-                // This should never happen but good to be safe
-                await dialog.showMessageBox({
-                    title: _t("store|error|unknown_backend_override_title"),
-                    message: _t("store|error|unknown_backend_override"),
-                    detail: _t("store|error|unknown_backend_override_details"),
-                    type: "error",
-                });
-                throw new Error("safeStorage backend unknown");
-            }
-
-            if (this.get("safeStorageBackendMigrate")) {
-                return this.upgradeLinuxBackend2();
-            }
-
-            // Whether we were using basic_text as a fallback before
-            const usingFallback = this.get("safeStorageBackendOverride") && safeStorageBackend === "basic_text";
-
-            if (this.mode === Mode.Encrypted && !isEncryptionAvailable && !usingFallback) {
+        if (!existingSafeStorageBackend) {
+            // First launch of the app or first launch since the update
+            if (this.mode === Mode.Encrypted && backend === "plaintext") {
                 // Sometimes we may have a working backend that for some reason does not support encryption at the moment.
                 // This may be because electron reported an incorrect backend or because of some known issues with the keyring itself.
                 // In any case, when this happens, we give the user an option to use a weaker form of encryption.
@@ -279,7 +286,7 @@ class Store extends ElectronStore<StoreData> {
                     title: _t("store|error|backend_no_encryption_title"),
                     message: _t("store|error|backend_no_encryption"),
                     detail: _t("store|error|backend_no_encryption_detail", {
-                        backend: safeStorageBackend,
+                        backend: safeStorage.getSelectedStorageBackend(),
                         brand: global.vectorConfig.brand || "Element",
                     }),
                     type: "error",
@@ -288,82 +295,65 @@ class Store extends ElectronStore<StoreData> {
                     cancelId: 0,
                 });
                 if (response === 0) {
-                    throw new Error(
-                        `Encryption support not available on backend ${safeStorageBackend} and user prohibits using weaker encryption.`,
-                    );
+                    throw new Error("isEncryptionAvailable=false and user rejected plaintext");
                 }
-                this.recordSafeStorageBackend("basic_text");
-                this.set("safeStorageBackendOverride", true);
-                relaunchApp();
-            } else if (usingFallback) {
-                // On the next run, don't use the fallback.
-                // This is so that we can check if the problems with the keyring fixed itself.
-                this.set("safeStorageBackendOverride", false);
-            } else if (!safeStorageBackend) {
-                if (selectedSafeStorageBackend === "basic_text" && this.mode === Mode.Encrypted) {
-                    const { response } = await dialog.showMessageBox({
-                        title: _t("store|error|unsupported_keyring_title"),
-                        message: _t("store|error|unsupported_keyring"),
-                        detail: _t("store|error|unsupported_keyring_detail", {
-                            brand: global.vectorConfig.brand || "Element",
-                            link: "https://www.electronjs.org/docs/latest/api/safe-storage#safestoragegetselectedstoragebackend-linux",
-                        }),
-                        type: "error",
-                        buttons: [_t("action|cancel"), _t("store|error|unsupported_keyring_cta")],
-                        defaultId: 0,
-                        cancelId: 0,
-                    });
-                    if (response === 0) {
-                        throw new Error("safeStorage backend basic_text and user rejected it");
-                    }
-                    this.mode = Mode.AllowPlaintext;
-                }
-
-                // Store the backend used for the safeStorage data so we can detect if it changes
-                this.recordSafeStorageBackend(selectedSafeStorageBackend);
-                safeStorageBackend = selectedSafeStorageBackend;
-            } else if (safeStorageBackend !== selectedSafeStorageBackend) {
-                console.warn(`safeStorage backend changed from ${safeStorageBackend} to ${selectedSafeStorageBackend}`);
-
-                if (safeStorageBackend === "basic_text") {
-                    return this.upgradeLinuxBackend1();
-                } else if (safeStorageBackend === "plaintext") {
-                    this.upgradeLinuxBackend3();
-                } else if (safeStorageBackend in safeStorageBackendMap) {
-                    this.set("safeStorageBackendOverride", true);
-                    relaunchApp();
-                    return;
-                } else {
-                    // Warn the user that the backend has changed and tell them that we cannot migrate
-                    const { response } = await dialog.showMessageBox({
-                        title: _t("store|error|backend_changed_title"),
-                        message: _t("store|error|backend_changed"),
-                        detail: _t("store|error|backend_changed_detail"),
-                        type: "question",
-                        buttons: [_t("common|no"), _t("common|yes")],
-                        defaultId: 0,
-                        cancelId: 0,
-                    });
-                    if (response === 0) {
-                        throw new Error("safeStorage backend changed and cannot migrate");
-                    }
-                    await clearDataAndRelaunch();
+            } else if (this.mode === Mode.Encrypted && backend === "basic_text") {
+                // Electron did not identify a compatible encrypted backend, ask user for consent to degraded mode
+                const { response } = await dialog.showMessageBox({
+                    title: _t("store|error|unsupported_keyring_title"),
+                    message: _t("store|error|unsupported_keyring"),
+                    detail: _t("store|error|unsupported_keyring_detail", {
+                        brand: global.vectorConfig.brand || "Element",
+                        link: "https://www.electronjs.org/docs/latest/api/safe-storage#safestoragegetselectedstoragebackend-linux",
+                    }),
+                    type: "error",
+                    buttons: [_t("action|cancel"), _t("store|error|unsupported_keyring_cta")],
+                    defaultId: 0,
+                    cancelId: 0,
+                });
+                if (response === 0) {
+                    throw new Error("safeStorage backend basic_text and user rejected it");
                 }
             }
-        } else if (!safeStorageBackend) {
-            safeStorageBackend = this.mode === Mode.Encrypted ? "system" : "plaintext";
-            this.recordSafeStorageBackend(safeStorageBackend);
+            // Store the backend used for the safeStorage data so we can detect if it changes, and we know how the data is encoded
+            this.recordSafeStorageBackend(backend);
+        } else if (this.get("safeStorageBackendMigrate") && backend === "basic_text") {
+            return this.migrateBasicTextToPlaintext();
+        } else if (existingSafeStorageBackend === "plaintext" && backend !== "plaintext") {
+            this.migratePlaintextToEncrypted();
+        } else if (existingSafeStorageBackend === "basic_text" && backend !== "plaintext" && backend !== "basic_text") {
+            return this.prepareMigrateBasicTextToPlaintext();
+        } else if (existingSafeStorageBackend !== backend) {
+            console.warn(`safeStorage backend changed from ${existingSafeStorageBackend} to ${backend}`);
+
+            if (existingSafeStorageBackend in safeStorageBackendMap) {
+                this.set("safeStorageBackendOverride", true);
+                return relaunchApp();
+            } else {
+                // Warn the user that the backend has changed and tell them that we cannot migrate
+                const { response } = await dialog.showMessageBox({
+                    title: _t("store|error|backend_changed_title"),
+                    message: _t("store|error|backend_changed"),
+                    detail: _t("store|error|backend_changed_detail"),
+                    type: "question",
+                    buttons: [_t("common|no"), _t("common|yes")],
+                    defaultId: 0,
+                    cancelId: 0,
+                });
+                if (response === 0) {
+                    throw new Error("safeStorage backend changed and cannot migrate");
+                }
+                return clearDataAndRelaunch();
+            }
         }
 
-        if (this.mode !== Mode.ForcePlaintext && safeStorage.isEncryptionAvailable()) {
+        console.info(`Using storage mode '${this.mode}' with backend '${existingSafeStorageBackend}'`);
+
+        if (isEncryptionAvailable) {
             this.secrets = new SafeStorageWriter(this);
-        } else if (this.mode !== Mode.Encrypted) {
-            this.secrets = new PlaintextStorageWriter(this);
         } else {
-            throw new Error(`safeStorage is not available`);
+            this.secrets = new StorageWriter(this);
         }
-
-        console.info(`Using storage mode '${this.mode}' with backend '${safeStorageBackend}'`);
     }
 
     private recordSafeStorageBackend(backend: SafeStorageBackend): void {
@@ -373,35 +363,37 @@ class Store extends ElectronStore<StoreData> {
     /**
      * Linux support for upgrading the backend from basic_text to one of the encrypted backends,
      * this is quite a tricky process as the backend is not known until the app is ready & cannot be changed once it is.
-     * First we restart the app in basic_text backend mode, then decrypt the data & restart back in default backend mode,
-     * and re-encrypt the data.
+     * 1. We restart the app in safeStorageBackendMigrate mode
+     * 2. Now that we are in the mode which our data is written in we decrypt the data, write it back in plaintext
+     *     & restart back in default backend mode,
+     * 3. Finally, we load the plaintext data & encrypt it.
      */
-    private upgradeLinuxBackend1(): void {
+    private prepareMigrateBasicTextToPlaintext(): void {
         console.info(`Starting safeStorage migration to ${safeStorage.getSelectedStorageBackend()}`);
         this.set("safeStorageBackendMigrate", true);
         relaunchApp();
     }
-    private upgradeLinuxBackend2(): void {
-        this.secrets = new PlaintextStorageWriter(this);
+    private migrateBasicTextToPlaintext(): void {
+        const secrets = new SafeStorageWriter(this);
         console.info("Performing safeStorage migration");
         const data = this.get("safeStorage");
         if (data) {
             for (const key in data) {
-                this.set(this.secrets.getKey(key), this.secrets!.get(key));
+                this.set(secrets.getKey(key), secrets.get(key));
             }
             this.recordSafeStorageBackend("plaintext");
         }
-        this.set("safeStorageBackendMigrate", false);
+        this.delete("safeStorageBackendMigrate");
         relaunchApp();
     }
-    private upgradeLinuxBackend3(): void {
-        this.secrets = new PlaintextStorageWriter(this);
+    private migratePlaintextToEncrypted(): void {
+        const secrets = new SafeStorageWriter(this);
         const selectedSafeStorageBackend = safeStorage.getSelectedStorageBackend();
         console.info(`Finishing safeStorage migration to ${selectedSafeStorageBackend}`);
         const data = this.get("safeStorage");
         if (data) {
             for (const key in data) {
-                this.secrets.set(key, data[key]);
+                secrets.set(key, data[key]);
             }
         }
         this.recordSafeStorageBackend(selectedSafeStorageBackend);
