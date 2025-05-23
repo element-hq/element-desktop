@@ -275,9 +275,26 @@ class Store extends ElectronStore<StoreData> {
         await app.whenReady();
 
         // The backend the existing data is written with if any
-        const existingSafeStorageBackend = this.get("safeStorageBackend");
+        let existingSafeStorageBackend = this.get("safeStorageBackend");
         // The backend and encryption status of the currently loaded backend
         const backend = this.chooseBackend(this.mode === Mode.ForcePlaintext);
+
+        // Handle migrations
+        if (existingSafeStorageBackend) {
+            if (existingSafeStorageBackend === "basic_text" && backend !== "plaintext" && backend !== "basic_text") {
+                return this.prepareMigrateBasicTextToPlaintext();
+            }
+
+            if (this.get("safeStorageBackendMigrate") && backend === "basic_text") {
+                return this.migrateBasicTextToPlaintext();
+            }
+
+            if (existingSafeStorageBackend === "plaintext" && backend !== "plaintext") {
+                this.migratePlaintextToEncrypted();
+                // Ensure we update existingSafeStorageBackend so we don't fall into the "backend changed" clause below
+                existingSafeStorageBackend = this.get("safeStorageBackend");
+            }
+        }
 
         if (!existingSafeStorageBackend) {
             // First launch of the app or first launch since the update
@@ -287,12 +304,6 @@ class Store extends ElectronStore<StoreData> {
             }
             // Store the backend used for the safeStorage data so we can detect if it changes, and we know how the data is encoded
             this.recordSafeStorageBackend(backend);
-        } else if (this.get("safeStorageBackendMigrate") && backend === "basic_text") {
-            return this.migrateBasicTextToPlaintext();
-        } else if (existingSafeStorageBackend === "plaintext" && backend !== "plaintext") {
-            this.migratePlaintextToEncrypted();
-        } else if (existingSafeStorageBackend === "basic_text" && backend !== "plaintext" && backend !== "basic_text") {
-            return this.prepareMigrateBasicTextToPlaintext();
         } else if (existingSafeStorageBackend !== backend) {
             console.warn(`safeStorage backend changed from ${existingSafeStorageBackend} to ${backend}`);
 
@@ -304,8 +315,7 @@ class Store extends ElectronStore<StoreData> {
             }
         }
 
-        console.info(`Using storage mode '${this.mode}' with backend '${existingSafeStorageBackend}'`);
-
+        console.info(`Using storage mode '${this.mode}' with backend '${backend}'`);
         if (backend !== "plaintext") {
             this.secrets = new SafeStorageWriter(this);
         } else {
