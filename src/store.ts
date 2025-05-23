@@ -350,6 +350,12 @@ class Store extends ElectronStore<StoreData> {
                     await clearDataAndRelaunch();
                 }
             }
+
+            // We do not check allowPlaintextStorage here as it was already checked above if the storage is new
+            // and if the storage is existing then we should continue to honour the backend used to write the data
+            if (safeStorageBackend === "basic_text" && selectedSafeStorageBackend === safeStorageBackend) {
+                safeStorage.setUsePlainTextEncryption(true);
+            }
         } else if (!safeStorageBackend) {
             safeStorageBackend = this.mode === Mode.Encrypted ? "system" : "plaintext";
             this.recordSafeStorageBackend(safeStorageBackend);
