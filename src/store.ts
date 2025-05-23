@@ -261,12 +261,6 @@ class Store extends ElectronStore<StoreData> {
                 return this.upgradeLinuxBackend2();
             }
 
-            // The following enables plain text encryption if the backend used is basic_text.
-            // It has no significance for any other backend.
-            // We do this early so that in case we end up using the basic_text backend (either because that's the only one available
-            // or as a fallback when the configured backend lacks encryption support), encryption is already turned on.
-            safeStorage.setUsePlainTextEncryption(true);
-
             // Whether we were using basic_text as a fallback before
             const usingFallback = this.get("safeStorageBackendOverride") && safeStorageBackend === "basic_text";
 
@@ -348,6 +342,12 @@ class Store extends ElectronStore<StoreData> {
                     }
                     await clearDataAndRelaunch();
                 }
+            }
+
+            // We do not check allowPlaintextStorage here as it was already checked above if the storage is new
+            // and if the storage is existing then we should continue to honour the backend used to write the data
+            if (safeStorageBackend === "basic_text" && selectedSafeStorageBackend === safeStorageBackend) {
+                safeStorage.setUsePlainTextEncryption(true);
             }
         } else if (!safeStorageBackend) {
             safeStorageBackend = this.mode === Mode.Encrypted ? "system" : "plaintext";
