@@ -59,13 +59,11 @@
             "backend_no_encryption": "Váš systém má podporovaný zväzok kľúčov, ale šifrovanie nie je k dispozícii.",
             "backend_no_encryption_detail": "Electron zistil, že šifrovanie nie je k dispozícii na vašom zväzku kľúčov %(backend)s. Uistite sa, že máte nainštalovaný zväzok kľúčov. Ak máte zväzok kľúčov nainštalovaný, reštartujte počítač a skúste to znova. Voliteľne môžete povoliť aplikácii %(brand)s používať slabšiu formu šifrovania.",
             "backend_no_encryption_title": "Žiadna podpora šifrovania",
-            "unknown_backend_override": "Váš systém má nepodporovaný zväzok kľúčov, čo znamená, že databázu nemožno otvoriť.",
-            "unknown_backend_override_details": "Pre viac informácií si pozrite protokoly.",
-            "unknown_backend_override_title": "Nepodarilo sa načítať databázu",
             "unsupported_keyring": "Váš systém má nepodporovaný zväzok kľúčov, čo znamená, že databázu nemožno otvoriť.",
-            "unsupported_keyring_cta": "Použiť slabšie šifrovanie",
             "unsupported_keyring_detail": "Detekcia zväzku kľúčov aplikácie Electron nenašla podporovaný backend. Môžete sa pokúsiť manuálne nastaviť backend spustením aplikácie %(brand)s s argumentom príkazového riadka, je to jednorazová operácia. Pozrite si %(link)s .",
-            "unsupported_keyring_title": "Systém nie je podporovaný"
+            "unsupported_keyring_title": "Systém nie je podporovaný",
+            "unsupported_keyring_use_basic_text": "Použiť slabšie šifrovanie",
+            "unsupported_keyring_use_plaintext": "Nepoužiť žiadne šifrovanie"
         }
     },
     "view_menu": {

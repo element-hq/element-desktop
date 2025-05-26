@@ -56,13 +56,14 @@
             "backend_changed": "Hapus data dan muat ulang?",
             "backend_changed_detail": "Tidak dapat mengakses rahasia dari keyring sistem, tampaknya telah berubah.",
             "backend_changed_title": "Gagal memuat basis data",
-            "unknown_backend_override": "Sistem Anda memiliki keyring yang tidak didukung yang berarti basis data tidak dapat dibuka.",
-            "unknown_backend_override_details": "Silakan periksa log untuk detail lebih lanjut.",
-            "unknown_backend_override_title": "Gagal memuat basis data",
+            "backend_no_encryption": "Sistem Anda memiliki keyring yang didukung tetapi enkripsi tidak tersedia.",
+            "backend_no_encryption_detail": "Electron telah mendeteksi bahwa enkripsi tidak tersedia pada keyring %(backend)s Anda. Harap pastikan bahwa Anda telah memasang keyring. Jika Anda telah memasang keyring, silakan mulai ulang dan coba lagi. Secara opsional, Anda dapat mengizinkan %(brand)s untuk menggunakan bentuk enkripsi yang lebih lemah.",
+            "backend_no_encryption_title": "Tidak ada dukungan enkripsi",
             "unsupported_keyring": "Sistem Anda memiliki keyring yang tidak didukung yang berarti basis data tidak dapat dibuka.",
-            "unsupported_keyring_cta": "Gunakan enkripsi yang lebih lemah",
             "unsupported_keyring_detail": "Deteksi keyring Electron tidak menemukan backend yang didukung. Anda dapat mencoba mengonfigurasi backend secara manual dengan memulai %(brand)s dengan argumen baris perintah, operasi satu kali. Lihat %(link)s.",
-            "unsupported_keyring_title": "Sistem tidak didukung"
+            "unsupported_keyring_title": "Sistem tidak didukung",
+            "unsupported_keyring_use_basic_text": "Gunakan enkripsi yang lebih lemah",
+            "unsupported_keyring_use_plaintext": "Jangan gunakan enkripsi"
         }
     },
     "view_menu": {

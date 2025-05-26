@@ -59,13 +59,11 @@
             "backend_no_encryption": "Seu sistema tem um cofre compatível, mas a criptografia não está disponível.",
             "backend_no_encryption_detail": "O Electron detetou que a encriptação não está disponível no seu cofre %(backend)s. Certifique-se de que tem o cofre instalado. Se tiver o cofre instalado, reinicie e tente novamente. Opcionalmente, você pode permitir que %(brand)s use uma forma mais fraca de criptografia.",
             "backend_no_encryption_title": "Sem suporte para criptografia",
-            "unknown_backend_override": "Seu sistema possui um cofre não compatível, o que impede a abertura do banco de dados.",
-            "unknown_backend_override_details": "Verifique os logs para obter mais detalhes.",
-            "unknown_backend_override_title": "Falha ao carregar o banco de dados",
             "unsupported_keyring": "Seu sistema possui um cofre não compatível, o que impede a abertura do banco de dados.",
-            "unsupported_keyring_cta": "Use criptografia mais fraca",
             "unsupported_keyring_detail": "A detecção de cofre do Electron não encontrou um backend compatível. Você pode tentar configurar manualmente o backend iniciando %(brand)s com um argumento de linha de comando, uma operação única. Consulte %(link)s.",
-            "unsupported_keyring_title": "Sistema não suportado"
+            "unsupported_keyring_title": "Sistema não suportado",
+            "unsupported_keyring_use_basic_text": "Use criptografia mais fraca",
+            "unsupported_keyring_use_plaintext": "Não usar criptografia"
         }
     },
     "view_menu": {
