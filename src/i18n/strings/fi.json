@@ -54,9 +54,6 @@
     "store": {
         "error": {
             "backend_changed_title": "Tietokannan lataaminen epäonnistui",
-            "unknown_backend_override_details": "Katso tarkemmat tiedot lokeista.",
-            "unknown_backend_override_title": "Tietokannan lataaminen epäonnistui",
-            "unsupported_keyring_cta": "Käytä heikompaa salausta",
             "unsupported_keyring_title": "Järjestelmä ei ole tuettu"
         }
     },

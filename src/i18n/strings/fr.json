@@ -56,11 +56,7 @@
             "backend_changed": "Effacer les données et recharger ?",
             "backend_changed_detail": "Impossible d'accéder aux secrets depuis le trousseau de clés du système, il semble avoir changé.",
             "backend_changed_title": "Impossible de charger la base de données",
-            "unknown_backend_override": "Votre système possède un trousseau de clés non pris en charge, ce qui signifie que la base de données ne peut pas être ouverte.",
-            "unknown_backend_override_details": "Veuillez consulter les journaux pour plus de détails.",
-            "unknown_backend_override_title": "Impossible de charger la base de données",
             "unsupported_keyring": "Votre système possède un trousseau de clés non pris en charge, la base de données ne peut pas être ouverte.",
-            "unsupported_keyring_cta": "Utiliser un chiffrement plus faible",
             "unsupported_keyring_detail": "La détection du porte-clés par Electron n'a pas permis de trouver de backend compatible. Vous pouvez essayer de configurer manuellement le backend en utilisant %(brand)s avec un argument de ligne de commande. Cette opération doit être effectuer une seule fois. Voir%(link)s.",
             "unsupported_keyring_title": "Système non pris en charge"
         }
