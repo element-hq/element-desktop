@@ -1004,6 +1004,15 @@
     glob "^7.1.6"
     minimatch "^3.0.4"
 
+"@electron/asar@4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@electron/asar/-/asar-4.0.0.tgz#9818aa14637b09782aa617284195eeb79545585a"
+  integrity sha512-tBqVW/Z/iZ88ZGCXtg8jaGVlip6HzVIRUm0RHZ6+YtBMmWQG8jQxF68yLWlNxYXnndBVpwwofQNdt0EicmD0Vg==
+  dependencies:
+    commander "^13.1.0"
+    glob "^11.0.1"
+    minimatch "^10.0.1"
+
 "@electron/asar@^3.2.1":
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/@electron/asar/-/asar-3.3.1.tgz#cd14e897770d9844673dd7c1dc8944e086e1e0ea"
@@ -4362,7 +4371,7 @@ glob@^10.2.2, glob@^10.3.10, glob@^10.3.12, glob@^10.3.7:
     package-json-from-dist "^1.0.0"
     path-scurry "^1.11.1"
 
-glob@^11.0.0:
+glob@^11.0.0, glob@^11.0.1:
   version "11.0.2"
   resolved "https://registry.yarnpkg.com/glob/-/glob-11.0.2.tgz#3261e3897bbc603030b041fd77ba636022d51ce0"
   integrity sha512-YT7U7Vye+t5fZ/QMkBFrTJ7ZQxInIUjwyAjVj84CYXqgBdv30MFUPGnBR6sQaVq6Is15wYJUsnzTuWaGRBhBAQ==
@@ -5425,7 +5434,7 @@ min-indent@^1.0.0:
   resolved "https://registry.yarnpkg.com/min-indent/-/min-indent-1.0.1.tgz#a63f681673b30571fbe8bc25686ae746eefa9869"
   integrity sha512-I9jwMn07Sy/IwOj3zVkVik2JTvgpaykDZEigL6Rx6N9LbMywwUSMtxET+7lVoDLLd3O3IXwJwvuuns8UB/HeAg==
 
-minimatch@^10.0.0:
+minimatch@^10.0.0, minimatch@^10.0.1:
   version "10.0.1"
   resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-10.0.1.tgz#ce0521856b453c86e25f2c4c0d03e6ff7ddc440b"
   integrity sha512-ethXTt3SGGR+95gudmqJ1eNhRO7eGEGIgYA9vnPatK4/etz2MEVDno5GMCibdMTuBMyElzIlgxMna3K94XDIDQ==
