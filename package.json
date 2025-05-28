@@ -74,20 +74,20 @@
         "@babel/core": "^7.18.10",
         "@babel/preset-env": "^7.18.10",
         "@babel/preset-typescript": "^7.18.6",
-        "@electron/asar": "3.4.1",
+        "@electron/asar": "4.0.0",
         "@playwright/test": "1.52.0",
         "@stylistic/eslint-plugin": "^4.0.0",
         "@types/auto-launch": "^5.0.1",
         "@types/counterpart": "^0.18.1",
         "@types/minimist": "^1.2.1",
-        "@types/node": "18.19.100",
+        "@types/node": "18.19.103",
         "@types/pacote": "^11.1.1",
         "@typescript-eslint/eslint-plugin": "^8.0.0",
         "@typescript-eslint/parser": "^8.0.0",
         "app-builder-lib": "26.0.15",
         "chokidar": "^4.0.0",
         "detect-libc": "^2.0.0",
-        "electron": "36.2.0",
+        "electron": "36.3.1",
         "electron-builder": "26.0.15",
         "electron-builder-squirrel-windows": "26.0.15",
         "electron-devtools-installer": "^4.0.0",
@@ -115,7 +115,7 @@
         "matrix-seshat": "^4.0.1"
     },
     "resolutions": {
-        "@types/node": "18.19.100",
+        "@types/node": "18.19.103",
         "config-file-ts": "0.2.8-rc1",
         "node-abi": "4.8.0"
     }
