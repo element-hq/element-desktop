@@ -61,7 +61,9 @@
             "backend_no_encryption_title": "Keine Verschlüsselungsunterstützung",
             "unsupported_keyring": "Der Schlüsselbund ihres Systems wird nicht unterstützt, wodurch die Datenbank nicht geöffnet werden kann.",
             "unsupported_keyring_detail": "Die Schlüsselbunderkennung von Electron hat kein unterstütztes Backend gefunden. Möglicherweise können sie dennoch den ihres Systemes verwenden. Infos unter %(link)s.",
-            "unsupported_keyring_title": "System nicht unterstützt"
+            "unsupported_keyring_title": "System nicht unterstützt",
+            "unsupported_keyring_use_basic_text": "Schwächere Verschlüsselung verwenden",
+            "unsupported_keyring_use_plaintext": "Verwenden Sie keine Verschlüsselung"
         }
     },
     "view_menu": {
