@@ -1,3 +1,31 @@
+Changes in [1.11.102](https://github.com/element-hq/element-desktop/releases/tag/v1.11.102) (2025-06-03)
+========================================================================================================
+## ✨ Features
+
+* Support build-time specified protocol scheme for oidc callback ([#2285](https://github.com/element-hq/element-desktop/pull/2285)). Contributed by @t3chguy.
+* EW: Modernize the recovery key input modal ([#29819](https://github.com/element-hq/element-web/pull/29819)). Contributed by @uhoreg.
+* New room list: move secondary filters into primary filters ([#29972](https://github.com/element-hq/element-web/pull/29972)). Contributed by @florianduros.
+* Prompt the user when key storage is unexpectedly off ([#29912](https://github.com/element-hq/element-web/pull/29912)). Contributed by @andybalaam.
+* New room list: move sort menu in room list header ([#29983](https://github.com/element-hq/element-web/pull/29983)). Contributed by @florianduros.
+* New room list: rework spacing of room list item ([#29965](https://github.com/element-hq/element-web/pull/29965)). Contributed by @florianduros.
+* RLS: Remove forgotten room from skiplist ([#29933](https://github.com/element-hq/element-web/pull/29933)). Contributed by @MidhunSureshR.
+* Add room list sorting ([#29951](https://github.com/element-hq/element-web/pull/29951)). Contributed by @dbkr.
+* Don't use the minimised width(68px) on the new room list ([#29778](https://github.com/element-hq/element-web/pull/29778)). Contributed by @langleyd.
+
+## 🐛 Bug Fixes
+
+* Enable plain text encryption before checking if encryption is available ([#2343](https://github.com/element-hq/element-desktop/pull/2343)). Contributed by @MidhunSureshR.
+* Enable plain text encryption early if we actually mean to use `basic_text` as backend ([#2341](https://github.com/element-hq/element-desktop/pull/2341)). Contributed by @MidhunSureshR.
+* [Backport staging] Close call options popup menu when option has been selected ([#30054](https://github.com/element-hq/element-web/pull/30054)). Contributed by @RiotRobot.
+* RoomListStoreV3: Only add new rooms that pass `VisibilityProvider` check ([#29974](https://github.com/element-hq/element-web/pull/29974)). Contributed by @MidhunSureshR.
+* Re-order primary filters ([#29957](https://github.com/element-hq/element-web/pull/29957)). Contributed by @dbkr.
+* Fix leaky CSS adding `!` to all H1 elements ([#29964](https://github.com/element-hq/element-web/pull/29964)). Contributed by @t3chguy.
+* Fix extensions panel style ([#29273](https://github.com/element-hq/element-web/pull/29273)). Contributed by @langleyd.
+* Fix state events being hidden from widgets in read\_events actions ([#29954](https://github.com/element-hq/element-web/pull/29954)). Contributed by @robintown.
+* Remove old filter test ([#29963](https://github.com/element-hq/element-web/pull/29963)). Contributed by @dbkr.
+
+
+
 Changes in [1.11.101](https://github.com/element-hq/element-desktop/releases/tag/v1.11.101) (2025-05-20)
 ========================================================================================================
 ## ✨ Features
