@@ -233,7 +233,7 @@ class Store extends ElectronStore<StoreData> {
         });
     }
 
-    private safeStorageReadyPromise?: Promise<unknown>;
+    private safeStorageReadyPromise?: Promise<boolean>;
     public async safeStorageReady(): Promise<void> {
         if (!this.safeStorageReadyPromise) {
             throw new Error("prepareSafeStorage must be called before using storage methods");
@@ -283,6 +283,11 @@ class Store extends ElectronStore<StoreData> {
      * @returns true if safeStorage was initialised successfully or false if the app will be relaunched
      */
     public async prepareSafeStorage(electronSession: Session): Promise<boolean> {
+        this.safeStorageReadyPromise = this.reallyPrepareSafeStorage(electronSession);
+        return this.safeStorageReadyPromise;
+    }
+
+    private async reallyPrepareSafeStorage(electronSession: Session): Promise<boolean> {
         await app.whenReady();
 
         // The backend the existing data is written with if any
