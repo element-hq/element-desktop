@@ -58,7 +58,6 @@
     },
     "dependencies": {
         "@sentry/electron": "^6.0.0",
-        "@standardnotes/electron-clear-data": "^1.0.5",
         "auto-launch": "^5.0.5",
         "counterpart": "^0.18.6",
         "electron-store": "^10.0.0",

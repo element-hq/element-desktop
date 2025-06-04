@@ -174,7 +174,7 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
             break;
 
         case "clearStorage":
-            await clearDataAndRelaunch();
+            await clearDataAndRelaunch(global.mainWindow.webContents.session);
             return; // the app is about to stop, we don't need to reply to the IPC
 
         case "breadcrumbs": {

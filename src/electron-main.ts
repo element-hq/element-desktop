@@ -453,14 +453,6 @@ app.on("ready", async () => {
         store,
     });
 
-    try {
-        console.debug("Ensuring storage is ready");
-        await store.safeStorageReady();
-    } catch (e) {
-        console.error(e);
-        app.exit(1);
-    }
-
     // Load the previous window state with fallback to defaults
     const mainWindowState = windowStateKeeper({
         defaultWidth: 1024,
@@ -492,6 +484,15 @@ app.on("ready", async () => {
             webgl: true,
         },
     });
+
+    try {
+        console.debug("Ensuring storage is ready");
+        if (!(await store.prepareSafeStorage(global.mainWindow.webContents.session))) return;
+    } catch (e) {
+        console.error(e);
+        app.exit(1);
+    }
+
     void global.mainWindow.loadURL("vector://vector/webapp/");
 
     if (process.platform === "darwin") {
