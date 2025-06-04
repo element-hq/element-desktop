@@ -56,9 +56,13 @@
             "backend_changed": "Effacer les données et recharger ?",
             "backend_changed_detail": "Impossible d'accéder aux secrets depuis le trousseau de clés du système, il semble avoir changé.",
             "backend_changed_title": "Impossible de charger la base de données",
+            "backend_no_encryption": "Votre système dispose d'un trousseau de clés compatible mais le chiffrement est indisponible.",
+            "backend_no_encryption_title": "Aucune prise en charge du chiffrement",
             "unsupported_keyring": "Votre système possède un trousseau de clés non pris en charge, la base de données ne peut pas être ouverte.",
             "unsupported_keyring_detail": "La détection du porte-clés par Electron n'a pas permis de trouver de backend compatible. Vous pouvez essayer de configurer manuellement le backend en utilisant %(brand)s avec un argument de ligne de commande. Cette opération doit être effectuer une seule fois. Voir%(link)s.",
-            "unsupported_keyring_title": "Système non pris en charge"
+            "unsupported_keyring_title": "Système non pris en charge",
+            "unsupported_keyring_use_basic_text": "Utiliser un chiffrement plus faible",
+            "unsupported_keyring_use_plaintext": "N'utilise pas de chiffrement"
         }
     },
     "view_menu": {
