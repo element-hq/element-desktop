@@ -16,8 +16,7 @@ limitations under the License.
 
 import ElectronStore from "electron-store";
 import keytar from "keytar-forked";
-import { app, safeStorage, dialog, type SafeStorage } from "electron";
-import { clearAllUserData, relaunchApp } from "@standardnotes/electron-clear-data";
+import { app, safeStorage, dialog, type SafeStorage, type Session } from "electron";
 
 import { _t } from "./language-helper.js";
 
@@ -61,12 +60,18 @@ const safeStorageBackendMap: Omit<
     kwallet5: "kwallet5",
 };
 
+function relaunchApp(): void {
+    app.relaunch();
+    app.exit();
+}
+
 /**
  * Clear all data and relaunch the app.
  */
-export async function clearDataAndRelaunch(): Promise<void> {
+export async function clearDataAndRelaunch(electronSession: Session): Promise<void> {
     Store.instance?.clear();
-    clearAllUserData();
+    electronSession.flushStorageData();
+    await electronSession.clearStorageData();
     relaunchApp();
 }
 
@@ -230,7 +235,7 @@ class Store extends ElectronStore<StoreData> {
     private safeStorageReadyPromise?: Promise<unknown>;
     public async safeStorageReady(): Promise<void> {
         if (!this.safeStorageReadyPromise) {
-            this.safeStorageReadyPromise = this.prepareSafeStorage();
+            throw new Error("prepareSafeStorage must be called before using storage methods");
         }
         await this.safeStorageReadyPromise;
     }
@@ -270,8 +275,13 @@ class Store extends ElectronStore<StoreData> {
      * Prepare the safeStorage backend for use.
      * We don't eagerly import from keytar as that would bring in data for all Element profiles and not just the current one,
      * so we import lazily in getSecret.
+     * 
+     * This will relaunch the app in some cases, in which case it will return false and the caller should abort startup.
+     * 
+     * @param electronSession - The Electron session to use for storage (will be used to clear storage if necessary).
+     * @returns true if safeStorage was initialised successfully or false if the app will be relaunched
      */
-    private async prepareSafeStorage(): Promise<void> {
+    public async prepareSafeStorage(electronSession: Session): Promise<boolean> {
         await app.whenReady();
 
         // The backend the existing data is written with if any
@@ -282,11 +292,13 @@ class Store extends ElectronStore<StoreData> {
         // Handle migrations
         if (existingSafeStorageBackend) {
             if (existingSafeStorageBackend === "basic_text" && backend !== "plaintext" && backend !== "basic_text") {
-                return this.prepareMigrateBasicTextToPlaintext();
+                this.prepareMigrateBasicTextToPlaintext();
+                return false;
             }
 
             if (this.get("safeStorageBackendMigrate") && backend === "basic_text") {
-                return this.migrateBasicTextToPlaintext();
+                this.migrateBasicTextToPlaintext();
+                return false;
             }
 
             if (existingSafeStorageBackend === "plaintext" && backend !== "plaintext") {
@@ -314,9 +326,10 @@ class Store extends ElectronStore<StoreData> {
 
             if (existingSafeStorageBackend in safeStorageBackendMap && !this.get("safeStorageBackendOverride")) {
                 this.set("safeStorageBackendOverride", true);
-                return relaunchApp();
+                relaunchApp();
+                return false;
             } else {
-                await this.consultUserBackendChangedUnableToMigrate();
+                await this.consultUserBackendChangedUnableToMigrate(electronSession);
             }
         }
 
@@ -326,9 +339,11 @@ class Store extends ElectronStore<StoreData> {
         } else {
             this.secrets = new StorageWriter(this);
         }
+
+        return true;
     }
 
-    private async consultUserBackendChangedUnableToMigrate(): Promise<void> {
+    private async consultUserBackendChangedUnableToMigrate(electronSession: Session): Promise<void> {
         const { response } = await dialog.showMessageBox({
             title: _t("store|error|backend_changed_title"),
             message: _t("store|error|backend_changed"),
@@ -341,7 +356,7 @@ class Store extends ElectronStore<StoreData> {
         if (response === 0) {
             throw new Error("safeStorage backend changed and cannot migrate");
         }
-        return clearDataAndRelaunch();
+        return clearDataAndRelaunch(electronSession);
     }
 
     private async consultUserConsentDegradedMode(backend: "plaintext" | "basic_text"): Promise<void> {

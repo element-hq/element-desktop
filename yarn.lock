@@ -1048,7 +1048,6 @@
 
 "@electron/node-gyp@https://github.com/electron/node-gyp#06b29aafb7708acef8b3669835c8a7857ebc92d2":
   version "10.2.0-electron.1"
-  uid "06b29aafb7708acef8b3669835c8a7857ebc92d2"
   resolved "https://github.com/electron/node-gyp#06b29aafb7708acef8b3669835c8a7857ebc92d2"
   dependencies:
     env-paths "^2.2.0"
@@ -1334,7 +1333,6 @@
 
 "@fastify/otel@github:getsentry/fastify-otel#otel-v1":
   version "0.8.0"
-  uid ae3088d65e286bdc94ac5d722573537d6a6671bb
   resolved "https://codeload.github.com/getsentry/fastify-otel/tar.gz/ae3088d65e286bdc94ac5d722573537d6a6671bb"
   dependencies:
     "@opentelemetry/core" "^1.30.1"
@@ -2034,7 +2032,7 @@
   resolved "https://registry.yarnpkg.com/@sentry/node/-/node-9.18.0.tgz#682ad11030548eb0e0674ff091afc65319da6d8d"
   integrity sha512-n0H13YVfynZJnKQLHoTlyBK2P960X8+B08za9VaRnJ4zikDx23Xk2Owtj006ZUItUKtKLFi70NyQGGDp7gVAyw==
   dependencies:
-    "@fastify/otel" "github:getsentry/fastify-otel#otel-v1"
+    "@fastify/otel" getsentry/fastify-otel#otel-v1
     "@opentelemetry/api" "^1.9.0"
     "@opentelemetry/context-async-hooks" "^1.30.1"
     "@opentelemetry/core" "^1.30.1"
@@ -2126,11 +2124,6 @@
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-4.6.0.tgz#3c7c9c46e678feefe7a2e5bb609d3dbd665ffb3f"
   integrity sha512-t09vSN3MdfsyCHoFcTRCH/iUtG7OJ0CsjzB8cjAmKc/va/kIgeDI/TxsigdncE/4be734m0cvIYwNaV4i2XqAw==
-
-"@standardnotes/electron-clear-data@^1.0.5":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@standardnotes/electron-clear-data/-/electron-clear-data-1.1.1.tgz#45eab118ed5d1ee9369b540d7e62a9ca96778335"
-  integrity sha512-R0YivtSwSQpNt5nPOi7YRTGlk6kpcz6/2/sAQZf6ZCU8vIGm1cBMo++6kkGQcDEumkwbmagxmLWinL9d1W5g3Q==
 
 "@stylistic/eslint-plugin@^4.0.0":
   version "4.4.0"
