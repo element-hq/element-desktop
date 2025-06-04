@@ -487,7 +487,7 @@ app.on("ready", async () => {
 
     try {
         console.debug("Ensuring storage is ready");
-        if (!await store.prepareSafeStorage(global.mainWindow.webContents.session)) return;
+        if (!(await store.prepareSafeStorage(global.mainWindow.webContents.session))) return;
     } catch (e) {
         console.error(e);
         app.exit(1);

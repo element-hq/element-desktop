@@ -276,9 +276,9 @@ class Store extends ElectronStore<StoreData> {
      * Prepare the safeStorage backend for use.
      * We don't eagerly import from keytar as that would bring in data for all Element profiles and not just the current one,
      * so we import lazily in getSecret.
-     * 
+     *
      * This will relaunch the app in some cases, in which case it will return false and the caller should abort startup.
-     * 
+     *
      * @param electronSession - The Electron session to use for storage (will be used to clear storage if necessary).
      * @returns true if safeStorage was initialised successfully or false if the app will be relaunched
      */
