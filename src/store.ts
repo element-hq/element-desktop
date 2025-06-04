@@ -61,6 +61,7 @@ const safeStorageBackendMap: Omit<
 };
 
 function relaunchApp(): void {
+    console.info("Relaunching app...");
     app.relaunch();
     app.exit();
 }
