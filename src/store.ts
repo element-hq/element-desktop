@@ -329,7 +329,9 @@ class Store extends ElectronStore<StoreData> {
                 relaunchApp();
                 return false;
             } else {
+                // This will either relaunch the app or throw an execption
                 await this.consultUserBackendChangedUnableToMigrate(electronSession);
+                return false;
             }
         }
 
