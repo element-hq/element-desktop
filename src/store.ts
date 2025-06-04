@@ -305,9 +305,14 @@ class Store extends ElectronStore<StoreData> {
             // Store the backend used for the safeStorage data so we can detect if it changes, and we know how the data is encoded
             this.recordSafeStorageBackend(backend);
         } else if (existingSafeStorageBackend !== backend) {
+            // We already appear to have started using a backend other than the one that we picked, so
+            // set the override flag and relaunch with the backend we were previously using, unless we
+            // already have the override flag, in which case we must assume the previous backend is no
+            // longer usable, in which case we should fall into the next block and warn the user we can't
+            // migrate.
             console.warn(`safeStorage backend changed from ${existingSafeStorageBackend} to ${backend}`);
 
-            if (existingSafeStorageBackend in safeStorageBackendMap) {
+            if (existingSafeStorageBackend in safeStorageBackendMap && !this.get("safeStorageBackendOverride")) {
                 this.set("safeStorageBackendOverride", true);
                 return relaunchApp();
             } else {
