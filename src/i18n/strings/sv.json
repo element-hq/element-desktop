@@ -22,7 +22,9 @@
         "about": "Om",
         "brand_help": "%(brand)s-hjälp",
         "help": "Hjälp",
-        "preferences": "Inställningar"
+        "no": "Nej",
+        "preferences": "Inställningar",
+        "yes": "Ja"
     },
     "confirm_quit": "Är du säker att du vill avsluta?",
     "edit_menu": {
@@ -48,6 +50,14 @@
         "save_image_as": "Spara bild som…",
         "save_image_as_error_description": "Bilden sparades inte",
         "save_image_as_error_title": "Misslyckades med att spara bilden"
+    },
+    "store": {
+        "error": {
+            "backend_changed": "Rensa data och ladda om?",
+            "backend_changed_detail": "Kunde inte komma åt hemligheten från systemnyckelringen, det verkar ha ändrats.",
+            "backend_changed_title": "Misslyckades att ladda databasen",
+            "unsupported_keyring": "Ditt system har en nyckelring som inte stöds, vilket innebär att databasen inte kan öppnas."
+        }
     },
     "view_menu": {
         "actual_size": "Verklig storlek",

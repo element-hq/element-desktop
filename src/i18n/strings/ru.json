@@ -22,7 +22,9 @@
         "about": "О программе",
         "brand_help": "Помощь %(brand)s",
         "help": "Помощь",
-        "preferences": "Предпочтения"
+        "no": "Нет",
+        "preferences": "Предпочтения",
+        "yes": "Да"
     },
     "confirm_quit": "Вы уверены, что хотите выйти?",
     "edit_menu": {
