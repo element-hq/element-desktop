@@ -79,8 +79,9 @@ const Settings: Record<string, Setting> = {
     },
     "Electron.enableContentProtection": {
         // Unsupported on Linux https://www.electronjs.org/docs/latest/api/browser-window#winsetcontentprotectionenable-macos-windows
+        // Broken on macOS https://github.com/electron/electron/issues/19880
         supported(): boolean {
-            return process.platform !== "linux";
+            return process.platform === "win32";
         },
         async read(): Promise<any> {
             return Store.instance?.get("enableContentProtection");
@@ -104,6 +105,7 @@ ipcMain.handle("setSettingValue", async (_ev, settingName: string, value: any) =
     if (!setting) {
         throw new Error(`Unknown setting: ${settingName}`);
     }
+    console.debug(`Writing setting value for: ${settingName} = ${value}`);
     await setting.write(value);
 });
 ipcMain.handle("getSettingValue", async (_ev, settingName: string) => {
@@ -111,5 +113,7 @@ ipcMain.handle("getSettingValue", async (_ev, settingName: string) => {
     if (!setting) {
         throw new Error(`Unknown setting: ${settingName}`);
     }
-    return await setting.read();
+    const value = await setting.read();
+    console.debug(`Reading setting value for: ${settingName} = ${value}`);
+    return value;
 });
