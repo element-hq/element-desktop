@@ -13,10 +13,10 @@ import Store from "./store.js";
 interface Setting {
     read(): Promise<any>;
     write(value: any): Promise<void>;
-    supported?(): boolean;
+    supported?(): boolean; // if undefined, the setting is always supported
 }
 
-export const Settings: Record<string, Setting> = {
+const Settings: Record<string, Setting> = {
     "Electron.autoLaunch": {
         async read(): Promise<any> {
             return global.launcher.isEnabled();
