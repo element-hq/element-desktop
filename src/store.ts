@@ -83,6 +83,7 @@ interface StoreData {
     autoHideMenuBar: boolean;
     locale?: string | string[];
     disableHardwareAcceleration: boolean;
+    enableContentProtection: boolean;
     safeStorage?: Record<string, string>;
     /** the safeStorage backend used for the safeStorage data as written */
     safeStorageBackend?: SafeStorageBackend;
@@ -214,6 +215,10 @@ class Store extends ElectronStore<StoreData> {
                     anyOf: [{ type: "string" }, { type: "array", items: { type: "string" } }],
                 },
                 disableHardwareAcceleration: {
+                    type: "boolean",
+                    default: false,
+                },
+                enableContentProtection: {
                     type: "boolean",
                     default: false,
                 },

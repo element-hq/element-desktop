@@ -485,6 +485,8 @@ app.on("ready", async () => {
         },
     });
 
+    global.mainWindow.setContentProtection(store.get("enableContentProtection"));
+
     try {
         console.debug("Ensuring storage is ready");
         if (!(await store.prepareSafeStorage(global.mainWindow.webContents.session))) return;

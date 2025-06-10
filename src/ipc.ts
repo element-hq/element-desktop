@@ -9,7 +9,6 @@ import { app, autoUpdater, desktopCapturer, ipcMain, powerSaveBlocker, TouchBar,
 
 import IpcMainEvent = Electron.IpcMainEvent;
 import { randomArray } from "./utils.js";
-import { Settings } from "./settings.js";
 import { getDisplayMediaCallback, setDisplayMediaCallback } from "./displayMediaCallback.js";
 import Store, { clearDataAndRelaunch } from "./store.js";
 
@@ -69,18 +68,6 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
         case "getUpdateFeedUrl":
             ret = autoUpdater.getFeedURL();
             break;
-        case "getSettingValue": {
-            const [settingName] = args;
-            const setting = Settings[settingName];
-            ret = await setting.read();
-            break;
-        }
-        case "setSettingValue": {
-            const [settingName, value] = args;
-            const setting = Settings[settingName];
-            await setting.write(value);
-            break;
-        }
         case "setLanguage":
             global.appLocalization.setAppLocale(args[0]);
             break;

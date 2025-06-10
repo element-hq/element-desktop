@@ -54,11 +54,20 @@ contextBridge.exposeInMainWorld("electron", {
         protocol: string;
         sessionId: string;
         config: IConfigOptions;
+        supportedSettings: Record<string, boolean>;
     }> {
-        const [{ protocol, sessionId }, config] = await Promise.all([
+        const [{ protocol, sessionId }, config, supportedSettings] = await Promise.all([
             ipcRenderer.invoke("getProtocol"),
             ipcRenderer.invoke("getConfig"),
+            ipcRenderer.invoke("getSupportedSettings"),
         ]);
-        return { protocol, sessionId, config };
+        return { protocol, sessionId, config, supportedSettings };
+    },
+
+    async setSettingValue(settingName: string, value: any): Promise<void> {
+        return ipcRenderer.invoke("setSettingValue", settingName, value);
+    },
+    async getSettingValue(settingName: string): Promise<any> {
+        return ipcRenderer.invoke("getSettingValue", settingName);
     },
 });
