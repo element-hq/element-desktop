@@ -101,6 +101,7 @@ const config: Omit<Writable<Configuration>, "electronFuses"> & {
         category: "Network;InstantMessaging;Chat",
         maintainer: "support@element.io",
         icon: "build/icons",
+        executableName: pkg.name, // element-desktop or element-desktop-nightly
     },
     deb: {
         packageCategory: "net",
@@ -182,6 +183,7 @@ if (process.env.ED_NIGHTLY) {
     config.extraMetadata.productName += " Nightly";
     config.extraMetadata.name += "-nightly";
     config.extraMetadata.description += " (nightly unstable build)";
+    config.linux.executableName += "-nightly";
     config.deb.fpm.push("--name", NIGHTLY_DEB_NAME);
     (config.protocols as Protocol).schemes[0] = config.extraMetadata.electron_protocol = NIGHTLY_PROTOCOL_SCHEME;
 
