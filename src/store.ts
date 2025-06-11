@@ -52,12 +52,13 @@ type SaneSafeStorageBackend = Exclude<SafeStorageBackend, "unknown">;
  */
 const safeStorageBackendMap: Omit<
     Record<SafeStorageBackend, string>,
-    "unknown" | "kwallet6" | "system" | "plaintext"
+    "unknown" | "system" | "plaintext"
 > = {
     basic_text: "basic",
     gnome_libsecret: "gnome-libsecret",
     kwallet: "kwallet",
     kwallet5: "kwallet5",
+    kwallet6: "kwallet6",
 };
 
 function relaunchApp(): void {
