@@ -50,14 +50,12 @@ type SaneSafeStorageBackend = Exclude<SafeStorageBackend, "unknown">;
  * kwallet6 cannot be specified via command line
  * https://www.electronjs.org/docs/latest/api/safe-storage#safestoragegetselectedstoragebackend-linux
  */
-const safeStorageBackendMap: Omit<
-    Record<SafeStorageBackend, string>,
-    "unknown" | "kwallet6" | "system" | "plaintext"
-> = {
+const safeStorageBackendMap: Omit<Record<SaneSafeStorageBackend, string>, "system" | "plaintext"> = {
     basic_text: "basic",
     gnome_libsecret: "gnome-libsecret",
     kwallet: "kwallet",
     kwallet5: "kwallet5",
+    kwallet6: "kwallet6",
 };
 
 function relaunchApp(): void {
