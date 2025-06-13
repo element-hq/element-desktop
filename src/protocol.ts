@@ -121,7 +121,7 @@ export default class ProtocolHandler {
     public getProfileFromDeeplink(args: string[]): string | undefined {
         // check if we are passed a profile in the SSO callback url
         const deeplinkUrl = args.find(
-            (arg) => arg.startsWith(`${this.protocol}://`) || arg.startsWith(`${LEGACY_PROTOCOL}://`),
+            (arg) => arg.startsWith(`${this.protocol}:/`) || arg.startsWith(`${LEGACY_PROTOCOL}://`),
         );
         if (deeplinkUrl?.includes(SEARCH_PARAM)) {
             const parsedUrl = new URL(deeplinkUrl);
