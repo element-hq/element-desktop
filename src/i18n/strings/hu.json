@@ -57,6 +57,7 @@
             "backend_changed_detail": "Nem sikerült hozzáférni a rendszerkulcstartó titkos kódjához, úgy tűnik, megváltozott.",
             "backend_changed_title": "Nem sikerült betölteni az adatbázist",
             "backend_no_encryption": "A rendszer támogatott kulcstartóval rendelkezik, de a titkosítás nem érhető el.",
+            "backend_no_encryption_detail": "Az Electron észlelte, hogy a titkosítás nem érhető el a(z) %(backend)s kulcstartóján. Győződjön meg róla, hogy telepítve van-e a kulcstartó. Ha telepítve van, indítsa újra és próbálja újra. Esetleg engedélyezheti a gyengébb titkosítást az %(brand)s számára.",
             "backend_no_encryption_title": "Nincs titkosítási támogatás",
             "unsupported_keyring": "A rendszer nem támogatott kulcstartóval rendelkezik, ami azt jelenti, hogy az adatbázis nem nyitható meg.",
             "unsupported_keyring_detail": "Az Electron kulcstartóészlelése nem talált támogatott háttérrendszert. Megpróbálhatja kézileg beállítani a háttérrendszert az %(brand)s egyszeri, parancssori argumentummal való indításával. Lásd: %(link)s.",

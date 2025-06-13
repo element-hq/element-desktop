@@ -56,7 +56,9 @@
             "backend_changed": "Rensa data och ladda om?",
             "backend_changed_detail": "Kunde inte komma åt hemligheten från systemnyckelringen, det verkar ha ändrats.",
             "backend_changed_title": "Misslyckades att ladda databasen",
-            "unsupported_keyring": "Ditt system har en nyckelring som inte stöds, vilket innebär att databasen inte kan öppnas."
+            "unsupported_keyring": "Ditt system har en nyckelring som inte stöds, vilket innebär att databasen inte kan öppnas.",
+            "unsupported_keyring_detail": "Electrons nyckelringsdetektering hittade inte en backend som stöds. Du kan försöka konfigurera backend manuellt genom att starta %(brand)s med ett kommandoradsargument, en engångsåtgärd. Se %(link)s.",
+            "unsupported_keyring_title": "Systemet stöds inte"
         }
     },
     "view_menu": {
