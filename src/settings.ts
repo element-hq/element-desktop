@@ -91,6 +91,14 @@ const Settings: Record<string, Setting> = {
             Store.instance?.set("enableContentProtection", value);
         },
     },
+    "locale": {
+        async read(): Promise<any> {
+            return Store.instance?.get("locale");
+        },
+        async write(value: any): Promise<void> {
+            global.appLocalization.setAppLocale(value);
+        },
+    },
 };
 
 ipcMain.handle("getSupportedSettings", async () => {

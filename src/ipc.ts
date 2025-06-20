@@ -39,20 +39,15 @@ ipcMain.on("loudNotification", function (): void {
 });
 
 let powerSaveBlockerId: number | null = null;
-ipcMain.on("app_onAction", function (_ev: IpcMainEvent, payload) {
-    switch (payload.action) {
-        case "call_state": {
-            if (powerSaveBlockerId !== null && powerSaveBlocker.isStarted(powerSaveBlockerId)) {
-                if (payload.state === "ended") {
-                    powerSaveBlocker.stop(powerSaveBlockerId);
-                    powerSaveBlockerId = null;
-                }
-            } else {
-                if (powerSaveBlockerId === null && payload.state === "connected") {
-                    powerSaveBlockerId = powerSaveBlocker.start("prevent-display-sleep");
-                }
-            }
-            break;
+ipcMain.on("callState", function (_ev: IpcMainEvent, state) {
+    if (powerSaveBlockerId !== null && powerSaveBlocker.isStarted(powerSaveBlockerId)) {
+        if (state === "ended") {
+            powerSaveBlocker.stop(powerSaveBlockerId);
+            powerSaveBlockerId = null;
+        }
+    } else {
+        if (powerSaveBlockerId === null && state === "connected") {
+            powerSaveBlockerId = powerSaveBlocker.start("prevent-display-sleep");
         }
     }
 });
@@ -65,14 +60,8 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
     let ret: any;
 
     switch (payload.name) {
-        case "getUpdateFeedUrl":
-            ret = autoUpdater.getFeedURL();
-            break;
         case "setLanguage":
             global.appLocalization.setAppLocale(args[0]);
-            break;
-        case "getAppVersion":
-            ret = app.getVersion();
             break;
         case "focusWindow":
             if (global.mainWindow.isMinimized()) {
@@ -228,5 +217,9 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
         reply: ret,
     });
 });
+
+ipcMain.handle("getCanSelfUpdate", () => !!autoUpdater.getFeedURL());
+
+ipcMain.handle("getVersion", () => app.getVersion());
 
 ipcMain.handle("getConfig", () => global.vectorConfig);
