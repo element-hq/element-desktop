@@ -57,7 +57,7 @@
             "backend_changed_detail": "Impossible d'accéder aux secrets depuis le trousseau de clés du système, il semble avoir changé.",
             "backend_changed_title": "Impossible de charger la base de données",
             "backend_no_encryption": "Votre système dispose d'un trousseau de clés compatible mais le chiffrement est indisponible.",
-            "backend_no_encryption_detail": "Electron a détecté que le chiffrement n'est pas disponible pour votre trousseau de clés %(backend)s. Assurez-vous que votre trousseau de clés est installé. Si le trousseau de clés est installé, redémarrez et réessayez. Vous pouvez éventuellement autoriser %(brand)s l'utilisation d'une forme de chiffrement plus faible.",
+            "backend_no_encryption_detail": "Electron a détecté que le chiffrement n'est pas disponible pour le trousseau %(backend)s. Veuillez vérifier que votre trousseau est installé. Si c'est le cas, redémarrez et réessayez. Comme alternative, vous pouvez autoriser %(brand)s à utiliser une option de chiffrement moins sécurisée.",
             "backend_no_encryption_title": "Aucune prise en charge du chiffrement",
             "unsupported_keyring": "Votre système possède un trousseau de clés non pris en charge, la base de données ne peut pas être ouverte.",
             "unsupported_keyring_detail": "La détection du porte-clés par Electron n'a pas permis de trouver de backend compatible. Vous pouvez essayer de configurer manuellement le backend en utilisant %(brand)s avec un argument de ligne de commande. Cette opération doit être effectuer une seule fois. Voir%(link)s.",
