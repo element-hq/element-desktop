@@ -43,7 +43,7 @@ const seshatDefaultPassphrase = "DEFAULT_PASSPHRASE";
 async function getOrCreatePassphrase(store: Store, key: string): Promise<string> {
     try {
         const storedPassphrase = await store.getSecret(key);
-        if (storedPassphrase !== null) {
+        if (storedPassphrase !== undefined) {
             return storedPassphrase;
         }
     } catch (e) {

@@ -6,7 +6,7 @@
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=element-desktop&metric=bugs)](https://sonarcloud.io/summary/new_code?id=element-desktop)
 
 # Element Desktop
-
+x
 Element Desktop is a Matrix client for desktop platforms with Element Web at its core.
 
 # First Steps

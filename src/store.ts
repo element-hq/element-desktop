@@ -105,7 +105,7 @@ class StorageWriter {
         this.store.set(this.getKey(key), secret);
     }
 
-    public get(key: string): string | null {
+    public get(key: string): string | undefined {
         return this.store.get(this.getKey(key));
     }
 
@@ -122,7 +122,7 @@ class SafeStorageWriter extends StorageWriter {
         this.store.set(this.getKey(key), safeStorage.encryptString(secret).toString("base64"));
     }
 
-    public get(key: string): string | null {
+    public get(key: string): string | undefined {
         const ciphertext = this.store.get<string, string | undefined>(this.getKey(key));
         if (ciphertext) {
             try {
@@ -132,7 +132,7 @@ class SafeStorageWriter extends StorageWriter {
                 console.error("...ciphertext:", JSON.stringify(ciphertext));
             }
         }
-        return null;
+        return undefined;
     }
 }
 
@@ -462,7 +462,7 @@ class Store extends ElectronStore<StoreData> {
      *
      * @returns A promise for the secret string.
      */
-    public async getSecret(key: string): Promise<string | null> {
+    public async getSecret(key: string): Promise<string | undefined> {
         await this.safeStorageReady();
         let secret = this.secrets!.get(key);
         if (secret) return secret;
@@ -518,9 +518,9 @@ class Store extends ElectronStore<StoreData> {
     /**
      * @deprecated will be removed in the near future
      */
-    private async getSecretKeytar(key: string): Promise<string | null> {
+    private async getSecretKeytar(key: string): Promise<string | undefined> {
         return (
-            (await keytar.getPassword(KEYTAR_SERVICE, key)) ?? (await keytar.getPassword(LEGACY_KEYTAR_SERVICE, key))
+            (await keytar.getPassword(KEYTAR_SERVICE, key)) ?? (await keytar.getPassword(LEGACY_KEYTAR_SERVICE, key) ?? undefined)
         );
     }
 
