@@ -520,7 +520,9 @@ class Store extends ElectronStore<StoreData> {
      */
     private async getSecretKeytar(key: string): Promise<string | undefined> {
         return (
-            (await keytar.getPassword(KEYTAR_SERVICE, key)) ?? (await keytar.getPassword(LEGACY_KEYTAR_SERVICE, key) ?? undefined)
+            (await keytar.getPassword(KEYTAR_SERVICE, key)) ??
+            (await keytar.getPassword(LEGACY_KEYTAR_SERVICE, key)) ??
+            undefined
         );
     }
 
