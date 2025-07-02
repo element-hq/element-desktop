@@ -181,7 +181,7 @@ jobs:
                   echo "ED_SIGNTOOL_THUMBPRINT=$Thumbprint" >> $env:GITHUB_ENV
                   echo "ED_SIGNTOOL_SUBJECT_NAME=$SubjectName" >> $env:GITHUB_ENV
               env:
-                  ESIGNER_URL: https://app.esigner.com/documents/1589b50d-2e30-452f-a40c-3b81661f95b4/final
+                  ESIGNER_URL: https://app.esigner.com/documents/1589b50d-2e30-452f-a40c-3b81661f95b4/download_zip
                   INSTALL_DIR: C:\Users\runneradmin\eSignerCKA
                   MASTER_KEY_FILE: C:\Users\runneradmin\eSignerCKA\master.key
 
