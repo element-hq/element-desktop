@@ -146,10 +146,8 @@ jobs:
               run: |
                   Set-StrictMode -Version 'Latest'
 
-                  # Download, extract, and rename
-                  Invoke-WebRequest -OutFile eSigner_CKA.zip "$env:ESIGNER_URL"
-                  Expand-Archive -Path eSigner_CKA.zip -DestinationPath .
-                  Get-ChildItem -Path * -Include "*_build_*.exe" -Recurse | Rename-Item -NewName eSigner_CKA.exe
+                  # Download installer
+                  Invoke-WebRequest -OutFile eSigner_CKA.exe "$env:ESIGNER_URL"
 
                   # Install
                   New-Item -ItemType Directory -Force -Path "$env:INSTALL_DIR"
@@ -181,7 +179,7 @@ jobs:
                   echo "ED_SIGNTOOL_THUMBPRINT=$Thumbprint" >> $env:GITHUB_ENV
                   echo "ED_SIGNTOOL_SUBJECT_NAME=$SubjectName" >> $env:GITHUB_ENV
               env:
-                  ESIGNER_URL: https://app.esigner.com/documents/1589b50d-2e30-452f-a40c-3b81661f95b4/download_zip
+                  ESIGNER_URL: https://app.esigner.com/documents/1589b50d-2e30-452f-a40c-3b81661f95b4/final
                   INSTALL_DIR: C:\Users\runneradmin\eSignerCKA
                   MASTER_KEY_FILE: C:\Users\runneradmin\eSignerCKA\master.key
 
