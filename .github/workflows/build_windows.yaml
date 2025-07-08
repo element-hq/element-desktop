@@ -199,6 +199,7 @@ jobs:
                   Import-Certificate -CertStoreLocation Cert:\LocalMachine\Root -FilePath .github/SSLcom-sandbox.crt
 
             - name: Check app was signed successfully
+              if: inputs.sign # https://github.com/element-hq/element-desktop/issues/2425
               run: |
                   Set-StrictMode -Version 'Latest'
                   Get-ChildItem `
