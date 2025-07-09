@@ -61,7 +61,9 @@
             "backend_no_encryption_title": "Dim cefnogaeth amgryptio",
             "unsupported_keyring": "Mae gan eich system allweddell nad yw'n cael ei chefnogi sy'n golygu nad oes modd agor y gronfa ddata.",
             "unsupported_keyring_detail": "Heb ganfod allweddell Electron gefn. Gallwch geisio ffurfweddu'r gefn â llaw trwy gychwyn %(brand)s gyda dadl llinell orchymyn, gweithrediad untro. Gweler %(link)s.",
-            "unsupported_keyring_title": "System heb ei chefnogi"
+            "unsupported_keyring_title": "System heb ei chefnogi",
+            "unsupported_keyring_use_basic_text": "Defnyddiwch amgryptio gwannach",
+            "unsupported_keyring_use_plaintext": "Peidiwch â defnyddio amgryptio"
         }
     },
     "view_menu": {
