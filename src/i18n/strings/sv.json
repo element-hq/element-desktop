@@ -56,9 +56,14 @@
             "backend_changed": "Rensa data och ladda om?",
             "backend_changed_detail": "Kunde inte komma åt hemligheten från systemnyckelringen, det verkar ha ändrats.",
             "backend_changed_title": "Misslyckades att ladda databasen",
+            "backend_no_encryption": "Ditt system har en nyckelring som stöds men kryptering är inte tillgänglig.",
+            "backend_no_encryption_detail": "Electron har upptäckt att kryptering inte är tillgänglig på din nyckelring %(backend)s. Se till att du har nyckelringen installerad. Om du har nyckelringen installerad, starta om och försök igen. Alternativt kan du tillåta %(brand)s att använda en svagare form av kryptering.",
+            "backend_no_encryption_title": "Inget krypteringsstöd",
             "unsupported_keyring": "Ditt system har en nyckelring som inte stöds, vilket innebär att databasen inte kan öppnas.",
             "unsupported_keyring_detail": "Electrons nyckelringsdetektering hittade inte en backend som stöds. Du kan försöka konfigurera backend manuellt genom att starta %(brand)s med ett kommandoradsargument, en engångsåtgärd. Se %(link)s.",
-            "unsupported_keyring_title": "Systemet stöds inte"
+            "unsupported_keyring_title": "Systemet stöds inte",
+            "unsupported_keyring_use_basic_text": "Använd svagare kryptering",
+            "unsupported_keyring_use_plaintext": "Använd ingen kryptering"
         }
     },
     "view_menu": {
