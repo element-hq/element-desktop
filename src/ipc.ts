@@ -12,12 +12,18 @@ import { randomArray } from "./utils.js";
 import { getDisplayMediaCallback, setDisplayMediaCallback } from "./displayMediaCallback.js";
 import Store, { clearDataAndRelaunch } from "./store.js";
 
-ipcMain.on("setBadgeCount", function (_ev: IpcMainEvent, count: number): void {
+ipcMain.on("setBadgeCount", function (_ev: IpcMainEvent, count: number, imageBuffer?: Buffer, imageBufferDescription?: string): void {
     if (process.platform !== "win32") {
         // only set badgeCount on Mac/Linux, the docs say that only those platforms support it but turns out Electron
         // has some Windows support too, and in some Windows environments this leads to two badges rendering atop
         // each other. See https://github.com/vector-im/element-web/issues/16942
         app.badgeCount = count;
+    } else {
+        if (imageBuffer && imageBufferDescription !== undefined) {
+            global.mainWindow?.setOverlayIcon(nativeImage.createFromBuffer(Buffer.from(imageBuffer)), imageBufferDescription);
+        } else {
+            global.mainWindow?.setOverlayIcon(null, "");
+        }
     }
     if (count === 0) {
         global.mainWindow?.flashFrame(false);
