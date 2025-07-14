@@ -55,13 +55,17 @@ contextBridge.exposeInMainWorld("electron", {
         sessionId: string;
         config: IConfigOptions;
         supportedSettings: Record<string, boolean>;
+        /**
+         * Do we need to render badge overlays for new notifications?
+         */
+        supportsBadgeOverlay: boolean;
     }> {
         const [{ protocol, sessionId }, config, supportedSettings] = await Promise.all([
             ipcRenderer.invoke("getProtocol"),
             ipcRenderer.invoke("getConfig"),
             ipcRenderer.invoke("getSupportedSettings"),
         ]);
-        return { protocol, sessionId, config, supportedSettings };
+        return { protocol, sessionId, config, supportedSettings, supportsBadgeOverlay: process.platform === "win32" };
     },
 
     async setSettingValue(settingName: string, value: any): Promise<void> {
