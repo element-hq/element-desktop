@@ -68,45 +68,25 @@ export function create(config: IConfig): void {
     initApplicationMenu();
     trayIcon.on("click", toggleWin);
 
-    if (process.platform === "win32") {
-        // We only use setOverlayIcon on Windows as it's only supported on that platform, but has good support
-        // from all the Windows variants we support.
-        // https://www.electronjs.org/docs/latest/api/browser-window#winsetoverlayiconoverlay-description-windows
-        ipcMain.on(
-            "setBadgeCount",
-            function (_ev: IpcMainEvent, count: number, imageBuffer?: Buffer, imageBufferDescription?: string): void {
-                if (imageBuffer && imageBufferDescription !== undefined) {
-                    global.mainWindow?.setOverlayIcon(
-                        nativeImage.createFromBuffer(Buffer.from(imageBuffer)),
-                        imageBufferDescription,
-                    );
-                } else {
-                    global.mainWindow?.setOverlayIcon(null, "");
-                }
-            },
-        );
-    } else {
-        // For other platforms, we instead update the application icon when the favicon changes.
-        let lastFavicon: string | null = null;
-        global.mainWindow?.webContents.on("page-favicon-updated", async function (ev, favicons) {
-            if (!favicons || favicons.length <= 0 || !favicons[0].startsWith("data:")) {
-                if (lastFavicon !== null) {
-                    global.mainWindow?.setIcon(defaultIcon);
-                    trayIcon?.setImage(defaultIcon);
-                    lastFavicon = null;
-                }
-                return;
+    let lastFavicon: string | null = null;
+    global.mainWindow?.webContents.on("page-favicon-updated", async function (ev, favicons) {
+        if (!favicons || favicons.length <= 0 || !favicons[0].startsWith("data:")) {
+            if (lastFavicon !== null) {
+                global.mainWindow?.setIcon(defaultIcon);
+                trayIcon?.setImage(defaultIcon);
+                lastFavicon = null;
             }
+            return;
+        }
 
-            // No need to change, shortcut
-            if (favicons[0] === lastFavicon) return;
-            lastFavicon = favicons[0];
+        // No need to change, shortcut
+        if (favicons[0] === lastFavicon) return;
+        lastFavicon = favicons[0];
 
-            const newFavicon = nativeImage.createFromDataURL(favicons[0]);
-            trayIcon?.setImage(newFavicon);
-            global.mainWindow?.setIcon(newFavicon);
-        });
-    }
+        const newFavicon = nativeImage.createFromDataURL(favicons[0]);
+        trayIcon?.setImage(newFavicon);
+        global.mainWindow?.setIcon(newFavicon);
+    });
 
     global.mainWindow?.webContents.on("page-title-updated", function (ev, title) {
         trayIcon?.setToolTip(title);

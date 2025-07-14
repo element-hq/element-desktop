@@ -76,5 +76,13 @@
         "bring_all_to_front": "Bring All to Front",
         "label": "Window",
         "zoom": "Zoom"
+    },
+    "icon_overlay": {
+        "description_notifications": {
+            "one": "You have %(count)s unread notification.",
+            "other": "You have %(count)s unread notifications."
+        },
+        "description_error": "Error"
     }
+        
 }
