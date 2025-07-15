@@ -7,7 +7,7 @@ SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Com
 Please see LICENSE files in the repository root for full details.
 */
 
-import { app, Tray, Menu, nativeImage, ipcMain, IpcMainEvent } from "electron";
+import { app, Tray, Menu, nativeImage, ipcMain, type IpcMainEvent } from "electron";
 import { v5 as uuidv5 } from "uuid";
 
 import { _t } from "./language-helper.js";
@@ -102,7 +102,7 @@ export function create(config: IConfig): void {
             if (favicons[0] === lastFavicon) return;
             lastFavicon = favicons[0];
 
-            let newFavicon = nativeImage.createFromDataURL(favicons[0]);
+            const newFavicon = nativeImage.createFromDataURL(favicons[0]);
             trayIcon?.setImage(newFavicon);
             global.mainWindow?.setIcon(newFavicon);
         });
