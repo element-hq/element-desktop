@@ -20,18 +20,6 @@ ipcMain.on(
             // has some Windows support too, and in some Windows environments this leads to two badges rendering atop
             // each other. See https://github.com/vector-im/element-web/issues/16942
             app.badgeCount = count;
-        } else {
-            // similarly, we only use setOverlayIcon on Windows as it's only supported on that platform, but has good support
-            // from all the Windows variants we support.
-            // https://www.electronjs.org/docs/latest/api/browser-window#winsetoverlayiconoverlay-description-windows
-            if (imageBuffer && imageBufferDescription !== undefined) {
-                global.mainWindow?.setOverlayIcon(
-                    nativeImage.createFromBuffer(Buffer.from(imageBuffer)),
-                    imageBufferDescription,
-                );
-            } else {
-                global.mainWindow?.setOverlayIcon(null, "");
-            }
         }
         if (count === 0) {
             global.mainWindow?.flashFrame(false);

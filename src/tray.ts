@@ -7,10 +7,7 @@ SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Com
 Please see LICENSE files in the repository root for full details.
 */
 
-import { app, Tray, Menu, nativeImage } from "electron";
-import pngToIco from "png-to-ico";
-import path from "node:path";
-import fs from "node:fs";
+import { app, Tray, Menu, nativeImage, ipcMain, IpcMainEvent } from "electron";
 import { v5 as uuidv5 } from "uuid";
 
 import { _t } from "./language-helper.js";
@@ -71,37 +68,45 @@ export function create(config: IConfig): void {
     initApplicationMenu();
     trayIcon.on("click", toggleWin);
 
-    let lastFavicon: string | null = null;
-    global.mainWindow?.webContents.on("page-favicon-updated", async function (ev, favicons) {
-        if (!favicons || favicons.length <= 0 || !favicons[0].startsWith("data:")) {
-            if (lastFavicon !== null) {
-                global.mainWindow?.setIcon(defaultIcon);
-                trayIcon?.setImage(defaultIcon);
-                lastFavicon = null;
+    if (process.platform === "win32") {
+        // We only use setOverlayIcon on Windows as it's only supported on that platform, but has good support
+        // from all the Windows variants we support.
+        // https://www.electronjs.org/docs/latest/api/browser-window#winsetoverlayiconoverlay-description-windows
+        ipcMain.on(
+            "setBadgeCount",
+            function (_ev: IpcMainEvent, count: number, imageBuffer?: Buffer, imageBufferDescription?: string): void {
+                if (imageBuffer && imageBufferDescription !== undefined) {
+                    global.mainWindow?.setOverlayIcon(
+                        nativeImage.createFromBuffer(Buffer.from(imageBuffer)),
+                        imageBufferDescription,
+                    );
+                } else {
+                    global.mainWindow?.setOverlayIcon(null, "");
+                }
+            },
+        );
+    } else {
+        // For other platforms, we instead update the application icon when the favicon changes.
+        let lastFavicon: string | null = null;
+        global.mainWindow?.webContents.on("page-favicon-updated", async function (ev, favicons) {
+            if (!favicons || favicons.length <= 0 || !favicons[0].startsWith("data:")) {
+                if (lastFavicon !== null) {
+                    global.mainWindow?.setIcon(defaultIcon);
+                    trayIcon?.setImage(defaultIcon);
+                    lastFavicon = null;
+                }
+                return;
             }
-            return;
-        }
 
-        // No need to change, shortcut
-        if (favicons[0] === lastFavicon) return;
-        lastFavicon = favicons[0];
+            // No need to change, shortcut
+            if (favicons[0] === lastFavicon) return;
+            lastFavicon = favicons[0];
 
-        let newFavicon = nativeImage.createFromDataURL(favicons[0]);
-
-        // Windows likes ico's too much.
-        if (process.platform === "win32") {
-            try {
-                const icoPath = path.join(app.getPath("temp"), "win32_element_icon.ico");
-                fs.writeFileSync(icoPath, await pngToIco(newFavicon.toPNG()));
-                newFavicon = nativeImage.createFromPath(icoPath);
-            } catch (e) {
-                console.error("Failed to make win32 ico", e);
-            }
-        }
-
-        trayIcon?.setImage(newFavicon);
-        global.mainWindow?.setIcon(newFavicon);
-    });
+            let newFavicon = nativeImage.createFromDataURL(favicons[0]);
+            trayIcon?.setImage(newFavicon);
+            global.mainWindow?.setIcon(newFavicon);
+        });
+    }
 
     global.mainWindow?.webContents.on("page-title-updated", function (ev, title) {
         trayIcon?.setToolTip(title);
