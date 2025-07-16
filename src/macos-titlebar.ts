@@ -117,6 +117,12 @@ export function setupMacosTitleBar(window: BrowserWindow): void {
                 height: 20px;
                 -webkit-app-region: drag;
             }
+            
+            .mx_LeftPanel_newRoomList::before {
+                /* Aligned with the room header */
+                height: 13px;
+                border-right: 1px solid var(--cpd-color-bg-subtle-primary);
+            }
 
             .mx_RoomView::before,
             .mx_SpaceRoomView::before {
