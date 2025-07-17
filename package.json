@@ -64,6 +64,7 @@
         "electron-window-state": "^5.0.3",
         "keytar-forked": "7.10.0",
         "minimist": "^1.2.6",
+        "png-to-ico": "^2.1.8",
         "uuid": "^11.0.0"
     },
     "devDependencies": {
