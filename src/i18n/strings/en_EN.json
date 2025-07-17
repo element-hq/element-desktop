@@ -35,6 +35,13 @@
     "file_menu": {
         "label": "File"
     },
+    "icon_overlay": {
+        "description_error": "Error",
+        "description_notifications": {
+            "one": "You have %(count)s unread notification.",
+            "other": "You have %(count)s unread notifications."
+        }
+    },
     "menu": {
         "hide": "Hide",
         "hide_others": "Hide Others",
@@ -76,13 +83,5 @@
         "bring_all_to_front": "Bring All to Front",
         "label": "Window",
         "zoom": "Zoom"
-    },
-    "icon_overlay": {
-        "description_notifications": {
-            "one": "You have %(count)s unread notification.",
-            "other": "You have %(count)s unread notifications."
-        },
-        "description_error": "Error"
     }
-        
 }
