@@ -14,7 +14,6 @@ import { ipcRenderer, contextBridge, IpcRendererEvent } from "electron";
 // handing out generalised messaging access.
 
 const CHANNELS = [
-    "app_onAction",
     "before-quit",
     "check_updates",
     "install_update",
@@ -51,17 +50,21 @@ contextBridge.exposeInMainWorld("electron", {
     },
 
     async initialise(): Promise<{
+        version: string;
         protocol: string;
         sessionId: string;
         config: IConfigOptions;
         supportedSettings: Record<string, boolean>;
+        canSelfUpdate: boolean;
     }> {
-        const [{ protocol, sessionId }, config, supportedSettings] = await Promise.all([
+        const [{ protocol, sessionId }, config, supportedSettings, version, canSelfUpdate] = await Promise.all([
             ipcRenderer.invoke("getProtocol"),
             ipcRenderer.invoke("getConfig"),
             ipcRenderer.invoke("getSupportedSettings"),
+            ipcRenderer.invoke("getVersion"),
+            ipcRenderer.invoke("canSelfUpdate"),
         ]);
-        return { protocol, sessionId, config, supportedSettings };
+        return { protocol, sessionId, config, supportedSettings, version, canSelfUpdate };
     },
 
     async setSettingValue(settingName: string, value: any): Promise<void> {
