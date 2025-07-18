@@ -48,7 +48,7 @@
         "copy_image_url": "Copier l'adresse de l'image",
         "copy_link_url": "Copier l’adresse du lien",
         "save_image_as": "Enregistrer l’image sous…",
-        "save_image_as_error_description": "L’image n’a pas pu être sauvegardée",
+        "save_image_as_error_description": "L’image n’a pas pu être enregistrée",
         "save_image_as_error_title": "Échec de la sauvegarde de l’image"
     },
     "store": {
