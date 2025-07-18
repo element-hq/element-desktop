@@ -1,5 +1,5 @@
 /*
-Copyright 2024 New Vector Ltd.
+Copyright 2024-2025 New Vector Ltd.
 Copyright 2017 Karl Glatz <karl@glatz.biz>
 Copyright 2017 OpenMarket Ltd
 
