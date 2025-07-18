@@ -1,5 +1,5 @@
 /*
-Copyright 2024 New Vector Ltd.
+Copyright 2024-2025 New Vector Ltd.
 Copyright 2017 Karl Glatz <karl@glatz.biz>
 Copyright 2017 OpenMarket Ltd
 
@@ -8,10 +8,10 @@ Please see LICENSE files in the repository root for full details.
 */
 
 import { app, Tray, Menu, nativeImage } from "electron";
+import { v5 as uuidv5 } from "uuid";
+import { writeFile } from "node:fs/promises";
 import pngToIco from "png-to-ico";
 import path from "node:path";
-import fs from "node:fs";
-import { v5 as uuidv5 } from "uuid";
 
 import { _t } from "./language-helper.js";
 
@@ -71,6 +71,7 @@ export function create(config: IConfig): void {
     initApplicationMenu();
     trayIcon.on("click", toggleWin);
 
+    // See also, badge.ts
     let lastFavicon: string | null = null;
     global.mainWindow?.webContents.on("page-favicon-updated", async function (ev, favicons) {
         if (!favicons || favicons.length <= 0 || !favicons[0].startsWith("data:")) {
@@ -92,15 +93,17 @@ export function create(config: IConfig): void {
         if (process.platform === "win32") {
             try {
                 const icoPath = path.join(app.getPath("temp"), "win32_element_icon.ico");
-                fs.writeFileSync(icoPath, await pngToIco(newFavicon.toPNG()));
+                await writeFile(icoPath, await pngToIco(newFavicon.toPNG()));
                 newFavicon = nativeImage.createFromPath(icoPath);
             } catch (e) {
                 console.error("Failed to make win32 ico", e);
             }
+            // Always update the tray icon for Windows.
+            trayIcon?.setImage(newFavicon);
+        } else {
+            trayIcon?.setImage(newFavicon);
+            global.mainWindow?.setIcon(newFavicon);
         }
-
-        trayIcon?.setImage(newFavicon);
-        global.mainWindow?.setIcon(newFavicon);
     });
 
     global.mainWindow?.webContents.on("page-title-updated", function (ev, title) {

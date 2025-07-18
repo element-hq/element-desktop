@@ -1,5 +1,5 @@
 /*
-Copyright 2018-2024 New Vector Ltd.
+Copyright 2018-2025 New Vector Ltd.
 Copyright 2017-2019 Michael Telatynski <7t3chguy@gmail.com>
 Copyright 2016 Aviral Dasgupta
 Copyright 2016 OpenMarket Ltd
@@ -23,6 +23,7 @@ import minimist from "minimist";
 import "./ipc.js";
 import "./seshat.js";
 import "./settings.js";
+import "./badge.js";
 import * as tray from "./tray.js";
 import Store from "./store.js";
 import { buildMenuTemplate } from "./vectormenu.js";

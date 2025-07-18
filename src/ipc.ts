@@ -1,5 +1,5 @@
 /*
-Copyright 2022-2024 New Vector Ltd.
+Copyright 2022-2025 New Vector Ltd.
 
 SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Commercial
 Please see LICENSE files in the repository root for full details.
@@ -11,18 +11,6 @@ import IpcMainEvent = Electron.IpcMainEvent;
 import { randomArray } from "./utils.js";
 import { getDisplayMediaCallback, setDisplayMediaCallback } from "./displayMediaCallback.js";
 import Store, { clearDataAndRelaunch } from "./store.js";
-
-ipcMain.on("setBadgeCount", function (_ev: IpcMainEvent, count: number): void {
-    if (process.platform !== "win32") {
-        // only set badgeCount on Mac/Linux, the docs say that only those platforms support it but turns out Electron
-        // has some Windows support too, and in some Windows environments this leads to two badges rendering atop
-        // each other. See https://github.com/vector-im/element-web/issues/16942
-        app.badgeCount = count;
-    }
-    if (count === 0) {
-        global.mainWindow?.flashFrame(false);
-    }
-});
 
 let focusHandlerAttached = false;
 ipcMain.on("loudNotification", function (): void {

@@ -35,6 +35,13 @@
     "file_menu": {
         "label": "File"
     },
+    "icon_overlay": {
+        "description_error": "Error",
+        "description_notifications": {
+            "one": "You have %(count)s unread notification.",
+            "other": "You have %(count)s unread notifications."
+        }
+    },
     "menu": {
         "hide": "Hide",
         "hide_others": "Hide Others",
