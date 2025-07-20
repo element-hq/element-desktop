@@ -2603,10 +2603,10 @@ app-builder-bin@5.0.0-alpha.12:
   resolved "https://registry.yarnpkg.com/app-builder-bin/-/app-builder-bin-5.0.0-alpha.12.tgz#2daf82f8badc698e0adcc95ba36af4ff0650dc80"
   integrity sha512-j87o0j6LqPL3QRr8yid6c+Tt5gC7xNfYo6uQIQkorAC6MpeayVMZrEDzKmJJ/Hlv7EnOQpaRm53k6ktDYZyB6w==
 
-app-builder-lib@26.0.16:
-  version "26.0.16"
-  resolved "https://registry.yarnpkg.com/app-builder-lib/-/app-builder-lib-26.0.16.tgz#110fc48d520a40fff46b5e0065c26564a63fc8ef"
-  integrity sha512-IEsVD9SWt7YbjJEdYNuhwkdzhNCRZr5YPu1cQUP12kVT/k3EbvSg6QVpBBsd9agVqUaEflvGfl9svTo+Yt7lFQ==
+app-builder-lib@26.0.19:
+  version "26.0.19"
+  resolved "https://registry.yarnpkg.com/app-builder-lib/-/app-builder-lib-26.0.19.tgz#fe49b0cccea620f76e953dd9fd4e567be0f6474e"
+  integrity sha512-z7SaBAqwCG0sYYhimleOChJlu1gRMT7LVhzKt1rxQ4mkUOntQJEdkgclLYuJqIBGIwh9dat3LQbvOr504J0e6w==
   dependencies:
     "@develar/schema-utils" "~2.6.5"
     "@electron/asar" "3.4.1"
@@ -2618,29 +2618,30 @@ app-builder-lib@26.0.16:
     "@malept/flatpak-bundler" "^0.4.0"
     "@types/fs-extra" "9.0.13"
     async-exit-hook "^2.0.1"
-    builder-util "26.0.16"
-    builder-util-runtime "9.3.2"
+    builder-util "26.0.19"
+    builder-util-runtime "9.3.3"
     chromium-pickle-js "^0.2.0"
     ci-info "^4.2.0"
-    config-file-ts "0.2.8-rc1"
     debug "^4.3.4"
     dotenv "^16.4.5"
     dotenv-expand "^11.0.6"
     ejs "^3.1.8"
-    electron-publish "26.0.16"
+    electron-publish "26.0.19"
     fs-extra "^10.1.0"
     hosted-git-info "^4.1.0"
     isbinaryfile "^5.0.0"
+    jiti "^2.4.2"
     js-yaml "^4.1.0"
     json5 "^2.2.3"
     lazy-val "^1.0.5"
-    minimatch "^10.0.0"
+    minimatch "^10.0.3"
     plist "3.1.0"
     resedit "^1.7.0"
     semver "^7.3.8"
     tar "^6.1.12"
     temp-file "^3.4.0"
     tiny-async-pool "1.3.0"
+    which "^5.0.0"
 
 applescript@^1.0.0:
   version "1.0.0"
@@ -2882,23 +2883,23 @@ buffer@^5.1.0, buffer@^5.5.0:
     base64-js "^1.3.1"
     ieee754 "^1.1.13"
 
-builder-util-runtime@9.3.2:
-  version "9.3.2"
-  resolved "https://registry.yarnpkg.com/builder-util-runtime/-/builder-util-runtime-9.3.2.tgz#2a69a239b50e26accf4ed4ea1730406a3117213c"
-  integrity sha512-7QDXJ1FwT6d9ZhG4kuObUUPY8/ENBS/Ky26O4hR5vbeoRGavgekS2Jxv+8sCn/v23aPGU2DXRWEeJuijN2ooYA==
+builder-util-runtime@9.3.3:
+  version "9.3.3"
+  resolved "https://registry.yarnpkg.com/builder-util-runtime/-/builder-util-runtime-9.3.3.tgz#a213aab8b66c1204c003106a0eec7c261cf04b5b"
+  integrity sha512-8AE+77tdJ9XTsK96e55EXJR+ZEK54r8rb0BS8PbEXw57tOX0EWV4BluGW3xkIn+Xvbp+bmQ8gECa15wlcEQxlg==
   dependencies:
     debug "^4.3.4"
     sax "^1.2.4"
 
-builder-util@26.0.16:
-  version "26.0.16"
-  resolved "https://registry.yarnpkg.com/builder-util/-/builder-util-26.0.16.tgz#43b52b643e2b70254a2cc5640d623d5e93461b15"
-  integrity sha512-VmhoCiQumRiuWPqng6a1p3LphHzYYLhI8UbjvLxb6f9IunF9YABv9yDZKu6jMpg1s6J0wka5NH0hH1PDrZ3fIw==
+builder-util@26.0.19:
+  version "26.0.19"
+  resolved "https://registry.yarnpkg.com/builder-util/-/builder-util-26.0.19.tgz#2313aae31a2681b2f5c9a6fb53d53b4cc86bac23"
+  integrity sha512-fKHgkdq6Ra3bv7ly69o32L3ZrOhaq2qzSnQn9rUzWMEpsZ8FfZy9XOYQZ7qIdwB6iqJ4uZhjlPD8ZsGb7LYMZA==
   dependencies:
     "7zip-bin" "~5.2.0"
     "@types/debug" "^4.1.6"
     app-builder-bin "5.0.0-alpha.12"
-    builder-util-runtime "9.3.2"
+    builder-util-runtime "9.3.3"
     chalk "^4.1.2"
     ci-info "^4.2.0"
     cross-spawn "^7.0.6"
@@ -3469,14 +3470,13 @@ dir-compare@^4.2.0:
     minimatch "^3.0.5"
     p-limit "^3.1.0 "
 
-dmg-builder@26.0.16:
-  version "26.0.16"
-  resolved "https://registry.yarnpkg.com/dmg-builder/-/dmg-builder-26.0.16.tgz#7cef5d51391ccdf22a226503fa089caf40d162bf"
-  integrity sha512-xRBGHKPHNgFdqHuo584RkIDDvMwl1gEPcXvZ4FSKHjE6Zb5+8gXG+Vak7E7VF5FUI/O9JoRQA2rG4mOJFoMocQ==
+dmg-builder@26.0.19:
+  version "26.0.19"
+  resolved "https://registry.yarnpkg.com/dmg-builder/-/dmg-builder-26.0.19.tgz#329f3a1b4e42c777da09e3fba0cd35517aa8a7ce"
+  integrity sha512-lZyqfdM0SPqNydGtq06B7LRSxUcKU4v/p2xU0kmKqTM9WXZaQELOZ0OH/gbLCmeZz6zWEDSA31MmTJ8b/X8nYg==
   dependencies:
-    app-builder-lib "26.0.16"
-    builder-util "26.0.16"
-    builder-util-runtime "9.3.2"
+    app-builder-lib "26.0.19"
+    builder-util "26.0.19"
     fs-extra "^10.1.0"
     iconv-lite "^0.6.2"
     js-yaml "^4.1.0"
@@ -3551,26 +3551,26 @@ ejs@^3.1.8:
   dependencies:
     jake "^10.8.5"
 
-electron-builder-squirrel-windows@26.0.16:
-  version "26.0.16"
-  resolved "https://registry.yarnpkg.com/electron-builder-squirrel-windows/-/electron-builder-squirrel-windows-26.0.16.tgz#3a60341c2cd6e46f53ceb9fe36eaf63a9f15cb0b"
-  integrity sha512-6Q2r4hz1PpYBMy12nHIYyyH0rOl0i9aP8+EPesKBwfnRjlniYJ3aRRsAcjGdPeVGezh+c7AXaJgoud4nSaPHGQ==
+electron-builder-squirrel-windows@26.0.19:
+  version "26.0.19"
+  resolved "https://registry.yarnpkg.com/electron-builder-squirrel-windows/-/electron-builder-squirrel-windows-26.0.19.tgz#68fb055847b0ed522f21597251fccce473183757"
+  integrity sha512-zddhAuxL4WknxTlbG9HxRWLar4jn6JkcD+K5kUK7YtoVPIweYgvq45BGNZEI4tbcgLsU7IF2wFyoqW8MyR7KBg==
   dependencies:
-    app-builder-lib "26.0.16"
-    builder-util "26.0.16"
+    app-builder-lib "26.0.19"
+    builder-util "26.0.19"
     electron-winstaller "5.4.0"
 
-electron-builder@26.0.16:
-  version "26.0.16"
-  resolved "https://registry.yarnpkg.com/electron-builder/-/electron-builder-26.0.16.tgz#d5d4860a0f22b99e950c0f8675d8ea7db86390e2"
-  integrity sha512-nGL/mfmTr+LdZ/jZA3/JzeGgi64jtwGNfwmJUVec//PLvqhFBhpnxbdMkwZAN9msOsZ8qqHbN9X/uy4gpBqZVA==
+electron-builder@26.0.19:
+  version "26.0.19"
+  resolved "https://registry.yarnpkg.com/electron-builder/-/electron-builder-26.0.19.tgz#e718723523bc54aff00b2523405c94da038e681a"
+  integrity sha512-0xkN9UcIBgrbNAqeurB+CyBARZPkfiILPK0nvbioX+S86B3fgRfJnjIh+T+zowyPTTY85NN5kLfItM8twVRy5w==
   dependencies:
-    app-builder-lib "26.0.16"
-    builder-util "26.0.16"
-    builder-util-runtime "9.3.2"
+    app-builder-lib "26.0.19"
+    builder-util "26.0.19"
+    builder-util-runtime "9.3.3"
     chalk "^4.1.2"
     ci-info "^4.2.0"
-    dmg-builder "26.0.16"
+    dmg-builder "26.0.19"
     fs-extra "^10.1.0"
     lazy-val "^1.0.5"
     simple-update-notifier "2.0.0"
@@ -3583,14 +3583,14 @@ electron-devtools-installer@^4.0.0:
   dependencies:
     unzip-crx-3 "^0.2.0"
 
-electron-publish@26.0.16:
-  version "26.0.16"
-  resolved "https://registry.yarnpkg.com/electron-publish/-/electron-publish-26.0.16.tgz#6fe1a24517d69f8888637e44017af6ea21ecdf22"
-  integrity sha512-NaibIXacWUCexnXw7ar3ZB/+ok+2WWHmH9WX6k2m7ax1o224+qpfO7mc+LbWbwNi+sMbwuyrHzY01fcg8Wv/pA==
+electron-publish@26.0.19:
+  version "26.0.19"
+  resolved "https://registry.yarnpkg.com/electron-publish/-/electron-publish-26.0.19.tgz#12f02b66c3dd9f870bbe15d07085b31371b6395e"
+  integrity sha512-tcQUIRuHOwaQxi+CrbpaB/5Q+vonj9fEeWkaVa3oM0DcdYHZK/nCLgWKu0kHgPheAU1ovfjVcXBpuyuFBLp2lA==
   dependencies:
     "@types/fs-extra" "^9.0.11"
-    builder-util "26.0.16"
-    builder-util-runtime "9.3.2"
+    builder-util "26.0.19"
+    builder-util-runtime "9.3.3"
     chalk "^4.1.2"
     form-data "^4.0.0"
     fs-extra "^10.1.0"
@@ -5520,7 +5520,7 @@ min-indent@^1.0.0:
   resolved "https://registry.yarnpkg.com/min-indent/-/min-indent-1.0.1.tgz#a63f681673b30571fbe8bc25686ae746eefa9869"
   integrity sha512-I9jwMn07Sy/IwOj3zVkVik2JTvgpaykDZEigL6Rx6N9LbMywwUSMtxET+7lVoDLLd3O3IXwJwvuuns8UB/HeAg==
 
-minimatch@^10.0.0, minimatch@^10.0.1:
+minimatch@^10.0.1:
   version "10.0.1"
   resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-10.0.1.tgz#ce0521856b453c86e25f2c4c0d03e6ff7ddc440b"
   integrity sha512-ethXTt3SGGR+95gudmqJ1eNhRO7eGEGIgYA9vnPatK4/etz2MEVDno5GMCibdMTuBMyElzIlgxMna3K94XDIDQ==
@@ -7577,6 +7577,13 @@ which@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/which/-/which-4.0.0.tgz#cd60b5e74503a3fbcfbf6cd6b4138a8bae644c1a"
   integrity sha512-GlaYyEb07DPxYCKhKzplCWBJtvxZcZMrL+4UkrTSJHHPyZU4mYYTv3qaOe77H7EODLSSopAUFAc6W8U4yqvscg==
+  dependencies:
+    isexe "^3.1.1"
+
+which@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/which/-/which-5.0.0.tgz#d93f2d93f79834d4363c7d0c23e00d07c466c8d6"
+  integrity sha512-JEdGzHwwkrbWoGOlIHqQ5gtprKGOenpDHpxE9zVR1bWbOtYRyPPHMe9FaP6x61CmNaTThSkb0DAJte5jD+DmzQ==
   dependencies:
     isexe "^3.1.1"
 
