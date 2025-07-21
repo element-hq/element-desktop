@@ -35,6 +35,13 @@
     "file_menu": {
         "label": "Fil"
     },
+    "icon_overlay": {
+        "description_error": "Feil",
+        "description_notifications": {
+            "one": "Du har %(count)s ulest varsel.",
+            "other": "Du har %(count)s uleste varsler."
+        }
+    },
     "menu": {
         "hide": "Skjul",
         "hide_others": "Skjul andre",
