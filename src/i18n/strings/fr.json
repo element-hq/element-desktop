@@ -35,6 +35,13 @@
     "file_menu": {
         "label": "Fichier"
     },
+    "icon_overlay": {
+        "description_error": "Erreur",
+        "description_notifications": {
+            "one": "Vous avez %(count)s notification non lue.",
+            "other": "Vous avez %(count)s notifications non lues."
+        }
+    },
     "menu": {
         "hide": "Masquer",
         "hide_others": "Masquer les autres",

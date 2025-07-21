@@ -35,6 +35,13 @@
     "file_menu": {
         "label": "Fail"
     },
+    "icon_overlay": {
+        "description_error": "Viga",
+        "description_notifications": {
+            "one": "Sul on %(count)s lugemata teavitus",
+            "other": "Sul on %(count)s lugemata teavitust"
+        }
+    },
     "menu": {
         "hide": "Peida",
         "hide_others": "Peida muud",
