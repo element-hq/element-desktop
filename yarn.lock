@@ -1973,12 +1973,12 @@
   resolved "https://registry.yarnpkg.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
   integrity sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==
 
-"@playwright/test@1.53.2":
-  version "1.53.2"
-  resolved "https://registry.yarnpkg.com/@playwright/test/-/test-1.53.2.tgz#fafb8dd5e109fc238c4580f82bebc2618f929f77"
-  integrity sha512-tEB2U5z74ebBeyfGNZ3Jfg29AnW+5HlWhvHtb/Mqco9pFdZU1ZLNdVb2UtB5CvmiilNr2ZfVH/qMmAROG/XTzw==
+"@playwright/test@1.54.1":
+  version "1.54.1"
+  resolved "https://registry.yarnpkg.com/@playwright/test/-/test-1.54.1.tgz#a76333e5c2cba5f12f96a6da978bba3ab073c7e6"
+  integrity sha512-FS8hQ12acieG2dYSksmLOF7BNxnVf2afRJdCuM1eMSxj6QTSE6G4InGF7oApGgDb65MX7AwMVlIkpru0yZA4Xw==
   dependencies:
-    playwright "1.53.2"
+    playwright "1.54.1"
 
 "@prisma/instrumentation@6.8.2":
   version "6.8.2"
@@ -2147,16 +2147,16 @@
   integrity sha512-t09vSN3MdfsyCHoFcTRCH/iUtG7OJ0CsjzB8cjAmKc/va/kIgeDI/TxsigdncE/4be734m0cvIYwNaV4i2XqAw==
 
 "@stylistic/eslint-plugin@^5.0.0":
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/@stylistic/eslint-plugin/-/eslint-plugin-5.1.0.tgz#98769a3e6fc68d92deba20538341b0ea7923b3ce"
-  integrity sha512-TJRJul4u/lmry5N/kyCU+7RWWOk0wyXN+BncRlDYBqpLFnzXkd7QGVfN7KewarFIXv0IX0jSF/Ksu7aHWEDeuw==
+  version "5.2.2"
+  resolved "https://registry.yarnpkg.com/@stylistic/eslint-plugin/-/eslint-plugin-5.2.2.tgz#a1cb24f17263e1dcb2d5c94069dc3ae7af1eb9ce"
+  integrity sha512-bE2DUjruqXlHYP3Q2Gpqiuj2bHq7/88FnuaS0FjeGGLCy+X6a07bGVuwtiOYnPSLHR6jmx5Bwdv+j7l8H+G97A==
   dependencies:
     "@eslint-community/eslint-utils" "^4.7.0"
-    "@typescript-eslint/types" "^8.34.1"
+    "@typescript-eslint/types" "^8.37.0"
     eslint-visitor-keys "^4.2.1"
     espree "^10.4.0"
     estraverse "^5.3.0"
-    picomatch "^4.0.2"
+    picomatch "^4.0.3"
 
 "@szmarczak/http-timer@^4.0.5":
   version "4.0.6"
@@ -2447,10 +2447,15 @@
     debug "^4.3.4"
     ts-api-utils "^2.1.0"
 
-"@typescript-eslint/types@8.36.0", "@typescript-eslint/types@^8.34.1", "@typescript-eslint/types@^8.36.0":
+"@typescript-eslint/types@8.36.0", "@typescript-eslint/types@^8.36.0":
   version "8.36.0"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/types/-/types-8.36.0.tgz#d3d184adc2899e2912c13b17c1590486ef37c7ac"
   integrity sha512-xGms6l5cTJKQPZOKM75Dl9yBfNdGeLRsIyufewnxT4vZTrjC0ImQT4fj8QmtJK84F58uSh5HVBSANwcfiXxABQ==
+
+"@typescript-eslint/types@^8.37.0":
+  version "8.38.0"
+  resolved "https://registry.yarnpkg.com/@typescript-eslint/types/-/types-8.38.0.tgz#297351c994976b93c82ac0f0e206c8143aa82529"
+  integrity sha512-wzkUfX3plUqij4YwWaJyqhiPE5UCRVlFpKn1oCRn2O1bJ592XxWJj8ROQ3JD5MYXLORW84063z3tZTb/cs4Tyw==
 
 "@typescript-eslint/typescript-estree@8.36.0":
   version "8.36.0"
@@ -3674,10 +3679,10 @@ electron-winstaller@5.4.0:
   optionalDependencies:
     "@electron/windows-sign" "^1.1.2"
 
-electron@37.2.0:
-  version "37.2.0"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-37.2.0.tgz#358082d3a3b39ebf35d506287826800985c6862e"
-  integrity sha512-dE6+qeg6SBUVd5d8CD2+GH82kh+gF1v40+hs+U+UOno681NMSGmBtgqwldQRpbvtnQDD7V2M9Cpfr3+Abw7aBg==
+electron@37.2.3:
+  version "37.2.3"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-37.2.3.tgz#a4916c591ddae6a2002dbb7f8ddc8e3db96b1f0b"
+  integrity sha512-JRKKn8cRDXDfkC+oWISbYs+c+L6RA776JM0NiB9bn2yV8H/LnBUlVPzKKfsXgrUIokN4YcbCw694vfAdEJwtGw==
   dependencies:
     "@electron/get" "^2.0.0"
     "@types/node" "^22.7.7"
@@ -6290,22 +6295,27 @@ picomatch@^4.0.2:
   resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-4.0.2.tgz#77c742931e8f3b8820946c76cd0c1f13730d1dab"
   integrity sha512-M7BAV6Rlcy5u+m6oPhAPFgJTzAioX/6B0DxyvDlo9l8+T3nLKbrczg2WLUyzd45L8RqfUMyGPzekbMvX2Ldkwg==
 
+picomatch@^4.0.3:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-4.0.3.tgz#796c76136d1eead715db1e7bad785dedd695a042"
+  integrity sha512-5gTmgEY/sqK6gFXLIsQNH19lWb4ebPDLA4SdLP7dsWkIXHWlG66oPuVvXSGFPppYZz8ZDZq0dYYrbHfBCVUb1Q==
+
 pidtree@^0.6.0:
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/pidtree/-/pidtree-0.6.0.tgz#90ad7b6d42d5841e69e0a2419ef38f8883aa057c"
   integrity sha512-eG2dWTVw5bzqGRztnHExczNxt5VGsE6OwTeCG3fdUf9KBsZzO3R5OIIIzWR+iZA0NtZ+RDVdaoE2dK1cn6jH4g==
 
-playwright-core@1.53.2:
-  version "1.53.2"
-  resolved "https://registry.yarnpkg.com/playwright-core/-/playwright-core-1.53.2.tgz#78f71e2f727713daa8d360dc11c460022c13cf91"
-  integrity sha512-ox/OytMy+2w1jcYEYlOo1Hhp8hZkLCximMTUTMBXjGUA1KoFfiSZ+DU+3a739jsPY0yoKH2TFy9S2fsJas8yAw==
+playwright-core@1.54.1:
+  version "1.54.1"
+  resolved "https://registry.yarnpkg.com/playwright-core/-/playwright-core-1.54.1.tgz#d32edcce048c9d83ceac31e294a7b60ef586960b"
+  integrity sha512-Nbjs2zjj0htNhzgiy5wu+3w09YetDx5pkrpI/kZotDlDUaYk0HVA5xrBVPdow4SAUIlhgKcJeJg4GRKW6xHusA==
 
-playwright@1.53.2:
-  version "1.53.2"
-  resolved "https://registry.yarnpkg.com/playwright/-/playwright-1.53.2.tgz#cc2ef4a22da1ae562e0ed91edb9e22a7c4371305"
-  integrity sha512-6K/qQxVFuVQhRQhFsVZ9fGeatxirtrpPgxzBYWyZLEXJzqYwuL4fuNmfOfD5et1tJE4GScKyPNeLhZeRwuTU3A==
+playwright@1.54.1:
+  version "1.54.1"
+  resolved "https://registry.yarnpkg.com/playwright/-/playwright-1.54.1.tgz#128d66a8d5182b5330e6440be3a72ca313362788"
+  integrity sha512-peWpSwIBmSLi6aW2auvrUtf2DqY16YYcCMO8rTVx486jKmDTJg7UAhyrraP98GB8BoPURZP8+nxO7TSd4cPr5g==
   dependencies:
-    playwright-core "1.53.2"
+    playwright-core "1.54.1"
   optionalDependencies:
     fsevents "2.3.2"
 
