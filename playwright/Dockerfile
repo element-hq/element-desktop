@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/playwright:v1.53.2-jammy@sha256:61a3b6663a09ae17c841af8242475e87a9f547ee452a773d6ac88b56e9dddc12
+FROM mcr.microsoft.com/playwright:v1.54.1-jammy@sha256:f72b8d294edee6beadacfc1868abf746dbc31316b1927f39f393107053c58bd1
 
 WORKDIR /work/element-desktop
 
