@@ -35,6 +35,13 @@
     "file_menu": {
         "label": "Fájl"
     },
+    "icon_overlay": {
+        "description_error": "Hiba",
+        "description_notifications": {
+            "one": "%(count)s olvasatlan értesítése van.",
+            "other": "%(count)s olvasatlan értesítése van."
+        }
+    },
     "menu": {
         "hide": "Elrejtés",
         "hide_others": "Mások elrejtése",
