@@ -35,6 +35,14 @@
     "file_menu": {
         "label": "Súbor"
     },
+    "icon_overlay": {
+        "description_error": "Chyba",
+        "description_notifications": {
+            "one": "Máte %(count)s neprečítané oznámenie.",
+            "few": "Máte %(count)s neprečítané oznámenia.",
+            "other": "Máte %(count)s neprečítaných oznámení."
+        }
+    },
     "menu": {
         "hide": "Skryť",
         "hide_others": "Skryť ostatné",
