@@ -35,6 +35,12 @@
     "file_menu": {
         "label": "Berkas"
     },
+    "icon_overlay": {
+        "description_error": "Kesalahan",
+        "description_notifications": {
+            "other": "Anda memiliki %(count)s notifikasi yang belum dibaca."
+        }
+    },
     "menu": {
         "hide": "Sembunyikan",
         "hide_others": "Sembunyikan yang Lain",
