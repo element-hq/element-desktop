@@ -35,6 +35,14 @@
     "file_menu": {
         "label": "Файл"
     },
+    "icon_overlay": {
+        "description_error": "Помилка",
+        "description_notifications": {
+            "one": "У вас є %(count)s непрочитане сповіщення.",
+            "few": "У вас є %(count)s непрочитані сповіщення.",
+            "many": "У вас є %(count)s непрочитаних сповіщень."
+        }
+    },
     "menu": {
         "hide": "Сховати",
         "hide_others": "Сховати інші",
