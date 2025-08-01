@@ -35,6 +35,14 @@
     "file_menu": {
         "label": "Plik"
     },
+    "icon_overlay": {
+        "description_error": "Błąd",
+        "description_notifications": {
+            "one": "Masz %(count)s nieprzeczytane powiadomienie.",
+            "few": "Masz %(count)s nieprzeczytane powiadomienia.",
+            "many": "Masz %(count)s nieprzeczytanych powiadomień."
+        }
+    },
     "menu": {
         "hide": "Ukryj",
         "hide_others": "Ukryj inne",
