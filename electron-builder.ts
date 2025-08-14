@@ -82,7 +82,14 @@ const config: Omit<Writable<Configuration>, "electronFuses"> & {
         },
         "lib/**",
     ],
-    extraResources: ["build/icon.*", "webapp.asar"],
+    extraResources: [
+        "build/icon.*",
+        {
+            from: "build/icon.*",
+            to: "", // root of the resources directory
+        },
+        "webapp.asar",
+    ],
     extraMetadata: {
         name: pkg.name,
         productName: pkg.productName,
