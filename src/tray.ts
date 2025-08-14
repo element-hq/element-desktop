@@ -38,18 +38,13 @@ function toggleWin(): void {
     }
 }
 
-interface IConfig {
-    icon_path: string; // eslint-disable-line camelcase
-    brand: string;
-}
-
 function getUuid(): string {
     // The uuid field is optional and only needed on unsigned Windows packages where the executable path changes
     // The hardcoded uuid is an arbitrary v4 uuid generated on https://www.uuidgenerator.net/version4
     return global.vectorConfig["uuid"] || "eba84003-e499-4563-8e9d-166e34b5cc25";
 }
 
-export function create(config: IConfig): void {
+export function create(config: (typeof global)["trayConfig"]): void {
     // no trays on darwin
     if (process.platform === "darwin" || trayIcon) return;
     const defaultIcon = nativeImage.createFromPath(config.icon_path);
