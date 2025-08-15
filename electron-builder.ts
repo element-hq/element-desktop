@@ -99,7 +99,6 @@ const config: Omit<Writable<Configuration>, "electronFuses"> & {
     linux: {
         target: ["tar.gz", "deb"],
         category: "Network;InstantMessaging;Chat",
-        maintainer: "support@element.io",
         icon: "build/icons",
         executableName: pkg.name, // element-desktop or element-desktop-nightly
     },
