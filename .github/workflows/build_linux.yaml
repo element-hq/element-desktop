@@ -83,7 +83,8 @@ jobs:
                   name: ${{ inputs.prepare-artifact-name }}
 
             - name: Apply variant overrides
-              run: [ -d overrides ] && mv -f overrides/* .
+              run: |
+                  [ -d overrides ] && mv -f overrides/* .
 
             - name: Cache .hak
               id: cache
