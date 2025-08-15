@@ -43,6 +43,9 @@ jobs:
               with:
                   name: webapp
 
+            - name: Apply variant overrides
+              run: [ -d overrides ] && mv -f overrides/* .
+
             - name: Cache .hak
               id: cache
               uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
