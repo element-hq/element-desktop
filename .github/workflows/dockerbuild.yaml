@@ -42,7 +42,7 @@ jobs:
               run: docker run -v $PWD:/project element-desktop-dockerbuild yarn install
 
             - name: Log in to the Container registry
-              uses: docker/login-action@3d100841f68d4548bf57e52eb27bd33ec5069f55
+              uses: docker/login-action@184bdaa0721073962dff0199f1fb9940f07167d1
               if: github.event_name != 'pull_request'
               with:
                   registry: ${{ env.REGISTRY }}
@@ -52,7 +52,7 @@ jobs:
             - name: Extract metadata for Docker
               id: meta
               if: github.event_name != 'pull_request'
-              uses: docker/metadata-action@902fa8ec7d6ecbf8d84d538b9b233a880e428804 # v5
+              uses: docker/metadata-action@c1e51972afc2121e065aed6d45c65596fe445f3f # v5
               with:
                   images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
                   tags: |

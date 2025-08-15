@@ -3,7 +3,7 @@
     "productName": "Element",
     "main": "lib/electron-main.js",
     "exports": "./lib/electron-main.js",
-    "version": "1.11.108",
+    "version": "1.11.109",
     "description": "Element: the future of secure communication",
     "author": "Element",
     "homepage": "https://element.io",
@@ -73,20 +73,20 @@
         "@babel/core": "^7.18.10",
         "@babel/preset-env": "^7.18.10",
         "@babel/preset-typescript": "^7.18.6",
-        "@electron/asar": "4.0.0",
-        "@playwright/test": "1.54.1",
+        "@electron/asar": "4.0.1",
+        "@playwright/test": "1.54.2",
         "@stylistic/eslint-plugin": "^5.0.0",
         "@types/auto-launch": "^5.0.1",
         "@types/counterpart": "^0.18.1",
         "@types/minimist": "^1.2.1",
-        "@types/node": "18.19.120",
+        "@types/node": "18.19.121",
         "@types/pacote": "^11.1.1",
         "@typescript-eslint/eslint-plugin": "^8.0.0",
         "@typescript-eslint/parser": "^8.0.0",
         "app-builder-lib": "26.0.19",
         "chokidar": "^4.0.0",
         "detect-libc": "^2.0.0",
-        "electron": "37.2.3",
+        "electron": "37.2.5",
         "electron-builder": "26.0.19",
         "electron-builder-squirrel-windows": "26.0.19",
         "electron-devtools-installer": "^4.0.0",
@@ -108,13 +108,13 @@
         "rimraf": "^6.0.0",
         "tar": "^7.0.0",
         "tsx": "^4.19.2",
-        "typescript": "5.8.3"
+        "typescript": "5.9.2"
     },
     "hakDependencies": {
         "matrix-seshat": "^4.0.1"
     },
     "resolutions": {
-        "@types/node": "18.19.120",
+        "@types/node": "18.19.121",
         "config-file-ts": "0.2.8-rc1",
         "node-abi": "4.12.0"
     }

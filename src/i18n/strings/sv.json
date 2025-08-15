@@ -35,6 +35,13 @@
     "file_menu": {
         "label": "Arkiv"
     },
+    "icon_overlay": {
+        "description_error": "Fel",
+        "description_notifications": {
+            "one": "Du har %(count)s oläst avisering.",
+            "other": "Du har %(count)s olästa aviseringar."
+        }
+    },
     "menu": {
         "hide": "Göm",
         "hide_others": "Göm övriga",
