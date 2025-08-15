@@ -188,8 +188,14 @@ jobs:
             - name: Build App
               run: yarn build --publish never -w ${{ steps.config.outputs.build-args }}
               env:
+                  VARIANT_PATH: variant.json
                   # Only set for Nightly builds
-                  ED_NIGHTLY: ${{ inputs.version }}
+                  # The windows packager relies on parsing this as semver, so we have to make it look like one.
+                  # This will give our update packages really stupid names, but we probably can't change that either
+                  # because squirrel windows parses them for the version too. We don't really care: nobody sees them.
+                  # We just give the installer a static name, so you'll just see this in the 'about' dialog.
+                  # Turns out if you use 0.0.0 here it makes Squirrel windows crash, so we use 0.0.1.
+                  VERSION: ${{ inputs.version && format('0.0.1-nightly.{0}', inputs.version) || '' }}
 
             - name: Trust eSigner sandbox cert
               if: inputs.sign == ''
