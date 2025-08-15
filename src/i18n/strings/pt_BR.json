@@ -35,6 +35,13 @@
     "file_menu": {
         "label": "Arquivo"
     },
+    "icon_overlay": {
+        "description_error": "Erro",
+        "description_notifications": {
+            "one": "Você tem %(count)s notificação não lida.",
+            "other": "Você tem %(count)s notificações não lidas."
+        }
+    },
     "menu": {
         "hide": "Esconder",
         "hide_others": "Esconder Outras(os)",
