@@ -5,10 +5,7 @@
     "exports": "./lib/electron-main.js",
     "version": "1.11.108",
     "description": "Element: the future of secure communication",
-    "author": {
-        "name": "Element",
-        "email": "support@element.io"
-    },
+    "author": "Element",
     "homepage": "https://element.io",
     "repository": {
         "type": "git",
