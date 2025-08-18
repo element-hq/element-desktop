@@ -88,6 +88,7 @@ jobs:
 
             - name: Apply variant overrides
               run: if [ -d overrides ]; then mv -f overrides/* .; fi
+              shell: bash
 
             - name: Cache .hak
               id: cache
