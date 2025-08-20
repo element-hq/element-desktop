@@ -250,25 +250,6 @@ async function setupGlobals(): Promise<void> {
     });
 }
 
-// Look for an auto-launcher under 'Riot' and if we find one,
-// port its enabled/disabled-ness over to the new 'Element' launcher
-async function moveAutoLauncher(): Promise<void> {
-    if (!global.vectorConfig.brand || global.vectorConfig.brand === "Element") {
-        const oldLauncher = new AutoLaunch({
-            name: "Riot",
-            isHidden: true,
-            mac: {
-                useLaunchAgent: true,
-            },
-        });
-        const wasEnabled = await oldLauncher.isEnabled();
-        if (wasEnabled) {
-            await oldLauncher.disable();
-            await global.launcher.enable();
-        }
-    }
-}
-
 global.appQuitting = false;
 
 const exitShortcuts: Array<(input: Input, platform: string) => boolean> = [
@@ -355,7 +336,6 @@ app.on("ready", async () => {
     try {
         asarPath = await getAsarPath();
         await setupGlobals();
-        await moveAutoLauncher();
     } catch (e) {
         console.log("App setup failed: exiting", e);
         process.exit(1);
