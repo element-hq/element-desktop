@@ -233,19 +233,10 @@ async function setupGlobals(): Promise<void> {
     const asarPath = await getAsarPath();
     await loadConfig();
 
-    // we assume the resources path is in the same place as the asar
-    const resPath = await tryPaths("res", path.dirname(asarPath), [
-        // If run from the source checkout
-        "res",
-        // if run from packaged application
-        "",
-    ]);
-
-    // The tray icon
-    // It's important to call `path.join` so we don't end up with the packaged asar in the final path.
-    const iconFile = `element.${process.platform === "win32" ? "ico" : "png"}`;
+    // Figure out the tray icon path & brand name
+    const iconFile = `icon.${process.platform === "win32" ? "ico" : "png"}`;
     global.trayConfig = {
-        icon_path: path.join(resPath, "img", iconFile),
+        icon_path: path.join(path.dirname(asarPath), "build", iconFile),
         brand: global.vectorConfig.brand || "Element",
     };
 
