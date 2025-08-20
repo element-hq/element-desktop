@@ -34,6 +34,11 @@ on:
                 type: boolean
                 required: false
                 description: "Whether to run the blob report"
+            prepare-artifact-name:
+                type: string
+                required: false
+                description: "The name of the prepare artifact to use, defaults to 'webapp'"
+                default: "webapp"
 permissions: {} # No permissions required
 jobs:
     build:
@@ -69,7 +74,7 @@ jobs:
 
             - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
               with:
-                  name: webapp
+                  name: ${{ inputs.prepare-artifact-name }}
 
             - name: Cache .hak
               id: cache
