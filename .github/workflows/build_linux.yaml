@@ -145,9 +145,8 @@ jobs:
             - name: Build App
               run: yarn build --publish never -l ${{ steps.config.outputs.build-args }}
               env:
-                  VARIANT_PATH: variant.json
                   # Only set for Nightly builds
-                  VERSION: ${{ inputs.version }}
+                  ED_NIGHTLY: ${{ inputs.version }}
 
             - name: Check native libraries
               run: |
