@@ -518,6 +518,14 @@ app.on("ready", async () => {
         }
     });
 
+    // Clear the SDK session lock ping. Since we obtain an app single instance lock during initialisation,
+    // we are guaranteed to be the only Element Desktop process running.
+    global.mainWindow.webContents
+        .executeJavaScript("window.localStorage.removeItem('react_sdk_session_lock_ping');")
+        .catch(() => {
+            console.log("Failed to clear existing session lock");
+        });
+
     global.mainWindow.on("closed", () => {
         global.mainWindow = null;
     });
