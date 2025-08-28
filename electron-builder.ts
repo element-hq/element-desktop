@@ -43,7 +43,10 @@ type Writable<T> = NonNullable<
 // Load the package.json file to get the app metadata
 const pkg: Pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
 // Load the default variant as a base configuration
-let variant: Variant = JSON.parse(fs.readFileSync(path.join("element.io", "release", "build.json"), "utf8"));
+let variant: Variant = {
+    ...pkg,
+    JSON.parse(fs.readFileSync(path.join("element.io", "release", "build.json"), "utf8")),
+};
 
 /**
  * If a variant is specified, we will use it to override the build-specific values.
@@ -51,7 +54,6 @@ let variant: Variant = JSON.parse(fs.readFileSync(path.join("element.io", "relea
  */
 if (process.env.VARIANT_PATH) {
     variant = {
-        ...pkg,
         ...variant,
         ...JSON.parse(fs.readFileSync(`${process.env.VARIANT_PATH}`, "utf8")),
     };
