@@ -45,7 +45,7 @@ const pkg: Pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
 // Load the default variant as a base configuration
 let variant: Variant = {
     ...pkg,
-    JSON.parse(fs.readFileSync(path.join("element.io", "release", "build.json"), "utf8")),
+    ...JSON.parse(fs.readFileSync(path.join("element.io", "release", "build.json"), "utf8")),
 };
 
 /**
