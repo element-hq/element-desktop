@@ -10,7 +10,7 @@ Please see LICENSE files in the repository root for full details.
 
 // Squirrel on windows starts the app with various flags as hooks to tell us when we've been installed/uninstalled etc.
 import "./squirrelhooks.js";
-import { app, BrowserWindow, Menu, autoUpdater, dialog, type Input, type Event, session, protocol } from "electron";
+import { app, BrowserWindow, Menu, autoUpdater, dialog, type Input, type Event, session, protocol, desktopCapturer } from "electron";
 // eslint-disable-next-line n/file-extension-in-import
 import * as Sentry from "@sentry/electron/main";
 import AutoLaunch from "auto-launch";
@@ -555,9 +555,15 @@ app.on("ready", async () => {
     webContentsHandler(global.mainWindow.webContents);
 
     session.defaultSession.setDisplayMediaRequestHandler((_, callback) => {
-        global.mainWindow?.webContents.send("openDesktopCapturerSourcePicker");
+        if (process.env.XDG_SESSION_TYPE === "wayland") {
+            desktopCapturer.getSources({ types: ['screen', 'window'] }).then((sources) => {
+                callback({ video: sources[0] })
+            });
+        } else {
+            global.mainWindow?.webContents.send("openDesktopCapturerSourcePicker");
+        }
         setDisplayMediaCallback(callback);
-    });
+    }, { useSystemPicker: true }); // Use Mac OS 15+ native picker
 
     setupMediaAuth(global.mainWindow);
 });
