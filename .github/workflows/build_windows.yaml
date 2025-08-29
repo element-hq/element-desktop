@@ -37,7 +37,17 @@ on:
             prepare-artifact-name:
                 type: string
                 required: false
-                description: "The name of the prepare artifact to use, defaults to 'webapp'"
+                description: |
+                    The name of the prepare artifact to use, defaults to 'webapp'.
+                    The artifact must contain the following:
+                    + webapp.asar - the asar archive of the webapp to embed in the desktop app
+                    + package.json - the package.json to use for build metadata
+                    + electronVersion - the version of electron to use for cache keying
+                    + hakHash - the hash of the .hak directory to use for cache keying
+                    + variant.json - the variant configuration to use for the build
+
+                    The artifact can also contain:
+                    + overrides/ - an optional directory containing any file/directory overrides to apply to the checkout root before building
                 default: "webapp"
 permissions: {} # No permissions required
 jobs:
@@ -75,6 +85,10 @@ jobs:
             - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
               with:
                   name: ${{ inputs.prepare-artifact-name }}
+
+            - name: Apply variant overrides
+              run: if [ -d overrides ]; then mv -f overrides/* .; fi
+              shell: bash
 
             - name: Cache .hak
               id: cache
@@ -193,8 +207,14 @@ jobs:
             - name: Build App
               run: yarn build --publish never -w ${{ steps.config.outputs.build-args }}
               env:
+                  VARIANT_PATH: variant.json
                   # Only set for Nightly builds
-                  ED_NIGHTLY: ${{ inputs.version }}
+                  # The windows packager relies on parsing this as semver, so we have to make it look like one.
+                  # This will give our update packages really stupid names, but we probably can't change that either
+                  # because squirrel windows parses them for the version too. We don't really care: nobody sees them.
+                  # We just give the installer a static name, so you'll just see this in the 'about' dialog.
+                  # Turns out if you use 0.0.0 here it makes Squirrel windows crash, so we use 0.0.1.
+                  VERSION: ${{ inputs.version && format('0.0.1-nightly.{0}', inputs.version) || '' }}
 
             - name: Trust eSigner sandbox cert
               if: inputs.sign == ''
