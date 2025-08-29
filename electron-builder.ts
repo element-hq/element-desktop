@@ -55,27 +55,26 @@ type Writable<T> = NonNullable<
 >;
 
 // Load the default variant as a base configuration
-let variant: Variant = JSON.parse(fs.readFileSync(path.join("element.io", "release", "build.json"), "utf8"));
+const DEFAULT_VARIANT = path.join("element.io", "release", "build.json");
+let variant: Variant = JSON.parse(fs.readFileSync(DEFAULT_VARIANT, "utf8"));
 
 /**
  * If a variant is specified, we will use it to override the build-specific values.
  * This allows us to have different builds for different purposes (e.g. stable, nightly).
  */
 if (process.env.VARIANT_PATH) {
-    console.log(`Using variant configuration from ${process.env.VARIANT_PATH}`);
+    console.log(`Using variant configuration from '${process.env.VARIANT_PATH}':`);
     variant = {
         ...variant,
         ...JSON.parse(fs.readFileSync(`${process.env.VARIANT_PATH}`, "utf8")),
     };
 } else {
-    console.warn("No VARIANT_PATH specified, using default variant configuration element.io/release/build.json");
+    console.warn(`No VARIANT_PATH specified, using default variant configuration '${DEFAULT_VARIANT}':`);
 }
 
-console.log("Using build configuration:");
 for (const key in variant) {
     console.log(`${key}: ${variant[key]}`);
 }
-console.log("");
 
 interface Configuration extends BaseConfiguration {
     extraMetadata: Partial<Pick<Pkg, "version">> & ExtraMetadata;
