@@ -556,8 +556,14 @@ app.on("ready", async () => {
 
     session.defaultSession.setDisplayMediaRequestHandler((_, callback) => {
         if (process.env.XDG_SESSION_TYPE === "wayland") {
+            // On Wayland, calling getSources() opens the xdg-desktop-portal picker.
+            // The user can only select a single source there, so Electron will return an array with exactly one entry.
             desktopCapturer.getSources({ types: ['screen', 'window'] }).then((sources) => {
-                callback({ video: sources[0] })
+                callback({ video: sources[0] });
+            }).catch((err) => {
+                // If the user cancels the dialog an error occurs "Failed to get sources"
+                console.error("Wayland: failed to get user-selected source:", err);
+                callback({ video: { id: "", name: ""} }); // The promise does not return if no dummy is passed here as source
             });
         } else {
             global.mainWindow?.webContents.send("openDesktopCapturerSourcePicker");
