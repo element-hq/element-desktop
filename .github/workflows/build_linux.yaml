@@ -27,14 +27,13 @@ on:
                     The name of the prepare artifact to use, defaults to 'webapp'.
                     The artifact must contain the following:
                     + webapp.asar - the asar archive of the webapp to embed in the desktop app
-                    + package.json - the package.json to use for build metadata
                     + electronVersion - the version of electron to use for cache keying
                     + hakHash - the hash of the .hak directory to use for cache keying
                     + changelog.Debian - the changelog file to embed in the Debian package  
                     + variant.json - the variant configuration to use for the build
 
-                    The artifact can also contain:
-                    + overrides/ - an optional directory containing any file/directory overrides to apply to the checkout root before building
+                    The artifact can also contain any additional files which will be applied as overrides to the checkout root before building,
+                    for example icons in the `build/` directory to override the app icons.
                 default: "webapp"
 env:
     SQLCIPHER_BUNDLED: ${{ inputs.sqlcipher == 'static' && '1' || '' }}
@@ -77,12 +76,12 @@ jobs:
                       }
 
             - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
-            - run: cat package.json
+            - run: cat build/icon.png | sha256
 
             - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
               with:
                   name: ${{ inputs.prepare-artifact-name }}
-            - run: cat package.json
+            - run: cat build/icon.png | sha256
 
             - name: Apply variant overrides
               run: if [ -d overrides ]; then mv -f overrides/* .; fi
