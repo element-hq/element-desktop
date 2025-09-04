@@ -20,16 +20,30 @@ import { type Configuration as BaseConfiguration, type Protocol } from "electron
  * Interface describing relevant fields of the package.json file.
  */
 interface Pkg {
+    version: string;
+}
+
+/**
+ * Base metadata fields, used in both package.json and the variant configuration.
+ */
+interface Metadata {
     name: string;
     productName: string;
     description: string;
-    version: string;
+}
+
+/**
+ * Extra metadata fields that are injected into the build to pass to the app at runtime.
+ */
+interface ExtraMetadata extends Metadata {
+    electron_appId: string;
+    electron_protocol: string;
 }
 
 /**
  * Interface describing the variant configuration format.
  */
-interface Variant extends Omit<Pkg, "version"> {
+interface Variant extends Metadata {
     "appId": string;
     "linux.executableName"?: string;
     "linux.deb.name"?: string;
@@ -40,29 +54,30 @@ type Writable<T> = NonNullable<
     T extends Function ? T : T extends object ? { -readonly [K in keyof T]: Writable<T[K]> } : T
 >;
 
-// Load the package.json file to get the app metadata
-const pkg: Pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
 // Load the default variant as a base configuration
-let variant: Variant = JSON.parse(fs.readFileSync(path.join("element.io", "release", "build.json"), "utf8"));
+const DEFAULT_VARIANT = path.join("element.io", "release", "build.json");
+let variant: Variant = JSON.parse(fs.readFileSync(DEFAULT_VARIANT, "utf8"));
 
 /**
  * If a variant is specified, we will use it to override the build-specific values.
  * This allows us to have different builds for different purposes (e.g. stable, nightly).
  */
 if (process.env.VARIANT_PATH) {
+    console.log(`Using variant configuration from '${process.env.VARIANT_PATH}':`);
     variant = {
-        ...pkg,
         ...variant,
         ...JSON.parse(fs.readFileSync(`${process.env.VARIANT_PATH}`, "utf8")),
     };
+} else {
+    console.warn(`No VARIANT_PATH specified, using default variant configuration '${DEFAULT_VARIANT}':`);
+}
+
+for (const key in variant) {
+    console.log(`${key}: ${variant[key]}`);
 }
 
 interface Configuration extends BaseConfiguration {
-    extraMetadata: Partial<Pick<Pkg, "version">> &
-        Omit<Pkg, "version"> & {
-            electron_appId: string;
-            electron_protocol: string;
-        };
+    extraMetadata: Partial<Pick<Pkg, "version">> & ExtraMetadata;
     linux: BaseConfiguration["linux"];
     win: BaseConfiguration["win"];
     mac: BaseConfiguration["mac"];
@@ -105,9 +120,9 @@ const config: Omit<Writable<Configuration>, "electronFuses"> & {
     ],
     extraResources: ["build/icon.*", "webapp.asar"],
     extraMetadata: {
-        name: pkg.name,
-        productName: pkg.productName,
-        description: pkg.description,
+        name: variant.name,
+        productName: variant.productName,
+        description: variant.description,
         electron_appId: variant.appId,
         electron_protocol: variant.protocols[0],
     },
@@ -115,7 +130,7 @@ const config: Omit<Writable<Configuration>, "electronFuses"> & {
         target: ["tar.gz", "deb"],
         category: "Network;InstantMessaging;Chat",
         icon: "build/icon.png",
-        executableName: pkg.name, // element-desktop or element-desktop-nightly
+        executableName: variant.name, // element-desktop or element-desktop-nightly
     },
     deb: {
         packageCategory: "net",

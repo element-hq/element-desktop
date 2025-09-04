@@ -35,6 +35,13 @@
     "file_menu": {
         "label": "Datei"
     },
+    "icon_overlay": {
+        "description_error": "Fehler",
+        "description_notifications": {
+            "one": "Du hast %(count)s ungelesene Benachrichtigung.",
+            "other": "Du hast %(count)s ungelesene Benachrichtigungen."
+        }
+    },
     "menu": {
         "hide": "Verstecken",
         "hide_others": "Andere verstecken",
@@ -57,13 +64,13 @@
             "backend_changed_detail": "Zugriff auf Schlüssel im Systemschlüsselbund nicht möglich, er scheint sich geändert zu haben.",
             "backend_changed_title": "Datenbank konnte nicht geladen werden",
             "backend_no_encryption": "Ihr System verfügt über einen unterstützten Keyring, aber die Verschlüsselung ist nicht verfügbar.",
-            "backend_no_encryption_detail": "Electron hat festgestellt, dass Verschlüsselung in Ihrem Keyring %(backend)s nicht verfügbar ist. Bitte stellen Sie sicher, dass Sie den Keyringinstalliert haben. Wenn Sie den Keyring installiert haben, starten Sie ihn bitte neu und versuchen Sie es erneut. Optional können Sie die Verwendung einer schwächeren Form der Verschlüsselung zulassen %(brand)s.",
+            "backend_no_encryption_detail": "Electron hat festgestellt, dass der Keyring von %(backend)s keine Verschlüsselung bietet. Wenn du den Keyring installiert hast, starte den Rechner bitte neu und versuche es erneut. Optional kann %(brand)s auch eine abgeschwächte Verschlüsselung nutzen.",
             "backend_no_encryption_title": "Keine Verschlüsselungsunterstützung",
-            "unsupported_keyring": "Der Schlüsselbund ihres Systems wird nicht unterstützt, wodurch die Datenbank nicht geöffnet werden kann.",
-            "unsupported_keyring_detail": "Die Schlüsselbunderkennung von Electron hat kein unterstütztes Backend gefunden. Möglicherweise können sie dennoch den ihres Systemes verwenden. Infos unter %(link)s.",
+            "unsupported_keyring": "Der Keyring des Systems wird nicht unterstützt. Daher kann die Datenbank nicht geöffnet werden kann.",
+            "unsupported_keyring_detail": "Die Keyring-Erkennung von Electron hat kein unterstütztes Backend gefunden. Du kannst einmalig versuchen, eine manuelle Konfiguration von %(brand)s über die Kommandozeile vorzunehmen. Infos unter %(link)s.",
             "unsupported_keyring_title": "System nicht unterstützt",
             "unsupported_keyring_use_basic_text": "Schwächere Verschlüsselung verwenden",
-            "unsupported_keyring_use_plaintext": "Verwenden Sie keine Verschlüsselung"
+            "unsupported_keyring_use_plaintext": "Verwende keine Verschlüsselung"
         }
     },
     "view_menu": {
