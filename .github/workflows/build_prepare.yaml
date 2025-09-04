@@ -165,16 +165,11 @@ jobs:
                   echo "| Element Web | [$WEB_VERSION](https://github.com/element-hq/element-web/commit/$WEB_VERSION) |" >> $GITHUB_STEP_SUMMARY
                   echo "| JS SDK      | [$JS_VERSION](https://github.com/matrix-org/matrix-js-sdk/commit/$JS_VERSION) |" >> $GITHUB_STEP_SUMMARY
 
-            - name: TEST
-              run: |
-                  echo 'TEST' > build/icon.png
-
             - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
               with:
                   name: webapp
                   retention-days: 1
                   path: |
-                      build/icon.png
                       webapp.asar
                       electronVersion
                       hakHash
