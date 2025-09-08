@@ -10,7 +10,18 @@ Please see LICENSE files in the repository root for full details.
 
 // Squirrel on windows starts the app with various flags as hooks to tell us when we've been installed/uninstalled etc.
 import "./squirrelhooks.js";
-import { app, BrowserWindow, Menu, autoUpdater, dialog, type Input, type Event, session, protocol, desktopCapturer } from "electron";
+import {
+    app,
+    BrowserWindow,
+    Menu,
+    autoUpdater,
+    dialog,
+    type Input,
+    type Event,
+    session,
+    protocol,
+    desktopCapturer,
+} from "electron";
 // eslint-disable-next-line n/file-extension-in-import
 import * as Sentry from "@sentry/electron/main";
 import AutoLaunch from "auto-launch";
@@ -554,22 +565,28 @@ app.on("ready", async () => {
 
     webContentsHandler(global.mainWindow.webContents);
 
-    session.defaultSession.setDisplayMediaRequestHandler((_, callback) => {
-        if (process.env.XDG_SESSION_TYPE === "wayland") {
-            // On Wayland, calling getSources() opens the xdg-desktop-portal picker.
-            // The user can only select a single source there, so Electron will return an array with exactly one entry.
-            desktopCapturer.getSources({ types: ['screen', 'window'] }).then((sources) => {
-                callback({ video: sources[0] });
-            }).catch((err) => {
-                // If the user cancels the dialog an error occurs "Failed to get sources"
-                console.error("Wayland: failed to get user-selected source:", err);
-                callback({ video: { id: "", name: ""} }); // The promise does not return if no dummy is passed here as source
-            });
-        } else {
-            global.mainWindow?.webContents.send("openDesktopCapturerSourcePicker");
-        }
-        setDisplayMediaCallback(callback);
-    }, { useSystemPicker: true }); // Use Mac OS 15+ native picker
+    session.defaultSession.setDisplayMediaRequestHandler(
+        (_, callback) => {
+            if (process.env.XDG_SESSION_TYPE === "wayland") {
+                // On Wayland, calling getSources() opens the xdg-desktop-portal picker.
+                // The user can only select a single source there, so Electron will return an array with exactly one entry.
+                desktopCapturer
+                    .getSources({ types: ["screen", "window"] })
+                    .then((sources) => {
+                        callback({ video: sources[0] });
+                    })
+                    .catch((err) => {
+                        // If the user cancels the dialog an error occurs "Failed to get sources"
+                        console.error("Wayland: failed to get user-selected source:", err);
+                        callback({ video: { id: "", name: "" } }); // The promise does not return if no dummy is passed here as source
+                    });
+            } else {
+                global.mainWindow?.webContents.send("openDesktopCapturerSourcePicker");
+            }
+            setDisplayMediaCallback(callback);
+        },
+        { useSystemPicker: true },
+    ); // Use Mac OS 15+ native picker
 
     setupMediaAuth(global.mainWindow);
 });
