@@ -35,6 +35,9 @@
     "file_menu": {
         "label": "Ffeil"
     },
+    "icon_overlay": {
+        "description_error": "Gwall"
+    },
     "menu": {
         "hide": "Cuddio",
         "hide_others": "Cuddio'r Gweddill",
