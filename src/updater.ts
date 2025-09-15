@@ -11,6 +11,7 @@ import os from "node:os";
 
 import { getSquirrelExecutable } from "./squirrelhooks.js";
 import { _t } from "./language-helper.js";
+import { initialisePromise } from "./ipc.js";
 
 const UPDATE_POLL_INTERVAL_MS = 60 * 60 * 1000;
 const INITIAL_UPDATE_DELAY_MS = 30 * 1000;
@@ -113,6 +114,12 @@ export async function start(updateBaseUrl: string): Promise<void> {
     }
 }
 
+/**
+ * Check if auto update is available on this platform.
+ * Has a side effect of firing showToast on EOL platforms so must only be called once!
+ * @param updateBaseUrl The base URL for updates
+ * @returns True if auto update is available
+ */
 async function available(updateBaseUrl?: string): Promise<boolean> {
     if (process.platform === "linux") {
         // Auto update is not supported on Linux
@@ -143,17 +150,21 @@ async function available(updateBaseUrl?: string): Promise<boolean> {
         if (major < 21) {
             // If the macOS version is too old for modern Electron support then disable auto update to prevent the app updating and bricking itself.
             // The oldest macOS version supported by Chromium/Electron 38 is Monterey (12.x) which started with Darwin 21.0
-            ipcMain.emit("showToast", {
-                title: _t("eol|title"),
-                description: _t("eol|no_more_updates", { brand: global.trayConfig.brand }),
+            initialisePromise.then(() => {
+                ipcMain.emit("showToast", {
+                    title: _t("eol|title"),
+                    description: _t("eol|no_more_updates", { brand: global.trayConfig.brand }),
+                });
             });
             return false;
         } else if (major < 22) {
             // If the macOS version is EOL then show a warning message.
             // The oldest macOS version still supported by Apple is Ventura (13.x) which started with Darwin 22.0
-            ipcMain.emit("showToast", {
-                title: _t("eol|title"),
-                description: _t("eol|warning", { brand: global.trayConfig.brand }),
+            initialisePromise.then(() => {
+                ipcMain.emit("showToast", {
+                    title: _t("eol|title"),
+                    description: _t("eol|warning", { brand: global.trayConfig.brand }),
+                });
             });
         }
     }
