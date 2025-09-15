@@ -7,8 +7,10 @@ Please see LICENSE files in the repository root for full details.
 
 import { app, autoUpdater, ipcMain } from "electron";
 import fs from "node:fs/promises";
+import os from "node:os";
 
 import { getSquirrelExecutable } from "./squirrelhooks.js";
+import { _t } from "./language-helper.js";
 
 const UPDATE_POLL_INTERVAL_MS = 60 * 60 * 1000;
 const INITIAL_UPDATE_DELAY_MS = 30 * 1000;
@@ -128,7 +130,35 @@ async function available(updateBaseUrl?: string): Promise<boolean> {
     }
 
     // Otherwise we're either on macOS or Windows with Squirrel
-    return !!updateBaseUrl;
+    if (!updateBaseUrl) {
+        return false;
+    }
+
+    if (process.platform === "darwin") {
+        // OS release returns the Darwin kernel version, not the macOS version, see
+        // https://en.wikipedia.org/wiki/Darwin_(operating_system)#Release_history to interpret it
+        const release = os.release();
+        const major = parseInt(release.split(".")[0], 10);
+
+        if (major < 21) {
+            // If the macOS version is too old for modern Electron support then disable auto update to prevent the app updating and bricking itself.
+            // The oldest macOS version supported by Chromium/Electron 38 is Monterey (12.x) which started with Darwin 21.0
+            ipcMain.emit("show_warning", {
+                title: _t("eol|title"),
+                description: _t("eol|no_more_updates", { brand: global.trayConfig.brand }),
+            });
+            return false;
+        } else if (major < 22) {
+            // If the macOS version is EOL then show a warning message.
+            // The oldest macOS version still supported by Apple is Ventura (13.x) which started with Darwin 22.0
+            ipcMain.emit("show_warning", {
+                title: _t("eol|title"),
+                description: _t("eol|warning", { brand: global.trayConfig.brand }),
+            });
+        }
+    }
+
+    return true;
 }
 
 ipcMain.on("install_update", installUpdate);
