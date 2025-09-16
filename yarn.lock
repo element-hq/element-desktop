@@ -2289,10 +2289,10 @@
     "@types/node" "*"
     form-data "^4.0.0"
 
-"@types/node@*", "@types/node@18.19.123", "@types/node@^22.10.3", "@types/node@^22.7.7":
-  version "18.19.123"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.19.123.tgz#08a3e4f5e0c73b8840c677b7635ce59d5dc1f76d"
-  integrity sha512-K7DIaHnh0mzVxreCR9qwgNxp3MH9dltPNIEddW9MYUlcKAzm+3grKNSTe2vCJHI1FaLpvpL5JGJrz1UZDKYvDg==
+"@types/node@*", "@types/node@18.19.124", "@types/node@^22.10.3", "@types/node@^22.7.7":
+  version "18.19.124"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.19.124.tgz#6f49e4fab8274910691a900e8a14316cbf3c7a31"
+  integrity sha512-hY4YWZFLs3ku6D2Gqo3RchTd9VRCcrjqp/I0mmohYeUVA5Y8eCXKJEasHxLAJVZRJuQogfd1GiJ9lgogBgKeuQ==
   dependencies:
     undici-types "~5.26.4"
 
