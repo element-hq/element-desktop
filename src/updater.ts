@@ -72,7 +72,8 @@ async function pollForUpdates(): Promise<void> {
 }
 
 export async function start(updateBaseUrl: string): Promise<void> {
-    if (!(await available(updateBaseUrl))) return;
+    if (!(await available())) return;
+    console.log(`Starting auto update with base URL: ${updateBaseUrl}`);
     if (!updateBaseUrl.endsWith("/")) {
         updateBaseUrl = updateBaseUrl + "/";
     }
@@ -117,13 +118,12 @@ export async function start(updateBaseUrl: string): Promise<void> {
 /**
  * Check if auto update is available on this platform.
  * Has a side effect of firing showToast on EOL platforms so must only be called once!
- * @param updateBaseUrl The base URL for updates
  * @returns True if auto update is available
  */
-async function available(updateBaseUrl?: string): Promise<boolean> {
+async function available(): Promise<boolean> {
     if (process.platform === "linux") {
         // Auto update is not supported on Linux
-        console.log("Auto update not supported on this platform");
+        console.warn("Auto update not supported on this platform");
         return false;
     }
 
@@ -131,16 +131,12 @@ async function available(updateBaseUrl?: string): Promise<boolean> {
         try {
             await fs.access(getSquirrelExecutable());
         } catch {
-            console.log("Squirrel not found, auto update not supported");
+            console.warn("Squirrel not found, auto update not supported");
             return false;
         }
     }
 
     // Otherwise we're either on macOS or Windows with Squirrel
-    if (!updateBaseUrl) {
-        return false;
-    }
-
     if (process.platform === "darwin") {
         // OS release returns the Darwin kernel version, not the macOS version, see
         // https://en.wikipedia.org/wiki/Darwin_(operating_system)#Release_history to interpret it
@@ -156,6 +152,7 @@ async function available(updateBaseUrl?: string): Promise<boolean> {
                     description: _t("eol|no_more_updates", { brand: global.trayConfig.brand }),
                 });
             });
+            console.warn("Auto update not supported, macOS version too old");
             return false;
         } else if (major < 22) {
             // If the macOS version is EOL then show a warning message.
