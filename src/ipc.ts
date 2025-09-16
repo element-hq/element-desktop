@@ -218,3 +218,10 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
 });
 
 ipcMain.handle("getConfig", () => global.vectorConfig);
+
+const initialisePromiseWithResolvers = Promise.withResolvers<void>();
+export const initialisePromise = initialisePromiseWithResolvers.promise;
+
+ipcMain.once("initialise", () => {
+    initialisePromiseWithResolvers.resolve();
+});

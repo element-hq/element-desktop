@@ -11,7 +11,7 @@
         "rootDir": "./src",
         "declaration": true,
         "typeRoots": ["src/@types", "node_modules/@types"],
-        "lib": ["es2022"],
+        "lib": ["es2022", "es2024.promise"],
         "types": ["node"],
         "strict": true
     },
