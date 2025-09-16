@@ -32,6 +32,11 @@
         "speech_start_speaking": "Start Speaking",
         "speech_stop_speaking": "Stop Speaking"
     },
+    "eol": {
+        "no_more_updates": "You are running an unsupported version of macOS. Please upgrade to receive %(brand)s updates.",
+        "title": "System unsupported",
+        "warning": "You are running an unsupported version of macOS. Please upgrade to ensure %(brand)s keeps working."
+    },
     "file_menu": {
         "label": "File"
     },
