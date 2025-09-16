@@ -52,6 +52,7 @@ export function setupMacosTitleBar(window: BrowserWindow): void {
                 -webkit-app-region: drag;
             }
             /* Exclude the main content elements from being drag handles */
+            .mx_AuthPage .mx_AuthPage_modalContent,
             .mx_AuthPage .mx_AuthPage_modalBlur,
             .mx_AuthPage .mx_AuthFooter > *,
             .mx_AuthPage .mx_Dropdown_menu {
