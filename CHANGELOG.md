@@ -1,3 +1,15 @@
+Changes in [1.11.112](https://github.com/element-hq/element-desktop/releases/tag/v1.11.112) (2025-09-16)
+========================================================================================================
+Fix [CVE-2025-59161](https://www.cve.org/CVERecord?id=CVE-2025-59161) / [GHSA-m6c8-98f4-75rr](https://github.com/element-hq/element-web/security/advisories/GHSA-m6c8-98f4-75rr)
+
+## This is the last release compatible with macOS Big Sur. It will not update further. Big Sur is End of Life for almost 2 years and the next version of Electron crashes upon startup on Big Sur.
+
+## ✨ Features
+
+* [Backport staging] Handle unsupported macOS versions better ([#2555](https://github.com/element-hq/element-desktop/pull/2555)). Contributed by @RiotRobot.
+
+
+
 Changes in [1.11.111](https://github.com/element-hq/element-desktop/releases/tag/v1.11.111) (2025-09-10)
 ========================================================================================================
 ## ✨ Features

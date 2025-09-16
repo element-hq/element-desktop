@@ -32,6 +32,7 @@ const CHANNELS = [
     "userAccessToken",
     "homeserverUrl",
     "serverSupportedVersions",
+    "showToast",
 ];
 
 contextBridge.exposeInMainWorld("electron", {
