@@ -32,6 +32,11 @@
         "speech_start_speaking": "Começar a Falar",
         "speech_stop_speaking": "Parar de Falar"
     },
+    "eol": {
+        "no_more_updates": "Você está usando uma versão não suportada do macOS. Atualize para receber as atualizações d %(brand)s.",
+        "title": "Sistema não suportado",
+        "warning": "Você está usando uma versão não compatível do macOS. Faça a atualização para garantir que o %(brand)s continue funcionando."
+    },
     "file_menu": {
         "label": "Arquivo"
     },
