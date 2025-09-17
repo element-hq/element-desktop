@@ -32,6 +32,11 @@
         "speech_start_speaking": "Cychwyn Llefaru",
         "speech_stop_speaking": "Peidio Llefaru"
     },
+    "eol": {
+        "no_more_updates": "Rydych chi'n rhedeg fersiwn o macOS nad yw'n cael ei chefnogi. Uwchraddiwch i dderbyn diweddariadau %(brand)s.",
+        "title": "System heb ei chefnogi",
+        "warning": "Rydych chi'n rhedeg fersiwn o macOS nad yw'n cael ei chefnogi. Uwchraddiwch i sicrhau bod %(brand)s yn parhau i weithio."
+    },
     "file_menu": {
         "label": "Ffeil"
     },
