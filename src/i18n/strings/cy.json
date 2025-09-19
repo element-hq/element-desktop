@@ -41,7 +41,15 @@
         "label": "Ffeil"
     },
     "icon_overlay": {
-        "description_error": "Gwall"
+        "description_error": "Gwall",
+        "description_notifications": {
+            "zero": "Mae gennych chi %(count)s hysbysiadau heb eu darllen.",
+            "one": "Mae gennych chi %(count)s hysbysiad heb ei ddarllen.",
+            "two": "Mae gennych chi %(count)s hysbysiad heb eu darllen.",
+            "few": "Mae gennych chi %(count)s hysbysiad heb eu darllen.",
+            "many": "Mae gennych chi %(count)s hysbysiad heb eu darllen.",
+            "other": "Mae gennych chi %(count)s hysbysiad heb eu darllen."
+        }
     },
     "menu": {
         "hide": "Cuddio",
