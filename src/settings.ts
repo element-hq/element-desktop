@@ -138,7 +138,7 @@ ipcMain.handle("getSettingValue", async (_ev, settingName: string) => {
     await app.whenReady();
     const storeAny = Store.instance as any;
     if (storeAny.readyPromise) await storeAny.readyPromise;
-    const stored = Store.instance?.get("desktopProxyConfig");
+    const stored = Store.instance?.get("desktopProxyConfig") as Partial<DesktopProxyConfig> | undefined;
     console.log("[proxy-debug] delayed initial stored:", stored);
     await applyProxyConfig(stored);
   })();
