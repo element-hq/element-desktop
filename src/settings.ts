@@ -6,7 +6,7 @@ Please see LICENSE files in the repository root for full details.
 */
 
 import { ipcMain } from "electron";
-
+import { applyProxyConfig, type DesktopProxyConfig } from "./proxy.js";
 import * as tray from "./tray.js";
 import Store from "./store.js";
 
@@ -91,6 +91,20 @@ const Settings: Record<string, Setting> = {
             Store.instance?.set("enableContentProtection", value);
         },
     },
+    "desktopProxyConfig": {
+        async read(): Promise<any> {
+            return Store.instance?.get("desktopProxyConfig") || { mode: "system" };
+        },
+        async write(value: any): Promise<void> {
+            // Basic guard/normalization
+            if (!value || !value.mode) value = { mode: "system" };
+            Store.instance?.set("desktopProxyConfig", value);
+            await applyProxyConfig(value as DesktopProxyConfig);
+        },
+        supported(): boolean {
+            return true;
+        },
+    }
 };
 
 ipcMain.handle("getSupportedSettings", async () => {
@@ -117,3 +131,14 @@ ipcMain.handle("getSettingValue", async (_ev, settingName: string) => {
     console.debug(`Reading setting value for: ${settingName} = ${value}`);
     return value;
 });
+
+(async () => {
+    if (!process.versions.electron) return;
+    const { app } = await import("electron");
+    await app.whenReady();
+    const storeAny = Store.instance as any;
+    if (storeAny.readyPromise) await storeAny.readyPromise;
+    const stored = Store.instance?.get("desktopProxyConfig");
+    console.log("[proxy-debug] delayed initial stored:", stored);
+    await applyProxyConfig(stored);
+  })();

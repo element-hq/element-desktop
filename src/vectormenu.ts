@@ -9,6 +9,8 @@ Please see LICENSE files in the repository root for full details.
 import { app, shell, Menu, type MenuItem, type MenuItemConstructorOptions } from "electron";
 
 import { _t } from "./language-helper.js";
+import { createProxyWindow } from "./proxy-window.js";
+
 
 const isMac = process.platform === "darwin";
 
@@ -151,6 +153,7 @@ export function buildMenuTemplate(): Menu {
                     label: _t("common|about") + " " + app.name,
                 },
                 { type: "separator" },
+                { type: "separator" },
                 {
                     label: _t("common|preferences") + "…",
                     accelerator: "Command+,", // Mac-only accelerator
@@ -158,6 +161,20 @@ export function buildMenuTemplate(): Menu {
                         global.mainWindow?.webContents.send("preferences");
                     },
                 },
+                {
+                    label: _t("common|preferences") + "…",
+                    accelerator: "Command+,",
+                    click(): void {
+                        global.mainWindow?.webContents.send("preferences");
+                    },
+                },
+                {
+                    label: "Network Proxy…",
+                    click(): void {
+                        createProxyWindow();
+                    },
+                },
+                { type: "separator" },
                 { type: "separator" },
                 {
                     role: "services",
@@ -233,6 +250,12 @@ export function buildMenuTemplate(): Menu {
             label: _t("file_menu|label"),
             accelerator: "f",
             submenu: [
+                {
+                    label: "Network Proxy…",
+                    click(): void {
+                        createProxyWindow();
+                    },
+                },
                 // For some reason, 'about' does not seem to work on windows.
                 /*{
                     role: 'about',

@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Network Proxy</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'unsafe-inline' 'self';">
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 16px; }
+    fieldset { margin-bottom: 12px; }
+    label { display: block; margin: 6px 0 2px; }
+    input[type="text"], input[type="password"], input[type="number"], select { width: 100%; box-sizing: border-box; }
+    .row { display: flex; gap: 8px; }
+    .row > div { flex: 1; }
+    .actions { display: flex; gap: 8px; margin-top: 12px; }
+    #proxy-status { margin-top: 8px; min-height: 1.2em; }
+    .error { color: #b00020; }
+    .ok { color: #007a1a; }
+    .warn { color: #a67c00; font-size: 12px; margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <h1>Network Proxy</h1>
+
+  <fieldset>
+    <legend>Mode</legend>
+    <label><input type="radio" name="mode" id="proxy-mode-system" value="system" checked> System</label>
+    <label><input type="radio" name="mode" id="proxy-mode-direct" value="direct"> Direct</label>
+    <label><input type="radio" name="mode" id="proxy-mode-custom" value="custom"> Custom</label>
+  </fieldset>
+
+  <div id="custom-fields" style="display: none;">
+    <label for="proxy-scheme">Scheme</label>
+    <select id="proxy-scheme">
+      <option value="socks5">socks5</option>
+      <option value="socks5h">socks5h</option>
+      <option value="http">http</option>
+      <option value="https">https</option>
+    </select>
+
+    <div class="row">
+      <div>
+        <label for="proxy-host">Host</label>
+        <input id="proxy-host" type="text" placeholder="localhost" />
+      </div>
+      <div>
+        <label for="proxy-port">Port</label>
+        <input id="proxy-port" type="number" min="1" max="65535" placeholder="9050" />
+      </div>
+    </div>
+
+    <div class="row">
+      <div>
+        <label for="proxy-username">Username</label>
+        <input id="proxy-username" type="text" autocomplete="off" />
+      </div>
+      <div>
+        <label for="proxy-password">Password</label>
+        <input id="proxy-password" type="password" autocomplete="off" />
+      </div>
+    </div>
+
+    <label for="proxy-bypass">Bypass list (comma or semicolon separated)</label>
+    <input id="proxy-bypass" type="text" placeholder="localhost, 127.0.0.1, *.corp.example" />
+  </div>
+
+  <div class="warn">
+    Warning: proxy credentials are stored locally in plaintext. Do not use sensitive passwords.
+  </div>
+
+  <div class="actions">
+    <button id="proxy-save">Save</button>
+    <button id="proxy-reset">Reset to System</button>
+    <button id="proxy-close">Close</button>
+  </div>
+
+  <div id="proxy-status" aria-live="polite"></div>
+
+  <script>
+    // Gracefully handle missing preload (proxyApi undefined) so the window still renders.
+    const api = (window && window.proxyApi) ? window.proxyApi : null;
+
+    const el = (id) => document.getElementById(id);
+    const status = el('proxy-status');
+    const customFields = el('custom-fields');
+
+    function setStatus(msg, cls) {
+      status.textContent = msg || '';
+      status.className = cls || '';
+    }
+
+    function getMode() {
+      if (el('proxy-mode-custom').checked) return 'custom';
+      if (el('proxy-mode-direct').checked) return 'direct';
+      return 'system';
+    }
+
+    function applyModeUI() {
+      customFields.style.display = (getMode() === 'custom') ? '' : 'none';
+    }
+
+    function fillForm(cfg) {
+      if (!cfg) return;
+      const mode = cfg.mode || 'system';
+      el('proxy-mode-system').checked = mode === 'system';
+      el('proxy-mode-direct').checked = mode === 'direct';
+      el('proxy-mode-custom').checked = mode === 'custom';
+      el('proxy-scheme').value = cfg.scheme || 'http';
+      el('proxy-host').value = cfg.host || '';
+      el('proxy-port').value = (cfg.port != null) ? String(cfg.port) : '';
+      el('proxy-username').value = cfg.username || '';
+      el('proxy-password').value = cfg.password || '';
+      el('proxy-bypass').value = cfg.bypass || '';
+      applyModeUI();
+    }
+
+    function readForm() {
+      const mode = getMode();
+      if (mode !== 'custom') return { mode };
+      const host = el('proxy-host').value.trim();
+      const portStr = el('proxy-port').value.trim();
+      const port = Number(portStr);
+      const scheme = el('proxy-scheme').value;
+      const username = el('proxy-username').value;
+      const password = el('proxy-password').value;
+      const bypass = el('proxy-bypass').value;
+
+      if (!host || !portStr) {
+        throw new Error('Host and port are required for custom proxy.');
+      }
+      if (!Number.isInteger(port) || port < 1 || port > 65535) {
+        throw new Error('Port must be an integer between 1 and 65535.');
+      }
+      return { mode, scheme, host, port, username, password, bypass };
+    }
+
+    function init() {
+      el('proxy-mode-system').addEventListener('change', applyModeUI);
+      el('proxy-mode-direct').addEventListener('change', applyModeUI);
+      el('proxy-mode-custom').addEventListener('change', applyModeUI);
+
+      el('proxy-close').addEventListener('click', () => {
+        api?.closeWindow?.();
+        window.close(); // fallback if preload missing
+      });
+
+      el('proxy-reset').addEventListener('click', async () => {
+        if (!api?.saveProxyConfig) {
+          setStatus('Preload not available; cannot write settings.', 'error');
+          return;
+        }
+        const res = await api.saveProxyConfig({ mode: 'system' });
+        if (res.ok) {
+          fillForm({ mode: 'system' });
+          setStatus('Proxy reset to System.', 'ok');
+        } else {
+          setStatus('Failed to reset: ' + (res.error || 'unknown error'), 'error');
+        }
+      });
+
+      el('proxy-save').addEventListener('click', async () => {
+        let cfg;
+        try {
+          cfg = readForm();
+        } catch (e) {
+          setStatus(e.message || String(e), 'error');
+          return;
+        }
+        if (!api?.saveProxyConfig) {
+          setStatus('Preload not available; cannot save settings.', 'error');
+          return;
+        }
+        const res = await api.saveProxyConfig(cfg);
+        if (res.ok) {
+          setStatus('Saved.', 'ok');
+        } else {
+          setStatus('Failed to save: ' + (res.error || 'unknown error'), 'error');
+        }
+      });
+
+      if (!api?.getProxyConfig) {
+        setStatus('Preload not available; settings cannot be read or saved.', 'error');
+        return;
+      }
+
+      api.getProxyConfig()
+        .then(cfg => {
+          fillForm(cfg || { mode: 'system' });
+          setStatus('', '');
+        })
+        .catch(err => {
+          setStatus('Failed to load settings: ' + (err?.message || String(err)), 'error');
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
