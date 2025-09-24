@@ -32,6 +32,11 @@
         "speech_start_speaking": "Commencer la dictée",
         "speech_stop_speaking": "Arrêter la dictée"
     },
+    "eol": {
+        "no_more_updates": "Vous utilisez une version de macOS non prise en charge. Veuillez mettre à jour macOS pour recevoir les mises à jour de %(brand)s.",
+        "title": "Système non pris en charge",
+        "warning": "Vous utilisez une version de macOS non prise en charge. Veuillez mettre à jour macOS afin que %(brand)s continue de fonctionner."
+    },
     "file_menu": {
         "label": "Fichier"
     },
