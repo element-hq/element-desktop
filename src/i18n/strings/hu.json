@@ -32,6 +32,11 @@
         "speech_start_speaking": "Kezdjen beszélni",
         "speech_stop_speaking": "Fejezze be a beszédet"
     },
+    "eol": {
+        "no_more_updates": "A macOS egy nem támogatott verzióját futtatja. Frissítse, hogy megkapja az %(brand)s új frissítéseit.",
+        "title": "A rendszer nem támogatott",
+        "warning": "A macOS egy nem támogatott verzióját futtatja. Frissítse a rendszert, hogy biztosítsa az %(brand)s további működését."
+    },
     "file_menu": {
         "label": "Fájl"
     },
