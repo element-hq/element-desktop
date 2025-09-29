@@ -32,6 +32,11 @@
         "speech_start_speaking": "Aufnahme starten",
         "speech_stop_speaking": "Aufnahme beenden"
     },
+    "eol": {
+        "no_more_updates": "Du benutzt eine nicht unterstützte Version von macOS. Bitte aktualisiere, um Updates für %(brand)s zu erhalten.",
+        "title": "System nicht unterstützt",
+        "warning": "Du benutzt eine nicht unterstützte Version von macOS. Bitte aktualisiere, damit %(brand)s weiter funktioniert."
+    },
     "file_menu": {
         "label": "Datei"
     },

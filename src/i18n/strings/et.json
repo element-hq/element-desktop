@@ -32,6 +32,11 @@
         "speech_start_speaking": "Alusta rääkimist",
         "speech_stop_speaking": "Lõpeta rääkimine"
     },
+    "eol": {
+        "no_more_updates": "Sa kasutad macOS-i toetamata versiooni. %(brand)s rakenduse tulevaste versioonide kasutamiseks palun uuenda operatsioonisüsteemi.",
+        "title": "Süsteem pole toetatud",
+        "warning": "Sa kasutad macOS-i toetamata versiooni. Et %(brand)s toimiks ka edaspidi, palun uuenda operatsioonisüsteemi."
+    },
     "file_menu": {
         "label": "Fail"
     },
