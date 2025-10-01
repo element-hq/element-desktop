@@ -53,9 +53,19 @@ on:
                     The artifact can also contain any additional files which will be applied as overrides to the checkout root before building,
                     for example icons in the `build/` directory to override the app icons.
                 default: "webapp"
+            test:
+                type: boolean
+                required: false
+                default: true
+                description: "Whether to run the test stage after building"
+            test-runs-on:
+                type: string
+                required: false
+                description: "The runner image to use for testing, normally set for you, may be needed for running in private repos."
 permissions: {} # No permissions required
 jobs:
     build:
+        name: Build Windows ${{ inputs.arch }}
         runs-on: windows-2025
         environment: ${{ inputs.sign && 'packages.element.io' || '' }}
         env:
@@ -251,9 +261,10 @@ jobs:
 
     test:
         needs: build
+        if: inputs.test
         uses: ./.github/workflows/build_test.yaml
         with:
             artifact: win-${{ inputs.arch }}
-            runs-on: ${{ inputs.arch == 'arm64' && 'windows-11-arm' || 'windows-2022' }}
+            runs-on: ${{ inputs.test-runs-on || (inputs.arch == 'arm64' && 'windows-11-arm' || 'windows-2022') }}
             executable: ./dist/win*-unpacked/Element*.exe
             blob_report: ${{ inputs.blob_report }}

@@ -39,15 +39,25 @@ on:
                     The artifact can also contain any additional files which will be applied as overrides to the checkout root before building,
                     for example icons in the `build/` directory to override the app icons.
                 default: "webapp"
+            test:
+                type: boolean
+                required: false
+                default: true
+                description: "Whether to run the test stage after building"
+            runs-on:
+                type: string
+                required: false
+                description: "The runner image to use, normally set for you, may be needed for running in private repos."
 env:
     SQLCIPHER_BUNDLED: ${{ inputs.sqlcipher == 'static' && '1' || '' }}
     MAX_GLIBC: 2.31 # bullseye-era glibc, used by glibc-check.sh
 permissions: {} # No permissions required
 jobs:
     build:
+        name: Build Linux ${{ inputs.arch }} SQLCipher ${{ inputs.sqlcipher }}
         # We build on native infrastructure as matrix-seshat fails to cross-compile properly
         # https://github.com/matrix-org/seshat/issues/135
-        runs-on: ${{ inputs.arch == 'arm64' && 'ubuntu-22.04-arm' || 'ubuntu-22.04' }}
+        runs-on: ${{ inputs.runs-on || (inputs.arch == 'arm64' && 'ubuntu-22.04-arm' || 'ubuntu-22.04') }}
         env:
             HAK_DOCKER_IMAGE: ghcr.io/element-hq/element-desktop-dockerbuild
         steps:
@@ -109,7 +119,7 @@ jobs:
 
             - name: "Get modified files"
               id: changed_files
-              if: steps.cache.outputs.cache-hit != 'true' && github.event_name == 'pull_request'
+              if: steps.cache.outputs.cache-hit != 'true' && github.event_name == 'pull_request' && github.repository == 'element-hq/element-desktop'
               uses: tj-actions/changed-files@823fcebdb31bb35fdf2229d9f769b400309430d0 # v46
               with:
                   files: |
@@ -213,10 +223,11 @@ jobs:
 
     test:
         needs: build
+        if: inputs.test
         uses: ./.github/workflows/build_test.yaml
         with:
             artifact: linux-${{ inputs.arch }}-sqlcipher-${{ inputs.sqlcipher }}
-            runs-on: ${{ inputs.arch == 'arm64' && 'ubuntu-22.04-arm' || 'ubuntu-22.04' }}
+            runs-on: ${{ inputs.runs-on || (inputs.arch == 'arm64' && 'ubuntu-22.04-arm' || 'ubuntu-22.04') }}
             executable: /opt/Element*/element-desktop*
             prepare_cmd: |
                 sudo apt-get -qq update

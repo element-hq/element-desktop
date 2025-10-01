@@ -49,9 +49,15 @@ on:
                     The artifact can also contain any additional files which will be applied as overrides to the checkout root before building,
                     for example icons in the `build/` directory to override the app icons.
                 default: "webapp"
+            test:
+                type: boolean
+                required: false
+                default: true
+                description: "Whether to run the test stage after building"
 permissions: {} # No permissions required
 jobs:
     build:
+        name: Build macOS Universal
         runs-on: macos-14 # M1
         environment: ${{ inputs.sign && 'packages.element.io' || '' }}
         steps:
@@ -175,6 +181,7 @@ jobs:
 
     test:
         needs: build
+        if: inputs.test
         uses: ./.github/workflows/build_test.yaml
         with:
             artifact: macos
