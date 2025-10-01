@@ -54,6 +54,11 @@ on:
                 required: false
                 default: true
                 description: "Whether to run the test stage after building"
+            artifact-prefix:
+                type: string
+                required: false
+                description: "An optional prefix to add to the artifact name, useful for distinguishing builds in private repos."
+                default: ""
 permissions: {} # No permissions required
 jobs:
     build:
@@ -168,7 +173,7 @@ jobs:
             - name: Upload Artifacts
               uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
               with:
-                  name: macos
+                  name: ${{ inputs.artifact-prefix }}macos
                   path: |
                       dist
                       !dist/mac-universal/**
