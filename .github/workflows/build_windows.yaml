@@ -270,6 +270,7 @@ jobs:
         if: inputs.test
         uses: ./.github/workflows/build_test.yaml
         with:
+            project: win-${{ inputs.arch }}
             artifact: ${{ inputs.artifact-prefix }}win-${{ inputs.arch }}
             runs-on: ${{ inputs.test-runs-on || (inputs.arch == 'arm64' && 'windows-11-arm' || 'windows-2022') }}
             executable: ./dist/win*-unpacked/Element*.exe
