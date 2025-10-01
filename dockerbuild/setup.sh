@@ -3,7 +3,7 @@
 set -x
 declare -A archMap=(["amd64"]="x64" ["arm64"]="arm64")
 ARCH="${archMap["$TARGETARCH"]}"
-# The .node-version file generally doesn't have the 'v' (rennovate does not put the 'v' and will
+# The .node-version file generally doesn't have the 'v' (renovate does not put the 'v' and will
 # strip it on upgrade if it's there) but the 'v' is also widely supported so we probably ought
 # to just work either way.
 NODE_VERSION=$(cat /.node-version | sed -e 's/^v//')
