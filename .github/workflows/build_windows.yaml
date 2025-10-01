@@ -265,6 +265,7 @@ jobs:
                   Test-Path './dist/Element*.msi'
 
     test:
+        name: Test Windows ${{ inputs.arch }}
         needs: build
         if: inputs.test
         uses: ./.github/workflows/build_test.yaml

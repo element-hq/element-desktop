@@ -227,6 +227,7 @@ jobs:
                   ARCH: ${{ inputs.arch }}
 
     test:
+        name: Test Linux ${{ inputs.arch }} SQLCipher ${{ inputs.sqlcipher }}
         needs: build
         if: inputs.test
         uses: ./.github/workflows/build_test.yaml

@@ -185,6 +185,7 @@ jobs:
                   test -f ./dist/Element*-mac.zip
 
     test:
+        name: Test macOS Universal
         needs: build
         if: inputs.test
         uses: ./.github/workflows/build_test.yaml
