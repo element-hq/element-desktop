@@ -62,8 +62,8 @@ on:
             targets:
                 type: string
                 required: false
-                description: "Comma separated list of targets to build"
-                default: "dmg,zip"
+                description: "List of targets to build"
+                default: "dmg zip"
 permissions: {} # No permissions required
 jobs:
     build:
@@ -121,9 +121,8 @@ jobs:
             - name: "[Signed] Build App"
               if: inputs.sign != ''
               run: |
-                  yarn build:universal -m="$TARGETS" --publish never
+                  yarn build:universal --publish never -m ${{ inputs.targets }}
               env:
-                  TARGETS: ${{ inputs.targets }}
                   APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
                   APPLE_ID: ${{ secrets.APPLE_ID }}
                   APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
@@ -144,9 +143,8 @@ jobs:
             - name: "[Unsigned] Build App"
               if: inputs.sign == ''
               run: |
-                  yarn build:universal -m="$TARGETS" --publish never
+                  yarn build:universal --publish never -m ${{ inputs.targets }}
               env:
-                  TARGETS: ${{ inputs.targets }}
                   CSC_IDENTITY_AUTO_DISCOVERY: false
                   VARIANT_PATH: variant.json
 

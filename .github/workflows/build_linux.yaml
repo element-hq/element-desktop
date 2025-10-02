@@ -56,8 +56,8 @@ on:
             targets:
                 type: string
                 required: false
-                description: "Comma separated list of targets to build"
-                default: "tar.gz,deb"
+                description: "List of targets to build"
+                default: "tar.gz deb"
 env:
     SQLCIPHER_BUNDLED: ${{ inputs.sqlcipher == 'static' && '1' || '' }}
     MAX_GLIBC: 2.31 # bullseye-era glibc, used by glibc-check.sh
@@ -180,9 +180,8 @@ jobs:
                   echo "USE_SYSTEM_FPM=true" >> $GITHUB_ENV
 
             - name: Build App
-              run: yarn build --publish never -l="$TARGETS" ${{ steps.config.outputs.build-args }}
+              run: yarn build --publish never ${{ steps.config.outputs.build-args }} -l ${{ inputs.targets }}
               env:
-                  TARGETS: ${{ inputs.targets }}
                   VARIANT_PATH: variant.json
                   # Only set for Nightly builds
                   VERSION: ${{ inputs.version }}

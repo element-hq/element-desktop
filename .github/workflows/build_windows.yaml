@@ -70,8 +70,8 @@ on:
             targets:
                 type: string
                 required: false
-                description: "Comma separated list of targets to build"
-                default: "squirrel,msi"
+                description: "List of targets to build"
+                default: "squirrel msi"
 permissions: {} # No permissions required
 jobs:
     build:
@@ -228,9 +228,8 @@ jobs:
                   MASTER_KEY_FILE: C:\Users\runneradmin\eSignerCKA\master.key
 
             - name: Build App
-              run: yarn build --publish never -w="$TARGETS" ${{ steps.config.outputs.build-args }}
+              run: yarn build --publish never ${{ steps.config.outputs.build-args }} -w ${{ inputs.targets }}
               env:
-                  TARGETS: ${{ inputs.targets }}
                   VARIANT_PATH: variant.json
                   # Only set for Nightly builds
                   # The windows packager relies on parsing this as semver, so we have to make it look like one.
