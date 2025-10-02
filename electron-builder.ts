@@ -151,6 +151,7 @@ const config: Omit<Writable<Configuration>, "electronFuses"> & {
         fpm: ["--deb-pre-depends", "libc6 (>= 2.31)"],
     },
     mac: {
+        target: ["dmg", "zip"],
         category: "public.app-category.social-networking",
         darkModeSupport: true,
         hardenedRuntime: true,

@@ -67,6 +67,11 @@ on:
                 required: false
                 description: "An optional prefix to add to the artifact name, useful for distinguishing builds in private repos."
                 default: ""
+            targets:
+                type: string
+                required: false
+                description: "Comma separated list of targets to build"
+                default: "squirrel,msi"
 permissions: {} # No permissions required
 jobs:
     build:
@@ -223,7 +228,7 @@ jobs:
                   MASTER_KEY_FILE: C:\Users\runneradmin\eSignerCKA\master.key
 
             - name: Build App
-              run: yarn build --publish never -w ${{ steps.config.outputs.build-args }}
+              run: yarn build --publish never -w=${{ inputs.targets }} ${{ steps.config.outputs.build-args }}
               env:
                   VARIANT_PATH: variant.json
                   # Only set for Nightly builds
@@ -256,12 +261,20 @@ jobs:
                       dist
                   retention-days: 1
 
-            - name: Assert all required files are present
+            - name: Assert executable is present
               run: |
                   Test-Path './dist/win-*unpacked/Element*.exe'
+
+            - name: Assert all Squirrel files are present
+              if: contains(inputs.targets, 'squirrel')
+              run: |
                   Test-Path './dist/squirrel-windows*/Element Setup*.exe'
                   Test-Path './dist/squirrel-windows*/element-desktop-*-full.nupkg'
                   Test-Path './dist/squirrel-windows*/RELEASES'
+
+            - name: Assert MSI is present
+              if: contains(inputs.targets, 'msi')
+              run: |
                   Test-Path './dist/Element*.msi'
 
     test:

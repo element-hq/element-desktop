@@ -59,6 +59,11 @@ on:
                 required: false
                 description: "An optional prefix to add to the artifact name, useful for distinguishing builds in private repos."
                 default: ""
+            targets:
+                type: string
+                required: false
+                description: "Comma separated list of targets to build"
+                default: "dmg,zip"
 permissions: {} # No permissions required
 jobs:
     build:
@@ -116,7 +121,7 @@ jobs:
             - name: "[Signed] Build App"
               if: inputs.sign != ''
               run: |
-                  yarn build:universal --publish never
+                  yarn build:universal -m=${{ inputs.targets }} --publish never
               env:
                   APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
                   APPLE_ID: ${{ secrets.APPLE_ID }}
@@ -138,7 +143,7 @@ jobs:
             - name: "[Unsigned] Build App"
               if: inputs.sign == ''
               run: |
-                  yarn build:universal --publish never
+                  yarn build:universal -m=${{ inputs.targets }} --publish never
               env:
                   CSC_IDENTITY_AUTO_DISCOVERY: false
                   VARIANT_PATH: variant.json
@@ -179,15 +184,20 @@ jobs:
                       !dist/mac-universal/**
                   retention-days: 1
 
-            - name: Assert all required files are present
+            - name: Assert zip is present
+              if: contains(inputs.targets, 'zip')
+              run: |
+                  test -f ./dist/Element*-mac.zip
+
+            - name: Assert dmg is present
+              if: contains(inputs.targets, 'dmg')
               run: |
                   test -f ./dist/Element*.dmg
-                  test -f ./dist/Element*-mac.zip
 
     test:
         name: Test macOS Universal
         needs: build
-        if: inputs.test
+        if: inputs.test && contains(inputs.targets, 'dmg')
         uses: ./.github/workflows/build_test.yaml
         with:
             project: macos
