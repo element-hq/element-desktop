@@ -228,8 +228,9 @@ jobs:
                   MASTER_KEY_FILE: C:\Users\runneradmin\eSignerCKA\master.key
 
             - name: Build App
-              run: yarn build --publish never -w=${{ inputs.targets }} ${{ steps.config.outputs.build-args }}
+              run: yarn build --publish never -w="$TARGETS" ${{ steps.config.outputs.build-args }}
               env:
+                  TARGETS: ${{ inputs.targets }}
                   VARIANT_PATH: variant.json
                   # Only set for Nightly builds
                   # The windows packager relies on parsing this as semver, so we have to make it look like one.

@@ -121,8 +121,9 @@ jobs:
             - name: "[Signed] Build App"
               if: inputs.sign != ''
               run: |
-                  yarn build:universal -m=${{ inputs.targets }} --publish never
+                  yarn build:universal -m="$TARGETS" --publish never
               env:
+                  TARGETS: ${{ inputs.targets }}
                   APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
                   APPLE_ID: ${{ secrets.APPLE_ID }}
                   APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
@@ -143,8 +144,9 @@ jobs:
             - name: "[Unsigned] Build App"
               if: inputs.sign == ''
               run: |
-                  yarn build:universal -m=${{ inputs.targets }} --publish never
+                  yarn build:universal -m="$TARGETS" --publish never
               env:
+                  TARGETS: ${{ inputs.targets }}
                   CSC_IDENTITY_AUTO_DISCOVERY: false
                   VARIANT_PATH: variant.json
 

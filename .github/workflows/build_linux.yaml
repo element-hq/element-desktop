@@ -180,8 +180,9 @@ jobs:
                   echo "USE_SYSTEM_FPM=true" >> $GITHUB_ENV
 
             - name: Build App
-              run: yarn build --publish never -l=${{ inputs.targets }} ${{ steps.config.outputs.build-args }}
+              run: yarn build --publish never -l="$TARGETS" ${{ steps.config.outputs.build-args }}
               env:
+                  TARGETS: ${{ inputs.targets }}
                   VARIANT_PATH: variant.json
                   # Only set for Nightly builds
                   VERSION: ${{ inputs.version }}
