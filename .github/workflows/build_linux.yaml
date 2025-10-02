@@ -152,8 +152,8 @@ jobs:
                   fi
 
             # Workaround for https://github.com/electron-userland/electron-builder/issues/6116
+            # and https://github.com/electron-userland/electron-builder/issues/5721
             - name: Install fpm
-              if: inputs.arch == 'arm64'
               run: |
                   sudo apt-get install ruby-dev build-essential
                   sudo gem install fpm
