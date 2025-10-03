@@ -211,6 +211,11 @@ jobs:
               env:
                   ARCH: ${{ inputs.arch }}
 
+            - name: Assert no hardlinks are found
+              run: |
+                  ! dpkg-deb --fsys-tarfile element-desktop*.deb | tar -tv | grep '^h'
+                  ! tar -tvf element-desktop*.tar.gz | grep '^h'
+
     test:
         needs: build
         uses: ./.github/workflows/build_test.yaml
