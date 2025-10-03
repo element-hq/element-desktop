@@ -155,7 +155,6 @@ jobs:
             # and https://github.com/electron-userland/electron-builder/issues/5721
             - name: Install fpm
               run: |
-                  sudo apt-get install ruby-dev build-essential
                   sudo gem install fpm
                   echo "USE_SYSTEM_FPM=true" >> $GITHUB_ENV
 
@@ -165,6 +164,7 @@ jobs:
                   VARIANT_PATH: variant.json
                   # Only set for Nightly builds
                   VERSION: ${{ inputs.version }}
+                  FPM_DEBUG: true # TODO
 
             - name: Check native libraries
               run: |
@@ -213,8 +213,8 @@ jobs:
 
             - name: Assert no hardlinks are found
               run: |
-                  ! dpkg-deb --fsys-tarfile element-desktop*.deb | tar -tv | grep '^h'
-                  ! tar -tvf element-desktop*.tar.gz | grep '^h'
+                  ! dpkg-deb --fsys-tarfile ./dist/element-desktop*.deb | tar -tv | grep '^h'
+                  ! tar -tvf ./dist/element-desktop*.tar.gz | grep '^h'
 
     test:
         needs: build
