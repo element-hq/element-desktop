@@ -173,9 +173,7 @@ jobs:
                   shopt -s globstar
 
                   FILES=$(file dist/**/*.node)
-                  echo "$FILES"
-
-                  ! grep -zv "$ARCH"
+                  ! echo "$FILES" | tee /dev/tty | grep -zv "$ARCH"
 
                   LIBS=$(readelf -d dist/**/*.node | grep NEEDED)
                   echo "$LIBS"
@@ -212,8 +210,9 @@ jobs:
 
             - name: Assert no hardlinks are found
               run: |
-                  ! dpkg-deb --fsys-tarfile ./dist/element-desktop*.deb | tar -tv | grep '^h'
-                  ! tar -tvf ./dist/element-desktop*.tar.gz | grep '^h'
+                  set -e
+                  dpkg-deb --fsys-tarfile ./dist/element-desktop*.deb | tar -tv | tee /dev/tty | grep -vzq '^h'
+                  tar -tvf ./dist/element-desktop*.tar.gz | tee /dev/tty | grep -vzq '^h'
 
     test:
         needs: build
