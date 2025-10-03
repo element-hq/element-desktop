@@ -51,7 +51,7 @@ jobs:
     tests-done:
         needs: [windows, linux, macos]
         runs-on: ubuntu-24.04
-        if: always()
+        if: ${{ !cancelled() }}
         steps:
             - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
 

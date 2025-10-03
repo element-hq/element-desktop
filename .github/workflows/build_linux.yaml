@@ -215,12 +215,12 @@ jobs:
                   TAR_GZ_LISTING=$(tar -tvf ./dist/element-desktop*.tar.gz)
                   echo "tar.gz listing: "
                   echo "$TAR_GZ_LISTING"
-                  ! echo "$TAR_GZ_LISTING" | grep -z '^h'
+                  ! echo "$TAR_GZ_LISTING" | grep '^h'
 
                   DEB_LISTING=$(dpkg-deb --fsys-tarfile ./dist/element-desktop*.deb | tar -tv)
                   echo "deb listing: "
                   echo "$DEB_LISTING"
-                  ! echo "$DEB_LISTING" | grep -z '^h'
+                  ! echo "$DEB_LISTING" | grep '^h'
 
     test:
         needs: build
