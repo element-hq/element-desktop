@@ -166,6 +166,8 @@ jobs:
                   VERSION: ${{ inputs.version }}
                   FPM_DEBUG: true # TODO
                   DEBUG: electron-builder # TODO
+                  # Workaround for https://github.com/electron-userland/electron-builder/issues/5721
+                  USE_HARD_LINKS: false
 
             - name: Check native libraries
               run: |
