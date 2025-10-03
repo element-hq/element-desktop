@@ -165,6 +165,7 @@ jobs:
                   # Only set for Nightly builds
                   VERSION: ${{ inputs.version }}
                   FPM_DEBUG: true # TODO
+                  DEBUG: electron-builder # TODO
 
             - name: Check native libraries
               run: |
@@ -174,9 +175,7 @@ jobs:
                   FILES=$(file dist/**/*.node)
                   echo "$FILES"
 
-                  if [ grep -v "$ARCH" ]; then
-                      exit 1
-                  fi
+                  ! grep -zv "$ARCH"
 
                   LIBS=$(readelf -d dist/**/*.node | grep NEEDED)
                   echo "$LIBS"
@@ -213,8 +212,8 @@ jobs:
 
             - name: Assert no hardlinks are found
               run: |
-                  ! dpkg-deb --fsys-tarfile ./dist/element-desktop*.deb | tar -tv | grep '^h'
-                  ! tar -tvf ./dist/element-desktop*.tar.gz | grep '^h'
+                  ! dpkg-deb --fsys-tarfile ./dist/element-desktop*.deb | tar -tv | grep -z '^h'
+                  ! tar -tvf ./dist/element-desktop*.tar.gz | grep -z '^h'
 
     test:
         needs: build
