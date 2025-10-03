@@ -210,9 +210,9 @@ jobs:
 
             - name: Assert no hardlinks are found
               run: |
-                  set -e
-                  ! dpkg-deb --fsys-tarfile ./dist/element-desktop*.deb | tar -tv | grep -z '^h'
+                  set -ex
                   ! tar -tvf ./dist/element-desktop*.tar.gz | grep -z '^h'
+                  ! dpkg-deb --fsys-tarfile ./dist/element-desktop*.deb | tar -tv | grep -z '^h'
 
     test:
         needs: build
