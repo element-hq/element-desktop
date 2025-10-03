@@ -175,7 +175,7 @@ jobs:
                   FILES=$(file dist/**/*.node)
                   echo $FILES
 
-                  ! echo "$FILES" | grep -zv "$ARCH"
+                  ! echo "$FILES" | grep -v "$ARCH"
 
                   LIBS=$(readelf -d dist/**/*.node | grep NEEDED)
                   echo "$LIBS"
@@ -205,7 +205,6 @@ jobs:
 
             - name: Assert all required files are present
               run: |
-                  set -ex
                   test -f ./dist/element-desktop*$ARCH.deb
                   test -f ./dist/element-desktop*.tar.gz
               env:
@@ -213,11 +212,15 @@ jobs:
 
             - name: Assert no hardlinks are found
               run: |
-                  set -ex
-                  ! tar -tvf ./dist/element-desktop*.tar.gz | grep -z '^h'
-                  echo $?
-                  ! dpkg-deb --fsys-tarfile ./dist/element-desktop*.deb | tar -tv | grep -z '^h'
-                  echo $?
+                  TAR_GZ_LISTING=$(tar -tvf ./dist/element-desktop*.tar.gz)
+                  echo "tar.gz listing: "
+                  echo "$TAR_GZ_LISTING"
+                  ! echo "$TAR_GZ_LISTING" | grep -z '^h'
+
+                  DEB_LISTING=$(dpkg-deb --fsys-tarfile ./dist/element-desktop*.deb | tar -tv)
+                  echo "deb listing: "
+                  echo "$DEB_LISTING"
+                  ! echo "$DEB_LISTING" | grep -z '^h'
 
     test:
         needs: build
