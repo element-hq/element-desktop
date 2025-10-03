@@ -44,6 +44,10 @@ on:
                 required: false
                 default: true
                 description: "Whether to run the test stage after building"
+            test-args:
+                type: string
+                required: false
+                description: "Additional arguments to pass to playwright"
             runs-on:
                 type: string
                 required: false
@@ -250,3 +254,4 @@ jobs:
                 sudo apt-get -qq update
                 sudo apt install ./dist/*.deb
             blob_report: ${{ inputs.blob_report }}
+            args: ${{ inputs.test-args }}

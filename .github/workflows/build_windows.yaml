@@ -62,6 +62,10 @@ on:
                 type: string
                 required: false
                 description: "The runner image to use for testing, normally set for you, may be needed for running in private repos."
+            test-args:
+                type: string
+                required: false
+                description: "Additional arguments to pass to playwright"
             artifact-prefix:
                 type: string
                 required: false
@@ -288,3 +292,4 @@ jobs:
             runs-on: ${{ inputs.test-runs-on || (inputs.arch == 'arm64' && 'windows-11-arm' || 'windows-2022') }}
             executable: ./dist/win*-unpacked/Element*.exe
             blob_report: ${{ inputs.blob_report }}
+            args: ${{ inputs.test-args }}

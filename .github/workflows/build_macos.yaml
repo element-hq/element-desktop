@@ -54,6 +54,10 @@ on:
                 required: false
                 default: true
                 description: "Whether to run the test stage after building"
+            test-args:
+                type: string
+                required: false
+                description: "Additional arguments to pass to playwright"
             artifact-prefix:
                 type: string
                 required: false
@@ -211,3 +215,4 @@ jobs:
                 rsync -a /Volumes/Element/Element*.app ~/Applications/ &&
                 hdiutil detach /Volumes/Element
             blob_report: ${{ inputs.blob_report }}
+            args: ${{ inputs.test-args }}
