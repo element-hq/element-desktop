@@ -80,12 +80,7 @@ jobs:
               uses: coactions/setup-xvfb@6b00cf1889f4e1d5a48635647013c0508128ee1a
               timeout-minutes: 20
               with:
-                  run: |
-                      yarn test
-                          --project=${{ inputs.project }}
-                          ${{ runner.os != 'Linux' && '--ignore-snapshots' || '' }}
-                          ${{ inputs.blob_report == false && '--reporter=html' || '' }}
-                          ${{ inputs.args }}
+                  run: yarn test --project=${{ inputs.project }} ${{ runner.os != 'Linux' && '--ignore-snapshots' || '' }} ${{ inputs.blob_report == false && '--reporter=html' || '' }} ${{ inputs.args }}
               env:
                   ELEMENT_DESKTOP_EXECUTABLE: ${{ steps.executable.outputs.path }}
 
