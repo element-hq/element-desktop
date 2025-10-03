@@ -168,7 +168,6 @@ jobs:
                   DEBUG: electron-builder # TODO
 
             - name: Check native libraries
-              shell: bash
               run: |
                   set -x
                   shopt -s globstar
@@ -212,10 +211,9 @@ jobs:
                   ARCH: ${{ inputs.arch }}
 
             - name: Assert no hardlinks are found
-              shell: bash
               run: |
-                  dpkg-deb --fsys-tarfile ./dist/element-desktop*.deb | tar -tv | grep -zv '^h'
-                  tar -tvf ./dist/element-desktop*.tar.gz | grep -zv '^h'
+                  ! dpkg-deb --fsys-tarfile ./dist/element-desktop*.deb | tar -tv | grep '^h'
+                  ! tar -tvf ./dist/element-desktop*.tar.gz | grep '^h'
 
     test:
         needs: build
