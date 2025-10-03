@@ -173,6 +173,8 @@ jobs:
                   shopt -s globstar
 
                   FILES=$(file dist/**/*.node)
+                  echo $FILES
+
                   ! echo "$FILES" | grep -zv "$ARCH"
 
                   LIBS=$(readelf -d dist/**/*.node | grep NEEDED)
@@ -203,6 +205,7 @@ jobs:
 
             - name: Assert all required files are present
               run: |
+                  set -ex
                   test -f ./dist/element-desktop*$ARCH.deb
                   test -f ./dist/element-desktop*.tar.gz
               env:
@@ -212,7 +215,9 @@ jobs:
               run: |
                   set -ex
                   ! tar -tvf ./dist/element-desktop*.tar.gz | grep -z '^h'
+                  echo $?
                   ! dpkg-deb --fsys-tarfile ./dist/element-desktop*.deb | tar -tv | grep -z '^h'
+                  echo $?
 
     test:
         needs: build
