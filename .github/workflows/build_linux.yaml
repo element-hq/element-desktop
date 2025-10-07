@@ -243,7 +243,7 @@ jobs:
               if: contains(inputs.targets, 'tar.gz')
               run: |
                   test -f ./dist/element-desktop*.tar.gz
-                  
+
                   TAR_GZ_LISTING=$(tar -tvf ./dist/element-desktop*.tar.gz)
                   echo "tar.gz listing: "
                   echo "$TAR_GZ_LISTING"
