@@ -32,8 +32,14 @@
         "speech_start_speaking": "Говорите",
         "speech_stop_speaking": "Перестаньте говорить"
     },
+    "eol": {
+        "title": "Система не поддерживается"
+    },
     "file_menu": {
         "label": "Файл"
+    },
+    "icon_overlay": {
+        "description_error": "Ошибка"
     },
     "menu": {
         "hide": "Скрыть",

@@ -176,10 +176,9 @@ jobs:
                   fi
 
             # Workaround for https://github.com/electron-userland/electron-builder/issues/6116
+            # and https://github.com/electron-userland/electron-builder/issues/5721
             - name: Install fpm
-              if: inputs.arch == 'arm64'
               run: |
-                  sudo apt-get install ruby-dev build-essential
                   sudo gem install fpm
                   echo "USE_SYSTEM_FPM=true" >> $GITHUB_ENV
 
@@ -189,6 +188,8 @@ jobs:
                   VARIANT_PATH: variant.json
                   # Only set for Nightly builds
                   VERSION: ${{ inputs.version }}
+                  # Workaround for https://github.com/electron-userland/electron-builder/issues/5721
+                  USE_HARD_LINKS: false
 
             - name: Check native libraries
               run: |
@@ -196,11 +197,9 @@ jobs:
                   shopt -s globstar
 
                   FILES=$(file dist/**/*.node)
-                  echo "$FILES"
+                  echo $FILES
 
-                  if [ grep -v "$ARCH" ]; then
-                      exit 1
-                  fi
+                  ! echo "$FILES" | grep -v "$ARCH"
 
                   LIBS=$(readelf -d dist/**/*.node | grep NEEDED)
                   echo "$LIBS"
@@ -228,10 +227,15 @@ jobs:
                       !dist/*-unpacked/**
                   retention-days: 1
 
-            - name: Assert deb is present
+            - name: Assert deb is present and valid
               if: contains(inputs.targets, 'deb')
               run: |
                   test -f ./dist/element-desktop*$ARCH.deb
+
+                  DEB_LISTING=$(dpkg-deb --fsys-tarfile ./dist/element-desktop*.deb | tar -tv)
+                  echo "deb listing: "
+                  echo "$DEB_LISTING"
+                  ! echo "$DEB_LISTING" | grep '^h'
               env:
                   ARCH: ${{ inputs.arch }}
 
@@ -239,6 +243,11 @@ jobs:
               if: contains(inputs.targets, 'tar.gz')
               run: |
                   test -f ./dist/element-desktop*.tar.gz
+                  
+                  TAR_GZ_LISTING=$(tar -tvf ./dist/element-desktop*.tar.gz)
+                  echo "tar.gz listing: "
+                  echo "$TAR_GZ_LISTING"
+                  ! echo "$TAR_GZ_LISTING" | grep '^h'
 
     test:
         name: Test Linux ${{ inputs.arch }} SQLCipher ${{ inputs.sqlcipher }}
