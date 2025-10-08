@@ -53,9 +53,33 @@ on:
                     The artifact can also contain any additional files which will be applied as overrides to the checkout root before building,
                     for example icons in the `build/` directory to override the app icons.
                 default: "webapp"
+            test:
+                type: boolean
+                required: false
+                default: true
+                description: "Whether to run the test stage after building"
+            test-runs-on:
+                type: string
+                required: false
+                description: "The runner image to use for testing, normally set for you, may be needed for running in private repos."
+            test-args:
+                type: string
+                required: false
+                description: "Additional arguments to pass to playwright"
+            artifact-prefix:
+                type: string
+                required: false
+                description: "An optional prefix to add to the artifact name, useful for distinguishing builds in private repos."
+                default: ""
+            targets:
+                type: string
+                required: false
+                description: "List of targets to build"
+                default: "squirrel msi"
 permissions: {} # No permissions required
 jobs:
     build:
+        name: Build Windows ${{ inputs.arch }}
         runs-on: windows-2025
         environment: ${{ inputs.sign && 'packages.element.io' || '' }}
         env:
@@ -208,7 +232,7 @@ jobs:
                   MASTER_KEY_FILE: C:\Users\runneradmin\eSignerCKA\master.key
 
             - name: Build App
-              run: yarn build --publish never -w ${{ steps.config.outputs.build-args }}
+              run: yarn build --publish never ${{ steps.config.outputs.build-args }} -w ${{ inputs.targets }}
               env:
                   VARIANT_PATH: variant.json
                   # Only set for Nightly builds
@@ -236,24 +260,36 @@ jobs:
             - name: Upload Artifacts
               uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
               with:
-                  name: win-${{ inputs.arch }}
+                  name: ${{ inputs.artifact-prefix }}win-${{ inputs.arch }}
                   path: |
                       dist
                   retention-days: 1
 
-            - name: Assert all required files are present
+            - name: Assert executable is present
               run: |
                   Test-Path './dist/win-*unpacked/Element*.exe'
+
+            - name: Assert all Squirrel files are present
+              if: contains(inputs.targets, 'squirrel')
+              run: |
                   Test-Path './dist/squirrel-windows*/Element Setup*.exe'
                   Test-Path './dist/squirrel-windows*/element-desktop-*-full.nupkg'
                   Test-Path './dist/squirrel-windows*/RELEASES'
+
+            - name: Assert MSI is present
+              if: contains(inputs.targets, 'msi')
+              run: |
                   Test-Path './dist/Element*.msi'
 
     test:
+        name: Test Windows ${{ inputs.arch }}
         needs: build
+        if: inputs.test
         uses: ./.github/workflows/build_test.yaml
         with:
-            artifact: win-${{ inputs.arch }}
-            runs-on: ${{ inputs.arch == 'arm64' && 'windows-11-arm' || 'windows-2022' }}
+            project: win-${{ inputs.arch }}
+            artifact: ${{ inputs.artifact-prefix }}win-${{ inputs.arch }}
+            runs-on: ${{ inputs.test-runs-on || (inputs.arch == 'arm64' && 'windows-11-arm' || 'windows-2022') }}
             executable: ./dist/win*-unpacked/Element*.exe
             blob_report: ${{ inputs.blob_report }}
+            args: ${{ inputs.test-args }}

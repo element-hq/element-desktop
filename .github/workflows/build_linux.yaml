@@ -39,15 +39,39 @@ on:
                     The artifact can also contain any additional files which will be applied as overrides to the checkout root before building,
                     for example icons in the `build/` directory to override the app icons.
                 default: "webapp"
+            test:
+                type: boolean
+                required: false
+                default: true
+                description: "Whether to run the test stage after building"
+            test-args:
+                type: string
+                required: false
+                description: "Additional arguments to pass to playwright"
+            runs-on:
+                type: string
+                required: false
+                description: "The runner image to use, normally set for you, may be needed for running in private repos."
+            artifact-prefix:
+                type: string
+                required: false
+                description: "An optional prefix to add to the artifact name, useful for distinguishing builds in private repos."
+                default: ""
+            targets:
+                type: string
+                required: false
+                description: "List of targets to build"
+                default: "tar.gz deb"
 env:
     SQLCIPHER_BUNDLED: ${{ inputs.sqlcipher == 'static' && '1' || '' }}
     MAX_GLIBC: 2.31 # bullseye-era glibc, used by glibc-check.sh
 permissions: {} # No permissions required
 jobs:
     build:
+        name: Build Linux ${{ inputs.arch }} SQLCipher ${{ inputs.sqlcipher }}
         # We build on native infrastructure as matrix-seshat fails to cross-compile properly
         # https://github.com/matrix-org/seshat/issues/135
-        runs-on: ${{ inputs.arch == 'arm64' && 'ubuntu-22.04-arm' || 'ubuntu-22.04' }}
+        runs-on: ${{ inputs.runs-on || (inputs.arch == 'arm64' && 'ubuntu-22.04-arm' || 'ubuntu-22.04') }}
         env:
             HAK_DOCKER_IMAGE: ghcr.io/element-hq/element-desktop-dockerbuild
         steps:
@@ -109,7 +133,7 @@ jobs:
 
             - name: "Get modified files"
               id: changed_files
-              if: steps.cache.outputs.cache-hit != 'true' && github.event_name == 'pull_request'
+              if: steps.cache.outputs.cache-hit != 'true' && github.event_name == 'pull_request' && github.repository == 'element-hq/element-desktop'
               uses: tj-actions/changed-files@823fcebdb31bb35fdf2229d9f769b400309430d0 # v46
               with:
                   files: |
@@ -159,13 +183,11 @@ jobs:
                   echo "USE_SYSTEM_FPM=true" >> $GITHUB_ENV
 
             - name: Build App
-              run: yarn build --publish never -l ${{ steps.config.outputs.build-args }}
+              run: yarn build --publish never ${{ steps.config.outputs.build-args }} -l ${{ inputs.targets }}
               env:
                   VARIANT_PATH: variant.json
                   # Only set for Nightly builds
                   VERSION: ${{ inputs.version }}
-                  FPM_DEBUG: true # TODO
-                  DEBUG: electron-builder # TODO
                   # Workaround for https://github.com/electron-userland/electron-builder/issues/5721
                   USE_HARD_LINKS: false
 
@@ -199,39 +221,46 @@ jobs:
             - name: Upload Artifacts
               uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
               with:
-                  name: linux-${{ inputs.arch }}-sqlcipher-${{ inputs.sqlcipher }}
+                  name: ${{ inputs.artifact-prefix }}linux-${{ inputs.arch }}-sqlcipher-${{ inputs.sqlcipher }}
                   path: |
                       dist
                       !dist/*-unpacked/**
                   retention-days: 1
 
-            - name: Assert all required files are present
+            - name: Assert deb is present and valid
+              if: contains(inputs.targets, 'deb')
               run: |
                   test -f ./dist/element-desktop*$ARCH.deb
-                  test -f ./dist/element-desktop*.tar.gz
-              env:
-                  ARCH: ${{ inputs.arch }}
-
-            - name: Assert no hardlinks are found
-              run: |
-                  TAR_GZ_LISTING=$(tar -tvf ./dist/element-desktop*.tar.gz)
-                  echo "tar.gz listing: "
-                  echo "$TAR_GZ_LISTING"
-                  ! echo "$TAR_GZ_LISTING" | grep '^h'
 
                   DEB_LISTING=$(dpkg-deb --fsys-tarfile ./dist/element-desktop*.deb | tar -tv)
                   echo "deb listing: "
                   echo "$DEB_LISTING"
                   ! echo "$DEB_LISTING" | grep '^h'
+              env:
+                  ARCH: ${{ inputs.arch }}
+
+            - name: Assert tar.gz is present
+              if: contains(inputs.targets, 'tar.gz')
+              run: |
+                  test -f ./dist/element-desktop*.tar.gz
+
+                  TAR_GZ_LISTING=$(tar -tvf ./dist/element-desktop*.tar.gz)
+                  echo "tar.gz listing: "
+                  echo "$TAR_GZ_LISTING"
+                  ! echo "$TAR_GZ_LISTING" | grep '^h'
 
     test:
+        name: Test Linux ${{ inputs.arch }} SQLCipher ${{ inputs.sqlcipher }}
         needs: build
+        if: inputs.test && contains(inputs.targets, 'deb')
         uses: ./.github/workflows/build_test.yaml
         with:
-            artifact: linux-${{ inputs.arch }}-sqlcipher-${{ inputs.sqlcipher }}
-            runs-on: ${{ inputs.arch == 'arm64' && 'ubuntu-22.04-arm' || 'ubuntu-22.04' }}
+            project: linux-${{ inputs.arch }}-sqlcipher-${{ inputs.sqlcipher }}
+            artifact: ${{ inputs.artifact-prefix }}linux-${{ inputs.arch }}-sqlcipher-${{ inputs.sqlcipher }}
+            runs-on: ${{ inputs.runs-on || (inputs.arch == 'arm64' && 'ubuntu-22.04-arm' || 'ubuntu-22.04') }}
             executable: /opt/Element*/element-desktop*
             prepare_cmd: |
                 sudo apt-get -qq update
                 sudo apt install ./dist/*.deb
             blob_report: ${{ inputs.blob_report }}
+            args: ${{ inputs.test-args }}

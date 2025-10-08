@@ -10,6 +10,10 @@ on:
                 type: string
                 required: true
                 description: "The name of the artifact to download"
+            project:
+                type: string
+                required: true
+                description: "The Playwright project to use for testing"
             executable:
                 type: string
                 required: true
@@ -22,12 +26,19 @@ on:
                 type: boolean
                 default: false
                 description: "Whether to upload a blob report instead of the HTML report"
+            args:
+                type: string
+                required: false
+                description: "Additional arguments to pass to playwright, for e.g. skipping specific tests"
 permissions: {}
 jobs:
     test:
+        name: Test ${{ inputs.project }}
         runs-on: ${{ inputs.runs-on }}
         steps:
             - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+              with:
+                  repository: ${{ github.repository == 'element-hq/element-web-pro' && 'element-hq/element-desktop' || github.repository }}
 
             - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
               with:
@@ -69,7 +80,7 @@ jobs:
               uses: coactions/setup-xvfb@6b00cf1889f4e1d5a48635647013c0508128ee1a
               timeout-minutes: 20
               with:
-                  run: yarn test --project=${{ inputs.artifact }} ${{ runner.os != 'Linux' && '--ignore-snapshots' || '' }} ${{ inputs.blob_report == false && '--reporter=html' || '' }}
+                  run: yarn test --project=${{ inputs.project }} ${{ runner.os != 'Linux' && '--ignore-snapshots' || '' }} ${{ inputs.blob_report == false && '--reporter=html' || '' }} ${{ inputs.args }}
               env:
                   ELEMENT_DESKTOP_EXECUTABLE: ${{ steps.executable.outputs.path }}
 

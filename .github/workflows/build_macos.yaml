@@ -49,9 +49,29 @@ on:
                     The artifact can also contain any additional files which will be applied as overrides to the checkout root before building,
                     for example icons in the `build/` directory to override the app icons.
                 default: "webapp"
+            test:
+                type: boolean
+                required: false
+                default: true
+                description: "Whether to run the test stage after building"
+            test-args:
+                type: string
+                required: false
+                description: "Additional arguments to pass to playwright"
+            artifact-prefix:
+                type: string
+                required: false
+                description: "An optional prefix to add to the artifact name, useful for distinguishing builds in private repos."
+                default: ""
+            targets:
+                type: string
+                required: false
+                description: "List of targets to build"
+                default: "dmg zip"
 permissions: {} # No permissions required
 jobs:
     build:
+        name: Build macOS Universal
         runs-on: macos-14 # M1
         environment: ${{ inputs.sign && 'packages.element.io' || '' }}
         steps:
@@ -105,7 +125,7 @@ jobs:
             - name: "[Signed] Build App"
               if: inputs.sign != ''
               run: |
-                  yarn build:universal --publish never
+                  yarn build:universal --publish never -m ${{ inputs.targets }}
               env:
                   APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
                   APPLE_ID: ${{ secrets.APPLE_ID }}
@@ -127,7 +147,7 @@ jobs:
             - name: "[Unsigned] Build App"
               if: inputs.sign == ''
               run: |
-                  yarn build:universal --publish never
+                  yarn build:universal --publish never -m ${{ inputs.targets }}
               env:
                   CSC_IDENTITY_AUTO_DISCOVERY: false
                   VARIANT_PATH: variant.json
@@ -162,22 +182,30 @@ jobs:
             - name: Upload Artifacts
               uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
               with:
-                  name: macos
+                  name: ${{ inputs.artifact-prefix }}macos
                   path: |
                       dist
                       !dist/mac-universal/**
                   retention-days: 1
 
-            - name: Assert all required files are present
+            - name: Assert zip is present
+              if: contains(inputs.targets, 'zip')
               run: |
-                  test -f ./dist/Element*.dmg
                   test -f ./dist/Element*-mac.zip
 
+            - name: Assert dmg is present
+              if: contains(inputs.targets, 'dmg')
+              run: |
+                  test -f ./dist/Element*.dmg
+
     test:
+        name: Test macOS Universal
         needs: build
+        if: inputs.test && contains(inputs.targets, 'dmg')
         uses: ./.github/workflows/build_test.yaml
         with:
-            artifact: macos
+            project: macos
+            artifact: ${{ inputs.artifact-prefix }}macos
             runs-on: macos-14
             executable: /Users/runner/Applications/Element*.app/Contents/MacOS/Element*
             # We need to mount the DMG and copy the app to the Applications folder as a mounted DMG is
@@ -187,3 +215,4 @@ jobs:
                 rsync -a /Volumes/Element/Element*.app ~/Applications/ &&
                 hdiutil detach /Volumes/Element
             blob_report: ${{ inputs.blob_report }}
+            args: ${{ inputs.test-args }}
