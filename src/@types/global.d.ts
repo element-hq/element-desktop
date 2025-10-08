@@ -7,7 +7,6 @@ Please see LICENSE files in the repository root for full details.
 
 import { type BrowserWindow } from "electron";
 
-import type AutoLaunch from "auto-launch";
 import { type AppLocalization } from "../language-helper.js";
 
 // global type extensions need to use var for whatever reason
@@ -18,7 +17,6 @@ declare global {
     var mainWindow: BrowserWindow | null;
     var appQuitting: boolean;
     var appLocalization: AppLocalization;
-    var launcher: AutoLaunch;
     var vectorConfig: IConfigOptions;
     var trayConfig: {
         // eslint-disable-next-line camelcase

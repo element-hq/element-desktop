@@ -9,6 +9,7 @@ import { ipcMain } from "electron";
 
 import * as tray from "./tray.js";
 import Store from "./store.js";
+import { AutoLaunch, type AutoLaunchState } from "./auto-launch.js";
 
 interface Setting {
     read(): Promise<any>;
@@ -18,15 +19,11 @@ interface Setting {
 
 const Settings: Record<string, Setting> = {
     "Electron.autoLaunch": {
-        async read(): Promise<any> {
-            return global.launcher.isEnabled();
+        async read(): Promise<AutoLaunchState> {
+            return AutoLaunch.instance.getState();
         },
-        async write(value: any): Promise<void> {
-            if (value) {
-                return global.launcher.enable();
-            } else {
-                return global.launcher.disable();
-            }
+        async write(value: AutoLaunchState): Promise<void> {
+            return AutoLaunch.instance.setState(value);
         },
     },
     "Electron.warnBeforeExit": {

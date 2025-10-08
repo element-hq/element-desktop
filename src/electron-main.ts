@@ -24,7 +24,6 @@ import {
 } from "electron";
 // eslint-disable-next-line n/file-extension-in-import
 import * as Sentry from "@sentry/electron/main";
-import AutoLaunch from "auto-launch";
 import path, { dirname } from "node:path";
 import windowStateKeeper from "electron-window-state";
 import fs, { promises as afs } from "node:fs";
@@ -239,7 +238,7 @@ async function configureSentry(): Promise<void> {
     }
 }
 
-// Set up globals for Tray and AutoLaunch
+// Set up globals for Tray
 async function setupGlobals(): Promise<void> {
     const asarPath = await getAsarPath();
     await loadConfig();
@@ -250,15 +249,6 @@ async function setupGlobals(): Promise<void> {
         icon_path: path.join(path.dirname(asarPath), "build", iconFile),
         brand: global.vectorConfig.brand || "Element",
     };
-
-    // launcher
-    global.launcher = new AutoLaunch({
-        name: global.vectorConfig.brand || "Element",
-        isHidden: true,
-        mac: {
-            useLaunchAgent: true,
-        },
-    });
 }
 
 global.appQuitting = false;
