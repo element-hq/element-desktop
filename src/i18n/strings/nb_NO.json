@@ -23,7 +23,7 @@
         "brand_help": "%(brand)s Hjelp",
         "help": "Hjelp",
         "no": "Nei",
-        "preferences": "Brukervalg",
+        "preferences": "Innstillinger",
         "yes": "Ja"
     },
     "confirm_quit": "Er du sikker på at du vil slutte?",
@@ -31,6 +31,11 @@
         "speech": "Tale",
         "speech_start_speaking": "Begynn å snakke",
         "speech_stop_speaking": "Slutt å snakke"
+    },
+    "eol": {
+        "no_more_updates": "Du kjører en versjon av macOS som ikke støttes. Oppgrader for å motta oppdateringer fr %(brand)s.",
+        "title": "Systemet støttes ikke",
+        "warning": "Du bruker en versjon av macOS som ikke støttes. Oppgrader for å sikre at %(brand)s fortsetter å fungere."
     },
     "file_menu": {
         "label": "Fil"
