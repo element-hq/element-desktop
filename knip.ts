@@ -10,6 +10,8 @@ export default {
         "@action-validator/*",
         // Used for git pre-commit hooks
         "husky",
+        // Required for `patch-package`
+        "postinstall-postinstall",
     ],
     ignoreBinaries: ["jq", "scripts/in-docker.sh"],
 } satisfies KnipConfig;
