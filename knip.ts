@@ -1,7 +1,7 @@
 import { KnipConfig } from "knip";
 
 export default {
-    entry: ["src/electron-main.ts", "src/preload.ts", "electron-builder.ts", ".eslintrc-*.js", "scripts/**", "hak/**"],
+    entry: ["src/preload.cts", "electron-builder.ts", "scripts/**", "hak/**"],
     project: ["**/*.{js,ts}"],
     ignoreDependencies: [
         // Brought in via hak scripts
