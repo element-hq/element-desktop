@@ -156,8 +156,7 @@ const config: Omit<Writable<Configuration>, "electronFuses"> & {
         darkModeSupport: true,
         hardenedRuntime: true,
         gatekeeperAssess: true,
-        // XXX: we cannot specify this due to https://github.com/electron/osx-sign/issues/344
-        // strictVerify: true,
+        strictVerify: true,
         entitlements: "./build/entitlements.mac.plist",
         icon: "build/icon.icns",
         mergeASARs: true,
