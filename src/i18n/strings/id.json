@@ -32,6 +32,11 @@
         "speech_start_speaking": "Mulai Berbicara",
         "speech_stop_speaking": "Berhenti Berbicara"
     },
+    "eol": {
+        "no_more_updates": "Anda menggunakan versi macOS yang tidak didukung. Harap tingkatkan untuk menerima pembaruan %(brand)s.",
+        "title": "Sistem tidak didukung",
+        "warning": "Anda menggunakan versi macOS yang tidak didukung. Harap perbarui untuk memastikan%(brand)s terus bekerja."
+    },
     "file_menu": {
         "label": "Berkas"
     },
