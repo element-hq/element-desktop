@@ -32,6 +32,11 @@
         "speech_start_speaking": "Zacznij mówić",
         "speech_stop_speaking": "Przestań mówić"
     },
+    "eol": {
+        "no_more_updates": "Korzystasz z nieobsługiwanej wersji systemu macOS. Zaktualizuj system, aby uzyskać aktualizacje %(brand)s.",
+        "title": "System nie jest obsługiwany",
+        "warning": "Korzystasz z nieobsługiwanej wersji systemu macOS. Zaktualizuj system, aby dalej korzystać z %(brand)s."
+    },
     "file_menu": {
         "label": "Plik"
     },
