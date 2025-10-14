@@ -63,7 +63,7 @@
         "@sentry/electron": "^7.0.0",
         "auto-launch": "^5.0.5",
         "counterpart": "^0.18.6",
-        "electron-store": "^10.0.0",
+        "electron-store": "^11.0.0",
         "electron-window-state": "^5.0.3",
         "keytar-forked": "7.10.0",
         "minimist": "^1.2.6",
