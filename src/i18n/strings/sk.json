@@ -32,6 +32,11 @@
         "speech_start_speaking": "Spustiť nahrávanie hlasu",
         "speech_stop_speaking": "Zastaviť nahrávanie hlasu"
     },
+    "eol": {
+        "no_more_updates": "Používate nepodporovanú verziu systému macOS. Prosím, aktualizujte systém, aby ste mohli dostávať aktualizácie aplikácie %(brand)s.",
+        "title": "Systém nie je podporovaný",
+        "warning": "Používate nepodporovanú verziu systému macOS. Vykonajte prosím aktualizáciu, aby aplikácia %(brand)s mohla správne fungovať."
+    },
     "file_menu": {
         "label": "Súbor"
     },
