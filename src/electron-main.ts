@@ -211,6 +211,7 @@ function loadConfig(): Promise<void> {
             global.vectorConfig = Object.assign(global.vectorConfig, localConfig);
         } catch (e) {
             if (e instanceof SyntaxError) {
+                await app.whenReady();
                 void dialog.showMessageBox({
                     type: "error",
                     title: `Your ${global.vectorConfig.brand || "Element"} is misconfigured`,
