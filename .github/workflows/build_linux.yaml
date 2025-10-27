@@ -175,13 +175,6 @@ jobs:
                       echo "ED_DEBIAN_CHANGELOG=changelog.Debian" >> $GITHUB_ENV
                   fi
 
-            # Workaround for https://github.com/electron-userland/electron-builder/issues/6116
-            # and https://github.com/electron-userland/electron-builder/issues/5721
-            - name: Install fpm
-              run: |
-                  sudo gem install fpm
-                  echo "USE_SYSTEM_FPM=true" >> $GITHUB_ENV
-
             - name: Build App
               run: yarn build --publish never ${{ steps.config.outputs.build-args }} -l ${{ inputs.targets }}
               env:
