@@ -77,7 +77,9 @@ jobs:
         steps:
             - name: Resolve docker image tag for push
               if: github.event_name == 'push'
-              run: echo "HAK_DOCKER_IMAGE=$HAK_DOCKER_IMAGE:$GITHUB_REF_NAME" >> $GITHUB_ENV
+              run: echo "HAK_DOCKER_IMAGE=$HAK_DOCKER_IMAGE:$REF" >> $GITHUB_ENV
+              env:
+                  REF: ${{ inputs.ref || github.ref_name }}
             - name: Resolve docker image tag for release
               if: github.event_name == 'release'
               run: echo "HAK_DOCKER_IMAGE=$HAK_DOCKER_IMAGE:staging" >> $GITHUB_ENV
