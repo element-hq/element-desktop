@@ -3416,10 +3416,10 @@ electron-winstaller@5.4.0:
   optionalDependencies:
     "@electron/windows-sign" "^1.1.2"
 
-electron@39.0.0:
-  version "39.0.0"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-39.0.0.tgz#6906720c5bd3c40f98f6e01802fdc301654c4550"
-  integrity sha512-UejnuOK4jpRZUq7MkEAnR/szsRWLKBJAdvn6j3xdQLT57fVv13VSNdaUHHjSheaqGzNhCGIdkPsPJnGJVh5kiA==
+electron@39.1.1:
+  version "39.1.1"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-39.1.1.tgz#cc15ceab2f54ce31ca0fa7606f17ddfa61c6fd3e"
+  integrity sha512-VuFEI1yQ7BH3RYI5VZtwFlzGp4rpPRd5oEc26ZQIItVLcLTbXt4/O7o4hs+1fyg9Q3NvGAifgX5Vp5EBOIFpAg==
   dependencies:
     "@electron/get" "^2.0.0"
     "@types/node" "^22.7.7"
