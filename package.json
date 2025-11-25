@@ -121,6 +121,6 @@
     "resolutions": {
         "@types/node": "18.19.130",
         "config-file-ts": "0.2.8-rc1",
-        "node-abi": "4.17.0"
+        "node-abi": "4.24.0"
     }
 }
