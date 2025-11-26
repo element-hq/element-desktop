@@ -84,7 +84,7 @@ export const test = base.extend<Fixtures>({
             args.unshift(path.join(__dirname, "..", "lib", "electron-main.js"));
         }
 
-        console.log(`Launching '${executablePath}' with args ${args.join(" ")}`);
+        console.log(`Launching '${executablePath || "electron"}' with args ${args.join(" ")}`);
 
         const app = await electron.launch({
             env: {

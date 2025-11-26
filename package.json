@@ -56,7 +56,7 @@
         "test": "playwright test",
         "test:open": "yarn test --ui",
         "test:screenshots:build": "docker build playwright -t element-desktop-playwright --platform linux/amd64",
-        "test:screenshots:run": "docker run --rm --network host -v $(pwd):/work/element-desktop -v /var/run/docker.sock:/var/run/docker.sock --platform linux/amd64 -it element-desktop-playwright",
+        "test:screenshots:run": "docker run --rm --network host -v $(pwd):/work/element-desktop -v element-desktop-playwright:/work/element-desktop/node_modules -v /var/run/docker.sock:/var/run/docker.sock --platform linux/amd64 -it element-desktop-playwright",
         "postinstall": "patch-package && electron-builder install-app-deps"
     },
     "dependencies": {
