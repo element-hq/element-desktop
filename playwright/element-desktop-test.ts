@@ -66,7 +66,7 @@ export const test = base.extend<Fixtures>({
         await fs.rm(tmpDir, { recursive: true });
     },
     app: async ({ tmpDir, extraEnv, extraArgs, stdout, stderr }, use) => {
-        const args = ["--profile-dir", tmpDir, ...extraArgs];
+        const args = ["--no-sandbox", "--profile-dir", tmpDir, ...extraArgs];
 
         if (process.env.GITHUB_ACTIONS) {
             if (process.platform === "linux") {
@@ -84,7 +84,7 @@ export const test = base.extend<Fixtures>({
             args.unshift(path.join(__dirname, "..", "lib", "electron-main.js"));
         }
 
-        console.log(`Launching '${executablePath}' with args ${args.join(" ")}`);
+        console.log(`Launching '${executablePath || "electron"}' with args ${args.join(" ")}`);
 
         const app = await electron.launch({
             env: {
