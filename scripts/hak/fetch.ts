@@ -38,6 +38,9 @@ export default async function fetch(hakEnv: HakEnv, moduleInfo: DependencyInfo):
     console.log("Running yarn install in " + moduleInfo.moduleBuildDir);
     await hakEnv.spawn("yarn", ["install", "--mode=skip-build"], {
         cwd: moduleInfo.moduleBuildDir,
+        env: {
+            YARN_ENABLE_HARDENED_MODE: "0",
+        },
     });
 
     // also extract another copy to the output directory at this point
