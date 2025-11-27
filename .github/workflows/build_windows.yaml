@@ -149,6 +149,8 @@ jobs:
                   rustup target add ${{ steps.config.outputs.target }}
 
             - run: corepack enable
+              env:
+                  DEBUG: corepack
             - uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6
               with:
                   node-version-file: .node-version
