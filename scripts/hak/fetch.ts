@@ -31,7 +31,7 @@ export default async function fetch(hakEnv: HakEnv, moduleInfo: DependencyInfo):
     });
 
     console.log("Running yarn install in " + moduleInfo.moduleBuildDir);
-    await hakEnv.spawn("yarn", ["install", "--ignore-scripts"], {
+    await hakEnv.spawn("yarn", ["install", "--mode=skip-build"], {
         cwd: moduleInfo.moduleBuildDir,
     });
 
