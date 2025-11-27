@@ -6,9 +6,6 @@ SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Com
 Please see LICENSE files in the repository root for full details.
 */
 
-import fs from "node:fs/promises";
-import path from "node:path";
-
 import type HakEnv from "../../scripts/hak/hakEnv.js";
 import type { DependencyInfo } from "../../scripts/hak/dep.js";
 
@@ -20,10 +17,6 @@ export default async function (hakEnv: HakEnv, moduleInfo: DependencyInfo): Prom
     }
 
     console.log("Running yarn install");
-
-    // Workaround for yarn berry being unhappy to run here without a `yarn.lock` file
-    const handle = await fs.open(path.join(moduleInfo.moduleBuildDir, "yarn.lock"), "a");
-    await handle.close();
 
     await hakEnv.spawn("yarn", ["install"], {
         cwd: moduleInfo.moduleBuildDir,

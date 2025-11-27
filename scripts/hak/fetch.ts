@@ -31,12 +31,15 @@ export default async function fetch(hakEnv: HakEnv, moduleInfo: DependencyInfo):
         packumentCache,
     });
 
-    // Workaround for yarn berry being unhappy to install a hak dependency without a `yarn.lock` file
-    const handle = await fsProm.open(path.join(moduleInfo.moduleBuildDir, "yarn.lock"), "a");
-    await handle.close();
+    const packageJsonPath = path.join(moduleInfo.moduleBuildDir, "package.json");
+    const packageJson = JSON.parse(await fsProm.readFile(packageJsonPath, "utf8"));
+    if (!packageJson.packageManager) {
+        packageJson.packageManager = "yarn@1.22.22";
+        await fsProm.writeFile(packageJsonPath, JSON.stringify(packageJson, null, 4));
+    }
 
     console.log("Running yarn install in " + moduleInfo.moduleBuildDir);
-    await hakEnv.spawn("yarn", ["install", "--mode=skip-build"], {
+    await hakEnv.spawn("corepack", ["yarn", "install", "--mode=skip-build"], {
         cwd: moduleInfo.moduleBuildDir,
         env: {
             YARN_ENABLE_HARDENED_MODE: "0",
