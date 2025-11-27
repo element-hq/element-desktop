@@ -8,7 +8,6 @@ Please see LICENSE files in the repository root for full details.
 
 import fsProm from "node:fs/promises";
 import pacote, { type Packument } from "pacote";
-import path from "node:path";
 
 import type HakEnv from "./hakEnv.js";
 import type { DependencyInfo } from "./dep.js";
@@ -31,19 +30,9 @@ export default async function fetch(hakEnv: HakEnv, moduleInfo: DependencyInfo):
         packumentCache,
     });
 
-    const packageJsonPath = path.join(moduleInfo.moduleBuildDir, "package.json");
-    const packageJson = JSON.parse(await fsProm.readFile(packageJsonPath, "utf8"));
-    if (!packageJson.packageManager) {
-        packageJson.packageManager = "yarn@1.22.22";
-        await fsProm.writeFile(packageJsonPath, JSON.stringify(packageJson, null, 4));
-    }
-
     console.log("Running yarn install in " + moduleInfo.moduleBuildDir);
-    await hakEnv.spawn("corepack", ["yarn", "install", "--mode=skip-build"], {
+    await hakEnv.spawn("corepack", ["yarn@1.22.22", "install", "--mode=skip-build"], {
         cwd: moduleInfo.moduleBuildDir,
-        env: {
-            YARN_ENABLE_HARDENED_MODE: "0",
-        },
     });
 
     // also extract another copy to the output directory at this point
@@ -56,6 +45,7 @@ export default async function fetch(hakEnv: HakEnv, moduleInfo: DependencyInfo):
     // actual runtime dependencies will have to be added to the main app's
     // dependencies. We can't tell what dependencies are real runtime deps
     // and which are just used for native module building.
+    console.log("@@ Pacote2", moduleInfo.moduleOutDir);
     await pacote.extract(`${moduleInfo.name}@${moduleInfo.version}`, moduleInfo.moduleOutDir, {
         packumentCache,
     });
