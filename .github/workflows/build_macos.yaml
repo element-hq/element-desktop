@@ -105,7 +105,6 @@ jobs:
               with:
                   python-version: "3.13"
 
-            - run: corepack enable
             - uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6
               with:
                   node-version-file: .node-version

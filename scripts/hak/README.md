@@ -40,7 +40,7 @@ the npm 'install' phase - modules that do this will typically end up with native
 targeted to the build platform and the node that npm/yarn is using, which is no good for an
 electron app.
 
-It does this by installing it with `--mode=skip-build` and then using `yarn link` to keep the
+It does this by installing it with `--ignore-scripts` and then using `yarn link` to keep the
 dependency module separate so yarn doesn't try to run its install / postinstall script
 at other points (eg. whenever you `yarn add` a random other dependency).
 

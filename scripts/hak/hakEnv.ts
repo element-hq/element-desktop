@@ -84,7 +84,6 @@ export default class HakEnv {
             npm_config_target: this.runtimeVersion,
             npm_config_build_from_source: "true",
             npm_config_devdir: path.join(os.homedir(), ".electron-gyp"),
-            COREPACK_ENABLE_DOWNLOAD_PROMPT: "0",
         };
     }
 

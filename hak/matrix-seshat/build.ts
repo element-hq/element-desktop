@@ -17,8 +17,7 @@ export default async function (hakEnv: HakEnv, moduleInfo: DependencyInfo): Prom
     }
 
     console.log("Running yarn install");
-
-    await hakEnv.spawn("corepack", ["yarn@1.22.22", "install"], {
+    await hakEnv.spawn("yarn", ["install"], {
         cwd: moduleInfo.moduleBuildDir,
         env,
         shell: true,
@@ -27,7 +26,7 @@ export default async function (hakEnv: HakEnv, moduleInfo: DependencyInfo): Prom
     const buildTarget = hakEnv.wantsStaticSqlCipher() ? "build-bundled" : "build";
 
     console.log("Running yarn build");
-    await hakEnv.spawn("corepack", ["yarn@1.22.22", "run", buildTarget], {
+    await hakEnv.spawn("yarn", ["run", buildTarget], {
         cwd: moduleInfo.moduleBuildDir,
         env,
         shell: true,

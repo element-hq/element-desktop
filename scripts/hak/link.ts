@@ -38,11 +38,10 @@ export default async function link(hakEnv: HakEnv, moduleInfo: DependencyInfo): 
         );
     }
 
-    console.log("@@", moduleInfo.moduleOutDir);
-    await hakEnv.spawn("corepack", ["yarn@1.22.22", "link"], {
+    await hakEnv.spawn("yarn", ["link"], {
         cwd: moduleInfo.moduleOutDir,
     });
-    await hakEnv.spawn("corepack", ["yarn@1.22.22", "link", moduleInfo.name], {
+    await hakEnv.spawn("yarn", ["link", moduleInfo.name], {
         cwd: hakEnv.projectRoot,
     });
 }

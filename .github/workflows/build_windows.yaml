@@ -148,9 +148,6 @@ jobs:
                   rustup default stable
                   rustup target add ${{ steps.config.outputs.target }}
 
-            # https://github.com/actions/setup-node/issues/480#issuecomment-2907867335
-            - run: npm install -g corepack@0.34.5 --force
-            - run: corepack enable
             - uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6
               with:
                   node-version-file: .node-version
