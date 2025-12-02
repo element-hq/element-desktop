@@ -8,8 +8,6 @@ RUN apt-get -qq update && apt-get -y -qq dist-upgrade && \
   apt-get -y -qq install --no-install-recommends \
   # tclsh is required for building SQLite as part of SQLCipher
   tcl \
-  # libsecret-1-dev is required even for prebuild keytar
-  libsecret-1-dev \
   # Used by seshat (when not SQLCIPHER_STATIC) \
   libsqlcipher-dev && \
   apt-get purge -y --auto-remove && rm -rf /var/lib/apt/lists/*

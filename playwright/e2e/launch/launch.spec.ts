@@ -6,8 +6,6 @@ SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Com
 Please see LICENSE files in the repository root for full details.
 */
 
-import keytar from "keytar-forked";
-
 import { test, expect } from "../../element-desktop-test.js";
 
 declare global {
@@ -60,34 +58,6 @@ test.describe("App launch", () => {
                     [userId, deviceId],
                 ),
             ).resolves.not.toBeNull();
-        });
-
-        test.describe("migrate from keytar", () => {
-            test.skip(
-                process.env.GITHUB_ACTIONS && ["linux", "darwin"].includes(process.platform),
-                "GitHub Actions hosted runner are not a compatible environment for this test",
-            );
-
-            const pickleKey = "DEADBEEF1234";
-            const keytarService = "element.io";
-            const keytarKey = `${userId}|${deviceId}`;
-
-            test.beforeAll(async () => {
-                await keytar.setPassword(keytarService, keytarKey, pickleKey);
-                await expect(keytar.getPassword(keytarService, keytarKey)).resolves.toBe(pickleKey);
-            });
-            test.afterAll(async () => {
-                await keytar.deletePassword(keytarService, keytarKey);
-            });
-
-            test("should migrate successfully", async ({ page }) => {
-                await expect(
-                    page.evaluate(
-                        ([userId, deviceId]) => window.mxPlatformPeg.get().getPickleKey(userId, deviceId),
-                        [userId, deviceId],
-                    ),
-                ).resolves.toBe(pickleKey);
-            });
         });
     });
 

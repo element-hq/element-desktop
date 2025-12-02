@@ -15,21 +15,9 @@ limitations under the License.
 */
 
 import ElectronStore from "electron-store";
-import keytar from "keytar-forked";
 import { app, safeStorage, dialog, type SafeStorage, type Session } from "electron";
 
 import { _t } from "./language-helper.js";
-
-/**
- * Legacy keytar service name for storing secrets.
- * @deprecated
- */
-const KEYTAR_SERVICE = "element.io";
-/**
- * Super legacy keytar service name for reading secrets.
- * @deprecated
- */
-const LEGACY_KEYTAR_SERVICE = "riot.im";
 
 /**
  * String union type representing all the safeStorage backends.
@@ -147,7 +135,7 @@ const enum Mode {
 /**
  * JSON-backed store for settings which need to be accessible by the main process.
  * Secrets are stored within the `safeStorage` object, encrypted with safeStorage.
- * Any secrets operations are blocked on Electron app ready emit, and keytar migration if still needed.
+ * Any secrets operations are blocked on Electron app ready emit.
  */
 class Store extends ElectronStore<StoreData> {
     private static internalInstance?: Store;
@@ -283,8 +271,6 @@ class Store extends ElectronStore<StoreData> {
 
     /**
      * Prepare the safeStorage backend for use.
-     * We don't eagerly import from keytar as that would bring in data for all Element profiles and not just the current one,
-     * so we import lazily in getSecret.
      *
      * This will relaunch the app in some cases, in which case it will return false and the caller should abort startup.
      *
@@ -462,7 +448,6 @@ class Store extends ElectronStore<StoreData> {
 
     /**
      * Get the stored secret for the key.
-     * Lazily migrates keys from keytar if they are not yet in the store.
      *
      * @param key The string key name.
      *
@@ -470,25 +455,11 @@ class Store extends ElectronStore<StoreData> {
      */
     public async getSecret(key: string): Promise<string | undefined> {
         await this.safeStorageReady();
-        let secret = this.secrets!.get(key);
-        if (secret) return secret;
-
-        try {
-            secret = await this.getSecretKeytar(key);
-        } catch (e) {
-            console.warn(`Failed to read data from keytar with key='${key}'`, e);
-        }
-        if (secret) {
-            console.debug("Migrating secret from keytar", key);
-            this.secrets!.set(key, secret);
-        }
-
-        return secret;
+        return this.secrets!.get(key);
     }
 
     /**
      * Add the secret for the key to the keychain.
-     * We write to both safeStorage & keytar to support downgrading the application.
      *
      * @param key The string key name.
      * @param secret The string password.
@@ -498,46 +469,16 @@ class Store extends ElectronStore<StoreData> {
     public async setSecret(key: string, secret: string): Promise<void> {
         await this.safeStorageReady();
         this.secrets!.set(key, secret);
-        try {
-            await keytar.setPassword(KEYTAR_SERVICE, key, secret);
-        } catch (e) {
-            console.warn(`Failed to write safeStorage backwards-compatibility key='${key}' data to keytar`, e);
-        }
     }
 
     /**
      * Delete the stored password for the key.
-     * Removes from safeStorage, keytar & keytar legacy.
      *
      * @param key The string key name.
      */
     public async deleteSecret(key: string): Promise<void> {
         await this.safeStorageReady();
         this.secrets!.delete(key);
-        try {
-            await this.deleteSecretKeytar(key);
-        } catch (e) {
-            console.warn(`Failed to delete secret with key='${key}' from keytar`, e);
-        }
-    }
-
-    /**
-     * @deprecated will be removed in the near future
-     */
-    private async getSecretKeytar(key: string): Promise<string | undefined> {
-        return (
-            (await keytar.getPassword(KEYTAR_SERVICE, key)) ??
-            (await keytar.getPassword(LEGACY_KEYTAR_SERVICE, key)) ??
-            undefined
-        );
-    }
-
-    /**
-     * @deprecated will be removed in the near future
-     */
-    private async deleteSecretKeytar(key: string): Promise<void> {
-        await keytar.deletePassword(LEGACY_KEYTAR_SERVICE, key);
-        await keytar.deletePassword(KEYTAR_SERVICE, key);
     }
 }
 
