@@ -7,7 +7,7 @@ Please see LICENSE files in the repository root for full details.
 */
 
 import fsProm from "node:fs/promises";
-import pacote from "pacote";
+import pacote, { type Packument } from "pacote";
 
 import type HakEnv from "./hakEnv.js";
 import type { DependencyInfo } from "./dep.js";
@@ -25,13 +25,13 @@ export default async function fetch(hakEnv: HakEnv, moduleInfo: DependencyInfo):
 
     console.log("Fetching " + moduleInfo.name + "@" + moduleInfo.version);
 
-    const packumentCache = new Map();
+    const packumentCache = new Map<string, Packument>();
     await pacote.extract(`${moduleInfo.name}@${moduleInfo.version}`, moduleInfo.moduleBuildDir, {
         packumentCache,
     });
 
     console.log("Running yarn install in " + moduleInfo.moduleBuildDir);
-    await hakEnv.spawn("yarn", ["install", "--ignore-scripts"], {
+    await hakEnv.spawn("corepack", ["yarn@1.22.22", "install", "--mode=skip-build"], {
         cwd: moduleInfo.moduleBuildDir,
     });
 
@@ -45,6 +45,7 @@ export default async function fetch(hakEnv: HakEnv, moduleInfo: DependencyInfo):
     // actual runtime dependencies will have to be added to the main app's
     // dependencies. We can't tell what dependencies are real runtime deps
     // and which are just used for native module building.
+    console.log("@@ Pacote2", moduleInfo.moduleOutDir);
     await pacote.extract(`${moduleInfo.name}@${moduleInfo.version}`, moduleInfo.moduleOutDir, {
         packumentCache,
     });

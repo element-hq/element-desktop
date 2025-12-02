@@ -4,7 +4,6 @@ FROM rust:bullseye@sha256:4886b155a84b46ad61df6a2249905bea8c61fc1eaa903398713233
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN curl --proto "=https" -L https://yarnpkg.com/latest.tar.gz | tar xvz && mv yarn-* /yarn && ln -s /yarn/bin/yarn /usr/bin/yarn
 RUN apt-get -qq update && apt-get -y -qq dist-upgrade && \
   apt-get -y -qq install --no-install-recommends \
   # tclsh is required for building SQLite as part of SQLCipher
@@ -18,6 +17,7 @@ RUN ln -s /usr/bin/python3 /usr/bin/python & ln -s /usr/bin/pip3 /usr/bin/pip
 
 ENV DEBUG_COLORS=true
 ENV FORCE_COLOR=true
+ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 
 WORKDIR /project
 
