@@ -13,6 +13,29 @@ custom build of Element without installing the various build tools required.
 The process is automated by [vector-im/element-builder](https://github.com/vector-im/element-builder)
 when releasing.
 
+## Use docker
+
+As an alternative to the process below, you can build the native modules with:
+
+```
+yarn docker:setup
+yarn docker:install
+INDOCKER_SQLCIPHER_BUNDLED=1 yarn docker:build:native
+```
+
+The above will build `matrix-seshat` in
+`docker/node_modules/matrix-seshat`. You can then either run `yarn docker:build`
+to build the app inside docker, or:
+
+```
+yarn --cwd docker/node_modules/matrix-seshat link
+yarn link matrix-seshat
+```
+
+... and build the app with `yarn build` or run it with `yarn start`.
+
+(See also https://github.com/element-hq/element-desktop#docker.)
+
 ## Building
 
 Install the pre-requisites for your system:
@@ -56,7 +79,8 @@ This is also needed to when pulling in changes to Seshat using `yarn link`.
 
 Recompiling Seshat itself can be done like so:
 
-    yarn run electron-build-env -- --electron 6.1.1 -- neon build matrix-seshat --release
+    ELECTRON_VERSION=$(electron --version)
+    yarn run electron-build-env -- --electron ${ELECTRON_VERSION#v} -- neon build matrix-seshat --release
 
 Please make sure to include all the `--` as well as the `--release` command line
 switch at the end. Modify your electron version accordingly depending on the
