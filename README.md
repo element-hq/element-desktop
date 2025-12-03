@@ -52,7 +52,9 @@ If you only want to run the app locally and don't need to build packages, you ca
 provide the `webapp` directory directly:
 
 ```
-# Assuming you've checked out and built a copy of element-web in ../element-web
+# Assuming you've checked out and built a copy of element-web in ../element-web.
+# Note that you will not be able to `yarn build` after this, but `yarn start`
+# will work fine.
 ln -s ../element-web/webapp ./
 ```
 
