@@ -86,7 +86,7 @@
         "@typescript-eslint/eslint-plugin": "^8.0.0",
         "@typescript-eslint/parser": "^8.0.0",
         "app-builder-lib": "26.2.0",
-        "chokidar": "^4.0.0",
+        "chokidar": "^5.0.0",
         "detect-libc": "^2.0.0",
         "electron": "39.2.3",
         "electron-builder": "26.2.0",
