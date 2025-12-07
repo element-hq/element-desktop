@@ -12,7 +12,7 @@ import type HakEnv from "./hakEnv.js";
 import { type DependencyInfo } from "./dep.js";
 
 export default async function link(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
-    const linkFolder=path.join(hakEnv.dotHakDir, "links");
+    const linkFolder = path.join(hakEnv.dotHakDir, "links");
     await hakEnv.spawn("yarn", ["link", "--link-folder", linkFolder], {
         cwd: moduleInfo.moduleOutDir,
     });
