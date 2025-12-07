@@ -15,7 +15,7 @@ when releasing.
 
 ## Use docker
 
-As an alternative to the process below, you can build the native modules with:
+If you are building for Linux, you can build the native modules with:
 
 ```
 yarn docker:setup
@@ -41,7 +41,7 @@ yarn link matrix-seshat
 Install the pre-requisites for your system:
 
 - [Windows pre-requisites](https://github.com/vector-im/element-desktop/blob/develop/docs/windows-requirements.md)
-- Linux: TODO
+- Linux: TODO. Using the docker environment as above is recommended.
 - OS X: TODO
 
 Then optionally, [add seshat and dependencies to support search in E2E rooms](#adding-seshat-for-search-in-e2e-encrypted-rooms).
