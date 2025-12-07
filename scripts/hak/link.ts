@@ -7,8 +7,6 @@ Please see LICENSE files in the repository root for full details.
 */
 
 import path from "node:path";
-import os from "node:os";
-import fsProm from "node:fs/promises";
 
 import type HakEnv from "./hakEnv.js";
 import { type DependencyInfo } from "./dep.js";
