@@ -32,6 +32,9 @@
         "speech_start_speaking": "Почати говорити",
         "speech_stop_speaking": "Припинити говорити"
     },
+    "eol": {
+        "title": "Система не підтримується"
+    },
     "file_menu": {
         "label": "Файл"
     },
