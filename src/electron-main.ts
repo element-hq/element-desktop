@@ -505,8 +505,8 @@ app.on("ready", async () => {
 
     global.mainWindow.webContents.on("before-input-event", (event: Event, input: Input): void => {
         const exitShortcutPressed =
-        input.type === "keyDown" && exitShortcuts.some((shortcutFn) => shortcutFn(input, process.platform));
-        
+            input.type === "keyDown" && exitShortcuts.some((shortcutFn) => shortcutFn(input, process.platform));
+
         // We only care about the exit shortcuts here
         if (!exitShortcutPressed || !global.mainWindow) return;
 
