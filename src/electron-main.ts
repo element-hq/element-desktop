@@ -504,11 +504,18 @@ app.on("ready", async () => {
     });
 
     global.mainWindow.webContents.on("before-input-event", (event: Event, input: Input): void => {
-        const shouldWarnBeforeExit = store.get("warnBeforeExit", true);
         const exitShortcutPressed =
-            input.type === "keyDown" && exitShortcuts.some((shortcutFn) => shortcutFn(input, process.platform));
+        input.type === "keyDown" && exitShortcuts.some((shortcutFn) => shortcutFn(input, process.platform));
+        
+        // We only care about the exit shortcuts here
+        if (!exitShortcutPressed || !global.mainWindow) return;
 
-        if (shouldWarnBeforeExit && exitShortcutPressed && global.mainWindow) {
+        // Prevent the default behaviour
+        event.preventDefault();
+
+        // Let's ask the user if they really want to exit the app
+        const shouldWarnBeforeExit = store.get("warnBeforeExit", true);
+        if (shouldWarnBeforeExit) {
             const shouldCancelCloseRequest =
                 dialog.showMessageBoxSync(global.mainWindow, {
                     type: "question",
@@ -522,13 +529,11 @@ app.on("ready", async () => {
                     defaultId: 1,
                     cancelId: 0,
                 }) === 0;
-
-            if (shouldCancelCloseRequest) {
-                event.preventDefault();
-            } else {
-                app.exit();
-            }
+            if (shouldCancelCloseRequest) return;
         }
+
+        // Exit the app
+        app.exit();
     });
 
     global.mainWindow.on("closed", () => {
