@@ -525,6 +525,8 @@ app.on("ready", async () => {
 
             if (shouldCancelCloseRequest) {
                 event.preventDefault();
+            } else {
+                app.exit();
             }
         }
     });
