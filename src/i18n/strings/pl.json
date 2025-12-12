@@ -73,7 +73,7 @@
             "backend_no_encryption_detail": "Elektron wykrył, że szyfrowanie nie jest dostępne w twoim keyring'u %(backend)s. Upewnij się, że keyring został zainstalowany. Jeśli tak, uruchom ponownie urządzenie i spróbuj ponownie. Opcjonalnie, zezwól %(brand)s, aby korzystał ze słabszego szyfrowania.",
             "backend_no_encryption_title": "Szyfrowanie nie jest obsługiwane",
             "unsupported_keyring": "System zawiera niewspierany keyring, nie można otworzyć bazy danych.",
-            "unsupported_keyring_detail": "Wykrywanie keyringu Electron nie znalazł wspieranego backendu. Możesz spróbować ręcznie ustawić backed, uruchamiając %(brand)s za pomocą wiesza poleceń. Zobacz %(link)s.",
+            "unsupported_keyring_detail": "Wykrywanie breloków firmy Electron nie znalazło obsługiwanego zaplecza. Możesz spróbować ręcznie skonfigurować zaplecze, zaczynając od argumentu %(brand)s wiersza polecenia, operacji jednorazowej. Widzieć%(link)s.",
             "unsupported_keyring_title": "System niewspierany",
             "unsupported_keyring_use_basic_text": "Użyj słabszego szyfrowania",
             "unsupported_keyring_use_plaintext": "Nie używaj szyfrowania"

@@ -22,7 +22,9 @@
         "about": "Acerca de",
         "brand_help": "Ayuda sobre %(brand)s",
         "help": "Ayuda",
-        "preferences": "Preferencias"
+        "no": "No",
+        "preferences": "Preferencias",
+        "yes": "Sí"
     },
     "confirm_quit": "¿Quieres salir?",
     "edit_menu": {
@@ -57,6 +59,7 @@
     },
     "window_menu": {
         "bring_all_to_front": "Traer todas al primer plano",
-        "label": "Ventana"
+        "label": "Ventana",
+        "zoom": "Acercamiento"
     }
 }
