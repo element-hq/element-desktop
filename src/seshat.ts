@@ -17,6 +17,7 @@ import type {
 import IpcMainEvent = Electron.IpcMainEvent;
 import { randomArray } from "./utils.js";
 import Store from "./store.js";
+import { createSeshatConfig } from "./seshat-config.js";
 
 let seshatSupported = false;
 let Seshat: typeof SeshatType;
@@ -40,6 +41,7 @@ try {
 let eventIndex: SeshatType | null = null;
 
 const seshatDefaultPassphrase = "DEFAULT_PASSPHRASE";
+
 async function getOrCreatePassphrase(store: Store, key: string): Promise<string> {
     try {
         const storedPassphrase = await store.getSecret(key);
@@ -103,13 +105,15 @@ ipcMain.on("seshat", async function (_ev: IpcMainEvent, payload): Promise<void> 
             if (eventIndex === null) {
                 const userId = args[0];
                 const deviceId = args[1];
+                const tokenizerMode = args[2] as string | undefined;
                 const passphraseKey = `seshat|${userId}|${deviceId}`;
 
                 const passphrase = await getOrCreatePassphrase(store, passphraseKey);
+                const seshatConfig = createSeshatConfig(tokenizerMode);
 
                 try {
                     await afs.mkdir(eventStorePath, { recursive: true });
-                    eventIndex = new Seshat(eventStorePath, { passphrase });
+                    eventIndex = new Seshat(eventStorePath, { passphrase, ...seshatConfig });
                 } catch (e) {
                     if (e instanceof ReindexError) {
                         // If this is a reindex error, the index schema
@@ -118,6 +122,7 @@ ipcMain.on("seshat", async function (_ev: IpcMainEvent, payload): Promise<void> 
                         // database again.
                         const recoveryIndex = new SeshatRecovery(eventStorePath, {
                             passphrase,
+                            ...seshatConfig,
                         });
 
                         const userVersion = await recoveryIndex.getUserVersion();
@@ -131,10 +136,19 @@ ipcMain.on("seshat", async function (_ev: IpcMainEvent, payload): Promise<void> 
                             await recoveryIndex.reindex();
                         }
 
-                        eventIndex = new Seshat(eventStorePath, { passphrase });
+                        eventIndex = new Seshat(eventStorePath, { passphrase, ...seshatConfig });
                     } else {
-                        sendError(payload.id, <Error>e);
-                        return;
+                        // Schema mismatch or other errors - delete and recreate the database
+                        console.warn("Failed to open Seshat database, deleting and recreating:", e);
+                        await deleteContents(eventStorePath);
+                        try {
+                            eventIndex = new Seshat(eventStorePath, { passphrase, ...seshatConfig });
+                            // Return that the database was recreated so element-web can re-add checkpoints
+                            ret = { wasRecreated: true };
+                        } catch (e2) {
+                            sendError(payload.id, <Error>e2);
+                            return;
+                        }
                     }
                 }
             }
