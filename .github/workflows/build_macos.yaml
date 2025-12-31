@@ -72,7 +72,7 @@ permissions: {} # No permissions required
 jobs:
     build:
         name: Build macOS Universal
-        runs-on: macos-14 # M1
+        runs-on: macos-15 # M1
         environment: ${{ inputs.sign && 'packages.element.io' || '' }}
         steps:
             - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
