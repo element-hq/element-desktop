@@ -25,7 +25,7 @@ jobs:
               uses: docker/setup-qemu-action@c7c53464625b32c7a7e944ae62b3e17d2b600130 # v3
 
             - name: Set up Docker Buildx
-              uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435 # v3
+              uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
               with:
                   install: true
 
@@ -42,7 +42,7 @@ jobs:
               run: docker run -v $PWD:/project element-desktop-dockerbuild yarn install
 
             - name: Log in to the Container registry
-              uses: docker/login-action@28fdb31ff34708d19615a74d67103ddc2ea9725c
+              uses: docker/login-action@6862ffc5ab2cdb4405cf318a62a6f4c066e2298b
               if: github.event_name != 'pull_request'
               with:
                   registry: ${{ env.REGISTRY }}
