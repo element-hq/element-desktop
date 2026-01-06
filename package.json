@@ -88,7 +88,7 @@
         "app-builder-lib": "26.2.0",
         "chokidar": "^5.0.0",
         "detect-libc": "^2.0.0",
-        "electron": "39.2.6",
+        "electron": "39.2.7",
         "electron-builder": "26.2.0",
         "electron-builder-squirrel-windows": "26.2.0",
         "electron-devtools-installer": "^4.0.0",
@@ -120,6 +120,7 @@
     "resolutions": {
         "@types/node": "18.19.130",
         "config-file-ts": "0.2.8-rc1",
-        "node-abi": "4.24.0"
+        "node-abi": "4.24.0",
+        "@types/pg-pool": "2.0.7"
     }
 }
