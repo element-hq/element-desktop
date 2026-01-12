@@ -68,7 +68,7 @@ jobs:
                   event-type: trigger-pipeline
                   client-payload: |-
                       {
-                          "base-ref": "${{ needs.prepare.outputs.nightly-version == '' && steps.refs.outputs.base-ref || 'develop' }}"
+                          "base-ref": "${{ github.ref_name }}"
                       }
 
     windows:
