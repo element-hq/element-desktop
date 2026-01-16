@@ -166,15 +166,15 @@ jobs:
                   # Windows
                   for arch in x64 arm64
                   do
-                      [ -d "win-$arch" ] && mv packages.element.io/install/win32/$arch/{*,"Element Nightly Setup"}.exe
+                      if [ -d "win-$arch" ]; then mv packages.element.io/install/win32/$arch/{*,"Element Nightly Setup"}.exe; fi
                   done
 
                   # macOS
-                  [ -d macos ] && mv packages.element.io/install/macos/{*,"Element Nightly"}.dmg
+                  if [ -d macos ]; then mv packages.element.io/install/macos/{*,"Element Nightly"}.dmg; fi
 
                   # Linux
-                  [ -d linux-amd64-sqlcipher-static ] && mv packages.element.io/install/linux/glibc-x86-64/{*,element-desktop-nightly}.tar.gz
-                  [ -d linux-arm64-sqlcipher-static ] && mv packages.element.io/install/linux/glibc-aarch64/{*,element-desktop-nightly}.tar.gz
+                  if [ -d linux-amd64-sqlcipher-static ]; then mv packages.element.io/install/linux/glibc-x86-64/{*,element-desktop-nightly}.tar.gz; fi
+                  if [ -d linux-arm64-sqlcipher-static ]; then mv packages.element.io/install/linux/glibc-aarch64/{*,element-desktop-nightly}.tar.gz; fi
 
             - name: "[Release] Prepare release latest symlink"
               if: needs.prepare.outputs.nightly-version == ''
