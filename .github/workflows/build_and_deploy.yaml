@@ -126,7 +126,7 @@ jobs:
 
             - name: Prepare artifacts for deployment
               run: |
-                  set -x
+                  set -ex
 
                   # Windows
                   for arch in x64 arm64
@@ -161,7 +161,7 @@ jobs:
             - name: "[Nightly] Strip version from installer file"
               if: needs.prepare.outputs.nightly-version != ''
               run: |
-                  set -x
+                  set -ex
 
                   # Windows
                   for arch in x64 arm64
@@ -179,7 +179,7 @@ jobs:
             - name: "[Release] Prepare release latest symlink"
               if: needs.prepare.outputs.nightly-version == ''
               run: |
-                  set -x
+                  set -ex
 
                   # Windows
                   for arch in x64 arm64
