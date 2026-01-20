@@ -1,5 +1,5 @@
 diff --git a/node_modules/dmg-builder/out/dmgUtil.js b/node_modules/dmg-builder/out/dmgUtil.js
-index acf576a..c434665 100644
+index acf576a..c306492 100644
 --- a/node_modules/dmg-builder/out/dmgUtil.js
 +++ b/node_modules/dmg-builder/out/dmgUtil.js
 @@ -99,7 +99,6 @@ async function customizeDmg({ appPath, artifactPath, volumeName, specification,
@@ -10,7 +10,7 @@ index acf576a..c434665 100644
          "icon-size": specification.iconSize,
          "text-size": iconTextSize,
          "compression-level": Number(process.env.ELECTRON_BUILDER_COMPRESSION_LEVEL || "9"),
-@@ -114,6 +113,13 @@ async function customizeDmg({ appPath, artifactPath, volumeName, specification,
+@@ -114,6 +113,16 @@ async function customizeDmg({ appPath, artifactPath, volumeName, specification,
              // hide_extension: c.hideExtension,
          }))) || [],
      };
@@ -27,3 +27,30 @@ index acf576a..c434665 100644
      if (specification.backgroundColor != null || specification.background == null) {
          settings["background-color"] = specification.backgroundColor || "#ffffff";
          const window = specification.window;
+diff --git a/node_modules/dmg-builder/vendor/dmgbuild/badge.py b/node_modules/dmg-builder/vendor/dmgbuild/badge.py
+index 65a993f..8e9b38c 100644
+--- a/node_modules/dmg-builder/vendor/dmgbuild/badge.py
++++ b/node_modules/dmg-builder/vendor/dmgbuild/badge.py
+@@ -54,10 +54,10 @@ def badge_disk_icon(badge_file, output_file):
+     rgbColorSpace = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB)
+ 
+     # Scale
+-    scale = 1.0
++    scale = 0.6
+ 
+-    # Perspective transform
+-    corners = ((0.2, 0.95), (0.8, 0.95), (0.85, 0.35), (0.15, 0.35))
++    # Top left, Top right, Bottom right, Bottom left
++    corners = ((0, 1), (1, 1), (1, 0), (0, 0))
+ 
+     # Translation
+     position = (0.5, 0.5)
+@@ -141,7 +141,7 @@ def badge_disk_icon(badge_file, output_file):
+         tfm = NSAffineTransform.transform()
+         tfm.translateXBy_yBy_(
+             math.floor((position[0] - 0.5 * scale) * width),
+-            math.floor((position[1] - 0.5 * scale) * height),
++            math.floor((position[1] - 0.4 * scale) * height),
+         )
+ 
+         transform.setValue_forKey_(out, kCIInputImageKey)
