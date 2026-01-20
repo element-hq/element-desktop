@@ -109,6 +109,10 @@ jobs:
               with:
                   python-version: "3.13"
 
+            # Install Quartz for DMG badges
+            # https://github.com/electron-userland/electron-builder/issues/9511#issuecomment-3774092888
+            - run: sudo pip3 install pyobjc-framework-Quartz
+
             - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
               with:
                   node-version-file: .node-version
