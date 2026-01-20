@@ -15,8 +15,11 @@ index acf576a..c434665 100644
          }))) || [],
      };
 +
-+    const badgeIcon = await packager.getResource(specification.badgeIcon);
-+    if (badgeIcon) {
++    if (specification.badgeIcon) {
++        let badgeIcon = await packager.getResource(specification.badgeIcon);
++        if (badgeIcon.toLowerCase().endsWith(".icon")) {
++            badgeIcon = await packager.generateIcnsFromIcon(badgeIcon)
++        }
 +        settings["badge-icon"] = badgeIcon;
 +        delete settings["icon"];
 +    }
