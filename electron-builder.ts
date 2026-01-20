@@ -162,6 +162,10 @@ const config: Omit<Writable<Configuration>, "electronFuses"> & {
         mergeASARs: true,
         x64ArchFiles: "**/matrix-seshat/*.node", // hak already runs lipo
     },
+    dmg: {
+        icon: "",
+        badgeIcon: "build/icon.icon",
+    },
     win: {
         target: ["squirrel", "msi"],
         signtoolOptions: {
