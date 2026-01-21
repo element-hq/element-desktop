@@ -121,7 +121,7 @@
         "atomically": "2.1.0",
         "@types/node": "18.19.130",
         "config-file-ts": "0.2.8-rc1",
-        "node-abi": "4.25.0",
+        "node-abi": "4.26.0",
         "@types/pg-pool": "2.0.7"
     }
 }
