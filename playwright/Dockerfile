@@ -1,8 +1,11 @@
-FROM mcr.microsoft.com/playwright:v1.55.0-jammy@sha256:55db7b712a981e9cc1ec757a4511cd01c5ed4e20bd7c84b2dee4e1d320102b9d
+FROM mcr.microsoft.com/playwright:v1.57.0-jammy@sha256:6aca677c27a967caf7673d108ac67ffaf8fed134f27e17b27a05464ca0ace831
 
 WORKDIR /work/element-desktop
 
-RUN apt-get update && apt-get -y install xvfb && apt-get purge -y --auto-remove && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get -y install xvfb dbus-x11 && apt-get purge -y --auto-remove && rm -rf /var/lib/apt/lists/*
+
+# Create node_modules & dist dirs so that the volumes have the correct permissions
+RUN mkdir node_modules dist && chown 1000:1000 node_modules dist
 
 USER 1000:1000
 

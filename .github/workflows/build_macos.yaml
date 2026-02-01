@@ -49,24 +49,48 @@ on:
                     The artifact can also contain any additional files which will be applied as overrides to the checkout root before building,
                     for example icons in the `build/` directory to override the app icons.
                 default: "webapp"
+            test:
+                type: boolean
+                required: false
+                default: true
+                description: "Whether to run the test stage after building"
+            test-args:
+                type: string
+                required: false
+                description: "Additional arguments to pass to playwright"
+            artifact-prefix:
+                type: string
+                required: false
+                description: "An optional prefix to add to the artifact name, useful for distinguishing builds in private repos."
+                default: ""
+            targets:
+                type: string
+                required: false
+                description: "List of targets to build"
+                default: "dmg zip"
 permissions: {} # No permissions required
 jobs:
     build:
-        runs-on: macos-14 # M1
+        name: Build macOS Universal
+        runs-on: macos-15 # M1
         environment: ${{ inputs.sign && 'packages.element.io' || '' }}
         steps:
-            - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+            - uses: maxim-lobanov/setup-xcode@60606e260d2fc5762a71e64e74b2174e8ea3c8bd # v1
+              with:
+                  xcode-version: latest-stable
+
+            - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
               with:
                   repository: element-hq/element-desktop
                   ref: ${{ inputs.ref }}
 
-            - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
+            - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
               with:
                   name: ${{ inputs.prepare-artifact-name }}
 
             - name: Cache .hak
               id: cache
-              uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4
+              uses: actions/cache@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v5
               with:
                   key: ${{ runner.os }}-${{ hashFiles('hakHash', 'electronVersion') }}
                   path: |
@@ -81,21 +105,21 @@ jobs:
                   rustup target add x86_64-apple-darwin
 
             # M1 macos-14 comes without Python preinstalled
-            - uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v6
+            - uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6
               with:
                   python-version: "3.13"
 
-            - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+            # Install Quartz for DMG badges
+            # https://github.com/electron-userland/electron-builder/issues/9511#issuecomment-3774092888
+            - run: sudo pip3 install pyobjc-framework-Quartz
+
+            - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
               with:
                   node-version-file: .node-version
                   cache: "yarn"
 
             - name: Install Deps
               run: "yarn install --frozen-lockfile"
-
-            # Python 3.12 drops distutils which keytar relies on
-            - name: Install setuptools
-              run: pip3 install setuptools
 
             - name: Build Natives
               if: steps.cache.outputs.cache-hit != 'true'
@@ -105,7 +129,7 @@ jobs:
             - name: "[Signed] Build App"
               if: inputs.sign != ''
               run: |
-                  yarn build:universal --publish never
+                  yarn build:universal --publish never -m ${{ inputs.targets }}
               env:
                   APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
                   APPLE_ID: ${{ secrets.APPLE_ID }}
@@ -127,7 +151,7 @@ jobs:
             - name: "[Unsigned] Build App"
               if: inputs.sign == ''
               run: |
-                  yarn build:universal --publish never
+                  yarn build:universal --publish never -m ${{ inputs.targets }}
               env:
                   CSC_IDENTITY_AUTO_DISCOVERY: false
                   VARIANT_PATH: variant.json
@@ -160,24 +184,32 @@ jobs:
 
             # We exclude mac-universal as the unpacked app takes forever to upload and zip and dmg already contains it
             - name: Upload Artifacts
-              uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+              uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
               with:
-                  name: macos
+                  name: ${{ inputs.artifact-prefix }}macos
                   path: |
                       dist
                       !dist/mac-universal/**
                   retention-days: 1
 
-            - name: Assert all required files are present
+            - name: Assert zip is present
+              if: contains(inputs.targets, 'zip')
               run: |
-                  test -f ./dist/Element*.dmg
                   test -f ./dist/Element*-mac.zip
 
+            - name: Assert dmg is present
+              if: contains(inputs.targets, 'dmg')
+              run: |
+                  test -f ./dist/Element*.dmg
+
     test:
+        name: Test macOS Universal
         needs: build
+        if: inputs.test && contains(inputs.targets, 'dmg')
         uses: ./.github/workflows/build_test.yaml
         with:
-            artifact: macos
+            project: macos
+            artifact: ${{ inputs.artifact-prefix }}macos
             runs-on: macos-14
             executable: /Users/runner/Applications/Element*.app/Contents/MacOS/Element*
             # We need to mount the DMG and copy the app to the Applications folder as a mounted DMG is
@@ -187,3 +219,4 @@ jobs:
                 rsync -a /Volumes/Element/Element*.app ~/Applications/ &&
                 hdiutil detach /Volumes/Element
             blob_report: ${{ inputs.blob_report }}
+            args: ${{ inputs.test-args }}

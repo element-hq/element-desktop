@@ -24,7 +24,6 @@ import {
 } from "electron";
 // eslint-disable-next-line n/file-extension-in-import
 import * as Sentry from "@sentry/electron/main";
-import AutoLaunch from "auto-launch";
 import path, { dirname } from "node:path";
 import windowStateKeeper from "electron-window-state";
 import fs, { promises as afs } from "node:fs";
@@ -169,59 +168,75 @@ function loadLocalConfigFile(): Json {
     }
 }
 
+let loadConfigPromise: Promise<void> | undefined;
 // Loads the config from asar, and applies a config.json from userData atop if one exists
-// Writes config to `global.vectorConfig`. Does nothing if `global.vectorConfig` is already set.
-async function loadConfig(): Promise<void> {
-    if (global.vectorConfig) return;
+// Writes config to `global.vectorConfig`. Idempotent, returns the same promise on subsequent calls.
+function loadConfig(): Promise<void> {
+    if (loadConfigPromise) return loadConfigPromise;
 
-    const asarPath = await getAsarPath();
+    async function actuallyLoadConfig(): Promise<void> {
+        const asarPath = await getAsarPath();
 
-    try {
-        console.log(`Loading app config: ${path.join(asarPath, LocalConfigFilename)}`);
-        global.vectorConfig = loadJsonFile(asarPath, LocalConfigFilename);
-    } catch {
-        // it would be nice to check the error code here and bail if the config
-        // is unparsable, but we get MODULE_NOT_FOUND in the case of a missing
-        // file or invalid json, so node is just very unhelpful.
-        // Continue with the defaults (ie. an empty config)
-        global.vectorConfig = {};
-    }
-
-    try {
-        // Load local config and use it to override values from the one baked with the build
-        const localConfig = loadLocalConfigFile();
-
-        // If the local config has a homeserver defined, don't use the homeserver from the build
-        // config. This is to avoid a problem where Riot thinks there are multiple homeservers
-        // defined, and panics as a result.
-        if (Object.keys(localConfig).find((k) => homeserverProps.includes(<any>k))) {
-            // Rip out all the homeserver options from the vector config
-            global.vectorConfig = Object.keys(global.vectorConfig)
-                .filter((k) => !homeserverProps.includes(<any>k))
-                .reduce(
-                    (obj, key) => {
-                        obj[key] = global.vectorConfig[key];
-                        return obj;
-                    },
-                    {} as Omit<Partial<(typeof global)["vectorConfig"]>, keyof typeof homeserverProps>,
-                );
+        try {
+            console.log(`Loading app config: ${path.join(asarPath, LocalConfigFilename)}`);
+            global.vectorConfig = loadJsonFile(asarPath, LocalConfigFilename);
+        } catch {
+            // it would be nice to check the error code here and bail if the config
+            // is unparsable, but we get MODULE_NOT_FOUND in the case of a missing
+            // file or invalid json, so node is just very unhelpful.
+            // Continue with the defaults (ie. an empty config)
+            global.vectorConfig = {};
         }
 
-        global.vectorConfig = Object.assign(global.vectorConfig, localConfig);
-    } catch (e) {
-        if (e instanceof SyntaxError) {
-            void dialog.showMessageBox({
-                type: "error",
-                title: `Your ${global.vectorConfig.brand || "Element"} is misconfigured`,
-                message:
-                    `Your custom ${global.vectorConfig.brand || "Element"} configuration contains invalid JSON. ` +
-                    `Please correct the problem and reopen ${global.vectorConfig.brand || "Element"}.`,
-                detail: e.message || "",
+        try {
+            // Load local config and use it to override values from the one baked with the build
+            const localConfig = loadLocalConfigFile();
+
+            // If the local config has a homeserver defined, don't use the homeserver from the build
+            // config. This is to avoid a problem where Riot thinks there are multiple homeservers
+            // defined, and panics as a result.
+            if (Object.keys(localConfig).find((k) => homeserverProps.includes(<any>k))) {
+                // Rip out all the homeserver options from the vector config
+                global.vectorConfig = Object.keys(global.vectorConfig)
+                    .filter((k) => !homeserverProps.includes(<any>k))
+                    .reduce(
+                        (obj, key) => {
+                            obj[key] = global.vectorConfig[key];
+                            return obj;
+                        },
+                        {} as Omit<Partial<(typeof global)["vectorConfig"]>, keyof typeof homeserverProps>,
+                    );
+            }
+
+            global.vectorConfig = Object.assign(global.vectorConfig, localConfig);
+        } catch (e) {
+            if (e instanceof SyntaxError) {
+                await app.whenReady();
+                void dialog.showMessageBox({
+                    type: "error",
+                    title: `Your ${global.vectorConfig.brand || "Element"} is misconfigured`,
+                    message:
+                        `Your custom ${global.vectorConfig.brand || "Element"} configuration contains invalid JSON. ` +
+                        `Please correct the problem and reopen ${global.vectorConfig.brand || "Element"}.`,
+                    detail: e.message || "",
+                });
+            }
+
+            // Could not load local config, this is expected in most cases.
+        }
+
+        // Tweak modules paths as they assume the root is at the same level as webapp, but for `vector://vector/webapp` it is not.
+        if (Array.isArray(global.vectorConfig.modules)) {
+            global.vectorConfig.modules = global.vectorConfig.modules.map((m) => {
+                if (m.startsWith("/")) {
+                    return "/webapp" + m;
+                }
+                return m;
             });
         }
-
-        // Could not load local config, this is expected in most cases.
     }
+    loadConfigPromise = actuallyLoadConfig();
+    return loadConfigPromise;
 }
 
 // Configure Electron Sentry and crashReporter using sentry.dsn in config.json if one is present.
@@ -239,7 +254,7 @@ async function configureSentry(): Promise<void> {
     }
 }
 
-// Set up globals for Tray and AutoLaunch
+// Set up globals for Tray
 async function setupGlobals(): Promise<void> {
     const asarPath = await getAsarPath();
     await loadConfig();
@@ -250,15 +265,6 @@ async function setupGlobals(): Promise<void> {
         icon_path: path.join(path.dirname(asarPath), "build", iconFile),
         brand: global.vectorConfig.brand || "Element",
     };
-
-    // launcher
-    global.launcher = new AutoLaunch({
-        name: global.vectorConfig.brand || "Element",
-        isHidden: true,
-        mac: {
-            useLaunchAgent: true,
-        },
-    });
 }
 
 global.appQuitting = false;
@@ -285,11 +291,6 @@ process.on("uncaughtException", function (error: Error): void {
 app.commandLine.appendSwitch("--enable-usermedia-screen-capturing");
 if (!app.commandLine.hasSwitch("enable-features")) {
     app.commandLine.appendSwitch("enable-features", "WebRTCPipeWireCapturer");
-}
-// Workaround bug in electron 36:https://github.com/electron/electron/issues/46538
-// Hopefully this will no longer be needed soon and can be removed
-if (process.platform === "linux") {
-    app.commandLine.appendSwitch("gtk-version", "3");
 }
 
 const gotLock = app.requestSingleInstanceLock();
@@ -503,11 +504,18 @@ app.on("ready", async () => {
     });
 
     global.mainWindow.webContents.on("before-input-event", (event: Event, input: Input): void => {
-        const shouldWarnBeforeExit = store.get("warnBeforeExit", true);
         const exitShortcutPressed =
             input.type === "keyDown" && exitShortcuts.some((shortcutFn) => shortcutFn(input, process.platform));
 
-        if (shouldWarnBeforeExit && exitShortcutPressed && global.mainWindow) {
+        // We only care about the exit shortcuts here
+        if (!exitShortcutPressed || !global.mainWindow) return;
+
+        // Prevent the default behaviour
+        event.preventDefault();
+
+        // Let's ask the user if they really want to exit the app
+        const shouldWarnBeforeExit = store.get("warnBeforeExit", true);
+        if (shouldWarnBeforeExit) {
             const shouldCancelCloseRequest =
                 dialog.showMessageBoxSync(global.mainWindow, {
                     type: "question",
@@ -521,11 +529,11 @@ app.on("ready", async () => {
                     defaultId: 1,
                     cancelId: 0,
                 }) === 0;
-
-            if (shouldCancelCloseRequest) {
-                event.preventDefault();
-            }
+            if (shouldCancelCloseRequest) return;
         }
+
+        // Exit the app
+        app.exit();
     });
 
     global.mainWindow.on("closed", () => {

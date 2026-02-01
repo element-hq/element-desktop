@@ -111,7 +111,7 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
             try {
                 ret = await store.getSecret(`${args[0]}|${args[1]}`);
             } catch {
-                // if an error is thrown (e.g. keytar can't connect to the keychain),
+                // if an error is thrown (e.g. we can't initialise safeStorage),
                 // then return null, which means the default pickle key will be used
                 ret = null;
             }
