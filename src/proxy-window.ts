@@ -21,6 +21,13 @@ function pickExisting(paths: string[]): string | null {
     return null;
 }
 
+/**
+ * Opens the native proxy settings window.
+ *
+ * If the window is already open, it will be brought to focus.
+ * Attempts to locate the necessary preload script and HTML asset from
+ * both source-relative paths (dev) and bundled paths (packaged app).
+ */
 export function createProxyWindow(): void {
     if (proxyWindow && !proxyWindow.isDestroyed()) {
         proxyWindow.focus();
@@ -31,10 +38,8 @@ export function createProxyWindow(): void {
     const preloadPath =
         pickExisting([
             path.join(__dirnameResolved, "proxy-preload.cjs"),
-            path.join(__dirnameResolved, "proxy-preload.js"),
             path.join(app.getAppPath(), "lib", "proxy-preload.cjs"),
-            path.join(app.getAppPath(), "lib", "proxy-preload.js"),
-        ]) ?? path.join(__dirnameResolved, "proxy-preload.js");
+        ]) ?? path.join(__dirnameResolved, "proxy-preload.cjs");
 
     const htmlPath =
         pickExisting([
