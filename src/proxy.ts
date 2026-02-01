@@ -13,13 +13,23 @@ Please see LICENSE files in the repository root for full details.
  * will silently no-op instead of throwing Electron lifecycle errors.
  */
 
+/**
+ * Describes the proxy configuration for the Electron session.
+ */
 export interface DesktopProxyConfig {
+    /** The rough mode of operation: system default, direct/none, or custom settings. */
     mode: "system" | "direct" | "custom";
+    /** The protocol scheme for the proxy server (e.g. socks5, https). */
     scheme?: "socks5" | "socks5h" | "http" | "https";
+    /** The hostname or IP of the proxy server. */
     host?: string;
+    /** The port number of the proxy server. */
     port?: number;
+    /** Optional username for authentication. */
     username?: string;
+    /** Optional password for authentication. */
     password?: string;
+    /** Comma or semicolon separated list of hosts to bypass proxy for. */
     bypass?: string; // comma or semicolon separated list
 }
 
@@ -31,6 +41,9 @@ type ElectronFixedConfig = {
 
 let lastApplied: DesktopProxyConfig | undefined;
 
+/**
+ * Retrieve the currently active proxy configuration.
+ */
 export function getLastAppliedConfig(): DesktopProxyConfig | undefined {
     return lastApplied;
 }
