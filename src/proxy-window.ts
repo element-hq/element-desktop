@@ -1,3 +1,10 @@
+/*
+Copyright 2026 New Vector Ltd.
+
+SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Commercial
+Please see LICENSE files in the repository root for full details.
+*/
+
 import { BrowserWindow, ipcMain, app } from "electron";
 import path from "node:path";
 import { pathToFileURL, fileURLToPath } from "node:url";
@@ -20,19 +27,20 @@ export function createProxyWindow(): void {
         return;
     }
 
-    // Prefer a CommonJS preload if present (robust across module configs)
-    const preloadPath = pickExisting([
-        path.join(__dirnameResolved, "proxy-preload.cjs"),
-        path.join(__dirnameResolved, "proxy-preload.js"),
-        path.join(app.getAppPath(), "lib", "proxy-preload.cjs"),
-        path.join(app.getAppPath(), "lib", "proxy-preload.js"),
-    ]) ?? path.join(__dirnameResolved, "proxy-preload.js");
+    // Prefer a CommonJS preload if present
+    const preloadPath =
+        pickExisting([
+            path.join(__dirnameResolved, "proxy-preload.cjs"),
+            path.join(__dirnameResolved, "proxy-preload.js"),
+            path.join(app.getAppPath(), "lib", "proxy-preload.cjs"),
+            path.join(app.getAppPath(), "lib", "proxy-preload.js"),
+        ]) ?? path.join(__dirnameResolved, "proxy-preload.js");
 
-    // Find the HTML in either compiled lib dir or alongside this file
-    const htmlPath = pickExisting([
-        path.join(__dirnameResolved, "proxy-window.html"),
-        path.join(app.getAppPath(), "lib", "proxy-window.html"),
-    ]) ?? path.join(__dirnameResolved, "proxy-window.html");
+    const htmlPath =
+        pickExisting([
+            path.join(__dirnameResolved, "proxy-window.html"),
+            path.join(app.getAppPath(), "lib", "proxy-window.html"),
+        ]) ?? path.join(__dirnameResolved, "proxy-window.html");
 
     proxyWindow = new BrowserWindow({
         width: 540,
@@ -54,18 +62,28 @@ export function createProxyWindow(): void {
         proxyWindow = null;
     });
 
-    proxyWindow
-        .loadURL(pathToFileURL(htmlPath).toString())
-        .catch((e) => {
-            console.error("Failed to load proxy window:", e);
-        });
+    proxyWindow.loadURL(pathToFileURL(htmlPath).toString()).catch((e: unknown) => {
+        console.error("Failed to load proxy window:", e);
+    });
 }
 
-// Register the close handler once
 if (!ipcMain.listenerCount("proxyWindowClose")) {
     ipcMain.on("proxyWindowClose", () => {
         if (proxyWindow && !proxyWindow.isDestroyed()) {
             proxyWindow.close();
+        }
+    });
+}
+if (!ipcMain.listenerCount("proxyWindowResize")) {
+    ipcMain.on("proxyWindowResize", (_event: unknown, width: number, height: number) => {
+        if (proxyWindow && !proxyWindow.isDestroyed()) {
+            try {
+                const w = Math.max(width, 400);
+                const h = Math.max(height, 200);
+                proxyWindow.setContentSize(w, h);
+            } catch (e) {
+                console.error("Failed to resize proxy window", e);
+            }
         }
     });
 }

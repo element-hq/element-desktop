@@ -11,7 +11,6 @@ import { app, shell, Menu, type MenuItem, type MenuItemConstructorOptions } from
 import { _t } from "./language-helper.js";
 import { createProxyWindow } from "./proxy-window.js";
 
-
 const isMac = process.platform === "darwin";
 
 export function buildMenuTemplate(): Menu {
@@ -108,6 +107,13 @@ export function buildMenuTemplate(): Menu {
                     role: "toggleDevTools",
                     label: _t("view_menu|toggle_developer_tools"),
                 },
+                { type: "separator" },
+                {
+                    label: "Proxy Settings…",
+                    click(): void {
+                        createProxyWindow();
+                    },
+                },
             ],
         },
         {
@@ -166,12 +172,6 @@ export function buildMenuTemplate(): Menu {
                     accelerator: "Command+,",
                     click(): void {
                         global.mainWindow?.webContents.send("preferences");
-                    },
-                },
-                {
-                    label: "Network Proxy…",
-                    click(): void {
-                        createProxyWindow();
                     },
                 },
                 { type: "separator" },
@@ -250,12 +250,6 @@ export function buildMenuTemplate(): Menu {
             label: _t("file_menu|label"),
             accelerator: "f",
             submenu: [
-                {
-                    label: "Network Proxy…",
-                    click(): void {
-                        createProxyWindow();
-                    },
-                },
                 // For some reason, 'about' does not seem to work on windows.
                 /*{
                     role: 'about',

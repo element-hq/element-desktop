@@ -6,6 +6,7 @@ Please see LICENSE files in the repository root for full details.
 */
 
 import { ipcMain } from "electron";
+
 import { applyProxyConfig, type DesktopProxyConfig } from "./proxy.js";
 import * as tray from "./tray.js";
 import Store from "./store.js";
@@ -90,18 +91,55 @@ const Settings: Record<string, Setting> = {
     },
     "desktopProxyConfig": {
         async read(): Promise<any> {
-            return Store.instance?.get("desktopProxyConfig") || { mode: "system" };
+            const config = (Store.instance?.get("desktopProxyConfig") || { mode: "system" }) as DesktopProxyConfig;
+            if (config.mode === "custom") {
+                try {
+                    const password = await Store.instance?.getSecret("proxy_password");
+                    if (password) {
+                        (config as DesktopProxyConfig).password = password;
+                    }
+                } catch (e) {
+                    console.error("Failed to read proxy password from secure storage:", e);
+                }
+            }
+            return config;
         },
         async write(value: any): Promise<void> {
-            // Basic guard/normalization
-            if (!value || !value.mode) value = { mode: "system" };
-            Store.instance?.set("desktopProxyConfig", value);
+            if (!value || typeof value !== "object") value = { mode: "system" };
+            if (!value.mode) value.mode = "system";
+
+            if (!["system", "direct", "custom"].includes(value.mode)) {
+                console.warn(`Invalid proxy mode ${value.mode}, falling back to system`);
+                value.mode = "system";
+            }
+
+            const configToSave = { ...value };
+
+            const password = configToSave.password;
+
+            delete configToSave.password;
+
+            Store.instance?.set("desktopProxyConfig", configToSave);
+
+            if (value.mode === "custom") {
+                try {
+                    if (password) {
+                        await Store.instance?.setSecret("proxy_password", password);
+                        value.password = password;
+                    } else {
+                        await Store.instance?.deleteSecret("proxy_password");
+                    }
+                } catch (e) {
+                    console.error("Failed to write proxy password to secure storage:", e);
+                }
+            }
+
             await applyProxyConfig(value as DesktopProxyConfig);
         },
         supported(): boolean {
             return true;
         },
-    }
+    },
 };
 
 ipcMain.handle("getSupportedSettings", async () => {
@@ -116,7 +154,6 @@ ipcMain.handle("setSettingValue", async (_ev, settingName: string, value: any) =
     if (!setting) {
         throw new Error(`Unknown setting: ${settingName}`);
     }
-    console.debug(`Writing setting value for: ${settingName} = ${value}`);
     await setting.write(value);
 });
 ipcMain.handle("getSettingValue", async (_ev, settingName: string) => {
@@ -125,17 +162,15 @@ ipcMain.handle("getSettingValue", async (_ev, settingName: string) => {
         throw new Error(`Unknown setting: ${settingName}`);
     }
     const value = await setting.read();
-    console.debug(`Reading setting value for: ${settingName} = ${value}`);
     return value;
 });
 
-(async () => {
+(async (): Promise<void> => {
     if (!process.versions.electron) return;
     const { app } = await import("electron");
     await app.whenReady();
     const storeAny = Store.instance as any;
     if (storeAny.readyPromise) await storeAny.readyPromise;
     const stored = Store.instance?.get("desktopProxyConfig") as Partial<DesktopProxyConfig> | undefined;
-    console.log("[proxy-debug] delayed initial stored:", stored);
     await applyProxyConfig(stored);
-  })();
+})();

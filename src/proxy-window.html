@@ -1,198 +1,378 @@
+<!--
+Copyright 2026 New Vector Ltd.
+
+SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Commercial
+Please see LICENSE files in the repository root for full details.
+-->
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Network Proxy</title>
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'unsafe-inline' 'self';">
-  <style>
-    body { font-family: system-ui, sans-serif; margin: 16px; }
-    fieldset { margin-bottom: 12px; }
-    label { display: block; margin: 6px 0 2px; }
-    input[type="text"], input[type="password"], input[type="number"], select { width: 100%; box-sizing: border-box; }
-    .row { display: flex; gap: 8px; }
-    .row > div { flex: 1; }
-    .actions { display: flex; gap: 8px; margin-top: 12px; }
-    #proxy-status { margin-top: 8px; min-height: 1.2em; }
-    .error { color: #b00020; }
-    .ok { color: #007a1a; }
-    .warn { color: #a67c00; font-size: 12px; margin-top: 8px; }
-  </style>
-</head>
-<body>
-  <h1>Network Proxy</h1>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Network Proxy</title>
+        <style>
+            :root {
+                --background: #ffffff;
+                --text-color: #17191c;
+                --input-bg: #ffffff;
+                --input-border: #e3e8f0;
+                --input-border-focus: #0dbd8b;
+                --button-bg: #f2f5f8;
+                --button-text: #17191c;
+                --primary-color: #0dbd8b;
+                --primary-text: #ffffff;
+                --danger-color: #ff5b55;
+                --font-family:
+                    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            }
 
-  <fieldset>
-    <legend>Mode</legend>
-    <label><input type="radio" name="mode" id="proxy-mode-system" value="system" checked> System</label>
-    <label><input type="radio" name="mode" id="proxy-mode-direct" value="direct"> Direct</label>
-    <label><input type="radio" name="mode" id="proxy-mode-custom" value="custom"> Custom</label>
-  </fieldset>
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --background: #15191e;
+                    --text-color: #ffffff;
+                    --input-bg: #21262c;
+                    --input-border: #5c6269;
+                    --button-bg: #21262c;
+                    --button-text: #ffffff;
+                }
+            }
 
-  <div id="custom-fields" style="display: none;">
-    <label for="proxy-scheme">Scheme</label>
-    <select id="proxy-scheme">
-      <option value="socks5">socks5</option>
-      <option value="socks5h">socks5h</option>
-      <option value="http">http</option>
-      <option value="https">https</option>
-    </select>
+            body {
+                font-family: var(--font-family);
+                margin: 0;
+                padding: 24px;
+                background-color: var(--background);
+                color: var(--text-color);
+                font-size: 14px;
+                line-height: 1.5;
+            }
 
-    <div class="row">
-      <div>
-        <label for="proxy-host">Host</label>
-        <input id="proxy-host" type="text" placeholder="localhost" />
-      </div>
-      <div>
-        <label for="proxy-port">Port</label>
-        <input id="proxy-port" type="number" min="1" max="65535" placeholder="9050" />
-      </div>
-    </div>
+            h1 {
+                font-size: 18px;
+                font-weight: 600;
+                margin: 0 0 24px 0;
+            }
 
-    <div class="row">
-      <div>
-        <label for="proxy-username">Username</label>
-        <input id="proxy-username" type="text" autocomplete="off" />
-      </div>
-      <div>
-        <label for="proxy-password">Password</label>
-        <input id="proxy-password" type="password" autocomplete="off" />
-      </div>
-    </div>
+            .section {
+                background: var(--input-bg);
+                border: 1px solid var(--input-border);
+                border-radius: 8px;
+                padding: 16px;
+                margin-bottom: 16px;
+            }
 
-    <label for="proxy-bypass">Bypass list (comma or semicolon separated)</label>
-    <input id="proxy-bypass" type="text" placeholder="localhost, 127.0.0.1, *.corp.example" />
-  </div>
+            .section-title {
+                font-weight: 600;
+                margin-bottom: 12px;
+                display: block;
+            }
 
-  <div class="warn">
-    Warning: proxy credentials are stored locally in plaintext. Do not use sensitive passwords.
-  </div>
+            label.radio-option {
+                display: flex;
+                align-items: center;
+                margin-bottom: 8px;
+                cursor: pointer;
+            }
 
-  <div class="actions">
-    <button id="proxy-save">Save</button>
-    <button id="proxy-reset">Reset to System</button>
-    <button id="proxy-close">Close</button>
-  </div>
+            label.radio-option input {
+                margin-right: 12px;
+                accent-color: var(--primary-color);
+            }
 
-  <div id="proxy-status" aria-live="polite"></div>
+            label.field-label {
+                display: block;
+                margin-bottom: 6px;
+                font-weight: 500;
+                font-size: 12px;
+                color: var(--text-color);
+                opacity: 0.8;
+            }
 
-  <script>
-    // Gracefully handle missing preload (proxyApi undefined) so the window still renders.
-    const api = (window && window.proxyApi) ? window.proxyApi : null;
+            input[type="text"],
+            input[type="password"],
+            input[type="number"],
+            select {
+                width: 100%;
+                box-sizing: border-box;
+                padding: 10px;
+                border-radius: 4px;
+                border: 1px solid var(--input-border);
+                background-color: var(--input-bg);
+                color: var(--text-color);
+                font-family: inherit;
+                font-size: 14px;
+                outline: none;
+                transition: border-color 0.2s;
+            }
 
-    const el = (id) => document.getElementById(id);
-    const status = el('proxy-status');
-    const customFields = el('custom-fields');
+            input:focus,
+            select:focus {
+                border-color: var(--primary-color);
+            }
 
-    function setStatus(msg, cls) {
-      status.textContent = msg || '';
-      status.className = cls || '';
-    }
+            .row {
+                display: flex;
+                gap: 16px;
+                margin-bottom: 12px;
+            }
 
-    function getMode() {
-      if (el('proxy-mode-custom').checked) return 'custom';
-      if (el('proxy-mode-direct').checked) return 'direct';
-      return 'system';
-    }
+            .row > div {
+                flex: 1;
+            }
 
-    function applyModeUI() {
-      customFields.style.display = (getMode() === 'custom') ? '' : 'none';
-    }
+            .actions {
+                display: flex;
+                justify-content: flex-end;
+                gap: 12px;
+                margin-top: 24px;
+            }
 
-    function fillForm(cfg) {
-      if (!cfg) return;
-      const mode = cfg.mode || 'system';
-      el('proxy-mode-system').checked = mode === 'system';
-      el('proxy-mode-direct').checked = mode === 'direct';
-      el('proxy-mode-custom').checked = mode === 'custom';
-      el('proxy-scheme').value = cfg.scheme || 'http';
-      el('proxy-host').value = cfg.host || '';
-      el('proxy-port').value = (cfg.port != null) ? String(cfg.port) : '';
-      el('proxy-username').value = cfg.username || '';
-      el('proxy-password').value = cfg.password || '';
-      el('proxy-bypass').value = cfg.bypass || '';
-      applyModeUI();
-    }
+            button {
+                padding: 10px 24px;
+                border-radius: 20px;
+                font-weight: 600;
+                cursor: pointer;
+                border: none;
+                font-size: 14px;
+                transition: opacity 0.2s;
+            }
 
-    function readForm() {
-      const mode = getMode();
-      if (mode !== 'custom') return { mode };
-      const host = el('proxy-host').value.trim();
-      const portStr = el('proxy-port').value.trim();
-      const port = Number(portStr);
-      const scheme = el('proxy-scheme').value;
-      const username = el('proxy-username').value;
-      const password = el('proxy-password').value;
-      const bypass = el('proxy-bypass').value;
+            button:hover {
+                opacity: 0.9;
+            }
 
-      if (!host || !portStr) {
-        throw new Error('Host and port are required for custom proxy.');
-      }
-      if (!Number.isInteger(port) || port < 1 || port > 65535) {
-        throw new Error('Port must be an integer between 1 and 65535.');
-      }
-      return { mode, scheme, host, port, username, password, bypass };
-    }
+            button.secondary {
+                background-color: transparent;
+                border: 1px solid var(--input-border);
+                color: var(--button-text);
+            }
 
-    function init() {
-      el('proxy-mode-system').addEventListener('change', applyModeUI);
-      el('proxy-mode-direct').addEventListener('change', applyModeUI);
-      el('proxy-mode-custom').addEventListener('change', applyModeUI);
+            button.primary {
+                background-color: var(--primary-color);
+                color: var(--primary-text);
+            }
 
-      el('proxy-close').addEventListener('click', () => {
-        api?.closeWindow?.();
-        window.close(); // fallback if preload missing
-      });
+            #proxy-status {
+                margin-top: 12px;
+                font-size: 13px;
+                opacity: 0;
+                transition: opacity 0.3s;
+            }
+            #proxy-status.visible {
+                opacity: 1;
+            }
 
-      el('proxy-reset').addEventListener('click', async () => {
-        if (!api?.saveProxyConfig) {
-          setStatus('Preload not available; cannot write settings.', 'error');
-          return;
-        }
-        const res = await api.saveProxyConfig({ mode: 'system' });
-        if (res.ok) {
-          fillForm({ mode: 'system' });
-          setStatus('Proxy reset to System.', 'ok');
-        } else {
-          setStatus('Failed to reset: ' + (res.error || 'unknown error'), 'error');
-        }
-      });
+            .ok {
+                color: var(--primary-color);
+            }
+            .error {
+                color: var(--danger-color);
+            }
 
-      el('proxy-save').addEventListener('click', async () => {
-        let cfg;
-        try {
-          cfg = readForm();
-        } catch (e) {
-          setStatus(e.message || String(e), 'error');
-          return;
-        }
-        if (!api?.saveProxyConfig) {
-          setStatus('Preload not available; cannot save settings.', 'error');
-          return;
-        }
-        const res = await api.saveProxyConfig(cfg);
-        if (res.ok) {
-          setStatus('Saved.', 'ok');
-        } else {
-          setStatus('Failed to save: ' + (res.error || 'unknown error'), 'error');
-        }
-      });
+            .helper-text {
+                font-size: 12px;
+                opacity: 0.6;
+                margin-top: 4px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Network Proxy</h1>
 
-      if (!api?.getProxyConfig) {
-        setStatus('Preload not available; settings cannot be read or saved.', 'error');
-        return;
-      }
+        <div class="section">
+            <span class="section-title">Connection Mode</span>
+            <label class="radio-option"
+                ><input type="radio" name="mode" id="proxy-mode-system" value="system" checked /> Use system proxy
+                settings</label
+            >
+            <label class="radio-option"
+                ><input type="radio" name="mode" id="proxy-mode-direct" value="direct" /> No proxy (direct
+                connection)</label
+            >
+            <label class="radio-option"
+                ><input type="radio" name="mode" id="proxy-mode-custom" value="custom" /> Manual configuration</label
+            >
+        </div>
 
-      api.getProxyConfig()
-        .then(cfg => {
-          fillForm(cfg || { mode: 'system' });
-          setStatus('', '');
-        })
-        .catch(err => {
-          setStatus('Failed to load settings: ' + (err?.message || String(err)), 'error');
-        });
-    }
+        <div id="custom-fields" style="display: none">
+            <div class="section">
+                <span class="section-title">Server Configuration</span>
 
-    document.addEventListener('DOMContentLoaded', init);
-  </script>
-</body>
+                <div style="margin-bottom: 12px">
+                    <label class="field-label" for="proxy-scheme">Protocol</label>
+                    <select id="proxy-scheme">
+                        <option value="http">HTTP</option>
+                        <option value="https">HTTPS</option>
+                        <option value="socks5">SOCKSv5</option>
+                        <option value="socks5h">SOCKSv5 (DNS remote)</option>
+                    </select>
+                </div>
+
+                <div class="row">
+                    <div style="flex: 2">
+                        <label class="field-label" for="proxy-host">Host</label>
+                        <input id="proxy-host" type="text" placeholder="e.g. proxy.example.com" />
+                    </div>
+                    <div>
+                        <label class="field-label" for="proxy-port">Port</label>
+                        <input id="proxy-port" type="number" min="1" max="65535" placeholder="8080" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <span class="section-title">Authentication (Optional)</span>
+                <div class="row">
+                    <div>
+                        <label class="field-label" for="proxy-username">Username</label>
+                        <input id="proxy-username" type="text" autocomplete="off" />
+                    </div>
+                    <div>
+                        <label class="field-label" for="proxy-password">Password</label>
+                        <input id="proxy-password" type="password" autocomplete="off" />
+                    </div>
+                </div>
+                <div class="helper-text">Passwords are stored securely in the system keychain.</div>
+            </div>
+
+            <div class="section">
+                <span class="section-title">Bypass</span>
+                <label class="field-label" for="proxy-bypass">Addresses to bypass proxy</label>
+                <input id="proxy-bypass" type="text" placeholder="localhost, 127.0.0.1, *.local" />
+                <div class="helper-text">Separate multiple entries with commas.</div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button id="proxy-close" class="secondary">Cancel</button>
+            <button id="proxy-save" class="primary">Save Changes</button>
+        </div>
+
+        <div id="proxy-status"></div>
+
+        <script>
+            const api = window && window.proxyApi ? window.proxyApi : null;
+
+            const el = (id) => document.getElementById(id);
+            const status = el("proxy-status");
+            const customFields = el("custom-fields");
+
+            function setStatus(msg, cls) {
+                status.textContent = msg || "";
+                status.className = cls || "";
+                status.classList.add("visible");
+            }
+
+            function getMode() {
+                if (el("proxy-mode-custom").checked) return "custom";
+                if (el("proxy-mode-direct").checked) return "direct";
+                return "system";
+            }
+
+            function applyModeUI() {
+                const mode = getMode();
+                customFields.style.display = mode === "custom" ? "block" : "none";
+                if (window.resizeToContent) setTimeout(window.resizeToContent, 10);
+            }
+
+            function fillForm(cfg) {
+                if (!cfg) return;
+                const mode = cfg.mode || "system";
+                el("proxy-mode-system").checked = mode === "system";
+                el("proxy-mode-direct").checked = mode === "direct";
+                el("proxy-mode-custom").checked = mode === "custom";
+                el("proxy-scheme").value = cfg.scheme || "http";
+                el("proxy-host").value = cfg.host || "";
+                el("proxy-port").value = cfg.port != null ? String(cfg.port) : "";
+                el("proxy-username").value = cfg.username || "";
+                el("proxy-password").value = cfg.password || "";
+                el("proxy-bypass").value = cfg.bypass || "";
+                applyModeUI();
+            }
+
+            function readForm() {
+                const mode = getMode();
+                if (mode !== "custom") return { mode };
+                const host = el("proxy-host").value.trim();
+                const portStr = el("proxy-port").value.trim();
+                const port = Number(portStr);
+                const scheme = el("proxy-scheme").value;
+                const username = el("proxy-username").value;
+                const password = el("proxy-password").value;
+                const bypass = el("proxy-bypass").value;
+
+                if (!host || !portStr) {
+                    throw new Error("Host and port are required.");
+                }
+                if (!Number.isInteger(port) || port < 1 || port > 65535) {
+                    throw new Error("Invalid port number.");
+                }
+                return { mode, scheme, host, port, username, password, bypass };
+            }
+
+            function init() {
+                window.resizeToContent = () => {
+                    if (api?.resizeWindow) {
+                        const height = document.body.offsetHeight;
+                        const width = 540;
+                        api.resizeWindow(width, height);
+                    }
+                };
+
+                const resizeObserver = new ResizeObserver(() => {
+                    window.resizeToContent();
+                });
+                resizeObserver.observe(document.body);
+
+                el("proxy-mode-system").addEventListener("change", applyModeUI);
+                el("proxy-mode-direct").addEventListener("change", applyModeUI);
+                el("proxy-mode-custom").addEventListener("change", applyModeUI);
+
+                el("proxy-close").addEventListener("click", () => {
+                    api?.closeWindow?.();
+                    window.close();
+                });
+
+                el("proxy-save").addEventListener("click", async () => {
+                    let cfg;
+                    try {
+                        cfg = readForm();
+                    } catch (e) {
+                        setStatus(e.message || String(e), "error");
+                        return;
+                    }
+                    if (!api?.saveProxyConfig) {
+                        setStatus("Cannot save settings (API missing).", "error");
+                        return;
+                    }
+
+                    setStatus("Saving...", "");
+                    const res = await api.saveProxyConfig(cfg);
+                    if (res.ok) {
+                        setStatus("Settings saved successfully.", "ok");
+                        setTimeout(() => {
+                            api?.closeWindow?.();
+                            window.close();
+                        }, 800);
+                    } else {
+                        setStatus("Failed to save: " + (res.error || "unknown"), "error");
+                    }
+                });
+
+                if (!api?.getProxyConfig) {
+                    setStatus("Settings API unavailable.", "error");
+                    return;
+                }
+
+                api.getProxyConfig()
+                    .then((cfg) => {
+                        fillForm(cfg || { mode: "system" });
+                    })
+                    .catch((err) => {
+                        setStatus("Failed to load settings.", "error");
+                    });
+            }
+
+            document.addEventListener("DOMContentLoaded", init);
+        </script>
+    </body>
 </html>

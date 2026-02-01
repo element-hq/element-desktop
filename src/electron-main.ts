@@ -46,11 +46,23 @@ import { setupMacosTitleBar } from "./macos-titlebar.js";
 import { type Json, loadJsonFile } from "./utils.js";
 import { setupMediaAuth } from "./media-auth.js";
 import { readBuildConfig } from "./build-config.js";
+import { getLastAppliedConfig } from "./proxy.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const argv = minimist(process.argv, {
     alias: { help: "h" },
+});
+
+app.on("login", (event, _webContents, _request, authInfo, callback) => {
+    if (authInfo.isProxy) {
+        const proxyConfig = getLastAppliedConfig();
+        if (proxyConfig && proxyConfig.mode === "custom" && proxyConfig.username && proxyConfig.password) {
+            event.preventDefault();
+            callback(proxyConfig.username, proxyConfig.password);
+            console.log(`[proxy] Authenticating to ${authInfo.host}:${authInfo.port}`);
+        }
+    }
 });
 
 if (argv["help"]) {

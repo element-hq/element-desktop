@@ -79,3 +79,16 @@ INCLUDE_LANGS.forEach((file): void => {
 if (watch) {
     INCLUDE_LANGS.forEach((file) => watchLanguage(I18N_BASE_PATH + file, I18N_DEST));
 }
+
+// Copy proxy window resources
+const PROXY_RESOURCES = ["proxy-window.html", "proxy-preload.cjs"];
+PROXY_RESOURCES.forEach((file) => {
+    fs.copyFileSync(path.join("src", file), path.join("lib", file));
+});
+if (watch) {
+    PROXY_RESOURCES.forEach((file) => {
+        chokidar.watch(path.join("src", file)).on("all", () => {
+            fs.copyFileSync(path.join("src", file), path.join("lib", file));
+        });
+    });
+}

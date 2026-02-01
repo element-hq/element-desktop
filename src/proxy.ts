@@ -7,8 +7,8 @@
  */
 
 export interface DesktopProxyConfig {
-    mode: 'system' | 'direct' | 'custom';
-    scheme?: 'socks5' | 'socks5h' | 'http' | 'https';
+    mode: "system" | "direct" | "custom";
+    scheme?: "socks5" | "socks5h" | "http" | "https";
     host?: string;
     port?: number;
     username?: string;
@@ -17,12 +17,16 @@ export interface DesktopProxyConfig {
 }
 
 type ElectronFixedConfig = {
-    mode: 'system' | 'direct' | 'fixed_servers';
+    mode: "system" | "direct" | "fixed_servers";
     proxyRules?: string;
     proxyBypassRules?: string;
 };
 
 let lastApplied: DesktopProxyConfig | undefined;
+
+export function getLastAppliedConfig(): DesktopProxyConfig | undefined {
+    return lastApplied;
+}
 
 /**
  * Apply the given proxy configuration.
@@ -34,7 +38,7 @@ export async function applyProxyConfig(config?: Partial<DesktopProxyConfig>): Pr
     try {
         if (!config) {
             // Nothing to do (treat as system default).
-            config = { mode: 'system' };
+            config = { mode: "system" };
         }
 
         // Not an Electron runtime (e.g. node/tsx script) -> ignore silently.
@@ -43,7 +47,7 @@ export async function applyProxyConfig(config?: Partial<DesktopProxyConfig>): Pr
         }
 
         // Dynamically import only after confirming Electron environment.
-        const { app, session } = await import('electron');
+        const { app, session } = await import("electron");
 
         if (!app.isReady()) {
             // Wait until ready; this covers early invocations from main process bootstrap.
@@ -58,82 +62,67 @@ export async function applyProxyConfig(config?: Partial<DesktopProxyConfig>): Pr
             return;
         }
 
-        const masked = maskForLog(electronCfg.proxyRules);
-        console.log('[proxy] Applying proxy config:',
-            JSON.stringify({
-                mode: electronCfg.mode,
-                proxyRules: masked,
-                proxyBypassRules: electronCfg.proxyBypassRules ?? undefined,
-            })
-        );
-
         await session.defaultSession.setProxy(electronCfg as any);
         lastApplied = normalized;
     } catch (err) {
-        console.error('Failed to apply proxy config:', err);
+        console.error("Failed to apply proxy config:", err);
     }
 }
 
 function normalizeConfig(cfg: Partial<DesktopProxyConfig>): DesktopProxyConfig {
-    if (cfg.mode === 'custom') {
+    if (cfg.mode === "custom") {
         return {
-            mode: 'custom',
-            scheme: cfg.scheme || 'http',
-            host: cfg.host || '',
+            mode: "custom",
+            scheme: cfg.scheme || "http",
+            host: cfg.host || "",
             port: cfg.port,
             username: cfg.username,
             password: cfg.password,
             bypass: cfg.bypass,
         };
     }
-    if (cfg.mode === 'direct') {
-        return { mode: 'direct' };
+    if (cfg.mode === "direct") {
+        return { mode: "direct" };
     }
-    return { mode: 'system' };
+    return { mode: "system" };
 }
 
 function toElectronProxyConfig(cfg: DesktopProxyConfig): ElectronFixedConfig {
-    if (cfg.mode === 'system') {
-        return { mode: 'system' };
+    if (cfg.mode === "system") {
+        return { mode: "system" };
     }
-    if (cfg.mode === 'direct') {
-        return { mode: 'direct' };
+    if (cfg.mode === "direct") {
+        return { mode: "direct" };
     }
     // custom
     const parts: string[] = [];
     if (cfg.host && cfg.port) {
-        let auth = '';
+        let auth = "";
         if (cfg.username) {
             auth = encodeURIComponent(cfg.username);
             if (cfg.password) {
-                auth += ':' + encodeURIComponent(cfg.password);
+                auth += ":" + encodeURIComponent(cfg.password);
             }
-            auth += '@';
+            auth += "@";
         }
         // Build rule like: scheme=scheme://authhost:port
         // Electron accepts a single URL or comma-separated protocol=... pairs.
-        const scheme = cfg.scheme || 'http';
+        const scheme = cfg.scheme || "http";
         parts.push(`${scheme}=${scheme}://${auth}${cfg.host}:${cfg.port}`);
     }
 
-    const proxyRules = parts.join(',');
-    const proxyBypassRules = (cfg.bypass || '')
+    const proxyRules = parts.join(",");
+    const proxyBypassRules = (cfg.bypass || "")
         .split(/[,;]/)
-        .map(s => s.trim())
+        .map((s) => s.trim())
         .filter(Boolean)
-        .join(',');
+        .join(",");
 
     return {
-        mode: 'fixed_servers',
+        mode: "fixed_servers",
         proxyRules: proxyRules || undefined,
         proxyBypassRules: proxyBypassRules || undefined,
     };
-}
-
-function maskForLog(proxyRules?: string): string | undefined {
-    if (!proxyRules) return proxyRules;
-    // mask anything that looks like username:password@ inside URL authority
-    return proxyRules.replace(/:\/\/([^:@\/]+):[^@\/]*@/g, (_m, user) => `://${user}:******@`);
 }
 
 function shallowEqual(a: DesktopProxyConfig, b: DesktopProxyConfig): boolean {
