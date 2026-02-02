@@ -81,7 +81,7 @@ if (watch) {
 }
 
 // Copy proxy window resources
-const PROXY_RESOURCES = ["proxy-window.html", "proxy-preload.cjs"];
+const PROXY_RESOURCES = ["proxy-window.html"];
 PROXY_RESOURCES.forEach((file) => {
     fs.copyFileSync(path.join("src", file), path.join("lib", file));
 });
