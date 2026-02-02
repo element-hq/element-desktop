@@ -18,6 +18,10 @@ async function saveSetting(value: DesktopProxyConfig): Promise<void> {
     return ipcRenderer.invoke("setSettingValue", SETTING_KEY, value);
 }
 
+async function getStrings(): Promise<Record<string, string>> {
+    return ipcRenderer.invoke("getProxyStrings");
+}
+
 contextBridge.exposeInMainWorld("proxyApi", {
     getProxyConfig: async () => getSetting(),
     saveProxyConfig: async (cfg: DesktopProxyConfig) => {
@@ -28,6 +32,7 @@ contextBridge.exposeInMainWorld("proxyApi", {
             return { ok: false, error: e?.message || String(e) };
         }
     },
+    getStrings: async () => getStrings(),
     closeWindow: () => {
         ipcRenderer.send("proxyWindowClose");
     },

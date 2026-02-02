@@ -173,32 +173,39 @@ Please see LICENSE files in the repository root for full details.
                 opacity: 0.6;
                 margin-top: 4px;
             }
+
+            .warning-text {
+                margin-top: 16px;
+                font-size: 12px;
+                opacity: 0.7;
+                text-align: center;
+                font-style: italic;
+            }
         </style>
     </head>
     <body>
-        <h1>Network Proxy</h1>
+        <h1 id="t-title">Network Proxy</h1>
 
         <div class="section">
-            <span class="section-title">Connection Mode</span>
-            <label class="radio-option"
-                ><input type="radio" name="mode" id="proxy-mode-system" value="system" checked /> Use system proxy
-                settings</label
-            >
-            <label class="radio-option"
-                ><input type="radio" name="mode" id="proxy-mode-direct" value="direct" /> No proxy (direct
-                connection)</label
-            >
-            <label class="radio-option"
-                ><input type="radio" name="mode" id="proxy-mode-custom" value="custom" /> Manual configuration</label
-            >
+            <span class="section-title" id="t-mode-title">Connection Mode</span>
+            <label class="radio-option">
+                <input type="radio" name="mode" id="proxy-mode-system" value="system" />
+                <span id="t-mode-system">Use system proxy settings</span>
+            </label>
+            <label class="radio-option">
+                <input type="radio" name="mode" id="proxy-mode-direct" value="direct" />
+                <span id="t-mode-direct">No proxy (direct connection)</span>
+            </label>
+            <label class="radio-option">
+                <input type="radio" name="mode" id="proxy-mode-custom" value="custom" />
+                <span id="t-mode-custom">Manual configuration</span>
+            </label>
         </div>
 
         <div id="custom-fields" style="display: none">
             <div class="section">
-                <span class="section-title">Server Configuration</span>
-
                 <div style="margin-bottom: 12px">
-                    <label class="field-label" for="proxy-scheme">Protocol</label>
+                    <label class="field-label" for="proxy-scheme" id="t-protocol">Protocol</label>
                     <select id="proxy-scheme">
                         <option value="http">HTTP</option>
                         <option value="https">HTTPS</option>
@@ -209,36 +216,33 @@ Please see LICENSE files in the repository root for full details.
 
                 <div class="row">
                     <div style="flex: 2">
-                        <label class="field-label" for="proxy-host">Host</label>
-                        <input id="proxy-host" type="text" placeholder="e.g. proxy.example.com" />
+                        <label class="field-label" for="proxy-host" id="t-host">Proxy Host</label>
+                        <input id="proxy-host" type="text" placeholder="" />
                     </div>
                     <div>
-                        <label class="field-label" for="proxy-port">Port</label>
-                        <input id="proxy-port" type="number" min="1" max="65535" placeholder="8080" />
+                        <label class="field-label" for="proxy-port" id="t-port">Port</label>
+                        <input id="proxy-port" type="number" min="1" max="65535" placeholder="" />
                     </div>
                 </div>
             </div>
 
             <div class="section">
-                <span class="section-title">Authentication (Optional)</span>
                 <div class="row">
                     <div>
-                        <label class="field-label" for="proxy-username">Username</label>
+                        <label class="field-label" for="proxy-username" id="t-username">Username</label>
                         <input id="proxy-username" type="text" autocomplete="off" />
                     </div>
                     <div>
-                        <label class="field-label" for="proxy-password">Password</label>
+                        <label class="field-label" for="proxy-password" id="t-password">Password</label>
                         <input id="proxy-password" type="password" autocomplete="off" />
                     </div>
                 </div>
-                <div class="helper-text">Passwords are stored securely in the system keychain.</div>
+                <div class="helper-text" id="t-password-help">Configuration is encrypted using the system's secure storage.</div>
             </div>
 
             <div class="section">
-                <span class="section-title">Bypass</span>
-                <label class="field-label" for="proxy-bypass">Addresses to bypass proxy</label>
-                <input id="proxy-bypass" type="text" placeholder="localhost, 127.0.0.1, *.local" />
-                <div class="helper-text">Separate multiple entries with commas.</div>
+                <label class="field-label" for="proxy-bypass" id="t-bypass">No Proxy For</label>
+                <input id="proxy-bypass" type="text" placeholder="" />
             </div>
         </div>
 
@@ -248,6 +252,7 @@ Please see LICENSE files in the repository root for full details.
         </div>
 
         <div id="proxy-status"></div>
+        <div class="warning-text" id="t-updates-warning"></div>
 
         <script>
             const api = window && window.proxyApi ? window.proxyApi : null;
@@ -309,6 +314,33 @@ Please see LICENSE files in the repository root for full details.
                 return { mode, scheme, host, port, username, password, bypass };
             }
 
+            function applyStrings(strings) {
+                if (!strings) return;
+                const setText = (id, val) => {
+                    const e = el(id);
+                    if (e && val) e.textContent = val;
+                };
+
+                setText("t-title", strings.title);
+                document.title = strings.title || "Network Proxy";
+                
+                setText("t-mode-system", strings.mode_system);
+                setText("t-mode-direct", strings.mode_direct);
+                setText("t-mode-custom", strings.mode_custom);
+
+                setText("t-protocol", strings.protocol);
+                setText("t-host", strings.host);
+                setText("t-port", strings.port);
+                setText("t-bypass", strings.bypass);
+                setText("t-username", strings.username);
+                setText("t-password", strings.password);
+                setText("t-password-help", strings.password_help);
+                setText("t-updates-warning", strings.updates_warning);
+
+                setText("proxy-close", strings.cancel);
+                setText("proxy-save", strings.save);
+            }
+
             function init() {
                 window.resizeToContent = () => {
                     if (api?.resizeWindow) {
@@ -358,18 +390,22 @@ Please see LICENSE files in the repository root for full details.
                     }
                 });
 
-                if (!api?.getProxyConfig) {
-                    setStatus("Settings API unavailable.", "error");
-                    return;
+                if (!api) {
+                     setStatus("API not found", "error");
+                     return;
                 }
-
-                api.getProxyConfig()
-                    .then((cfg) => {
-                        fillForm(cfg || { mode: "system" });
-                    })
-                    .catch((err) => {
-                        setStatus("Failed to load settings.", "error");
-                    });
+                
+                // Fetch strings and config
+                Promise.all([
+                    api.getStrings ? api.getStrings() : Promise.resolve(null),
+                    api.getProxyConfig ? api.getProxyConfig() : Promise.resolve(null)
+                ]).then(([strings, cfg]) => {
+                    if (strings) applyStrings(strings);
+                    fillForm(cfg || { mode: "system" });
+                }).catch(err => {
+                    console.error(err);
+                    setStatus("Failed to load settings.", "error");
+                })
             }
 
             document.addEventListener("DOMContentLoaded", init);

@@ -10,6 +10,8 @@ import path from "node:path";
 import { pathToFileURL, fileURLToPath } from "node:url";
 import fs from "node:fs";
 
+import { _t } from "./language-helper.js";
+
 let proxyWindow: BrowserWindow | null = null;
 
 const __dirnameResolved = path.dirname(fileURLToPath(import.meta.url));
@@ -79,6 +81,28 @@ if (!ipcMain.listenerCount("proxyWindowClose")) {
         }
     });
 }
+
+// Handler for fetching localized strings
+ipcMain.handle("getProxyStrings", () => {
+    return {
+        title: _t("proxy|title"),
+        mode_system: _t("proxy|mode_system"),
+        mode_direct: _t("proxy|mode_direct"),
+        mode_custom: _t("proxy|mode_custom"),
+        protocol: _t("proxy|protocol"),
+        host: _t("proxy|host"),
+        port: _t("proxy|port"),
+        bypass: _t("proxy|bypass"),
+        username: _t("proxy|username"),
+        password: _t("proxy|password"),
+        password_help: _t("proxy|password_help"),
+        updates_warning: _t("proxy|updates_warning"),
+        save: _t("proxy|save"),
+        cancel: _t("proxy|cancel"),
+        close: _t("proxy|close"),
+    };
+});
+
 if (!ipcMain.listenerCount("proxyWindowResize")) {
     ipcMain.on("proxyWindowResize", (_event: unknown, width: number, height: number) => {
         if (proxyWindow && !proxyWindow.isDestroyed()) {

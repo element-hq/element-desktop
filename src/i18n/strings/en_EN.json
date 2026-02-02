@@ -63,6 +63,23 @@
         "save_image_as_error_description": "The image failed to save",
         "save_image_as_error_title": "Failed to save image"
     },
+    "proxy": {
+        "bypass": "No proxy for (comma separated)",
+        "cancel": "Cancel",
+        "close": "Close",
+        "host": "Proxy Host",
+        "mode_custom": "Manual configuration",
+        "mode_direct": "No proxy (direct connection)",
+        "mode_system": "Use system proxy settings",
+        "password": "Password",
+        "password_help": "Configuration is encrypted using the system's secure storage.",
+        "port": "Port",
+        "protocol": "Protocol",
+        "save": "Save",
+        "title": "Network Proxy",
+        "updates_warning": "Note: These settings may not apply to application updates.",
+        "username": "Username"
+    },
     "store": {
         "error": {
             "backend_changed": "Clear data and reload?",
