@@ -9,7 +9,6 @@ Please see LICENSE files in the repository root for full details.
 import { app, shell, Menu, type MenuItem, type MenuItemConstructorOptions } from "electron";
 
 import { _t } from "./language-helper.js";
-import { createProxyWindow } from "./proxy-window.js";
 
 const isMac = process.platform === "darwin";
 
@@ -106,13 +105,6 @@ export function buildMenuTemplate(): Menu {
                 {
                     role: "toggleDevTools",
                     label: _t("view_menu|toggle_developer_tools"),
-                },
-                { type: "separator" },
-                {
-                    label: "Proxy Settings…",
-                    click(): void {
-                        createProxyWindow();
-                    },
                 },
             ],
         },
