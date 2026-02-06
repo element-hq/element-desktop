@@ -79,7 +79,7 @@ This is also needed to when pulling in changes to Seshat using `pnpm link`.
 Recompiling Seshat itself can be done like so:
 
     ELECTRON_VERSION=$(electron --version)
-    pnpm run electron-build-env -- --electron ${ELECTRON_VERSION#v} -- neon build matrix-seshat --release
+    pnpm electron-build-env -- --electron ${ELECTRON_VERSION#v} -- neon build matrix-seshat --release
 
 Please make sure to include all the `--` as well as the `--release` command line
 switch at the end. Modify your electron version accordingly depending on the
