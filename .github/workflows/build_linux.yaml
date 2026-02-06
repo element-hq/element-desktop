@@ -158,6 +158,7 @@ jobs:
                   docker run \
                     -v ${{ github.workspace }}:/work -w /work \
                     -e SQLCIPHER_BUNDLED \
+                    -e CI=1 \
                     $HAK_DOCKER_IMAGE \
                     pnpm build:native
 
