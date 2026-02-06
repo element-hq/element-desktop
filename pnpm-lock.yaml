@@ -111,6 +111,9 @@ importers:
       electron-devtools-installer:
         specifier: ^4.0.0
         version: 4.0.0
+      electron-playwright-helpers:
+        specifier: ^2.1.0
+        version: 2.1.0
       eslint:
         specifier: ^8.26.0
         version: 8.57.1
@@ -2170,6 +2173,9 @@ packages:
 
   electron-devtools-installer@4.0.0:
     resolution: {integrity: sha512-9Tntu/jtfSn0n6N/ZI6IdvRqXpDyLQiDuuIbsBI+dL+1Ef7C8J2JwByw58P3TJiNeuqyV3ZkphpNWuZK5iSY2w==}
+
+  electron-playwright-helpers@2.1.0:
+    resolution: {integrity: sha512-aQOefS1irz/Ou6IYuTE34ZLmIKVHKoTGUwkVuwu2P5iguuMTLtsg6CFImsWu0cabRPVZ1NgEpcGPumFZNDdrqA==}
 
   electron-publish@26.6.0:
     resolution: {integrity: sha512-LsyHMMqbvJ2vsOvuWJ19OezgF2ANdCiHpIucDHNiLhuI+/F3eW98ouzWSRmXXi82ZOPZXC07jnIravY4YYwCLQ==}
@@ -6815,6 +6821,10 @@ snapshots:
   electron-devtools-installer@4.0.0:
     dependencies:
       unzip-crx-3: 0.2.0
+
+  electron-playwright-helpers@2.1.0:
+    dependencies:
+      '@electron/asar': 3.4.1
 
   electron-publish@26.6.0:
     dependencies:
