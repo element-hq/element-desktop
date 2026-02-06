@@ -30,13 +30,13 @@ export default async function fetch(hakEnv: HakEnv, moduleInfo: DependencyInfo):
         packumentCache,
     });
 
-    console.log("Running yarn install in " + moduleInfo.moduleBuildDir);
-    await hakEnv.spawn("yarn", ["install", "--ignore-scripts"], {
+    console.log("Running pnpm install in " + moduleInfo.moduleBuildDir);
+    await hakEnv.spawn("pnpm", ["install", "--ignore-scripts"], {
         cwd: moduleInfo.moduleBuildDir,
     });
 
     // also extract another copy to the output directory at this point
-    // nb. we do not yarn install in the output copy: we could install in
+    // nb. we do not pnpm install in the output copy: we could install in
     // production mode to get only runtime dependencies and not devDependencies,
     // but usually native modules come with dependencies that are needed for
     // building/fetching the native modules (eg. node-pre-gyp) rather than

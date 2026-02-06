@@ -13,10 +13,9 @@ you will need debug symbols.
 2. Figure out which version of Electron your Element-Desktop is based on. The
    best way to do this is to figure out the version of Element-Desktop, then
    look at
-   [`yarn.lock`](https://github.com/element-hq/element-desktop/blob/develop/yarn.lock)
-   for the corresponding version. There should be an entry starting
-   `electron@`, and under it a `version` line: this will tell you the version
-   of Electron that was used for that version of Element-Desktop.
+   [`package.json`](https://github.com/element-hq/element-desktop/blob/develop/package.json)
+   for the corresponding version. There will be an entry within `dependencies` of
+   `electron`: the value will tell you the version of Electron that was used for that version of Element-Desktop.
 
 3. Go to [Electron's releases page](https://github.com/electron/electron/releases/)
    and find the version you just identified. Under "Assets", download

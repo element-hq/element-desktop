@@ -6,18 +6,11 @@ SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Com
 Please see LICENSE files in the repository root for full details.
 */
 
-import path from "node:path";
-
 import type HakEnv from "./hakEnv.js";
 import { type DependencyInfo } from "./dep.js";
 
 export default async function link(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
-    const linkFolder = path.join(hakEnv.dotHakDir, "links");
-    await hakEnv.spawn("yarn", ["link", "--link-folder", linkFolder], {
-        cwd: moduleInfo.moduleOutDir,
-    });
-
-    await hakEnv.spawn("yarn", ["link", "--link-folder", linkFolder, moduleInfo.name], {
+    await hakEnv.spawn("pnpm", ["link", moduleInfo.moduleOutDir], {
         cwd: hakEnv.projectRoot,
     });
 }

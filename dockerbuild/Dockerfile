@@ -4,7 +4,6 @@ FROM rust:bullseye@sha256:3ebcc2d6d71fb93a2967e35723902c51dd87dbb36f66f795a58d79
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN curl --proto "=https" -L https://yarnpkg.com/latest.tar.gz | tar xvz && mv yarn-* /yarn && ln -s /yarn/bin/yarn /usr/bin/yarn
 RUN apt-get -qq update && apt-get -y -qq dist-upgrade && \
   apt-get -y -qq install --no-install-recommends \
   # tclsh is required for building SQLite as part of SQLCipher

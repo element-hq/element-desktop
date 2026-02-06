@@ -122,16 +122,17 @@ jobs:
                   path: |
                       ./.hak
 
+            - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4
             - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
               with:
                   node-version-file: .node-version
-                  cache: "yarn"
+                  cache: "pnpm"
               env:
                   # Workaround for https://github.com/actions/setup-node/issues/317
                   FORCE_COLOR: 0
 
             - name: Install Deps
-              run: "yarn install --frozen-lockfile"
+              run: "pnpm install --frozen-lockfile"
 
             - name: "Get modified files"
               id: changed_files
@@ -158,7 +159,7 @@ jobs:
                     -v ${{ github.workspace }}:/work -w /work \
                     -e SQLCIPHER_BUNDLED \
                     $HAK_DOCKER_IMAGE \
-                    yarn build:native
+                    pnpm build:native
 
             - name: Fix permissions on .hak
               run: sudo chown -R $USER:$USER .hak
@@ -178,7 +179,7 @@ jobs:
                   fi
 
             - name: Build App
-              run: yarn build --publish never ${{ steps.config.outputs.build-args }} -l ${{ inputs.targets }}
+              run: pnpm build --publish never ${{ steps.config.outputs.build-args }} -l ${{ inputs.targets }}
               env:
                   VARIANT_PATH: variant.json
                   # Only set for Nightly builds

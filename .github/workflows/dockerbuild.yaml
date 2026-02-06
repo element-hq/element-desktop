@@ -39,7 +39,7 @@ jobs:
                   platforms: linux/amd64
 
             - name: Test image
-              run: docker run -v $PWD:/project element-desktop-dockerbuild yarn install
+              run: docker run -v $PWD:/project element-desktop-dockerbuild pnpm install
 
             - name: Log in to the Container registry
               uses: docker/login-action@3227f5311cb93ffd14d13e65d8cc400d30f4dd8a

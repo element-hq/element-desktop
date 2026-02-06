@@ -113,23 +113,24 @@ jobs:
             # https://github.com/electron-userland/electron-builder/issues/9511#issuecomment-3774092888
             - run: sudo pip3 install pyobjc-framework-Quartz
 
+            - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4
             - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
               with:
                   node-version-file: .node-version
-                  cache: "yarn"
+                  cache: "pnpm"
 
             - name: Install Deps
-              run: "yarn install --frozen-lockfile"
+              run: "pnpm install --frozen-lockfile"
 
             - name: Build Natives
               if: steps.cache.outputs.cache-hit != 'true'
-              run: yarn build:native:universal
+              run: pnpm build:native:universal
 
             # We split these because electron-builder gets upset if we set CSC_LINK even to an empty string
             - name: "[Signed] Build App"
               if: inputs.sign != ''
               run: |
-                  yarn build:universal --publish never -m ${{ inputs.targets }}
+                  pnpm build:universal --publish never -m ${{ inputs.targets }}
               env:
                   APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
                   APPLE_ID: ${{ secrets.APPLE_ID }}
@@ -151,7 +152,7 @@ jobs:
             - name: "[Unsigned] Build App"
               if: inputs.sign == ''
               run: |
-                  yarn build:universal --publish never -m ${{ inputs.targets }}
+                  pnpm build:universal --publish never -m ${{ inputs.targets }}
               env:
                   CSC_IDENTITY_AUTO_DISCOVERY: false
                   VARIANT_PATH: variant.json

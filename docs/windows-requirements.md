@@ -16,7 +16,7 @@ If you want to build native modules, make sure that the following tools are inst
 You can install the above tools using [Chocolatey](https://chocolatey.org/install):
 
 ```cmd
-choco install --no-progress -y git nodejs-lts yarn python StrawberryPerl rustup.install nasm magicsplat-tcl-tk
+choco install --no-progress -y git nodejs-lts pnpm python StrawberryPerl rustup.install nasm magicsplat-tcl-tk
 ```
 
 - [Build Tools for Visual Studio 2019](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2019) with the following configuration:

@@ -8,8 +8,8 @@ sleep 2
 
 export DISPLAY=:99
 
-yarn install --frozen-lockfile
-yarn build -l --dir
+pnpm install --frozen-lockfile
+pnpm build -l --dir
 
 PLAYWRIGHT_HTML_OPEN=never ELEMENT_DESKTOP_EXECUTABLE="./dist/linux-unpacked/element-desktop" \
   npx playwright test --update-snapshots --reporter line,html "$1"

@@ -16,8 +16,8 @@ export default async function (hakEnv: HakEnv, moduleInfo: DependencyInfo): Prom
         env.CARGO_BUILD_TARGET = hakEnv.getTargetId();
     }
 
-    console.log("Running yarn install");
-    await hakEnv.spawn("yarn", ["install"], {
+    console.log("Running pnpm install");
+    await hakEnv.spawn("pnpm", ["install"], {
         cwd: moduleInfo.moduleBuildDir,
         env,
         shell: true,
@@ -25,8 +25,8 @@ export default async function (hakEnv: HakEnv, moduleInfo: DependencyInfo): Prom
 
     const buildTarget = hakEnv.wantsStaticSqlCipher() ? "build-bundled" : "build";
 
-    console.log("Running yarn build");
-    await hakEnv.spawn("yarn", ["run", buildTarget], {
+    console.log("Running pnpm build");
+    await hakEnv.spawn("pnpm", ["run", buildTarget], {
         cwd: moduleInfo.moduleBuildDir,
         env,
         shell: true,

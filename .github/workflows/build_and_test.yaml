@@ -55,13 +55,14 @@ jobs:
         steps:
             - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
 
+            - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4
             - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
               with:
-                  cache: "yarn"
+                  cache: "pnpm"
                   node-version: "lts/*"
 
             - name: Install dependencies
-              run: yarn install --frozen-lockfile
+              run: pnpm install --frozen-lockfile
 
             - name: Download blob reports from GitHub Actions Artifacts
               uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
@@ -71,7 +72,7 @@ jobs:
                   merge-multiple: true
 
             - name: Merge into HTML Report
-              run: yarn playwright merge-reports -c ./playwright.config.ts --reporter=html ./all-blob-reports
+              run: pnpm playwright merge-reports -c ./playwright.config.ts --reporter=html ./all-blob-reports
 
             - name: Upload HTML report
               if: always()
