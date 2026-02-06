@@ -8,10 +8,10 @@ Please see LICENSE files in the repository root for full details.
 
 import fsProm from "node:fs/promises";
 import pacote from "pacote";
+import path from "node:path";
 
 import type HakEnv from "./hakEnv.js";
 import type { DependencyInfo } from "./dep.js";
-import path from "node:path";
 
 export default async function fetch(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
     let haveModuleBuildDir;

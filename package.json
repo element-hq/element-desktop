@@ -125,8 +125,7 @@
     },
     "pnpm": {
         "onlyBuiltDependencies": [
-            "electron",
-            "matrix-js-sdk"
+            "electron"
         ],
         "patchedDependencies": {
             "@types/auto-launch": "patches/@types__auto-launch.patch"
