@@ -136,6 +136,8 @@ jobs:
                   pnpm install --frozen-lockfile
                   # Workaround for pnpm strict security
                   chmod +x node_modules/7zip-bin/linux/*/7za
+                  # DEBUG
+                  ls -lah node_modules/7zip-bin/linux/*/7za
 
             - name: "Get modified files"
               id: changed_files
