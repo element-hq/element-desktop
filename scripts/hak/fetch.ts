@@ -11,6 +11,7 @@ import pacote from "pacote";
 
 import type HakEnv from "./hakEnv.js";
 import type { DependencyInfo } from "./dep.js";
+import path from "node:path";
 
 export default async function fetch(hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
     let haveModuleBuildDir;
@@ -29,6 +30,13 @@ export default async function fetch(hakEnv: HakEnv, moduleInfo: DependencyInfo):
     await pacote.extract(`${moduleInfo.name}@${moduleInfo.version}`, moduleInfo.moduleBuildDir, {
         packumentCache,
     });
+
+    // Workaround for us switching to pnpm but matrix-seshat still using yarn classic
+    const packageJsonPath = path.join(moduleInfo.moduleBuildDir, "package.json");
+    const packageJson = await fsProm.readFile(packageJsonPath, "utf-8");
+    const packageJsonData = JSON.parse(packageJson);
+    packageJsonData["packageManager"] = "yarn@1.22.22";
+    await fsProm.writeFile(packageJsonPath, JSON.stringify(packageJsonData, null, 2), "utf-8");
 
     console.log("Running yarn install in " + moduleInfo.moduleBuildDir);
     await hakEnv.spawn("yarn", ["install", "--ignore-scripts"], {
