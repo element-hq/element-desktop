@@ -26,11 +26,12 @@ jobs:
 
     i18n_lint:
         name: "i18n Check"
-        uses: matrix-org/matrix-web-i18n/.github/workflows/i18n_check.yml@main
+        uses: matrix-org/matrix-web-i18n/.github/workflows/i18n_check.yml@3673fd3abbf8dfae1de849c6cd3e69e24ed7a766
         permissions:
             pull-requests: read
         with:
             hardcoded-words: "Element"
+            packageManager: pnpm
 
     js_lint:
         name: "ESLint"
