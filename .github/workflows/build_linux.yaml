@@ -166,10 +166,10 @@ jobs:
               run: |
                   # For .hak
                   sudo chown -R $USER:$USER .hak
-                  # For node_modules pnpm strict security
-                  chmod +x node_modules/7zip-bin/linux/*/7za
                   # DEBUG
                   ls -lah node_modules/7zip-bin/linux/*/7za
+                  # For node_modules pnpm strict security
+                  sudo chmod +x node_modules/7zip-bin/linux/*/7za
 
             - name: Check native libraries in hak dependencies
               run: |
