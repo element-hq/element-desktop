@@ -580,7 +580,7 @@ app.on("ready", async () => {
                 desktopCapturer
                     .getSources({ types: ["screen", "window"] })
                     .then((sources) => {
-                        callback({ video: sources[0] });
+                        callback({ video: sources[0], audio: "loopback" });
                     })
                     .catch((err) => {
                         // If the user cancels the dialog an error occurs "Failed to get sources"
