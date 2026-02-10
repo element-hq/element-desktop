@@ -507,42 +507,15 @@ app.on("ready", async () => {
         const exitShortcutPressed =
             input.type === "keyDown" && exitShortcuts.some((shortcutFn) => shortcutFn(input, process.platform));
 
-        // Early return if:
-        // 1. Keys that were pressed are not shortcuts for exiting the app
-        // 2. Electron mainWindow is null for some reason
-        // 3. The application is already in the process of quitting
-        if (!exitShortcutPressed || !global.mainWindow || global.appQuitting) return;
+        // We only care about the exit shortcuts here
+        if (!exitShortcutPressed || !global.mainWindow) return;
 
         // Prevent the default behaviour
         event.preventDefault();
 
-        // Check if the user expects us to minimize to tray instead of quitting the app
-        // Two cases:
-        // 1. On Linux/Windows, user has enabled "Show tray icon and minimise window to it on close" in settings.
-        // 2. On Mac, the canonical behaviour is to minimize to tray; this is not configurable.
-        const shouldMinimize = store.get("minimizeToTray") || process.platform === "darwin";
-        if (shouldMinimize) {
-            if (global.mainWindow?.isFullScreen()) {
-                global.mainWindow.once("leave-full-screen", () => global.mainWindow?.hide());
-                global.mainWindow.setFullScreen(false);
-            } else {
-                global.mainWindow?.hide();
-            }
-            return;
-        }
-
-        // Quit the app; rest of the quit logic is on the close event handler below.
-        app.quit();
-    });
-
-    global.mainWindow.on("closed", () => {
-        global.mainWindow = null;
-    });
-
-    global.mainWindow.on("close", async (e) => {
-        // Check if the user expects us to ask for confirmation before quitting the app
+        // Let's ask the user if they really want to exit the app
         const shouldWarnBeforeExit = store.get("warnBeforeExit", true);
-        if (shouldWarnBeforeExit && global.mainWindow) {
+        if (shouldWarnBeforeExit) {
             const shouldCancelCloseRequest =
                 dialog.showMessageBoxSync(global.mainWindow, {
                     type: "question",
@@ -556,11 +529,33 @@ app.on("ready", async () => {
                     defaultId: 1,
                     cancelId: 0,
                 }) === 0;
-            if (shouldCancelCloseRequest) {
-                e.preventDefault();
-                global.appQuitting = false;
-                return false;
+            if (shouldCancelCloseRequest) return;
+        }
+
+        // Exit the app
+        app.exit();
+    });
+
+    global.mainWindow.on("closed", () => {
+        global.mainWindow = null;
+    });
+    global.mainWindow.on("close", async (e) => {
+        // If we are not quitting and have a tray icon then minimize to tray
+        if (!global.appQuitting && (tray.hasTray() || process.platform === "darwin")) {
+            // On Mac, closing the window just hides it
+            // (this is generally how single-window Mac apps
+            // behave, eg. Mail.app)
+            e.preventDefault();
+
+            if (global.mainWindow?.isFullScreen()) {
+                global.mainWindow.once("leave-full-screen", () => global.mainWindow?.hide());
+
+                global.mainWindow.setFullScreen(false);
+            } else {
+                global.mainWindow?.hide();
             }
+
+            return false;
         }
     });
 

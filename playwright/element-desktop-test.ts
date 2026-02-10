@@ -12,7 +12,6 @@ import path, { dirname } from "node:path";
 import os from "node:os";
 import { fileURLToPath } from "node:url";
 import { PassThrough } from "node:stream";
-import { stubDialog } from "electron-playwright-helpers";
 
 /**
  * A PassThrough stream that captures all data written to it.
@@ -112,8 +111,6 @@ export const test = base.extend<Fixtures>({
     page: async ({ app }, use) => {
         const window = await app.firstWindow();
         await use(window);
-        // EW may be configured to ask for confirmation before the app exits.
-        await stubDialog(app, "showMessageBoxSync", 1);
         await app.close().catch((e) => {
             console.error(e);
         });

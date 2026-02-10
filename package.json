@@ -92,7 +92,6 @@
         "electron-builder": "26.6.0",
         "electron-builder-squirrel-windows": "26.6.0",
         "electron-devtools-installer": "^4.0.0",
-        "electron-playwright-helpers": "^2.1.0",
         "eslint": "^8.26.0",
         "eslint-config-google": "^0.14.0",
         "eslint-config-prettier": "^10.0.0",
