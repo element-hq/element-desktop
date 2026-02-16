@@ -119,7 +119,7 @@ jobs:
 
             - name: Cache .hak
               id: cache
-              uses: actions/cache@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v5
+              uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5
               with:
                   key: ${{ runner.os }}-${{ inputs.arch }}-${{ hashFiles('hakHash', 'electronVersion') }}
                   path: |
@@ -148,27 +148,28 @@ jobs:
                   rustup default stable
                   rustup target add ${{ steps.config.outputs.target }}
 
+            - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4
             - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
               with:
                   node-version-file: .node-version
-                  cache: "yarn"
+                  cache: "pnpm"
 
             - name: Install Deps
-              run: "yarn install --frozen-lockfile"
+              run: "pnpm install --frozen-lockfile"
 
             - name: Insert config snippet
               if: steps.config.outputs.extra_config != ''
               shell: bash
               run: |
                   mkdir config-edit
-                  yarn asar extract webapp.asar config-edit
+                  pnpm asar extract webapp.asar config-edit
                   cd config-edit
                   mv config.json old-config.json
                   echo '${{ steps.config.outputs.extra_config }}' | jq -s '.[0] * .[1]' old-config.json - > config.json
                   rm old-config.json
                   cd ..
                   rm webapp.asar
-                  yarn asar pack config-edit/ webapp.asar
+                  pnpm asar pack config-edit/ webapp.asar
 
             - name: Set up sqlcipher macros
               if: steps.cache.outputs.cache-hit != 'true' && contains(inputs.arch, 'arm')
@@ -186,7 +187,7 @@ jobs:
               if: steps.cache.outputs.cache-hit != 'true'
               run: |
                   refreshenv
-                  yarn build:native --target ${{ steps.config.outputs.target }}
+                  pnpm build:native --target ${{ steps.config.outputs.target }}
 
             - name: Install and configure eSigner CKA
               run: |
@@ -232,7 +233,7 @@ jobs:
                   MASTER_KEY_FILE: C:\Users\runneradmin\eSignerCKA\master.key
 
             - name: Build App
-              run: yarn build --publish never ${{ steps.config.outputs.build-args }} -w ${{ inputs.targets }}
+              run: pnpm build --publish never ${{ steps.config.outputs.build-args }} -w ${{ inputs.targets }}
               env:
                   VARIANT_PATH: variant.json
                   # Only set for Nightly builds

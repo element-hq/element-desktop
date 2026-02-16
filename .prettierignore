@@ -7,7 +7,7 @@
 /src/i18n/strings
 /CHANGELOG.md
 /package-lock.json
-/yarn.lock
+/pnpm-lock.yaml
 /playwright/html-report
 /playwright/test-results
 

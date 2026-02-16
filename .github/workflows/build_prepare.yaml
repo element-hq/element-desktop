@@ -56,13 +56,14 @@ jobs:
         steps:
             - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
 
+            - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4
             - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
               with:
                   node-version-file: .node-version
-                  cache: "yarn"
+                  cache: "pnpm"
 
             - name: Install Deps
-              run: "yarn install --frozen-lockfile"
+              run: "pnpm install --frozen-lockfile"
 
             - name: Fetch Element Web (matching branch)
               id: branch-matching
@@ -71,10 +72,10 @@ jobs:
               run: |
                   scripts/branch-match.sh
                   cp "$CONFIG_DIR/config.json" element-web/
-                  yarn --cwd element-web install --frozen-lockfile
-                  yarn --cwd element-web run build
+                  pnpm --cwd element-web install --frozen-lockfile
+                  pnpm --cwd element-web run build
                   mv element-web/webapp .
-                  yarn asar-webapp
+                  pnpm asar-webapp
               env:
                   # These must be set for branch-match.sh to get the right branch
                   REPOSITORY: ${{ github.repository }}
@@ -83,7 +84,7 @@ jobs:
 
             - name: Fetch Element Web (${{ inputs.version }})
               if: steps.branch-matching.outcome == 'failure' || steps.branch-matching.outcome == 'skipped'
-              run: yarn run fetch --noverify -d ${{ inputs.config }} ${{ inputs.version }}
+              run: pnpm run fetch --noverify -d ${{ inputs.config }} ${{ inputs.version }}
 
             - name: Copy variant config
               run: cp "$CONFIG_DIR/build.json" variant.json
@@ -93,8 +94,9 @@ jobs:
             # We split this out to save the build_* scripts having to do it to make use of `hashFiles` in the cache action
             - name: Generate cache hash files
               run: |
+                  set -ex
                   # Add --no-sandbox as otherwise it fails because the helper isn't setuid root. It's only getting the version.
-                  yarn run --silent electron --no-sandbox --version > electronVersion
+                  pnpm --silent electron --no-sandbox --version > electronVersion
                   cat package.json | jq -c .hakDependencies | sha1sum > hakHash
                   find hak -type f -print0 | xargs -0 sha1sum >> hakHash
                   find scripts/hak -type f -print0 | xargs -0 sha1sum >> hakHash

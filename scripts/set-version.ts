@@ -14,7 +14,7 @@ export async function versionFromAsar(): Promise<string> {
     try {
         await fs.stat("webapp.asar");
     } catch {
-        throw new Error("No 'webapp.asar' found. Run 'yarn run fetch'");
+        throw new Error("No 'webapp.asar' found. Run 'pnpm run fetch'");
     }
 
     return asar.extractFile("webapp.asar", "version").toString().trim();
@@ -25,7 +25,7 @@ export async function setPackageVersion(ver: string): Promise<void> {
     // all the various version fields
     await new Promise<void>((resolve, reject) => {
         childProcess.execFile(
-            process.platform === "win32" ? "yarn.cmd" : "yarn",
+            process.platform === "win32" ? "pnpm.cmd" : "pnpm",
             [
                 "version",
                 "-s",

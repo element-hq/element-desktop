@@ -116,22 +116,23 @@ jobs:
 
             - name: Cache .hak
               id: cache
-              uses: actions/cache@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v5
+              uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5
               with:
                   key: ${{ runner.os }}-${{ github.ref_name }}-${{ inputs.sqlcipher }}-${{ inputs.arch }}-${{ hashFiles('hakHash', 'electronVersion', 'dockerbuild/*') }}
                   path: |
                       ./.hak
 
+            - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4
             - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
               with:
                   node-version-file: .node-version
-                  cache: "yarn"
+                  cache: "pnpm"
               env:
                   # Workaround for https://github.com/actions/setup-node/issues/317
                   FORCE_COLOR: 0
 
             - name: Install Deps
-              run: "yarn install --frozen-lockfile"
+              run: pnpm install --frozen-lockfile
 
             - name: "Get modified files"
               id: changed_files
@@ -157,11 +158,16 @@ jobs:
                   docker run \
                     -v ${{ github.workspace }}:/work -w /work \
                     -e SQLCIPHER_BUNDLED \
+                    -e CI=1 \
                     $HAK_DOCKER_IMAGE \
-                    yarn build:native
+                    pnpm build:native
 
-            - name: Fix permissions on .hak
-              run: sudo chown -R $USER:$USER .hak
+            - name: Fix permissions
+              run: |
+                  # For .hak
+                  sudo chown -R $USER:$USER .hak
+                  # For node_modules pnpm strict security
+                  sudo chmod +x node_modules/7zip-bin/linux/*/7za
 
             - name: Check native libraries in hak dependencies
               run: |
@@ -178,7 +184,7 @@ jobs:
                   fi
 
             - name: Build App
-              run: yarn build --publish never ${{ steps.config.outputs.build-args }} -l ${{ inputs.targets }}
+              run: pnpm build --publish never ${{ steps.config.outputs.build-args }} -l ${{ inputs.targets }}
               env:
                   VARIANT_PATH: variant.json
                   # Only set for Nightly builds

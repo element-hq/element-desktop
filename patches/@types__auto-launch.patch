@@ -1,7 +1,7 @@
-diff --git a/node_modules/@types/auto-launch/index.d.ts b/node_modules/@types/auto-launch/index.d.ts
+diff --git a/index.d.ts b/index.d.ts
 index a30a77c..e512ce1 100644
---- a/node_modules/@types/auto-launch/index.d.ts
-+++ b/node_modules/@types/auto-launch/index.d.ts
+--- a/index.d.ts
++++ b/index.d.ts
 @@ -25,6 +25,13 @@ interface AutoLaunchOptions {
  declare class AutoLaunch {
      constructor(options: AutoLaunchOptions);
