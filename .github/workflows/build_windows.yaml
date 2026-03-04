@@ -239,7 +239,8 @@ jobs:
                   MASTER_KEY_FILE: C:\Users\runneradmin\eSignerCKA\master.key
 
             - name: Build App
-              run: pnpm build --publish never $env:BUILD_ARGS -w $env:TARGETS
+              run: pnpm build --publish never $BUILD_ARGS -w $TARGETS
+              shell: bash
               env:
                   VARIANT_PATH: variant.json
                   # Only set for Nightly builds
