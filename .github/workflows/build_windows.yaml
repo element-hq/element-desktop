@@ -168,13 +168,11 @@ jobs:
                   pnpm asar extract webapp.asar config-edit
                   cd config-edit
                   mv config.json old-config.json
-                  echo '${EXTRA_CONFIG}' | jq -s '.[0] * .[1]' old-config.json - > config.json
+                  echo ${{ steps.config.outputs.extra_config }} | jq -s '.[0] * .[1]' old-config.json - > config.json
                   rm old-config.json
                   cd ..
                   rm webapp.asar
                   pnpm asar pack config-edit/ webapp.asar
-              env:
-                  EXTRA_CONFIG: ${{ steps.config.outputs.extra_config }}
 
             - name: Set up sqlcipher macros
               if: steps.cache.outputs.cache-hit != 'true' && contains(inputs.arch, 'arm')
