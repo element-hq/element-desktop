@@ -8,7 +8,7 @@ IMAGE=${DOCKER_IMAGE_NAME:-"element-desktop-dockerbuild"}
 
 docker inspect "$IMAGE" 2> /dev/null > /dev/null
 if [ $? != 0 ]; then
-    echo "Docker image $IMAGE not found. Have you run yarn run docker:setup?"
+    echo "Docker image $IMAGE not found. Have you run pnpm run docker:setup?"
     exit 1
 fi
 

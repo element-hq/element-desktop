@@ -9,77 +9,95 @@ jobs:
         name: "Typescript Syntax Check"
         runs-on: ubuntu-24.04
         steps:
-            - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+            - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+              with:
+                  persist-credentials: false
 
-            - uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6
+            - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4
+            - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
               with:
                   node-version-file: package.json
-                  cache: "yarn"
+                  cache: "pnpm"
 
             # Does not need branch matching as only analyses this layer
             - name: Install Deps
-              run: "yarn install --frozen-lockfile"
+              run: "pnpm install --frozen-lockfile"
 
             - name: Typecheck
-              run: "yarn run lint:types"
+              run: "pnpm run lint:types"
 
     i18n_lint:
         name: "i18n Check"
-        uses: matrix-org/matrix-web-i18n/.github/workflows/i18n_check.yml@main
+        uses: matrix-org/matrix-web-i18n/.github/workflows/i18n_check.yml@6eda3835118f3bc3fb658a1a3c20b7da9d16ae42
         permissions:
             pull-requests: read
         with:
             hardcoded-words: "Element"
+            packageManager: pnpm
 
     js_lint:
         name: "ESLint"
         runs-on: ubuntu-24.04
         steps:
-            - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+            - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+              with:
+                  persist-credentials: false
 
-            - uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6
+            - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4
+            - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
               with:
                   node-version-file: package.json
-                  cache: "yarn"
+                  cache: "pnpm"
 
             # Does not need branch matching as only analyses this layer
             - name: Install Deps
-              run: "yarn install --frozen-lockfile"
+              run: "pnpm install --frozen-lockfile"
 
             - name: Run Linter
-              run: "yarn run lint:js"
+              run: "pnpm run lint:js"
 
     workflow_lint:
         name: "Workflow Lint"
         runs-on: ubuntu-24.04
+        permissions:
+            security-events: write
         steps:
-            - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+            - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+              with:
+                  persist-credentials: false
 
-            - uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6
+            - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4
+            - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
               with:
                   node-version-file: package.json
-                  cache: "yarn"
+                  cache: "pnpm"
 
             # Does not need branch matching as only analyses this layer
             - name: Install Deps
-              run: "yarn install --frozen-lockfile"
+              run: "pnpm install --frozen-lockfile"
 
             - name: Run Linter
-              run: "yarn lint:workflows"
+              run: "pnpm lint:workflows"
+
+            - name: Run zizmor
+              uses: zizmorcore/zizmor-action@0dce2577a4760a2749d8cfb7a84b7d5585ebcb7d # v0.5.0
 
     analyse_dead_code:
         name: "Analyse Dead Code"
         runs-on: ubuntu-24.04
         steps:
-            - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+            - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+              with:
+                  persist-credentials: false
 
-            - uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6
+            - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4
+            - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
               with:
                   node-version-file: package.json
-                  cache: "yarn"
+                  cache: "pnpm"
 
             - name: Install Deps
-              run: "yarn install --frozen-lockfile"
+              run: "pnpm install --frozen-lockfile"
 
             - name: Run linter
-              run: "yarn run lint:knip"
+              run: "pnpm run lint:knip"

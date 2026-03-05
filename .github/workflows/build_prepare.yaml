@@ -54,15 +54,18 @@ jobs:
         outputs:
             nightly-version: ${{ steps.versions.outputs.nightly }}
         steps:
-            - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+            - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+              with:
+                  persist-credentials: false
 
-            - uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6
+            - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4
+            - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
               with:
                   node-version-file: .node-version
-                  cache: "yarn"
+                  cache: "pnpm"
 
             - name: Install Deps
-              run: "yarn install --frozen-lockfile"
+              run: "pnpm install --frozen-lockfile"
 
             - name: Fetch Element Web (matching branch)
               id: branch-matching
@@ -71,10 +74,10 @@ jobs:
               run: |
                   scripts/branch-match.sh
                   cp "$CONFIG_DIR/config.json" element-web/
-                  yarn --cwd element-web install --frozen-lockfile
-                  yarn --cwd element-web run build
+                  pnpm --cwd element-web install --frozen-lockfile
+                  pnpm --cwd element-web run build
                   mv element-web/webapp .
-                  yarn asar-webapp
+                  pnpm asar-webapp
               env:
                   # These must be set for branch-match.sh to get the right branch
                   REPOSITORY: ${{ github.repository }}
@@ -83,7 +86,10 @@ jobs:
 
             - name: Fetch Element Web (${{ inputs.version }})
               if: steps.branch-matching.outcome == 'failure' || steps.branch-matching.outcome == 'skipped'
-              run: yarn run fetch --noverify -d ${{ inputs.config }} ${{ inputs.version }}
+              run: pnpm run fetch --noverify -d ${CONFIG} ${VERSION}
+              env:
+                  CONFIG: ${{ inputs.config }}
+                  VERSION: ${{ inputs.version }}
 
             - name: Copy variant config
               run: cp "$CONFIG_DIR/build.json" variant.json
@@ -93,8 +99,9 @@ jobs:
             # We split this out to save the build_* scripts having to do it to make use of `hashFiles` in the cache action
             - name: Generate cache hash files
               run: |
+                  set -ex
                   # Add --no-sandbox as otherwise it fails because the helper isn't setuid root. It's only getting the version.
-                  yarn run --silent electron --no-sandbox --version > electronVersion
+                  pnpm --silent electron --no-sandbox --version > electronVersion
                   cat package.json | jq -c .hakDependencies | sha1sum > hakHash
                   find hak -type f -print0 | xargs -0 sha1sum >> hakHash
                   find scripts/hak -type f -print0 | xargs -0 sha1sum >> hakHash
@@ -129,7 +136,7 @@ jobs:
             - name: "[Release] Fetch release"
               id: release
               if: ${{ !inputs.nightly && inputs.version != 'develop' }}
-              uses: cardinalby/git-get-release-action@cedef2faf69cb7c55b285bad07688d04430b7ada # v1
+              uses: cardinalby/git-get-release-action@cedef2faf69cb7c55b285bad07688d04430b7ada # v1.2.4
               env:
                   GITHUB_TOKEN: ${{ github.token }}
               with:
@@ -157,15 +164,17 @@ jobs:
                   WEB_VERSION=${WEBAPP_VERSION:0:12}
                   JS_VERSION=${WEBAPP_VERSION:16:12}
 
-                  echo "### Nightly build ${{ steps.versions.outputs.nightly }}" >> $GITHUB_STEP_SUMMARY
+                  echo "### Nightly build ${NIGHTLY_VERSION}" >> $GITHUB_STEP_SUMMARY
                   echo "" >> $GITHUB_STEP_SUMMARY
                   echo "| Component   | Version |" >> $GITHUB_STEP_SUMMARY
                   echo "| ----------- | ------- |" >> $GITHUB_STEP_SUMMARY
                   echo "| Bundle Hash | $BUNDLE_HASH |" >> $GITHUB_STEP_SUMMARY
                   echo "| Element Web | [$WEB_VERSION](https://github.com/element-hq/element-web/commit/$WEB_VERSION) |" >> $GITHUB_STEP_SUMMARY
                   echo "| JS SDK      | [$JS_VERSION](https://github.com/matrix-org/matrix-js-sdk/commit/$JS_VERSION) |" >> $GITHUB_STEP_SUMMARY
+              env:
+                  NIGHTLY_VERSION: ${{ steps.versions.outputs.nightly }}
 
-            - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+            - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
               with:
                   name: webapp
                   retention-days: 1

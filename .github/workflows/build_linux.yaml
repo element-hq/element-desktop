@@ -105,33 +105,35 @@ jobs:
                         }
                       }
 
-            - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+            - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
               with:
                   repository: element-hq/element-desktop
                   ref: ${{ inputs.ref }}
+                  persist-credentials: false
 
-            - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6
+            - uses: actions/download-artifact@70fc10c6e5e1ce46ad2ea6f2b72d43f7d47b13c3 # v8
               with:
                   name: ${{ inputs.prepare-artifact-name }}
 
             - name: Cache .hak
               id: cache
-              uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+              uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5
               with:
                   key: ${{ runner.os }}-${{ github.ref_name }}-${{ inputs.sqlcipher }}-${{ inputs.arch }}-${{ hashFiles('hakHash', 'electronVersion', 'dockerbuild/*') }}
                   path: |
                       ./.hak
 
-            - uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6
+            - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4
+            - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
               with:
                   node-version-file: .node-version
-                  cache: "yarn"
+                  cache: "pnpm"
               env:
                   # Workaround for https://github.com/actions/setup-node/issues/317
                   FORCE_COLOR: 0
 
             - name: Install Deps
-              run: "yarn install --frozen-lockfile"
+              run: pnpm install --frozen-lockfile
 
             - name: "Get modified files"
               id: changed_files
@@ -143,7 +145,7 @@ jobs:
 
             # This allows contributors to test changes to the dockerbuild image within a pull request
             - name: Build docker image
-              uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6
+              uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
               if: steps.changed_files.outputs.any_modified == 'true'
               with:
                   file: dockerbuild/Dockerfile
@@ -157,11 +159,16 @@ jobs:
                   docker run \
                     -v ${{ github.workspace }}:/work -w /work \
                     -e SQLCIPHER_BUNDLED \
+                    -e CI=1 \
                     $HAK_DOCKER_IMAGE \
-                    yarn build:native
+                    pnpm build:native
 
-            - name: Fix permissions on .hak
-              run: sudo chown -R $USER:$USER .hak
+            - name: Fix permissions
+              run: |
+                  # For .hak
+                  sudo chown -R $USER:$USER .hak
+                  # For node_modules pnpm strict security
+                  sudo chmod +x node_modules/7zip-bin/linux/*/7za
 
             - name: Check native libraries in hak dependencies
               run: |
@@ -178,13 +185,15 @@ jobs:
                   fi
 
             - name: Build App
-              run: yarn build --publish never ${{ steps.config.outputs.build-args }} -l ${{ inputs.targets }}
+              run: pnpm build --publish never $BUILD_ARGS -l $TARGETS
               env:
                   VARIANT_PATH: variant.json
                   # Only set for Nightly builds
                   VERSION: ${{ inputs.version }}
                   # Workaround for https://github.com/electron-userland/electron-builder/issues/5721
                   USE_HARD_LINKS: false
+                  BUILD_ARGS: ${{ steps.config.outputs.build-args }}
+                  TARGETS: ${{ inputs.targets }}
 
             - name: Check native libraries
               run: |
@@ -214,7 +223,7 @@ jobs:
 
             # We exclude *-unpacked as it loses permissions and the tarball contains it with correct permissions
             - name: Upload Artifacts
-              uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+              uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
               with:
                   name: ${{ inputs.artifact-prefix }}linux-${{ inputs.arch }}-sqlcipher-${{ inputs.sqlcipher }}
                   path: |

@@ -1,10 +1,9 @@
 # Docker image to facilitate building Element Desktop's native bits using a glibc version (2.31)
 # with broader compatibility, down to Debian bullseye & Ubuntu focal.
-FROM rust:bullseye@sha256:f02c249a0dd84eda8a3403b6fb1a4a59fee86157f1657cb1f8baaf3d89fe2d88
+FROM rust:bullseye@sha256:fae8ebcb8eda28d37df2b965c87c15a572dac2b6d3893a72d6dea99d700d1786
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN curl --proto "=https" -L https://yarnpkg.com/latest.tar.gz | tar xvz && mv yarn-* /yarn && ln -s /yarn/bin/yarn /usr/bin/yarn
 RUN apt-get -qq update && apt-get -y -qq dist-upgrade && \
   apt-get -y -qq install --no-install-recommends \
   # tclsh is required for building SQLite as part of SQLCipher

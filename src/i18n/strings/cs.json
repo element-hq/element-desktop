@@ -35,7 +35,7 @@
     "eol": {
         "no_more_updates": "Používáte nepodporovanou verzi systému macOS. Prosím upgradujte %(brand)s pro získání aktualizací.",
         "title": "Systém není podporován",
-        "warning": "Používáte nepodporovanou verzi systému macOS. Proveďte prosím upgrade %(brand)s , aby byl stále funkční."
+        "warning": "Používáte nepodporovanou verzi systému macOS. Proveďte prosím upgrade %(brand)s, aby byl stále funkční."
     },
     "file_menu": {
         "label": "Soubor"

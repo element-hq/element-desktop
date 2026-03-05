@@ -158,9 +158,12 @@ const config: Omit<Writable<Configuration>, "electronFuses"> & {
         gatekeeperAssess: true,
         strictVerify: true,
         entitlements: "./build/entitlements.mac.plist",
-        icon: "build/icon.icns",
+        icon: "build/icon.icon",
         mergeASARs: true,
         x64ArchFiles: "**/matrix-seshat/*.node", // hak already runs lipo
+    },
+    dmg: {
+        badgeIcon: "build/icon.icon",
     },
     win: {
         target: ["squirrel", "msi"],

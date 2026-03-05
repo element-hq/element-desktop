@@ -18,7 +18,7 @@ but should work equally well for building modules for normal node.
 
 # Running
 
-Hak is invoked with a command and a dependency, eg. `yarn run hak fetch matrix-seshat`.
+Hak is invoked with a command and a dependency, eg. `pnpm run hak fetch matrix-seshat`.
 If no dependencies are given, hak runs the command on all dependencies.
 
 # Files
@@ -37,24 +37,21 @@ There are a lot of files involved:
 
 Hak works around native node modules that try to fetch or build their native component in
 the npm 'install' phase - modules that do this will typically end up with native components
-targeted to the build platform and the node that npm/yarn is using, which is no good for an
+targeted to the build platform and the node that npm/pnpm is using, which is no good for an
 electron app.
 
-It does this by installing it with `--ignore-scripts` and then using `yarn link` to keep the
-dependency module separate so yarn doesn't try to run its install / postinstall script
-at other points (eg. whenever you `yarn add` a random other dependency).
+It does this by installing it with `--ignore-scripts` and then using `pnpm link` to keep the
+dependency module separate so pnpm doesn't try to run its install / postinstall script
+at other points (eg. whenever you `pnpm add` a random other dependency).
 
 This also means that the dependencies cannot be listed in `dependencies` or
-`devDependencies` in the project, since this would cause npm / yarn to install them and
+`devDependencies` in the project, since this would cause pnpm to install them and
 try to fetch their native parts. Instead, they are listed in `hakDependencies` which
 hak reads to install them for you.
 
 Hak will _not_ install dependencies for the copy of the module it links into your
 project, so if your native module has javascript dependencies that are actually needed at
 runtime (and not just to fetch / build the native parts), it won't work.
-
-Hak will generate a `.yarnrc` in the project directory to set the link directory to its
-own in the .hak directory (unless one already exists, in which case this is your problem).
 
 # Lifecycle
 

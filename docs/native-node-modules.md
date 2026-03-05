@@ -18,21 +18,20 @@ when releasing.
 If you are building for Linux, you can build the native modules with:
 
 ```
-yarn docker:setup
-yarn docker:install
-INDOCKER_SQLCIPHER_BUNDLED=1 yarn docker:build:native
+pnpm docker:setup
+pnpm docker:install
+INDOCKER_SQLCIPHER_BUNDLED=1 pnpm docker:build:native
 ```
 
 The above will build `matrix-seshat` in
-`docker/node_modules/matrix-seshat`. You can then either run `yarn docker:build`
+`docker/node_modules/matrix-seshat`. You can then either run `pnpm docker:build`
 to build the app inside docker, or:
 
 ```
-yarn --cwd docker/node_modules/matrix-seshat link
-yarn link matrix-seshat
+pnpm link docker/node_modules/matrix-seshat
 ```
 
-... and build the app with `yarn build` or run it with `yarn start`.
+... and build the app with `pnpm build` or run it with `pnpm start`.
 
 (See also https://github.com/element-hq/element-desktop#docker.)
 
@@ -49,7 +48,7 @@ Then optionally, [add seshat and dependencies to support search in E2E rooms](#a
 Then, to build for an architecture selected automatically based on your system (recommended), run:
 
 ```
-yarn run build:native
+pnpm run build:native
 ```
 
 If you need to build for a specific architecture, see [here](#compiling-for-specific-architectures).
@@ -67,20 +66,20 @@ Seshat also depends on the SQLCipher library to store its data in encrypted form
 on disk. You'll need to install it via your OS package manager.
 
 After installing the Rust compiler and SQLCipher, Seshat support can be added
-using yarn at the root of this project:
+using pnpm at the root of this project:
 
-    yarn add matrix-seshat
+    pnpm add matrix-seshat
 
 You will have to rebuild the native libraries against electron's version
 of node rather than your system node, using the `electron-build-env` tool.
-This is also needed to when pulling in changes to Seshat using `yarn link`.
+This is also needed to when pulling in changes to Seshat using `pnpm link`.
 
-    yarn add electron-build-env
+    pnpm add electron-build-env
 
 Recompiling Seshat itself can be done like so:
 
     ELECTRON_VERSION=$(electron --version)
-    yarn run electron-build-env -- --electron ${ELECTRON_VERSION#v} -- neon build matrix-seshat --release
+    pnpm electron-build-env -- --electron ${ELECTRON_VERSION#v} -- neon build matrix-seshat --release
 
 Please make sure to include all the `--` as well as the `--release` command line
 switch at the end. Modify your electron version accordingly depending on the
@@ -89,7 +88,7 @@ version that is installed on your system.
 After this is done the Electron version of Element can be run from the main folder
 as usual using:
 
-    yarn start
+    pnpm start
 
 ### Statically linking libsqlcipher
 
@@ -109,26 +108,26 @@ and https://github.com/vector-im/element-web/issues/20926.
 On macOS, you can build universal native modules too:
 
 ```
-yarn run build:native:universal
+pnpm run build:native:universal
 ```
 
 ...or you can build for a specific architecture:
 
 ```
-yarn run build:native --target x86_64-apple-darwin
+pnpm run build:native --target x86_64-apple-darwin
 ```
 
 or
 
 ```
-yarn run build:native --target aarch64-apple-darwin
+pnpm run build:native --target aarch64-apple-darwin
 ```
 
 You'll then need to create a built bundle with the same architecture.
 To bundle a universal build for macOS, run:
 
 ```
-yarn run build:universal
+pnpm run build:universal
 ```
 
 ### Windows
@@ -136,13 +135,13 @@ yarn run build:universal
 If you're on Windows, you can choose to build specifically for 32 or 64 bit:
 
 ```
-yarn run build:32
+pnpm run build:32
 ```
 
 or
 
 ```
-yarn run build:64
+pnpm run build:64
 ```
 
 ### Cross compiling
@@ -156,19 +155,19 @@ at this time.
 
 The native module build system keeps the different architectures
 separate, so you can keep native modules for several architectures at the same
-time and switch which are active using a `yarn run hak copy` command, passing
+time and switch which are active using a `pnpm run hak copy` command, passing
 the appropriate architectures. This will error if you haven't yet built those
 architectures. eg:
 
 ```
-yarn run build:native --target x86_64-apple-darwin
+pnpm run build:native --target x86_64-apple-darwin
 # We've now built & linked into place native modules for Intel
-yarn run build:native --target aarch64-apple-darwin
+pnpm run build:native --target aarch64-apple-darwin
 # We've now built Apple Silicon modules too, and linked them into place as the active ones
 
-yarn run hak copy --target x86_64-apple-darwin
+pnpm run hak copy --target x86_64-apple-darwin
 # We've now switched back to our Intel modules
-yarn run hak copy --target x86_64-apple-darwin --target aarch64-apple-darwin
+pnpm run hak copy --target x86_64-apple-darwin --target aarch64-apple-darwin
 # Now our native modules are universal x86_64+aarch64 binaries
 ```
 
