@@ -137,8 +137,17 @@ ipcMain.on("seshat", async function (_ev: IpcMainEvent, payload): Promise<void> 
 
                         eventIndex = new Seshat(eventStorePath, { passphrase, ...seshatConfig });
                     } else {
-                        sendError(payload.id, <Error>e);
-                        return;
+                        // Schema mismatch or other errors - delete and recreate the database.
+                        console.warn("Failed to open Seshat database, deleting and recreating:", e);
+                        await deleteContents(eventStorePath);
+                        try {
+                            eventIndex = new Seshat(eventStorePath, { passphrase, ...seshatConfig });
+                            // Tell element-web to force re-adding initial checkpoints.
+                            ret = { wasRecreated: true };
+                        } catch (e2) {
+                            sendError(payload.id, <Error>e2);
+                            return;
+                        }
                     }
                 }
             }
