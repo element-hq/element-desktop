@@ -148,11 +148,19 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
             }));
             break;
         case "callDisplayMediaCallback": {
-            const shouldIncludeAudio = getAudioRequested() && process.platform === "win32";
+            const audioRequested = getAudioRequested();
             const callback = getDisplayMediaCallback();
             setDisplayMediaCallback(null);
             setAudioRequested(false);
-            if (shouldIncludeAudio) {
+
+            // Show audio picker for Linux (X11 path - Wayland is handled in electron-main.ts)
+            if (audioRequested && process.platform === "linux" && global.mainWindow) {
+                const { showAudioPickerAndStart } = await import("./audio-picker.js");
+                await showAudioPickerAndStart(global.mainWindow);
+            }
+
+            // Include loopback audio for Windows
+            if (audioRequested && process.platform === "win32") {
                 await callback?.({ video: args[0], audio: "loopback" });
             } else {
                 await callback?.({ video: args[0] });

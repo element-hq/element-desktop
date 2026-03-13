@@ -10,14 +10,10 @@ import { existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import type { Node } from "@vencord/venmic";
-import {
-    type VenmicListResult,
-    listVenmicNodes,
-    startVenmicDirect,
-    startVenmicSystemDirect,
-    stopVenmicDirect,
-} from "./venmic.js";
+import type { AudioSelection, VenmicListResult } from "./@types/audio-sharing.js";
+import { listVenmicNodes, startVenmicDirect, startVenmicSystemDirect, stopVenmicDirect } from "./venmic.js";
+
+export type { AudioSelection };
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -44,11 +40,6 @@ function getAudioPickerHtmlPath(): string {
     // Fallback to first candidate (will error if not found)
     console.warn("audio-picker: could not find audio-picker.html, tried:", candidates);
     return candidates[0];
-}
-
-export interface AudioSelection {
-    type: "none" | "system" | "app";
-    node?: Node;
 }
 
 /**

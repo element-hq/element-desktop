@@ -25,23 +25,23 @@ const VENMIC_PATCH_SCRIPT = `
     const originalGetDisplayMedia = navigator.mediaDevices.getDisplayMedia.bind(navigator.mediaDevices);
 
     navigator.mediaDevices.getDisplayMedia = async function(options) {
-        console.log('[venmic-inject] getDisplayMedia called in frame:', window.location.href);
+        console.debug('[venmic-inject] getDisplayMedia called in frame:', window.location.href);
         
         const stream = await originalGetDisplayMedia(options);
-        console.log('[venmic-inject] original getDisplayMedia returned, tracks:', 
+        console.debug('[venmic-inject] original getDisplayMedia returned, tracks:', 
             stream.getTracks().map(t => t.kind + ':' + t.label).join(', '));
 
         // Try to find and capture from venmic virtual microphone
         try {
             const devices = await navigator.mediaDevices.enumerateDevices();
             const audioInputs = devices.filter(d => d.kind === 'audioinput');
-            console.log('[venmic-inject] available audio inputs:', 
+            console.debug('[venmic-inject] available audio inputs:', 
                 audioInputs.map(d => d.label || d.deviceId.slice(0, 8)).join(', '));
 
             const venmicDevice = devices.find(d => d.label === 'vencord-screen-share');
 
             if (venmicDevice) {
-                console.log('[venmic-inject] found vencord-screen-share device!');
+                console.debug('[venmic-inject] found vencord-screen-share device');
 
                 const audioStream = await navigator.mediaDevices.getUserMedia({
                     audio: {
@@ -55,32 +55,33 @@ const VENMIC_PATCH_SCRIPT = `
                     }
                 });
 
-                console.log('[venmic-inject] captured audio from venmic virtual mic');
-
-                // Remove any existing audio tracks
-                stream.getAudioTracks().forEach(track => {
-                    console.log('[venmic-inject] removing existing audio track:', track.label);
-                    stream.removeTrack(track);
-                });
-
-                // Add the venmic audio track
                 const audioTrack = audioStream.getAudioTracks()[0];
-                stream.addTrack(audioTrack);
+                if (audioTrack) {
+                    // Remove any existing audio tracks
+                    stream.getAudioTracks().forEach(track => {
+                        console.debug('[venmic-inject] removing existing audio track:', track.label);
+                        stream.removeTrack(track);
+                    });
 
-                console.log('[venmic-inject] venmic audio track added to stream successfully');
+                    // Add the venmic audio track
+                    stream.addTrack(audioTrack);
+                    console.log('[venmic-inject] venmic audio track added to stream');
+                } else {
+                    console.warn('[venmic-inject] no audio track returned from virtual microphone');
+                }
             } else {
-                console.log('[venmic-inject] vencord-screen-share device not found');
+                console.debug('[venmic-inject] vencord-screen-share device not found');
             }
         } catch (err) {
             console.error('[venmic-inject] failed to capture venmic audio:', err);
         }
 
-        console.log('[venmic-inject] returning stream with tracks:', 
+        console.debug('[venmic-inject] returning stream with tracks:', 
             stream.getTracks().map(t => t.kind + ':' + t.label).join(', '));
         return stream;
     };
 
-    console.log('[venmic-inject] getDisplayMedia patch installed in frame:', window.location.href);
+    console.debug('[venmic-inject] getDisplayMedia patch installed in frame:', window.location.href);
 })();
 `;
 
@@ -96,7 +97,7 @@ export function setupVenmicInjection(webContents: WebContents): void {
             if (isMainFrame) {
                 // Main frame - inject directly
                 await webContents.executeJavaScript(VENMIC_PATCH_SCRIPT, true);
-                console.log("venmic: patch injected into main frame");
+                console.debug("venmic: patch injected into main frame");
             } else {
                 // Subframe - need to find and inject into all frames
                 // Get all frames including subframes
@@ -128,7 +129,7 @@ async function injectIntoAllFrames(frame: Electron.WebFrameMain): Promise<void> 
 
         // Inject into this frame
         await frame.executeJavaScript(VENMIC_PATCH_SCRIPT, true);
-        console.log("venmic: patch injected into frame:", frame.url);
+        console.debug("venmic: patch injected into frame:", frame.url);
     } catch (err) {
         // Frame might have been destroyed or navigated
         console.debug("venmic: failed to inject into frame:", err);

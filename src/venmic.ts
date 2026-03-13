@@ -1,5 +1,5 @@
 /*
-Copyright 2026 New Vector Ltd.
+Copyright 2025 New Vector Ltd.
 
 SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Commercial
 Please see LICENSE files in the repository root for full details.
@@ -12,6 +12,10 @@ import { fileURLToPath } from "node:url";
 
 import type { LinkData, Node, PatchBay as PatchBayType } from "@vencord/venmic";
 
+import type { VenmicListResult } from "./@types/audio-sharing.js";
+
+export type { VenmicListResult };
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const nativeRequire = createRequire(import.meta.url);
 
@@ -23,10 +27,6 @@ let initialized = false;
 
 let hasPipewirePulse = false;
 let isGlibcOutdated = false;
-
-export type VenmicListResult =
-    | { ok: true; targets: Node[]; hasPipewirePulse: boolean }
-    | { ok: false; isGlibcOutdated: boolean };
 
 function importVenmic(): void {
     if (imported) {

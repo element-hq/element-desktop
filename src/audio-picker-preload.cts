@@ -10,18 +10,7 @@ Please see LICENSE files in the repository root for full details.
 
 import { contextBridge, ipcRenderer } from "electron";
 
-import type { Node } from "@vencord/venmic";
-
-export interface AudioSelection {
-    type: "none" | "system" | "app";
-    node?: Node;
-}
-
-export interface VenmicListResult {
-    ok: true;
-    targets: Node[];
-    hasPipewirePulse: boolean;
-}
+import type { AudioSelection, VenmicListResult } from "./@types/audio-sharing.js" with { "resolution-mode": "import" };
 
 contextBridge.exposeInMainWorld("audioPickerAPI", {
     /**

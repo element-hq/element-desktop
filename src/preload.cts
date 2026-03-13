@@ -118,10 +118,10 @@ if (process.platform === "linux") {
     navigator.mediaDevices.getDisplayMedia = async function (
         options?: DisplayMediaStreamOptions,
     ): Promise<MediaStream> {
-        console.log("venmic: getDisplayMedia called with options:", options);
+        console.debug("venmic: getDisplayMedia called with options:", options);
 
         const stream = await originalGetDisplayMedia(options);
-        console.log(
+        console.debug(
             "venmic: original getDisplayMedia returned stream with tracks:",
             stream.getTracks().map((t) => `${t.kind}:${t.label}`),
         );
@@ -130,7 +130,7 @@ if (process.platform === "linux") {
         try {
             const devices = await navigator.mediaDevices.enumerateDevices();
             const audioInputs = devices.filter((d) => d.kind === "audioinput");
-            console.log(
+            console.debug(
                 "venmic: available audio input devices:",
                 audioInputs.map((d) => `${d.label} (${d.deviceId.slice(0, 8)}...)`),
             );
@@ -138,7 +138,7 @@ if (process.platform === "linux") {
             const venmicDevice = devices.find((d) => d.label === "vencord-screen-share");
 
             if (venmicDevice) {
-                console.log("venmic: found vencord-screen-share device:", venmicDevice.deviceId);
+                console.debug("venmic: found vencord-screen-share device:", venmicDevice.deviceId);
 
                 // Capture audio from the venmic virtual microphone
                 const audioStream = await navigator.mediaDevices.getUserMedia({
@@ -153,40 +153,44 @@ if (process.platform === "linux") {
                     },
                 });
 
-                console.log("venmic: captured audio stream from virtual mic");
+                console.debug("venmic: captured audio stream from virtual mic");
 
                 // Remove any existing audio tracks and add the venmic audio
-                stream.getAudioTracks().forEach((track) => {
-                    console.log("venmic: removing existing audio track:", track.label);
-                    stream.removeTrack(track);
-                });
                 const audioTrack = audioStream.getAudioTracks()[0];
-                stream.addTrack(audioTrack);
+                if (audioTrack) {
+                    stream.getAudioTracks().forEach((track) => {
+                        console.debug("venmic: removing existing audio track:", track.label);
+                        stream.removeTrack(track);
+                    });
+                    stream.addTrack(audioTrack);
 
-                // Clean up venmic when the audio track ends
-                audioTrack.addEventListener("ended", () => {
-                    console.log("venmic: audio track ended, stopping venmic");
-                    void ipcRenderer.invoke("stopVenmic");
-                });
-
-                // Also clean up when the video track ends (screen share stopped)
-                const videoTrack = stream.getVideoTracks()[0];
-                if (videoTrack) {
-                    videoTrack.addEventListener("ended", () => {
-                        console.log("venmic: video track ended, stopping venmic");
+                    // Clean up venmic when the audio track ends
+                    audioTrack.addEventListener("ended", () => {
+                        console.debug("venmic: audio track ended, stopping venmic");
                         void ipcRenderer.invoke("stopVenmic");
                     });
-                }
 
-                console.log("venmic: audio track added to screen share stream successfully");
+                    // Also clean up when the video track ends (screen share stopped)
+                    const videoTrack = stream.getVideoTracks()[0];
+                    if (videoTrack) {
+                        videoTrack.addEventListener("ended", () => {
+                            console.debug("venmic: video track ended, stopping venmic");
+                            void ipcRenderer.invoke("stopVenmic");
+                        });
+                    }
+
+                    console.log("venmic: audio track added to screen share stream");
+                } else {
+                    console.warn("venmic: no audio track returned from virtual microphone");
+                }
             } else {
-                console.log("venmic: vencord-screen-share device NOT found");
+                console.debug("venmic: vencord-screen-share device not found, audio not captured");
             }
         } catch (err) {
             console.error("venmic: failed to capture audio from virtual microphone:", err);
         }
 
-        console.log(
+        console.debug(
             "venmic: returning stream with tracks:",
             stream.getTracks().map((t) => `${t.kind}:${t.label}`),
         );
