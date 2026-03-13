@@ -112,6 +112,9 @@
         "tsx": "^4.19.2",
         "typescript": "5.9.3"
     },
+    "optionalDependencies": {
+        "@vencord/venmic": "^6.1.0"
+    },
     "hakDependencies": {
         "matrix-seshat": "^4.0.1"
     },
@@ -124,7 +127,8 @@
     },
     "pnpm": {
         "onlyBuiltDependencies": [
-            "electron"
+            "electron",
+            "@vencord/venmic"
         ],
         "patchedDependencies": {
             "@types/auto-launch": "patches/@types__auto-launch.patch"

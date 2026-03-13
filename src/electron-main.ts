@@ -47,6 +47,10 @@ import { type Json, loadJsonFile } from "./utils.js";
 import { setupMediaAuth } from "./media-auth.js";
 import { readBuildConfig } from "./build-config.js";
 
+if (process.platform === "linux") {
+    await import("./venmic.js");
+}
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const argv = minimist(process.argv, {

@@ -227,6 +227,17 @@ if (os.platform() === "linux") {
         // Remove sqlcipher dependency when using bundled
         config.deb.recommends = config.deb.recommends?.filter((d) => d !== "libsqlcipher0");
     }
+
+    // Include venmic native module prebuilds for Linux audio sharing.
+    // Only the .node files are needed since venmic.ts loads them directly.
+    config.files = [
+        ...(config.files as Array<string | object>),
+        {
+            from: "node_modules/@vencord/venmic",
+            to: "node_modules/@vencord/venmic",
+            filter: ["prebuilds/**/*.node"],
+        },
+    ];
 }
 
 export default config;

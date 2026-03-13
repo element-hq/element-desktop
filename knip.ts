@@ -6,6 +6,8 @@ export default {
     ignoreDependencies: [
         // Brought in via hak scripts
         "matrix-seshat",
+        // Native optional dependency for Linux audio sharing
+        "@vencord/venmic",
         // Required for `action-validator`
         "@action-validator/*",
         // Used for git pre-commit hooks

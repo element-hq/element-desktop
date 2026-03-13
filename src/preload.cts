@@ -76,4 +76,30 @@ contextBridge.exposeInMainWorld("electron", {
     async getSettingValue(settingName: string): Promise<any> {
         return ipcRenderer.invoke("getSettingValue", settingName);
     },
+
+    /**
+     * Virtual microphone API for Linux audio sharing via PipeWire.
+     * Only functional on Linux with PipeWire and @vencord/venmic installed.
+     */
+    venmic: {
+        /** List available audio nodes for sharing. */
+        list(): Promise<
+            | { ok: false; isGlibCxxOutdated: boolean }
+            | { ok: true; targets: Record<string, string>[]; hasPipewirePulse: boolean }
+        > {
+            return ipcRenderer.invoke("getVenmicList");
+        },
+        /** Start capturing audio from specific application nodes. */
+        start(include: Record<string, string>[]): Promise<boolean | undefined> {
+            return ipcRenderer.invoke("startVenmic", include);
+        },
+        /** Start capturing system-wide audio, optionally excluding specific nodes. */
+        startSystem(exclude: Record<string, string>[]): Promise<boolean | undefined> {
+            return ipcRenderer.invoke("startVenmicSystem", exclude);
+        },
+        /** Stop the virtual microphone and clean up. */
+        stop(): Promise<void> {
+            return ipcRenderer.invoke("stopVenmic");
+        },
+    },
 });
