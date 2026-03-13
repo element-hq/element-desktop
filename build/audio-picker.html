@@ -12,6 +12,47 @@ Please see LICENSE files in the repository root for full details.
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
     <title>Share Audio</title>
     <style>
+        :root {
+            /* Element/Compound-aligned color tokens */
+            --color-bg-canvas: #15191e;
+            --color-bg-subtle: #21262d;
+            --color-bg-subtle-hover: #282e36;
+            --color-bg-accent: rgba(13, 189, 139, 0.15);
+            --color-border-accent: #0dbd8b;
+            --color-accent: #0dbd8b;
+            --color-accent-hover: #0aa87c;
+            --color-text-primary: #ffffff;
+            --color-text-secondary: #a9b2bc;
+            --color-text-muted: #8d99a5;
+            --color-border-subtle: #30363d;
+            --color-border-interactive: #6e7681;
+            --color-bg-button-secondary: #30363d;
+            --color-bg-button-secondary-hover: #3d444d;
+            --color-bg-error: rgba(255, 75, 85, 0.15);
+            --color-border-error: rgba(255, 75, 85, 0.4);
+            --color-text-error: #ff4b55;
+            --color-focus-ring: rgba(13, 189, 139, 0.4);
+
+            /* Spacing scale */
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 12px;
+            --space-lg: 16px;
+            --space-xl: 20px;
+
+            /* Border radius */
+            --radius-md: 8px;
+
+            /* Transitions */
+            --transition-fast: 0.15s ease;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            :root {
+                --transition-fast: 0s;
+            }
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -20,79 +61,110 @@ Please see LICENSE files in the repository root for full details.
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: #15191e;
-            color: #ffffff;
-            padding: 20px;
+            background: var(--color-bg-canvas);
+            color: var(--color-text-primary);
+            padding: var(--space-xl);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
 
+        main {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: 0;
+        }
+
         h1 {
             font-size: 18px;
             font-weight: 600;
-            margin-bottom: 8px;
+            margin-bottom: var(--space-sm);
         }
 
         .subtitle {
             font-size: 13px;
-            color: #8d99a5;
-            margin-bottom: 20px;
+            color: var(--color-text-secondary);
+            margin-bottom: var(--space-xl);
         }
 
         .options-container {
             flex: 1;
             overflow-y: auto;
-            margin-bottom: 16px;
+            margin-bottom: var(--space-lg);
+        }
+
+        /* Scrollbar styling */
+        .options-container::-webkit-scrollbar,
+        .app-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .options-container::-webkit-scrollbar-track,
+        .app-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .options-container::-webkit-scrollbar-thumb,
+        .app-list::-webkit-scrollbar-thumb {
+            background: var(--color-border-subtle);
+            border-radius: 3px;
+        }
+
+        .options-container::-webkit-scrollbar-thumb:hover,
+        .app-list::-webkit-scrollbar-thumb:hover {
+            background: var(--color-border-interactive);
         }
 
         .option {
             display: flex;
             align-items: center;
-            padding: 14px 16px;
-            border-radius: 8px;
-            margin-bottom: 8px;
+            padding: 14px var(--space-lg);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-sm);
             cursor: pointer;
-            background: #21262d;
+            background: var(--color-bg-subtle);
             border: 2px solid transparent;
-            transition: all 0.15s ease;
+            transition: background var(--transition-fast), border-color var(--transition-fast);
+            outline: none;
         }
 
         .option:hover {
-            background: #282e36;
+            background: var(--color-bg-subtle-hover);
         }
 
-        .option.selected {
-            background: rgba(13, 110, 253, 0.15);
-            border-color: #0d6efd;
+        .option:focus-visible {
+            box-shadow: 0 0 0 2px var(--color-focus-ring);
         }
 
-        .option input[type="radio"] {
-            display: none;
+        .option[aria-checked="true"] {
+            background: var(--color-bg-accent);
+            border-color: var(--color-border-accent);
         }
 
         .option-radio {
             width: 18px;
             height: 18px;
-            border: 2px solid #6e7681;
+            border: 2px solid var(--color-border-interactive);
             border-radius: 50%;
             margin-right: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
+            transition: border-color var(--transition-fast);
         }
 
-        .option.selected .option-radio {
-            border-color: #0d6efd;
+        .option[aria-checked="true"] .option-radio {
+            border-color: var(--color-border-accent);
         }
 
-        .option.selected .option-radio::after {
+        .option[aria-checked="true"] .option-radio::after {
             content: "";
             width: 10px;
             height: 10px;
             border-radius: 50%;
-            background: #0d6efd;
+            background: var(--color-accent);
         }
 
         .option-content {
@@ -110,114 +182,226 @@ Please see LICENSE files in the repository root for full details.
 
         .option-description {
             font-size: 12px;
-            color: #8d99a5;
+            color: var(--color-text-secondary);
             margin-top: 2px;
         }
 
         .section-header {
             font-size: 12px;
             font-weight: 600;
-            color: #8d99a5;
+            color: var(--color-text-secondary);
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin: 20px 0 12px;
+            margin: var(--space-xl) 0 var(--space-md);
         }
 
         .app-list {
             max-height: 240px;
             overflow-y: auto;
-            border-radius: 8px;
+            border-radius: var(--radius-md);
         }
 
         .buttons {
             display: flex;
-            gap: 12px;
-            padding-top: 8px;
-            border-top: 1px solid #30363d;
+            gap: var(--space-md);
+            padding-top: var(--space-sm);
+            border-top: 1px solid var(--color-border-subtle);
         }
 
         button {
             flex: 1;
-            padding: 12px 16px;
+            padding: var(--space-md) var(--space-lg);
             border: none;
-            border-radius: 8px;
+            border-radius: var(--radius-md);
             font-size: 14px;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.15s ease;
+            transition: background var(--transition-fast), opacity var(--transition-fast);
+            outline: none;
+        }
+
+        button:focus-visible {
+            box-shadow: 0 0 0 2px var(--color-focus-ring);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         .btn-primary {
-            background: #0d6efd;
+            background: var(--color-accent);
             color: white;
         }
 
-        .btn-primary:hover {
-            background: #0b5ed7;
+        .btn-primary:hover:not(:disabled) {
+            background: var(--color-accent-hover);
         }
 
         .btn-secondary {
-            background: #30363d;
+            background: var(--color-bg-button-secondary);
             color: white;
         }
 
-        .btn-secondary:hover {
-            background: #3d444d;
+        .btn-secondary:hover:not(:disabled) {
+            background: var(--color-bg-button-secondary-hover);
         }
 
         .loading {
-            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             padding: 40px;
-            color: #8d99a5;
+            color: var(--color-text-muted);
+            gap: var(--space-md);
+        }
+
+        .spinner {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--color-border-subtle);
+            border-top-color: var(--color-accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .spinner {
+                animation: none;
+                border-top-color: var(--color-border-subtle);
+                border-right-color: var(--color-accent);
+            }
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         .error {
-            background: rgba(220, 53, 69, 0.15);
-            border: 1px solid rgba(220, 53, 69, 0.4);
-            color: #f8d7da;
-            padding: 16px;
-            border-radius: 8px;
-            margin-bottom: 16px;
+            background: var(--color-bg-error);
+            border: 1px solid var(--color-border-error);
+            color: var(--color-text-error);
+            padding: var(--space-lg);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-lg);
         }
 
         .no-apps {
             text-align: center;
-            padding: 20px;
-            color: #6e7681;
+            padding: var(--space-xl);
+            color: var(--color-text-muted);
             font-size: 13px;
         }
     </style>
 </head>
 <body>
-    <h1>Share Audio</h1>
-    <p class="subtitle">Choose what audio to share with the call</p>
+    <main>
+        <h1>Share Audio</h1>
+        <p class="subtitle">Choose what audio to share with the call</p>
 
-    <div id="content" class="loading">Loading audio sources...</div>
+        <div id="content" class="loading" aria-live="polite">
+            <div class="spinner" aria-hidden="true"></div>
+            <span>Loading audio sources...</span>
+        </div>
+    </main>
 
     <div class="buttons">
-        <button class="btn-secondary" id="cancel">Cancel</button>
-        <button class="btn-primary" id="share">Share</button>
+        <button type="button" class="btn-secondary" id="cancel">Cancel</button>
+        <button type="button" class="btn-primary" id="share" disabled>Share</button>
     </div>
 
     <script>
         (function() {
+            "use strict";
+
             const content = document.getElementById("content");
             const shareBtn = document.getElementById("share");
             const cancelBtn = document.getElementById("cancel");
 
             let selectedType = "none";
             let selectedNode = null;
+            let isSubmitting = false;
 
             function getAppName(node) {
-                return node["application.name"] || 
-                       node["application.process.binary"] || 
-                       node["node.name"] || 
+                return node["application.name"] ||
+                       node["application.process.binary"] ||
+                       node["node.name"] ||
                        "Unknown Application";
+            }
+
+            function escapeHtml(text) {
+                const div = document.createElement("div");
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            function selectOption(option) {
+                // Update visual state
+                content.querySelectorAll(".option").forEach(function(o) {
+                    o.setAttribute("aria-checked", "false");
+                    o.setAttribute("tabindex", "-1");
+                });
+                option.setAttribute("aria-checked", "true");
+                option.setAttribute("tabindex", "0");
+                option.focus();
+
+                // Update selection state
+                selectedType = option.dataset.type;
+                if (option.dataset.node) {
+                    try {
+                        selectedNode = JSON.parse(option.dataset.node);
+                    } catch (e) {
+                        selectedNode = null;
+                    }
+                } else {
+                    selectedNode = null;
+                }
+            }
+
+            function handleKeyDown(e) {
+                const options = Array.from(content.querySelectorAll(".option"));
+                const currentIndex = options.findIndex(function(o) {
+                    return o.getAttribute("aria-checked") === "true";
+                });
+
+                let nextIndex = currentIndex;
+
+                switch (e.key) {
+                    case "ArrowDown":
+                    case "ArrowRight":
+                        e.preventDefault();
+                        nextIndex = (currentIndex + 1) % options.length;
+                        break;
+                    case "ArrowUp":
+                    case "ArrowLeft":
+                        e.preventDefault();
+                        nextIndex = (currentIndex - 1 + options.length) % options.length;
+                        break;
+                    case "Home":
+                        e.preventDefault();
+                        nextIndex = 0;
+                        break;
+                    case "End":
+                        e.preventDefault();
+                        nextIndex = options.length - 1;
+                        break;
+                    case " ":
+                        e.preventDefault();
+                        // Space confirms current selection (already selected via focus)
+                        return;
+                    default:
+                        return;
+                }
+
+                if (nextIndex !== currentIndex && options[nextIndex]) {
+                    selectOption(options[nextIndex]);
+                }
             }
 
             function renderOptions(sources) {
                 const targets = sources.targets || [];
-                
+
                 // Group by application name to avoid duplicates
                 // Only store stable properties that won't change when the app recreates its audio node
                 const appMap = new Map();
@@ -237,65 +421,74 @@ Please see LICENSE files in the repository root for full details.
                 }
 
                 const apps = Array.from(appMap.entries())
-                    .sort((a, b) => a[0].localeCompare(b[0]));
+                    .sort(function(a, b) { return a[0].localeCompare(b[0]); });
 
-                let html = `
-                    <div class="option selected" data-type="none">
-                        <div class="option-radio"></div>
-                        <div class="option-content">
-                            <div class="option-label">No audio</div>
-                            <div class="option-description">Share screen only</div>
-                        </div>
-                    </div>
+                let html = '<div role="radiogroup" aria-label="Audio source selection">';
 
-                    <div class="option" data-type="system">
-                        <div class="option-radio"></div>
-                        <div class="option-content">
-                            <div class="option-label">Entire system</div>
-                            <div class="option-description">Share all audio from your computer</div>
-                        </div>
-                    </div>
-                `;
+                html += '\
+                    <div class="option" role="radio" aria-checked="true" tabindex="0" data-type="none">\
+                        <div class="option-radio" aria-hidden="true"></div>\
+                        <div class="option-content">\
+                            <div class="option-label">No audio</div>\
+                            <div class="option-description">Share screen only</div>\
+                        </div>\
+                    </div>\
+                    <div class="option" role="radio" aria-checked="false" tabindex="-1" data-type="system">\
+                        <div class="option-radio" aria-hidden="true"></div>\
+                        <div class="option-content">\
+                            <div class="option-label">Entire system</div>\
+                            <div class="option-description">Share all audio from your computer</div>\
+                        </div>\
+                    </div>';
 
                 if (apps.length > 0) {
-                    html += `<div class="section-header">Applications</div><div class="app-list">`;
+                    html += '<div class="section-header">Applications</div><div class="app-list">';
                     for (const [name, node] of apps) {
                         const nodeJson = JSON.stringify(node).replace(/"/g, "&quot;");
-                        html += `
-                            <div class="option" data-type="app" data-node="${nodeJson}">
-                                <div class="option-radio"></div>
-                                <div class="option-content">
-                                    <div class="option-label">${escapeHtml(name)}</div>
-                                </div>
-                            </div>
-                        `;
+                        html += '\
+                            <div class="option" role="radio" aria-checked="false" tabindex="-1" data-type="app" data-node="' + nodeJson + '">\
+                                <div class="option-radio" aria-hidden="true"></div>\
+                                <div class="option-content">\
+                                    <div class="option-label">' + escapeHtml(name) + '</div>\
+                                </div>\
+                            </div>';
                     }
-                    html += `</div>`;
+                    html += '</div>';
                 } else {
-                    html += `<div class="no-apps">No applications are currently playing audio</div>`;
+                    html += '<div class="no-apps">No applications are currently playing audio</div>';
                 }
+
+                html += '</div>';
 
                 content.className = "options-container";
                 content.innerHTML = html;
 
                 // Add click handlers
-                content.querySelectorAll(".option").forEach(option => {
-                    option.addEventListener("click", () => {
-                        content.querySelectorAll(".option").forEach(o => o.classList.remove("selected"));
-                        option.classList.add("selected");
-                        selectedType = option.dataset.type;
-                        selectedNode = option.dataset.node ? JSON.parse(option.dataset.node) : null;
+                content.querySelectorAll(".option").forEach(function(option) {
+                    option.addEventListener("click", function() {
+                        selectOption(option);
                     });
                 });
-            }
 
-            function escapeHtml(text) {
-                const div = document.createElement("div");
-                div.textContent = text;
-                return div.innerHTML;
+                // Add keyboard navigation to radiogroup
+                const radiogroup = content.querySelector('[role="radiogroup"]');
+                if (radiogroup) {
+                    radiogroup.addEventListener("keydown", handleKeyDown);
+                }
+
+                // Enable share button and focus first option
+                shareBtn.disabled = false;
+                const firstOption = content.querySelector(".option");
+                if (firstOption) {
+                    firstOption.focus();
+                }
             }
 
             function submit() {
+                if (isSubmitting || shareBtn.disabled) return;
+                isSubmitting = true;
+                shareBtn.disabled = true;
+
                 const selection = { type: selectedType };
                 if (selectedNode) {
                     selection.node = selectedNode;
@@ -303,37 +496,44 @@ Please see LICENSE files in the repository root for full details.
                 window.audioPickerAPI.submitSelection(selection);
             }
 
-            shareBtn.addEventListener("click", submit);
-            cancelBtn.addEventListener("click", () => window.audioPickerAPI.cancel());
+            function cancel() {
+                if (isSubmitting) return;
+                isSubmitting = true;
+                window.audioPickerAPI.cancel();
+            }
 
-            // Handle Enter key
-            document.addEventListener("keydown", (e) => {
-                if (e.key === "Enter") {
+            shareBtn.addEventListener("click", submit);
+            cancelBtn.addEventListener("click", cancel);
+
+            // Handle global keyboard shortcuts
+            document.addEventListener("keydown", function(e) {
+                if (e.key === "Enter" && !shareBtn.disabled) {
+                    e.preventDefault();
                     submit();
                 } else if (e.key === "Escape") {
-                    window.audioPickerAPI.cancel();
+                    e.preventDefault();
+                    cancel();
                 }
             });
 
             // Load sources
-            console.log("audio-picker: calling getSources()");
             window.audioPickerAPI.getSources()
-                .then(sources => {
-                    console.log("audio-picker: got sources", sources);
+                .then(function(sources) {
                     if (sources.ok) {
                         renderOptions(sources);
                     } else {
                         content.className = "";
-                        content.innerHTML = `<div class="error">
-                            Unable to load audio sources. 
-                            ${sources.isGlibCxxOutdated ? "Your system's GLIBC version may be too old." : "PipeWire may not be available."}
-                        </div>`;
+                        content.innerHTML = '<div class="error">\
+                            Unable to load audio sources. ' +
+                            (sources.isGlibCxxOutdated ? "Your system's GLIBC version may be too old." : "PipeWire may not be available.") +
+                        '</div>';
+                        shareBtn.disabled = false;
                     }
                 })
-                .catch(err => {
-                    console.error("audio-picker: error loading sources", err);
+                .catch(function(err) {
                     content.className = "";
-                    content.innerHTML = `<div class="error">Failed to load audio sources: ${escapeHtml(err.message)}</div>`;
+                    content.innerHTML = '<div class="error">Failed to load audio sources: ' + escapeHtml(err.message) + '</div>';
+                    shareBtn.disabled = false;
                 });
         })();
     </script>
