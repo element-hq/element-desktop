@@ -525,7 +525,7 @@ Please see LICENSE files in the repository root for full details.
                         content.className = "";
                         content.innerHTML = '<div class="error">\
                             Unable to load audio sources. ' +
-                            (sources.isGlibCxxOutdated ? "Your system's GLIBC version may be too old." : "PipeWire may not be available.") +
+                            (sources.isGlibcOutdated ? "Your system's GLIBC version may be too old." : "PipeWire may not be available.") +
                         '</div>';
                         shareBtn.disabled = false;
                     }

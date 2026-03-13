@@ -1,5 +1,5 @@
 /*
-Copyright 2025 New Vector Ltd.
+Copyright 2026 New Vector Ltd.
 
 SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Commercial
 Please see LICENSE files in the repository root for full details.
@@ -134,8 +134,6 @@ async function injectIntoAllFrames(frame: Electron.WebFrameMain): Promise<void> 
         console.debug("venmic: failed to inject into frame:", err);
     }
 
-    // Inject into child frames
-    for (const childFrame of frame.frames) {
-        await injectIntoAllFrames(childFrame);
-    }
+    // Inject into child frames in parallel
+    await Promise.all(frame.frames.map((childFrame) => injectIntoAllFrames(childFrame)));
 }

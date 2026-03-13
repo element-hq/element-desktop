@@ -1,5 +1,5 @@
 /*
-Copyright 2025 New Vector Ltd.
+Copyright 2026 New Vector Ltd.
 
 SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Commercial
 Please see LICENSE files in the repository root for full details.
@@ -22,11 +22,11 @@ let imported = false;
 let initialized = false;
 
 let hasPipewirePulse = false;
-let isGlibCxxOutdated = false;
+let isGlibcOutdated = false;
 
 export type VenmicListResult =
     | { ok: true; targets: Node[]; hasPipewirePulse: boolean }
-    | { ok: false; isGlibCxxOutdated: boolean };
+    | { ok: false; isGlibcOutdated: boolean };
 
 function importVenmic(): void {
     if (imported) {
@@ -36,25 +36,15 @@ function importVenmic(): void {
     imported = true;
 
     try {
-        // Load the native .node file directly to avoid needing the full
-        // venmic JS entry point and its pkg-prebuilds dependency chain in the
-        // packaged app. This follows the same approach used by Vesktop.
-        const nativePath = join(
-            __dirname,
-            "..",
-            "node_modules",
-            "@vencord",
-            "venmic",
-            "prebuilds",
-            `venmic-addon-linux-${process.arch}`,
-            "node-napi-v7.node",
-        );
+        // Load the native .node file directly from lib/ where it's copied
+        // during build. This follows the same approach used by Vesktop.
+        const nativePath = join(__dirname, `venmic-${process.arch}.node`);
         PatchBay = (nativeRequire(nativePath) as { PatchBay: typeof PatchBayType }).PatchBay;
         hasPipewirePulse = PatchBay.hasPipeWire();
     } catch (e: unknown) {
         const message = e instanceof Error ? (e.stack ?? e.message) : String(e);
         console.error("Failed to import venmic:", message);
-        isGlibCxxOutdated = /GLIBC_\d/.test(message);
+        isGlibcOutdated = message.toLowerCase().includes("glibc");
     }
 }
 
@@ -95,7 +85,7 @@ export function listVenmicNodes(): VenmicListResult {
         ?.list()
         .filter((s) => s["application.process.id"] !== audioPid);
 
-    return targets ? { ok: true, targets, hasPipewirePulse } : { ok: false, isGlibCxxOutdated };
+    return targets ? { ok: true, targets, hasPipewirePulse } : { ok: false, isGlibcOutdated };
 }
 
 /**

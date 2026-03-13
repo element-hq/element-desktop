@@ -86,7 +86,7 @@ contextBridge.exposeInMainWorld("electron", {
     venmic: {
         /** List available audio nodes for sharing. */
         list(): Promise<
-            | { ok: false; isGlibCxxOutdated: boolean }
+            | { ok: false; isGlibcOutdated: boolean }
             | { ok: true; targets: Record<string, string>[]; hasPipewirePulse: boolean }
         > {
             return ipcRenderer.invoke("getVenmicList");

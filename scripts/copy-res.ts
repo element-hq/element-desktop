@@ -79,3 +79,26 @@ INCLUDE_LANGS.forEach((file): void => {
 if (watch) {
     INCLUDE_LANGS.forEach((file) => watchLanguage(I18N_BASE_PATH + file, I18N_DEST));
 }
+
+// Copy venmic native addon for Linux audio sharing
+// Only copy on Linux since venmic is Linux-only
+if (process.platform === "linux") {
+    const venmicSource = path.join(
+        "node_modules",
+        "@vencord",
+        "venmic",
+        "prebuilds",
+        `venmic-addon-linux-${process.arch}`,
+        "node-napi-v7.node",
+    );
+
+    if (fs.existsSync(venmicSource)) {
+        const venmicDest = path.join("lib", `venmic-${process.arch}.node`);
+        fs.copyFileSync(venmicSource, venmicDest);
+        if (verbose) {
+            console.log(`Copied venmic native addon to ${venmicDest}`);
+        }
+    } else if (verbose) {
+        console.log("venmic native addon not found, skipping (optional dependency)");
+    }
+}
