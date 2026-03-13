@@ -24,6 +24,10 @@ let initialized = false;
 let hasPipewirePulse = false;
 let isGlibCxxOutdated = false;
 
+export type VenmicListResult =
+    | { ok: true; targets: Node[]; hasPipewirePulse: boolean }
+    | { ok: false; isGlibCxxOutdated: boolean };
+
 function importVenmic(): void {
     if (imported) {
         return;
@@ -80,7 +84,11 @@ function getRendererAudioServicePid(): string {
     return audioService?.pid?.toString() ?? "";
 }
 
-ipcMain.handle("getVenmicList", () => {
+/**
+ * List available audio nodes for sharing.
+ * Can be called directly from main process code.
+ */
+export function listVenmicNodes(): VenmicListResult {
     const audioPid = getRendererAudioServicePid();
 
     const targets = obtainVenmic()
@@ -88,9 +96,13 @@ ipcMain.handle("getVenmicList", () => {
         .filter((s) => s["application.process.id"] !== audioPid);
 
     return targets ? { ok: true, targets, hasPipewirePulse } : { ok: false, isGlibCxxOutdated };
-});
+}
 
-ipcMain.handle("startVenmic", (_ev, include: Node[]) => {
+/**
+ * Start capturing audio from specific application nodes.
+ * Can be called directly from main process code.
+ */
+export function startVenmicDirect(include: Node[]): boolean | undefined {
     const pid = getRendererAudioServicePid();
 
     const data: LinkData = {
@@ -100,9 +112,13 @@ ipcMain.handle("startVenmic", (_ev, include: Node[]) => {
     };
 
     return obtainVenmic()?.link(data);
-});
+}
 
-ipcMain.handle("startVenmicSystem", (_ev, exclude: Node[]) => {
+/**
+ * Start capturing system-wide audio, optionally excluding specific nodes.
+ * Can be called directly from main process code.
+ */
+export function startVenmicSystemDirect(exclude: Node[]): boolean | undefined {
     const pid = getRendererAudioServicePid();
 
     const data: LinkData = {
@@ -114,6 +130,21 @@ ipcMain.handle("startVenmicSystem", (_ev, exclude: Node[]) => {
     };
 
     return obtainVenmic()?.link(data);
-});
+}
 
-ipcMain.handle("stopVenmic", () => obtainVenmic()?.unlink());
+/**
+ * Stop the virtual microphone and clean up.
+ * Can be called directly from main process code.
+ */
+export function stopVenmicDirect(): void {
+    obtainVenmic()?.unlink();
+}
+
+// IPC handlers for renderer process access
+ipcMain.handle("getVenmicList", () => listVenmicNodes());
+
+ipcMain.handle("startVenmic", (_ev, include: Node[]) => startVenmicDirect(include));
+
+ipcMain.handle("startVenmicSystem", (_ev, exclude: Node[]) => startVenmicSystemDirect(exclude));
+
+ipcMain.handle("stopVenmic", () => stopVenmicDirect());

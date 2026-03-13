@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<!--
+Copyright 2025 New Vector Ltd.
+
+SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Commercial
+Please see LICENSE files in the repository root for full details.
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
+    <title>Share Audio</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #15191e;
+            color: #ffffff;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 13px;
+            color: #8d99a5;
+            margin-bottom: 20px;
+        }
+
+        .options-container {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 16px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            background: #21262d;
+            border: 2px solid transparent;
+            transition: all 0.15s ease;
+        }
+
+        .option:hover {
+            background: #282e36;
+        }
+
+        .option.selected {
+            background: rgba(13, 110, 253, 0.15);
+            border-color: #0d6efd;
+        }
+
+        .option input[type="radio"] {
+            display: none;
+        }
+
+        .option-radio {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #6e7681;
+            border-radius: 50%;
+            margin-right: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .option.selected .option-radio {
+            border-color: #0d6efd;
+        }
+
+        .option.selected .option-radio::after {
+            content: "";
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #0d6efd;
+        }
+
+        .option-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .option-label {
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .option-description {
+            font-size: 12px;
+            color: #8d99a5;
+            margin-top: 2px;
+        }
+
+        .section-header {
+            font-size: 12px;
+            font-weight: 600;
+            color: #8d99a5;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 20px 0 12px;
+        }
+
+        .app-list {
+            max-height: 240px;
+            overflow-y: auto;
+            border-radius: 8px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+            padding-top: 8px;
+            border-top: 1px solid #30363d;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .btn-primary {
+            background: #0d6efd;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0b5ed7;
+        }
+
+        .btn-secondary {
+            background: #30363d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #3d444d;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #8d99a5;
+        }
+
+        .error {
+            background: rgba(220, 53, 69, 0.15);
+            border: 1px solid rgba(220, 53, 69, 0.4);
+            color: #f8d7da;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+
+        .no-apps {
+            text-align: center;
+            padding: 20px;
+            color: #6e7681;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Share Audio</h1>
+    <p class="subtitle">Choose what audio to share with the call</p>
+
+    <div id="content" class="loading">Loading audio sources...</div>
+
+    <div class="buttons">
+        <button class="btn-secondary" id="cancel">Cancel</button>
+        <button class="btn-primary" id="share">Share</button>
+    </div>
+
+    <script>
+        (function() {
+            const content = document.getElementById("content");
+            const shareBtn = document.getElementById("share");
+            const cancelBtn = document.getElementById("cancel");
+
+            let selectedType = "none";
+            let selectedNode = null;
+
+            function getAppName(node) {
+                return node["application.name"] || 
+                       node["application.process.binary"] || 
+                       node["node.name"] || 
+                       "Unknown Application";
+            }
+
+            function renderOptions(sources) {
+                const targets = sources.targets || [];
+                
+                // Group by application name to avoid duplicates
+                // Only store stable properties that won't change when the app recreates its audio node
+                const appMap = new Map();
+                for (const node of targets) {
+                    const name = getAppName(node);
+                    if (!appMap.has(name)) {
+                        // Create a minimal filter using only stable properties
+                        // This ensures venmic can re-link if the app recreates its audio node
+                        const stableNode = {};
+                        if (node["application.name"]) {
+                            stableNode["application.name"] = node["application.name"];
+                        } else if (node["node.name"]) {
+                            stableNode["node.name"] = node["node.name"];
+                        }
+                        appMap.set(name, stableNode);
+                    }
+                }
+
+                const apps = Array.from(appMap.entries())
+                    .sort((a, b) => a[0].localeCompare(b[0]));
+
+                let html = `
+                    <div class="option selected" data-type="none">
+                        <div class="option-radio"></div>
+                        <div class="option-content">
+                            <div class="option-label">No audio</div>
+                            <div class="option-description">Share screen only</div>
+                        </div>
+                    </div>
+
+                    <div class="option" data-type="system">
+                        <div class="option-radio"></div>
+                        <div class="option-content">
+                            <div class="option-label">Entire system</div>
+                            <div class="option-description">Share all audio from your computer</div>
+                        </div>
+                    </div>
+                `;
+
+                if (apps.length > 0) {
+                    html += `<div class="section-header">Applications</div><div class="app-list">`;
+                    for (const [name, node] of apps) {
+                        const nodeJson = JSON.stringify(node).replace(/"/g, "&quot;");
+                        html += `
+                            <div class="option" data-type="app" data-node="${nodeJson}">
+                                <div class="option-radio"></div>
+                                <div class="option-content">
+                                    <div class="option-label">${escapeHtml(name)}</div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                    html += `</div>`;
+                } else {
+                    html += `<div class="no-apps">No applications are currently playing audio</div>`;
+                }
+
+                content.className = "options-container";
+                content.innerHTML = html;
+
+                // Add click handlers
+                content.querySelectorAll(".option").forEach(option => {
+                    option.addEventListener("click", () => {
+                        content.querySelectorAll(".option").forEach(o => o.classList.remove("selected"));
+                        option.classList.add("selected");
+                        selectedType = option.dataset.type;
+                        selectedNode = option.dataset.node ? JSON.parse(option.dataset.node) : null;
+                    });
+                });
+            }
+
+            function escapeHtml(text) {
+                const div = document.createElement("div");
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            function submit() {
+                const selection = { type: selectedType };
+                if (selectedNode) {
+                    selection.node = selectedNode;
+                }
+                window.audioPickerAPI.submitSelection(selection);
+            }
+
+            shareBtn.addEventListener("click", submit);
+            cancelBtn.addEventListener("click", () => window.audioPickerAPI.cancel());
+
+            // Handle Enter key
+            document.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") {
+                    submit();
+                } else if (e.key === "Escape") {
+                    window.audioPickerAPI.cancel();
+                }
+            });
+
+            // Load sources
+            console.log("audio-picker: calling getSources()");
+            window.audioPickerAPI.getSources()
+                .then(sources => {
+                    console.log("audio-picker: got sources", sources);
+                    if (sources.ok) {
+                        renderOptions(sources);
+                    } else {
+                        content.className = "";
+                        content.innerHTML = `<div class="error">
+                            Unable to load audio sources. 
+                            ${sources.isGlibCxxOutdated ? "Your system's GLIBC version may be too old." : "PipeWire may not be available."}
+                        </div>`;
+                    }
+                })
+                .catch(err => {
+                    console.error("audio-picker: error loading sources", err);
+                    content.className = "";
+                    content.innerHTML = `<div class="error">Failed to load audio sources: ${escapeHtml(err.message)}</div>`;
+                });
+        })();
+    </script>
+</body>
+</html>

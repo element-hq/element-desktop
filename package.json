@@ -127,8 +127,8 @@
     },
     "pnpm": {
         "onlyBuiltDependencies": [
-            "electron",
-            "@vencord/venmic"
+            "@vencord/venmic",
+            "electron"
         ],
         "patchedDependencies": {
             "@types/auto-launch": "patches/@types__auto-launch.patch"
