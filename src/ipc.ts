@@ -9,7 +9,12 @@ import { app, autoUpdater, desktopCapturer, ipcMain, powerSaveBlocker, TouchBar,
 
 import IpcMainEvent = Electron.IpcMainEvent;
 import { randomArray } from "./utils.js";
-import { getDisplayMediaCallback, setDisplayMediaCallback } from "./displayMediaCallback.js";
+import {
+    getDisplayMediaCallback,
+    setDisplayMediaCallback,
+    getAudioRequested,
+    setAudioRequested,
+} from "./displayMediaCallback.js";
 import Store, { clearDataAndRelaunch } from "./store.js";
 
 let focusHandlerAttached = false;
@@ -142,11 +147,19 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
                 thumbnailURL: source.thumbnail.toDataURL(),
             }));
             break;
-        case "callDisplayMediaCallback":
-            await getDisplayMediaCallback()?.({ video: args[0] });
+        case "callDisplayMediaCallback": {
+            const shouldIncludeAudio = getAudioRequested() && process.platform === "win32";
+            const callback = getDisplayMediaCallback();
             setDisplayMediaCallback(null);
+            setAudioRequested(false);
+            if (shouldIncludeAudio) {
+                await callback?.({ video: args[0], audio: "loopback" });
+            } else {
+                await callback?.({ video: args[0] });
+            }
             ret = null;
             break;
+        }
 
         case "clearStorage":
             await clearDataAndRelaunch(global.mainWindow.webContents.session);

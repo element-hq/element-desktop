@@ -10,6 +10,7 @@ import type { Streams } from "electron";
 type DisplayMediaCallback = (streams: Streams) => void;
 
 let displayMediaCallback: DisplayMediaCallback | null;
+let audioRequested = false;
 
 export const getDisplayMediaCallback = (): DisplayMediaCallback | null => {
     return displayMediaCallback;
@@ -17,4 +18,12 @@ export const getDisplayMediaCallback = (): DisplayMediaCallback | null => {
 
 export const setDisplayMediaCallback = (callback: DisplayMediaCallback | null): void => {
     displayMediaCallback = callback;
+};
+
+export const getAudioRequested = (): boolean => {
+    return audioRequested;
+};
+
+export const setAudioRequested = (requested: boolean): void => {
+    audioRequested = requested;
 };

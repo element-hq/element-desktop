@@ -41,7 +41,7 @@ import webContentsHandler from "./webcontents-handler.js";
 import * as updater from "./updater.js";
 import ProtocolHandler from "./protocol.js";
 import { _t, AppLocalization } from "./language-helper.js";
-import { setDisplayMediaCallback } from "./displayMediaCallback.js";
+import { setDisplayMediaCallback, setAudioRequested } from "./displayMediaCallback.js";
 import { setupMacosTitleBar } from "./macos-titlebar.js";
 import { type Json, loadJsonFile } from "./utils.js";
 import { setupMediaAuth } from "./media-auth.js";
@@ -573,7 +573,7 @@ app.on("ready", async () => {
     webContentsHandler(global.mainWindow.webContents);
 
     session.defaultSession.setDisplayMediaRequestHandler(
-        (_, callback) => {
+        (request, callback) => {
             if (process.env.XDG_SESSION_TYPE === "wayland") {
                 // On Wayland, calling getSources() opens the xdg-desktop-portal picker.
                 // The user can only select a single source there, so Electron will return an array with exactly one entry.
@@ -591,6 +591,7 @@ app.on("ready", async () => {
                 global.mainWindow?.webContents.send("openDesktopCapturerSourcePicker");
             }
             setDisplayMediaCallback(callback);
+            setAudioRequested(request.audioRequested);
         },
         { useSystemPicker: true },
     ); // Use Mac OS 15+ native picker
