@@ -9,15 +9,15 @@ import type HakEnv from "../../../scripts/hak/hakEnv.js";
 import type { DependencyInfo } from "../../../scripts/hak/dep.js";
 
 export default async function (hakEnv: HakEnv, moduleInfo: DependencyInfo): Promise<void> {
-  // venmic is Linux-only
-  if (!hakEnv.isLinux()) {
-    console.log(`Skipping venmic: only supported on Linux (target: ${hakEnv.getTargetId()})`);
-    return;
-  }
+    // venmic is Linux-only
+    if (!hakEnv.isLinux()) {
+        console.log(`Skipping venmic: only supported on Linux (target: ${hakEnv.getTargetId()})`);
+        return;
+    }
 
-  // venmic only provides x64 and arm64 prebuilds
-  const arch = hakEnv.getTargetArch();
-  if (arch !== "x64" && arch !== "arm64") {
-    throw new Error(`venmic does not provide prebuilds for architecture: ${arch}`);
-  }
+    // venmic only provides x64 and arm64 prebuilds
+    const arch = hakEnv.getTargetArch();
+    if (arch !== "x64" && arch !== "arm64") {
+        throw new Error(`venmic does not provide prebuilds for architecture: ${arch}`);
+    }
 }

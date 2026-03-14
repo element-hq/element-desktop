@@ -11,7 +11,6 @@ import { join } from "node:path";
 import { existsSync } from "node:fs";
 
 import type { LinkData, Node, PatchBay as PatchBayType } from "@vencord/venmic";
-
 import type { VenmicListResult } from "./@types/audio-sharing.js";
 
 export type { VenmicListResult };
