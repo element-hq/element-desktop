@@ -165,12 +165,14 @@ ipcMain.handle("getSettingValue", async (_ev, settingName: string) => {
     return value;
 });
 
-(async (): Promise<void> => {
+export async function initProxy(): Promise<void> {
     if (!process.versions.electron) return;
+    console.log("[proxy] Initializing proxy from settings...");
     const { app } = await import("electron");
     await app.whenReady();
     const storeAny = Store.instance as any;
     if (storeAny.readyPromise) await storeAny.readyPromise;
-    const stored = Store.instance?.get("desktopProxyConfig") as Partial<DesktopProxyConfig> | undefined;
+    const stored = await Settings["desktopProxyConfig"].read();
+    console.log("[proxy] Stored proxy config read:", JSON.stringify(stored));
     await applyProxyConfig(stored);
-})();
+}

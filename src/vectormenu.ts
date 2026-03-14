@@ -89,14 +89,21 @@ export function buildMenuTemplate(): Menu {
                 { type: "separator" },
                 // in macOS the Preferences menu item goes in the first menu
                 ...(!isMac
-                    ? [
+                    ? ([
                           {
                               label: _t("common|preferences"),
                               click(): void {
                                   global.mainWindow?.webContents.send("preferences");
                               },
                           },
-                      ]
+                          { type: "separator" as const },
+                          {
+                              label: _t("proxy|title") + "…",
+                              click(): void {
+                                  global.mainWindow?.webContents.send("open_proxy_settings");
+                              },
+                          },
+                      ] as MenuItemConstructorOptions[])
                     : []),
                 {
                     role: "togglefullscreen",
@@ -154,16 +161,16 @@ export function buildMenuTemplate(): Menu {
                 { type: "separator" },
                 {
                     label: _t("common|preferences") + "…",
-                    accelerator: "Command+,", // Mac-only accelerator
+                    accelerator: "Command+,",
                     click(): void {
                         global.mainWindow?.webContents.send("preferences");
                     },
                 },
+                { type: "separator" },
                 {
-                    label: _t("common|preferences") + "…",
-                    accelerator: "Command+,",
+                    label: _t("proxy|title") + "…",
                     click(): void {
-                        global.mainWindow?.webContents.send("preferences");
+                        global.mainWindow?.webContents.send("open_proxy_settings");
                     },
                 },
                 { type: "separator" },

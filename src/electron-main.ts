@@ -47,6 +47,7 @@ import { type Json, loadJsonFile } from "./utils.js";
 import { setupMediaAuth } from "./media-auth.js";
 import { readBuildConfig } from "./build-config.js";
 import { getLastAppliedConfig } from "./proxy.js";
+import { initProxy } from "./settings.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -354,6 +355,7 @@ if (store.get("disableHardwareAcceleration")) {
 
 app.on("ready", async () => {
     console.debug("Reached Electron ready state");
+    await initProxy();
 
     let asarPath: string;
 
