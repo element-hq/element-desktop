@@ -20,10 +20,18 @@ export const setDisplayMediaCallback = (callback: DisplayMediaCallback | null): 
     displayMediaCallback = callback;
 };
 
+/**
+ * Get whether audio was requested for the current display media callback.
+ * Used to determine if the audio picker should be shown on Linux.
+ */
 export const getAudioRequested = (): boolean => {
     return audioRequested;
 };
 
+/**
+ * Set whether audio was requested for the current display media callback.
+ * @param requested - Whether audio sharing was requested
+ */
 export const setAudioRequested = (requested: boolean): void => {
     audioRequested = requested;
 };

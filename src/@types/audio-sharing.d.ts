@@ -9,7 +9,9 @@ import type { Node } from "@vencord/venmic";
 
 /** User's audio source selection from the audio picker. */
 export interface AudioSelection {
+    /** The type of audio source: "none" (no audio), "system" (all system audio), or "app" (specific application). */
     type: "none" | "system" | "app";
+    /** The PipeWire node to capture audio from. Only set when type is "app". */
     node?: Node;
 }
 
