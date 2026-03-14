@@ -105,12 +105,13 @@ jobs:
                         }
                       }
 
-            - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+            - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
               with:
                   repository: element-hq/element-desktop
                   ref: ${{ inputs.ref }}
+                  persist-credentials: false
 
-            - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+            - uses: actions/download-artifact@70fc10c6e5e1ce46ad2ea6f2b72d43f7d47b13c3 # v8
               with:
                   name: ${{ inputs.prepare-artifact-name }}
 
@@ -144,7 +145,7 @@ jobs:
 
             # This allows contributors to test changes to the dockerbuild image within a pull request
             - name: Build docker image
-              uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6
+              uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
               if: steps.changed_files.outputs.any_modified == 'true'
               with:
                   file: dockerbuild/Dockerfile
@@ -184,13 +185,15 @@ jobs:
                   fi
 
             - name: Build App
-              run: pnpm build --publish never ${{ steps.config.outputs.build-args }} -l ${{ inputs.targets }}
+              run: pnpm build --publish never $BUILD_ARGS -l $TARGETS
               env:
                   VARIANT_PATH: variant.json
                   # Only set for Nightly builds
                   VERSION: ${{ inputs.version }}
                   # Workaround for https://github.com/electron-userland/electron-builder/issues/5721
                   USE_HARD_LINKS: false
+                  BUILD_ARGS: ${{ steps.config.outputs.build-args }}
+                  TARGETS: ${{ inputs.targets }}
 
             - name: Check native libraries
               run: |
@@ -220,7 +223,7 @@ jobs:
 
             # We exclude *-unpacked as it loses permissions and the tarball contains it with correct permissions
             - name: Upload Artifacts
-              uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+              uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
               with:
                   name: ${{ inputs.artifact-prefix }}linux-${{ inputs.arch }}-sqlcipher-${{ inputs.sqlcipher }}
                   path: |

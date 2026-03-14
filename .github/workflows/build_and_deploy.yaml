@@ -79,7 +79,7 @@ jobs:
             matrix:
                 arch: [x64, arm64]
         uses: ./.github/workflows/build_windows.yaml
-        secrets: inherit
+        secrets: inherit # zizmor: ignore[secrets-inherit]
         with:
             sign: true
             arch: ${{ matrix.arch }}
@@ -90,7 +90,7 @@ jobs:
         needs: prepare
         name: macOS
         uses: ./.github/workflows/build_macos.yaml
-        secrets: inherit
+        secrets: inherit # zizmor: ignore[secrets-inherit]
         with:
             sign: true
             base-url: https://packages.element.io/${{ needs.prepare.outputs.packages-dir }}
@@ -122,7 +122,7 @@ jobs:
         environment: ${{ needs.prepare.outputs.deploy == 'true' && 'packages.element.io' || '' }}
         steps:
             - name: Download artifacts
-              uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+              uses: actions/download-artifact@70fc10c6e5e1ce46ad2ea6f2b72d43f7d47b13c3 # v8
 
             - name: Prepare artifacts for deployment
               run: |
@@ -212,7 +212,7 @@ jobs:
 
             - name: Stash packages.element.io
               if: needs.prepare.outputs.deploy == 'false'
-              uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+              uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
               with:
                   name: packages.element.io
                   path: packages.element.io
@@ -250,7 +250,7 @@ jobs:
 
             - name: Stash debs
               if: needs.prepare.outputs.deploy == 'false' && needs.linux.result == 'success'
-              uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+              uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
               with:
                   name: debs
                   path: |
@@ -258,7 +258,7 @@ jobs:
                       ${{ steps.deb.outputs.arm64 }}
 
             - name: Publish amd64 deb to packages.element.io
-              uses: element-hq/packages.element.io@master
+              uses: element-hq/packages.element.io@master # zizmor: ignore[unpinned-uses]
               if: needs.prepare.outputs.deploy == 'true' && needs.linux.result == 'success'
               with:
                   file: ${{ steps.deb.outputs.amd64 }}
@@ -268,7 +268,7 @@ jobs:
                   bucket-access-key: ${{ secrets.CF_R2_TOKEN }}
 
             - name: Publish arm64 deb to packages.element.io
-              uses: element-hq/packages.element.io@master
+              uses: element-hq/packages.element.io@master # zizmor: ignore[unpinned-uses]
               if: needs.prepare.outputs.deploy == 'true' && needs.linux.result == 'success'
               with:
                   file: ${{ steps.deb.outputs.arm64 }}
@@ -289,14 +289,14 @@ jobs:
             id-token: write # This is required for requesting the JWT
         steps:
             - name: Configure AWS credentials
-              uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5
+              uses: aws-actions/configure-aws-credentials@8df5847569e6427dd6c4fb1cf565c83acfa8afa7 # v6
               with:
                   role-to-assume: arn:aws:iam::264135176173:role/Push-ElementDesktop-MSI
                   role-session-name: githubaction-run-${{ github.run_id }}
                   aws-region: ${{ env.AWS_REGION }}
 
             - name: Download artifacts
-              uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+              uses: actions/download-artifact@70fc10c6e5e1ce46ad2ea6f2b72d43f7d47b13c3 # v8
               with:
                   pattern: win-*
 
