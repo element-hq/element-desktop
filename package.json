@@ -116,7 +116,8 @@
         "@vencord/venmic": "^6.1.0"
     },
     "hakDependencies": {
-        "matrix-seshat": "^4.0.1"
+        "matrix-seshat": "^4.0.1",
+        "@vencord/venmic": "^6.1.0"
     },
     "resolutions": {
         "atomically": "2.1.1",

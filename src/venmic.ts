@@ -7,8 +7,8 @@ Please see LICENSE files in the repository root for full details.
 
 import { app, ipcMain } from "electron";
 import { createRequire } from "node:module";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { join } from "node:path";
+import { existsSync } from "node:fs";
 
 import type { LinkData, Node, PatchBay as PatchBayType } from "@vencord/venmic";
 
@@ -16,7 +16,6 @@ import type { VenmicListResult } from "./@types/audio-sharing.js";
 
 export type { VenmicListResult };
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
 const nativeRequire = createRequire(import.meta.url);
 
 let PatchBay: typeof PatchBayType | undefined;
@@ -36,9 +35,14 @@ function importVenmic(): void {
     imported = true;
 
     try {
-        // Load the native .node file directly from lib/ where it's copied
-        // during build. This follows the same approach used by Vesktop.
-        const nativePath = join(__dirname, `venmic-${process.arch}.node`);
+        // Load the native .node file from the HAK output.
+        // In development: .hak/hakModules/@vencord/venmic/venmic.node
+        // When packaged: node_modules/@vencord/venmic/venmic.node (electron-builder copies hakModules there)
+        const appPath = app.getAppPath();
+        const hakPath = join(appPath, ".hak", "hakModules", "@vencord", "venmic", "venmic.node");
+        const packagedPath = join(appPath, "node_modules", "@vencord", "venmic", "venmic.node");
+
+        const nativePath = existsSync(hakPath) ? hakPath : packagedPath;
         PatchBay = (nativeRequire(nativePath) as { PatchBay: typeof PatchBayType }).PatchBay;
         hasPipewirePulse = PatchBay.hasPipeWire();
     } catch (e: unknown) {
