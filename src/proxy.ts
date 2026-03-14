@@ -56,11 +56,6 @@ export function getLastAppliedConfig(): DesktopProxyConfig | undefined {
  */
 export async function applyProxyConfig(config?: Partial<DesktopProxyConfig>): Promise<void> {
     try {
-        if (!config) {
-            // Nothing to do (treat as system default).
-            config = { mode: "system" };
-        }
-
         // Not an Electron runtime (e.g. node/tsx script) -> ignore silently.
         if (!process.versions.electron) {
             return;
@@ -74,40 +69,13 @@ export async function applyProxyConfig(config?: Partial<DesktopProxyConfig>): Pr
             await app.whenReady();
         }
 
-        const normalized = normalizeConfig(config);
+        const normalized = normalizeConfig(config ?? { mode: "system" });
         let electronCfg = toElectronProxyConfig(normalized);
 
         // For system mode, we perform a manual resolution to avoid issues with Electron's default 'system' mode
         // which sometimes bypasses HTTP traffic incorrectly.
         if (normalized.mode === "system") {
-            // We must set it to 'system' first, otherwise resolveProxy might just return 'DIRECT'
-            // because it's using the previous session state.
-            await session.defaultSession.setProxy({ mode: "system" });
-
-            const [resHttp, resHttps] = await Promise.all([
-                session.defaultSession.resolveProxy("http://example.com"),
-                session.defaultSession.resolveProxy("https://google.com"),
-            ]);
-
-            console.log("[proxy] System resolution results - HTTP:", resHttp, "HTTPS:", resHttps);
-
-            const httpProxy = parseProxyResult(resHttp);
-            const httpsProxy = parseProxyResult(resHttps);
-
-            if (httpProxy || httpsProxy) {
-                const rules: string[] = [];
-                // Chromium proxy rules can be: "http=proxy1:8080;https=proxy2:8080"
-                // or just "proxy1:8080" for all protocols.
-                if (httpProxy) rules.push(`http=${httpProxy}`);
-                if (httpsProxy) rules.push(`https=${httpsProxy}`);
-                
-                electronCfg = {
-                    mode: "fixed_servers",
-                    proxyRules: rules.join(";"),
-                };
-            } else {
-                electronCfg = { mode: "direct" };
-            }
+            electronCfg = await resolveSystemProxy(session.defaultSession);
         }
 
         // Avoid re-applying identical config (cheap equality check).
@@ -117,7 +85,7 @@ export async function applyProxyConfig(config?: Partial<DesktopProxyConfig>): Pr
         }
 
         console.log("[proxy] Applying new proxy config to session:", JSON.stringify(electronCfg));
-        await session.defaultSession.setProxy(electronCfg as any);
+        await session.defaultSession.setProxy(electronCfg);
         lastApplied = normalized;
         console.log("[proxy] Successfully applied config.");
 
@@ -132,8 +100,8 @@ export async function applyProxyConfig(config?: Partial<DesktopProxyConfig>): Pr
         console.log("[proxy] Verification Matrix (HTTPS):", resMatrix);
 
         // Log certificate errors which often happen with intercepting proxies like ZAP
-        if (!session.defaultSession.listenerCount("certificate-error" as any)) {
-            (session.defaultSession as any).on("certificate-error", (event: any, webContents: any, url: any, error: any, certificate: any, callback: any) => {
+        if (!session.defaultSession.listenerCount("certificate-error")) {
+            session.defaultSession.on("certificate-error" as any, (event: any, webContents: any, url: any, error: any, certificate: any, callback: any) => {
                 console.warn(`[proxy] Certificate error for ${url}: ${error} (Issuer: ${certificate.issuerName})`);
                 // We keep security strict by default, but this log confirms why traffic is failing.
             });
@@ -143,12 +111,47 @@ export async function applyProxyConfig(config?: Partial<DesktopProxyConfig>): Pr
     }
 }
 
+/**
+ * Resolves the system proxy settings by performing a manual resolution.
+ * This is used to work around Electron's built-in system mode limitations.
+ */
+async function resolveSystemProxy(sess: import("electron").Session): Promise<ElectronFixedConfig> {
+    // We must set it to 'system' first, otherwise resolveProxy might just return 'DIRECT'
+    // because it's using the previous session state.
+    await sess.setProxy({ mode: "system" });
+
+    const [resHttp, resHttps] = await Promise.all([
+        sess.resolveProxy("http://example.com"),
+        sess.resolveProxy("https://google.com"),
+    ]);
+
+    console.log("[proxy] System resolution results - HTTP:", resHttp, "HTTPS:", resHttps);
+
+    const httpProxy = parseProxyResult(resHttp);
+    const httpsProxy = parseProxyResult(resHttps);
+
+    if (httpProxy || httpsProxy) {
+        const rules: string[] = [];
+        // Chromium proxy rules can be: "http=proxy1:8080;https=proxy2:8080"
+        // or just "proxy1:8080" for all protocols.
+        if (httpProxy) rules.push(`http=${httpProxy}`);
+        if (httpsProxy) rules.push(`https=${httpsProxy}`);
+        
+        return {
+            mode: "fixed_servers",
+            proxyRules: rules.join(";"),
+        };
+    }
+    
+    return { mode: "direct" };
+}
+
 function normalizeConfig(cfg: Partial<DesktopProxyConfig>): DesktopProxyConfig {
     if (cfg.mode === "custom") {
         return {
             mode: "custom",
-            scheme: cfg.scheme || "http",
-            host: cfg.host || "",
+            scheme: cfg.scheme ?? "http",
+            host: cfg.host ?? "",
             port: cfg.port,
             username: cfg.username,
             password: cfg.password,
@@ -163,10 +166,10 @@ function normalizeConfig(cfg: Partial<DesktopProxyConfig>): DesktopProxyConfig {
 
 function toElectronProxyConfig(cfg: DesktopProxyConfig): ElectronFixedConfig {
     if (cfg.mode === "system") {
-        return { mode: "system" } as ElectronFixedConfig;
+        return { mode: "system" };
     }
     if (cfg.mode === "direct") {
-        return { mode: "direct" } as ElectronFixedConfig;
+        return { mode: "direct" };
     }
     // custom
     const parts: string[] = [];
@@ -181,12 +184,12 @@ function toElectronProxyConfig(cfg: DesktopProxyConfig): ElectronFixedConfig {
         }
         // Build rule like: scheme=scheme://authhost:port
         // Electron accepts a single URL or comma-separated protocol=... pairs.
-        const scheme = cfg.scheme || "http";
+        const scheme = cfg.scheme ?? "http";
         parts.push(`${scheme}=${scheme}://${auth}${cfg.host}:${cfg.port}`);
     }
 
     const proxyRules = parts.join(";");
-    const proxyBypassRules = (cfg.bypass || "")
+    const proxyBypassRules = (cfg.bypass ?? "")
         .split(/[,;]/)
         .map((s) => s.trim())
         .filter(Boolean)

@@ -93,14 +93,14 @@ export function buildMenuTemplate(): Menu {
                           {
                               label: _t("common|preferences"),
                               click(): void {
-                                  global.mainWindow?.webContents.send("preferences");
+                                  globalThis.mainWindow?.webContents.send("preferences");
                               },
                           },
                           { type: "separator" as const },
                           {
                               label: _t("proxy|title") + "…",
                               click(): void {
-                                  global.mainWindow?.webContents.send("open_proxy_settings");
+                                  globalThis.mainWindow?.webContents.send("open_proxy_settings");
                               },
                           },
                       ] as MenuItemConstructorOptions[])
@@ -137,9 +137,9 @@ export function buildMenuTemplate(): Menu {
             submenu: [
                 {
                     // XXX: vectorConfig won't have defaults applied to it so we need to duplicate them here
-                    label: _t("common|brand_help", { brand: global.vectorConfig?.brand || "Element" }),
+                    label: _t("common|brand_help", { brand: globalThis.vectorConfig?.brand || "Element" }),
                     click(): void {
-                        void shell.openExternal(global.vectorConfig?.help_url || "https://element.io/help");
+                        void shell.openExternal(globalThis.vectorConfig?.help_url || "https://element.io/help");
                     },
                 },
             ],
@@ -163,14 +163,14 @@ export function buildMenuTemplate(): Menu {
                     label: _t("common|preferences") + "…",
                     accelerator: "Command+,",
                     click(): void {
-                        global.mainWindow?.webContents.send("preferences");
+                        globalThis.mainWindow?.webContents.send("preferences");
                     },
                 },
                 { type: "separator" },
                 {
                     label: _t("proxy|title") + "…",
                     click(): void {
-                        global.mainWindow?.webContents.send("open_proxy_settings");
+                        globalThis.mainWindow?.webContents.send("open_proxy_settings");
                     },
                 },
                 { type: "separator" },
