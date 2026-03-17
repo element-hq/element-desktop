@@ -100,7 +100,7 @@ export function buildMenuTemplate(): Menu {
                           {
                               label: _t("proxy|title") + "…",
                               click(): void {
-                                  globalThis.mainWindow?.webContents.send("open_proxy_settings");
+                                  globalThis.mainWindow?.webContents.send("openProxySettings");
                               },
                           },
                       ] as MenuItemConstructorOptions[])
@@ -170,7 +170,7 @@ export function buildMenuTemplate(): Menu {
                 {
                     label: _t("proxy|title") + "…",
                     click(): void {
-                        globalThis.mainWindow?.webContents.send("open_proxy_settings");
+                        globalThis.mainWindow?.webContents.send("openProxySettings");
                     },
                 },
                 { type: "separator" },
