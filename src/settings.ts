@@ -96,7 +96,7 @@ const Settings: Record<string, Setting> = {
                 try {
                     const password = await Store.instance?.getSecret("proxy_password");
                     if (password) {
-                        (config as DesktopProxyConfig).password = password;
+                        config.password = password;
                     }
                 } catch (e) {
                     console.error("Failed to read proxy password from secure storage:", e);

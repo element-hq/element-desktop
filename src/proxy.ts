@@ -101,7 +101,7 @@ export async function applyProxyConfig(config?: Partial<DesktopProxyConfig>): Pr
 
         // Log certificate errors which often happen with intercepting proxies like ZAP
         if (!session.defaultSession.listenerCount("certificate-error")) {
-            session.defaultSession.on("certificate-error" as any, (event: any, webContents: any, url: any, error: any, certificate: any, callback: any) => {
+            (session.defaultSession as any).on("certificate-error", (event: any, webContents: any, url: any, error: any, certificate: any, callback: any) => {
                 console.warn(`[proxy] Certificate error for ${url}: ${error} (Issuer: ${certificate.issuerName})`);
                 // We keep security strict by default, but this log confirms why traffic is failing.
             });

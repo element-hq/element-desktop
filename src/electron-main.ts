@@ -57,7 +57,7 @@ const argv = minimist(process.argv, {
 app.on("login", (event, _webContents, _request, authInfo, callback) => {
     if (authInfo.isProxy) {
         const proxyConfig = getLastAppliedConfig();
-        if (proxyConfig && proxyConfig.mode === "custom" && proxyConfig.username && proxyConfig.password) {
+        if (proxyConfig?.mode === "custom" && proxyConfig.username && proxyConfig.password) {
             event.preventDefault();
             callback(proxyConfig.username, proxyConfig.password);
             console.log(`[proxy] Authenticating to ${authInfo.host}:${authInfo.port}`);
@@ -491,7 +491,7 @@ app.on("ready", async () => {
         app.exit(1);
     }
 
-    void globalThis.mainWindow.loadURL("vector://vector/webapp/");
+    globalThis.mainWindow.loadURL("vector://vector/webapp/");
 
     if (process.platform === "darwin") {
         setupMacosTitleBar(globalThis.mainWindow);
