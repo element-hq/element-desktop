@@ -5,10 +5,14 @@ SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Com
 Please see LICENSE files in the repository root for full details.
 */
 
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { describe, expect, it, vi } from "vitest";
 
 import { TokenizerMode } from "../../src/seshat-config.js";
 import { initEventIndex } from "../../src/seshat-index.js";
+
+const eventStorePath = join(tmpdir(), "element-desktop-seshat-index-test");
 
 describe("initEventIndex", () => {
     it("passes ngram config when opening a new index", async () => {
@@ -21,7 +25,7 @@ describe("initEventIndex", () => {
 
         class FakeReindexError extends Error {}
 
-        const result = await initEventIndex("/tmp/EventStore", fixtureValue, TokenizerMode.Ngram, {
+        const result = await initEventIndex(eventStorePath, fixtureValue, TokenizerMode.Ngram, {
             mkdir,
             deleteContents,
             createSeshat: Seshat,
@@ -29,8 +33,8 @@ describe("initEventIndex", () => {
             isReindexError: (error) => error instanceof FakeReindexError,
         });
 
-        expect(mkdir).toHaveBeenCalledWith("/tmp/EventStore", { recursive: true });
-        expect(Seshat).toHaveBeenCalledWith("/tmp/EventStore", {
+        expect(mkdir).toHaveBeenCalledWith(eventStorePath, { recursive: true });
+        expect(Seshat).toHaveBeenCalledWith(eventStorePath, {
             passphrase: fixtureValue,
             tokenizerMode: TokenizerMode.Ngram,
             ngramMinSize: 2,
@@ -61,7 +65,7 @@ describe("initEventIndex", () => {
             .mockImplementationOnce(() => reopenedIndex);
         const SeshatRecovery = vi.fn().mockImplementation(() => recoveryIndex);
 
-        const result = await initEventIndex("/tmp/EventStore", fixtureValue, TokenizerMode.Language, {
+        const result = await initEventIndex(eventStorePath, fixtureValue, TokenizerMode.Language, {
             mkdir,
             deleteContents,
             createSeshat: Seshat,
@@ -69,12 +73,12 @@ describe("initEventIndex", () => {
             isReindexError: (error) => error instanceof FakeReindexError,
         });
 
-        expect(SeshatRecovery).toHaveBeenCalledWith("/tmp/EventStore", {
+        expect(SeshatRecovery).toHaveBeenCalledWith(eventStorePath, {
             passphrase: fixtureValue,
             tokenizerMode: TokenizerMode.Language,
         });
         expect(recoveryIndex.reindex).toHaveBeenCalledOnce();
-        expect(Seshat).toHaveBeenNthCalledWith(2, "/tmp/EventStore", {
+        expect(Seshat).toHaveBeenNthCalledWith(2, eventStorePath, {
             passphrase: fixtureValue,
             tokenizerMode: TokenizerMode.Language,
         });
@@ -99,7 +103,7 @@ describe("initEventIndex", () => {
             .mockImplementationOnce(() => recreatedIndex);
         const SeshatRecovery = vi.fn();
 
-        const result = await initEventIndex("/tmp/EventStore", fixtureValue, TokenizerMode.Ngram, {
+        const result = await initEventIndex(eventStorePath, fixtureValue, TokenizerMode.Ngram, {
             mkdir,
             deleteContents,
             createSeshat: Seshat,
@@ -107,8 +111,8 @@ describe("initEventIndex", () => {
             isReindexError: (error) => error instanceof FakeReindexError,
         });
 
-        expect(deleteContents).toHaveBeenCalledWith("/tmp/EventStore");
-        expect(Seshat).toHaveBeenNthCalledWith(2, "/tmp/EventStore", {
+        expect(deleteContents).toHaveBeenCalledWith(eventStorePath);
+        expect(Seshat).toHaveBeenNthCalledWith(2, eventStorePath, {
             passphrase: fixtureValue,
             tokenizerMode: TokenizerMode.Ngram,
             ngramMinSize: 2,
