@@ -3,7 +3,7 @@
     "productName": "Element",
     "main": "lib/electron-main.js",
     "exports": "./lib/electron-main.js",
-    "version": "1.12.11",
+    "version": "1.12.12",
     "description": "Element: the future of secure communication",
     "author": {
         "name": "Element",
@@ -87,12 +87,12 @@
         "@types/pacote": "^11.1.1",
         "@typescript-eslint/eslint-plugin": "^8.0.0",
         "@typescript-eslint/parser": "^8.0.0",
-        "app-builder-lib": "26.7.0",
+        "app-builder-lib": "26.8.2",
         "chokidar": "^5.0.0",
         "detect-libc": "^2.0.0",
         "electron": "40.6.1",
-        "electron-builder": "26.7.0",
-        "electron-builder-squirrel-windows": "26.7.0",
+        "electron-builder": "26.8.2",
+        "electron-builder-squirrel-windows": "26.8.2",
         "electron-devtools-installer": "^4.0.0",
         "eslint": "^8.26.0",
         "eslint-config-google": "^0.14.0",
@@ -122,7 +122,7 @@
         "atomically": "2.1.1",
         "@types/node": "18.19.130",
         "config-file-ts": "0.2.8-rc1",
-        "node-abi": "4.26.0",
+        "node-abi": "4.27.0",
         "@types/pg-pool": "2.0.7"
     },
     "pnpm": {
@@ -142,5 +142,5 @@
             "eslint": "8"
         }
     },
-    "packageManager": "pnpm@10.28.2+sha512.41872f037ad22f7348e3b1debbaf7e867cfd448f2726d9cf74c08f19507c31d2c8e7a11525b983febc2df640b5438dee6023ebb1f84ed43cc2d654d2bc326264"
+    "packageManager": "pnpm@10.32.1+sha512.a706938f0e89ac1456b6563eab4edf1d1faf3368d1191fc5c59790e96dc918e4456ab2e67d613de1043d2e8c81f87303e6b40d4ffeca9df15ef1ad567348f2be"
 }
