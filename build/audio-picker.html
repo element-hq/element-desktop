@@ -10,41 +10,12 @@ Please see LICENSE files in the repository root for full details.
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
+    <link rel="stylesheet" href="compound/compound-design-tokens.css">
     <title id="page-title">Share Audio</title>
     <style>
         :root {
-            /* Compound Design Tokens — dark theme resolved values
-             * from @vector-im/compound-design-tokens */
-            --color-bg-canvas: var(--cpd-color-bg-canvas-default, #101317);
-            --color-bg-subtle: var(--cpd-color-bg-subtle-primary, #26282d);
-            --color-bg-subtle-hover: var(--cpd-color-bg-action-secondary-hovered, hsla(286, 31%, 82%, 0.04));
-            --color-bg-accent: var(--cpd-color-bg-accent-selected, hsl(151, 100%, 7%));
-            --color-border-accent: var(--cpd-color-border-accent-subtle, #005a43);
-            --color-accent: var(--cpd-color-bg-accent-rest, #129a78);
-            --color-accent-hover: var(--cpd-color-bg-accent-hovered, #17ac84);
-            --color-text-primary: var(--cpd-color-text-primary, #ebeef2);
-            --color-text-secondary: var(--cpd-color-text-secondary, #808994);
-            --color-text-muted: var(--cpd-color-text-disabled, #656c76);
-            --color-border-subtle: var(--cpd-color-border-interactive-secondary, #3c3f44);
-            --color-border-interactive: var(--cpd-color-border-interactive-primary, #656c76);
-            --color-bg-button-secondary: var(--cpd-color-bg-action-secondary-rest, #101317);
-            --color-bg-button-secondary-hover: var(--cpd-color-bg-action-secondary-hovered, hsla(286, 31%, 82%, 0.04));
-            --color-bg-error: var(--cpd-color-bg-critical-subtle, #3e0000);
-            --color-border-error: var(--cpd-color-border-critical-subtle, #710000);
-            --color-text-error: var(--cpd-color-text-critical-primary, #fd3e3c);
-            --color-focus-ring: var(--cpd-color-border-focused, #4187eb);
-
-            /* Spacing scale */
-            --space-xs: 4px;
-            --space-sm: 8px;
-            --space-md: 12px;
-            --space-lg: 16px;
-            --space-xl: 20px;
-
-            /* Border radius */
+            /* Local tokens — no Compound equivalents */
             --radius-md: 8px;
-
-            /* Transitions */
             --transition-fast: 0.15s ease;
         }
 
@@ -61,10 +32,10 @@ Please see LICENSE files in the repository root for full details.
         }
 
         body {
-            font-family: var(--cpd-font-family-sans, Inter), "Helvetica Neue", "Segoe UI", Roboto, Ubuntu, "Fira Sans", "Noto Sans", Arial, sans-serif;
-            background: var(--color-bg-canvas);
-            color: var(--color-text-primary);
-            padding: var(--space-xl);
+            font-family: var(--cpd-font-family-sans);
+            background: var(--cpd-color-bg-canvas-default);
+            color: var(--cpd-color-text-primary);
+            padding: var(--cpd-space-5x);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -78,27 +49,26 @@ Please see LICENSE files in the repository root for full details.
         }
 
         h1 {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: var(--space-sm);
+            font: var(--cpd-font-heading-sm-semibold);
+            margin-bottom: var(--cpd-space-2x);
         }
 
         .subtitle {
-            font-size: 13px;
-            color: var(--color-text-secondary);
-            margin-bottom: var(--space-xl);
+            font: var(--cpd-font-body-sm-regular);
+            color: var(--cpd-color-text-secondary);
+            margin-bottom: var(--cpd-space-5x);
         }
 
         .options-container {
             flex: 1;
             overflow-y: auto;
-            margin-bottom: var(--space-lg);
+            margin-bottom: var(--cpd-space-4x);
         }
 
         /* Scrollbar styling */
         .options-container::-webkit-scrollbar,
         .app-list::-webkit-scrollbar {
-            width: 6px;
+            width: var(--cpd-space-1-5x);
         }
 
         .options-container::-webkit-scrollbar-track,
@@ -108,47 +78,47 @@ Please see LICENSE files in the repository root for full details.
 
         .options-container::-webkit-scrollbar-thumb,
         .app-list::-webkit-scrollbar-thumb {
-            background: var(--color-border-subtle);
+            background: var(--cpd-color-border-interactive-secondary);
             border-radius: 3px;
         }
 
         .options-container::-webkit-scrollbar-thumb:hover,
         .app-list::-webkit-scrollbar-thumb:hover {
-            background: var(--color-border-interactive);
+            background: var(--cpd-color-border-interactive-primary);
         }
 
         .option {
             display: flex;
             align-items: center;
-            padding: 14px var(--space-lg);
+            padding: var(--cpd-space-3x) var(--cpd-space-4x);
             border-radius: var(--radius-md);
-            margin-bottom: var(--space-sm);
+            margin-bottom: var(--cpd-space-2x);
             cursor: pointer;
-            background: var(--color-bg-subtle);
+            background: var(--cpd-color-bg-subtle-primary);
             border: 2px solid transparent;
             transition: background var(--transition-fast), border-color var(--transition-fast);
             outline: none;
         }
 
         .option:hover {
-            background: var(--color-bg-subtle-hover);
+            background: var(--cpd-color-bg-action-secondary-hovered);
         }
 
         .option:focus-visible {
-            box-shadow: 0 0 0 2px var(--color-focus-ring);
+            box-shadow: 0 0 0 2px var(--cpd-color-border-focused);
         }
 
         .option[aria-checked="true"] {
-            background: var(--color-bg-accent);
-            border-color: var(--color-border-accent);
+            background: var(--cpd-color-bg-accent-selected);
+            border-color: var(--cpd-color-border-accent-subtle);
         }
 
         .option-radio {
             width: 18px;
             height: 18px;
-            border: 2px solid var(--color-border-interactive);
+            border: 2px solid var(--cpd-color-border-interactive-primary);
             border-radius: 50%;
-            margin-right: 14px;
+            margin-right: var(--cpd-space-3x);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -157,7 +127,7 @@ Please see LICENSE files in the repository root for full details.
         }
 
         .option[aria-checked="true"] .option-radio {
-            border-color: var(--color-border-accent);
+            border-color: var(--cpd-color-border-accent-subtle);
         }
 
         .option[aria-checked="true"] .option-radio::after {
@@ -165,7 +135,7 @@ Please see LICENSE files in the repository root for full details.
             width: 10px;
             height: 10px;
             border-radius: 50%;
-            background: var(--color-accent);
+            background: var(--cpd-color-bg-accent-rest);
         }
 
         .option-content {
@@ -174,26 +144,24 @@ Please see LICENSE files in the repository root for full details.
         }
 
         .option-label {
-            font-size: 14px;
-            font-weight: 500;
+            font: var(--cpd-font-body-md-medium);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
         .option-description {
-            font-size: 12px;
-            color: var(--color-text-secondary);
-            margin-top: 2px;
+            font: var(--cpd-font-body-xs-regular);
+            color: var(--cpd-color-text-secondary);
+            margin-top: var(--cpd-space-0-5x);
         }
 
         .section-header {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--color-text-secondary);
+            font: var(--cpd-font-body-xs-semibold);
+            color: var(--cpd-color-text-secondary);
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin: var(--space-xl) 0 var(--space-md);
+            margin: var(--cpd-space-5x) 0 var(--cpd-space-3x);
         }
 
         .app-list {
@@ -204,25 +172,24 @@ Please see LICENSE files in the repository root for full details.
 
         .buttons {
             display: flex;
-            gap: var(--space-md);
-            padding-top: var(--space-sm);
-            border-top: 1px solid var(--color-border-subtle);
+            gap: var(--cpd-space-3x);
+            padding-top: var(--cpd-space-2x);
+            border-top: 1px solid var(--cpd-color-border-interactive-secondary);
         }
 
         button {
             flex: 1;
-            padding: var(--space-md) var(--space-lg);
+            padding: var(--cpd-space-3x) var(--cpd-space-4x);
             border: none;
             border-radius: var(--radius-md);
-            font-size: 14px;
-            font-weight: 500;
+            font: var(--cpd-font-body-md-medium);
             cursor: pointer;
             transition: background var(--transition-fast), opacity var(--transition-fast);
             outline: none;
         }
 
         button:focus-visible {
-            box-shadow: 0 0 0 2px var(--color-focus-ring);
+            box-shadow: 0 0 0 2px var(--cpd-color-border-focused);
         }
 
         button:disabled {
@@ -231,21 +198,21 @@ Please see LICENSE files in the repository root for full details.
         }
 
         .btn-primary {
-            background: var(--color-accent);
-            color: white;
+            background: var(--cpd-color-bg-accent-rest);
+            color: var(--cpd-color-text-on-solid-primary);
         }
 
         .btn-primary:hover:not(:disabled) {
-            background: var(--color-accent-hover);
+            background: var(--cpd-color-bg-accent-hovered);
         }
 
         .btn-secondary {
-            background: var(--color-bg-button-secondary);
-            color: white;
+            background: var(--cpd-color-bg-action-secondary-rest);
+            color: var(--cpd-color-text-primary);
         }
 
         .btn-secondary:hover:not(:disabled) {
-            background: var(--color-bg-button-secondary-hover);
+            background: var(--cpd-color-bg-action-secondary-hovered);
         }
 
         .loading {
@@ -253,16 +220,16 @@ Please see LICENSE files in the repository root for full details.
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 40px;
-            color: var(--color-text-muted);
-            gap: var(--space-md);
+            padding: var(--cpd-space-10x);
+            color: var(--cpd-color-text-disabled);
+            gap: var(--cpd-space-3x);
         }
 
         .spinner {
-            width: 24px;
-            height: 24px;
-            border: 2px solid var(--color-border-subtle);
-            border-top-color: var(--color-accent);
+            width: var(--cpd-space-6x);
+            height: var(--cpd-space-6x);
+            border: 2px solid var(--cpd-color-border-interactive-secondary);
+            border-top-color: var(--cpd-color-bg-accent-rest);
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
@@ -270,8 +237,8 @@ Please see LICENSE files in the repository root for full details.
         @media (prefers-reduced-motion: reduce) {
             .spinner {
                 animation: none;
-                border-top-color: var(--color-border-subtle);
-                border-right-color: var(--color-accent);
+                border-top-color: var(--cpd-color-border-interactive-secondary);
+                border-right-color: var(--cpd-color-bg-accent-rest);
             }
         }
 
@@ -280,19 +247,19 @@ Please see LICENSE files in the repository root for full details.
         }
 
         .error {
-            background: var(--color-bg-error);
-            border: 1px solid var(--color-border-error);
-            color: var(--color-text-error);
-            padding: var(--space-lg);
+            background: var(--cpd-color-bg-critical-subtle);
+            border: 1px solid var(--cpd-color-border-critical-subtle);
+            color: var(--cpd-color-text-critical-primary);
+            padding: var(--cpd-space-4x);
             border-radius: var(--radius-md);
-            margin-bottom: var(--space-lg);
+            margin-bottom: var(--cpd-space-4x);
         }
 
         .no-apps {
             text-align: center;
-            padding: var(--space-xl);
-            color: var(--color-text-muted);
-            font-size: 13px;
+            padding: var(--cpd-space-5x);
+            color: var(--cpd-color-text-disabled);
+            font: var(--cpd-font-body-sm-regular);
         }
     </style>
 </head>
@@ -520,8 +487,13 @@ Please see LICENSE files in the repository root for full details.
                 }
             });
 
-            // Load translated strings, then sources
-            window.audioPickerAPI.getStrings()
+            // Load config (theme) first, then strings, then sources
+            window.audioPickerAPI.getConfig()
+                .then(function(config) {
+                    // Apply Compound theme class immediately for correct token values
+                    document.documentElement.classList.add("cpd-theme-" + (config.theme || "dark"));
+                    return window.audioPickerAPI.getStrings();
+                })
                 .then(function(s) {
                     strings = s;
 

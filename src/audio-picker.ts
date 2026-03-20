@@ -5,15 +5,16 @@ SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Com
 Please see LICENSE files in the repository root for full details.
 */
 
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow, ipcMain, nativeTheme } from "electron";
 import { existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import type { AudioSelection, VenmicListResult } from "./@types/audio-sharing.js";
-export type { AudioSelection } from "./@types/audio-sharing.js";
 import { _t } from "./language-helper.js";
 import { listVenmicNodes, startVenmicDirect, startVenmicSystemDirect, stopVenmicDirect } from "./venmic.js";
+
+export type { AudioSelection } from "./@types/audio-sharing.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -55,6 +56,24 @@ export async function showAudioPicker(parentWindow: BrowserWindow): Promise<Audi
         return { type: "none" };
     }
 
+    // Detect the active Compound theme from the parent window's <body> class.
+    // element-web sets one of: cpd-theme-light, cpd-theme-dark, cpd-theme-light-hc, cpd-theme-dark-hc
+    let compoundTheme = "";
+    try {
+        const themeClass: string = await parentWindow.webContents.executeJavaScript(
+            `[...document.body.classList].find(c => c.startsWith("cpd-theme-")) || ""`,
+        );
+        // Strip the "cpd-theme-" prefix to get "light", "dark", "light-hc", or "dark-hc"
+        compoundTheme = themeClass.replace("cpd-theme-", "");
+    } catch (e) {
+        console.warn("audio-picker: failed to detect theme from parent window:", e);
+    }
+
+    // Fallback to system preference if detection failed or returned empty
+    if (!compoundTheme) {
+        compoundTheme = nativeTheme.shouldUseDarkColors ? "dark" : "light";
+    }
+
     return new Promise((resolve) => {
         const pickerWindow = new BrowserWindow({
             parent: parentWindow,
@@ -91,6 +110,8 @@ export async function showAudioPicker(parentWindow: BrowserWindow): Promise<Audi
             return audioSources;
         };
 
+        const handleGetConfig = (): { theme: string } => ({ theme: compoundTheme });
+
         const handleGetStrings = (): Record<string, string> => ({
             title: _t("audio_picker|title"),
             subtitle: _t("audio_picker|subtitle"),
@@ -110,12 +131,14 @@ export async function showAudioPicker(parentWindow: BrowserWindow): Promise<Audi
 
         const cleanup = (): void => {
             ipcMain.removeListener("audio-picker-result", handleResult);
+            ipcMain.removeHandler("audio-picker-get-config");
             ipcMain.removeHandler("audio-picker-get-sources");
             ipcMain.removeHandler("audio-picker-get-strings");
         };
 
         // Register handlers BEFORE loading the page
         ipcMain.on("audio-picker-result", handleResult);
+        ipcMain.handle("audio-picker-get-config", handleGetConfig);
         ipcMain.handle("audio-picker-get-sources", handleGetSources);
         ipcMain.handle("audio-picker-get-strings", handleGetStrings);
 

@@ -71,6 +71,7 @@
     },
     "devDependencies": {
         "@action-validator/cli": "^0.6.0",
+        "@vector-im/compound-design-tokens": "^6.10.1",
         "@action-validator/core": "^0.6.0",
         "@babel/core": "^7.18.10",
         "@babel/preset-env": "^7.18.10",

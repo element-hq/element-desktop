@@ -14,6 +14,13 @@ import type { AudioSelection, VenmicListResult } from "./@types/audio-sharing.js
 
 contextBridge.exposeInMainWorld("audioPickerAPI", {
     /**
+     * Get configuration for the audio picker (theme, etc).
+     */
+    getConfig(): Promise<{ theme: string }> {
+        return ipcRenderer.invoke("audio-picker-get-config");
+    },
+
+    /**
      * Get available audio sources from venmic.
      */
     getSources(): Promise<VenmicListResult> {
