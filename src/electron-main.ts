@@ -584,9 +584,7 @@ app.on("ready", async () => {
     webContentsHandler(global.mainWindow.webContents);
 
     // Set up venmic injection for Linux audio sharing in iframes (Element Call)
-    if (setupVenmicInjection) {
-        setupVenmicInjection(global.mainWindow.webContents);
-    }
+    setupVenmicInjection?.(global.mainWindow.webContents);
 
     session.defaultSession.setDisplayMediaRequestHandler(
         async (request, callback) => {
