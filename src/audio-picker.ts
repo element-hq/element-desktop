@@ -11,9 +11,9 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import type { AudioSelection, VenmicListResult } from "./@types/audio-sharing.js";
+export type { AudioSelection } from "./@types/audio-sharing.js";
+import { _t } from "./language-helper.js";
 import { listVenmicNodes, startVenmicDirect, startVenmicSystemDirect, stopVenmicDirect } from "./venmic.js";
-
-export type { AudioSelection };
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -65,7 +65,7 @@ export async function showAudioPicker(parentWindow: BrowserWindow): Promise<Audi
             minimizable: false,
             maximizable: false,
             fullscreenable: false,
-            title: "Share Audio",
+            title: _t("audio_picker|title"),
             webPreferences: {
                 preload: join(__dirname, "audio-picker-preload.cjs"),
                 contextIsolation: true,
@@ -91,14 +91,33 @@ export async function showAudioPicker(parentWindow: BrowserWindow): Promise<Audi
             return audioSources;
         };
 
+        const handleGetStrings = (): Record<string, string> => ({
+            title: _t("audio_picker|title"),
+            subtitle: _t("audio_picker|subtitle"),
+            loading: _t("audio_picker|loading"),
+            share: _t("audio_picker|share"),
+            cancel: _t("action|cancel"),
+            noAudioLabel: _t("audio_picker|no_audio_label"),
+            noAudioDescription: _t("audio_picker|no_audio_description"),
+            systemLabel: _t("audio_picker|system_label"),
+            systemDescription: _t("audio_picker|system_description"),
+            applicationsHeader: _t("audio_picker|applications_header"),
+            noApps: _t("audio_picker|no_apps"),
+            errorLoadPrefix: _t("audio_picker|error_load_prefix"),
+            errorGlibc: _t("audio_picker|error_glibc"),
+            errorPipewire: _t("audio_picker|error_pipewire"),
+        });
+
         const cleanup = (): void => {
             ipcMain.removeListener("audio-picker-result", handleResult);
             ipcMain.removeHandler("audio-picker-get-sources");
+            ipcMain.removeHandler("audio-picker-get-strings");
         };
 
         // Register handlers BEFORE loading the page
         ipcMain.on("audio-picker-result", handleResult);
         ipcMain.handle("audio-picker-get-sources", handleGetSources);
+        ipcMain.handle("audio-picker-get-strings", handleGetStrings);
 
         pickerWindow.on("closed", () => {
             if (!resolved) {

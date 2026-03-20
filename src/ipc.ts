@@ -159,12 +159,7 @@ ipcMain.on("ipcCall", async function (_ev: IpcMainEvent, payload) {
                 await showAudioPickerAndStart(global.mainWindow);
             }
 
-            // Include loopback audio for Windows
-            if (audioRequested && process.platform === "win32") {
-                await callback?.({ video: args[0], audio: "loopback" });
-            } else {
-                await callback?.({ video: args[0] });
-            }
+            callback?.({ video: args[0] });
             ret = null;
             break;
         }

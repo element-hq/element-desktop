@@ -21,6 +21,13 @@ contextBridge.exposeInMainWorld("audioPickerAPI", {
     },
 
     /**
+     * Get translated UI strings for the audio picker.
+     */
+    getStrings(): Promise<Record<string, string>> {
+        return ipcRenderer.invoke("audio-picker-get-strings");
+    },
+
+    /**
      * Send the user's selection back to the main process.
      */
     submitSelection(selection: AudioSelection): void {

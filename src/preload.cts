@@ -167,7 +167,7 @@ if (process.platform === "linux") {
                     // Clean up venmic when the audio track ends
                     audioTrack.addEventListener("ended", () => {
                         console.debug("venmic: audio track ended, stopping venmic");
-                        void ipcRenderer.invoke("stopVenmic");
+                        ipcRenderer.invoke("stopVenmic").catch((e) => console.error("venmic: failed to stop:", e));
                     });
 
                     // Also clean up when the video track ends (screen share stopped)
@@ -175,7 +175,7 @@ if (process.platform === "linux") {
                     if (videoTrack) {
                         videoTrack.addEventListener("ended", () => {
                             console.debug("venmic: video track ended, stopping venmic");
-                            void ipcRenderer.invoke("stopVenmic");
+                            ipcRenderer.invoke("stopVenmic").catch((e) => console.error("venmic: failed to stop:", e));
                         });
                     }
 
