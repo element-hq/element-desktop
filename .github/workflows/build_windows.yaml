@@ -114,7 +114,7 @@ jobs:
                   ref: ${{ inputs.ref }}
                   persist-credentials: false
 
-            - uses: actions/download-artifact@70fc10c6e5e1ce46ad2ea6f2b72d43f7d47b13c3 # v8
+            - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
               with:
                   name: ${{ inputs.prepare-artifact-name }}
 
@@ -151,8 +151,8 @@ jobs:
               env:
                   TARGET: ${{ steps.config.outputs.target }}
 
-            - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4
-            - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
+            - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4
+            - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6
               with:
                   node-version-file: .node-version
                   cache: "pnpm"
